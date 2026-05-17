@@ -1,0 +1,1064 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0046)https://www.doc88.com/p-0894363907651.html?r=1 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head style="mask-image: url(&quot;&quot;);"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>
+		一种高精度恒流源电路的设计与实现 - 道客巴巴
+	</title>
+	<meta property="og:type" content="document">
+	<meta property="og:url" content="https://www.doc88.com/p-0894363907651.html">
+	<meta property="og:release_date" content=" 2014-04-09">
+	<meta property="og:title" content="一种高精度恒流源电路的设计与实现">
+	<meta property="og:description" content="">
+	<meta property="og:document:type" content="PDF">
+	<meta property="og:image" content="https://png.doc88.com/2014/04/09/0894363907651_160.png">
+	<meta property="og:document:page" content="3">
+	<meta property="og:document:cost" content="1000积分">
+	<meta name="keywords" content="一种高精度恒">
+	<meta name="description" content="">
+	<meta name="author" content="道客巴巴">
+	<meta name="Robots" content="all">
+	<meta name="Copyright" content="道客巴巴 doc88.com 版权所有">
+	<link rel="stylesheet" type="text/css" href="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/core-v2.min.css">
+	<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="https://static.doc88.com/assets/css/forie.css?v=2.2"/>
+<![endif]-->
+	<!--[if lte IE 6]>
+<style type="text/css">
+body{_background-attachment:fixed;}
+#readshop {
+_top: expression(offsetParent.scrollTop<=50 ? 0:(offsetParent.scrollTop-50));
+}
+</style>
+<![endif]-->
+			<script language="JavaScript" type="text/javascript" src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/jquery-1.8.1.min.js.下载"></script>
+	<!--[if lte IE 6]>
+<script language="JavaScript" type="text/javascript" src="https://static.doc88.com/assets/js/color/js/colorpicker.js"></script>
+<![endif]-->
+	<script language="JavaScript">
+		var global_page = "reading";
+		var rf = '';
+	</script>
+		<script language="JavaScript" type="text/javascript" src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/commonjs.js.下载"></script><link href="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/1280.css" rel="stylesheet" type="text/css" id="loadCss">
+<link charset="utf-8" rel="stylesheet" href="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/window.css"><link charset="utf-8" rel="stylesheet" href="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/iconfont.css"></head>
+
+<body style="background: url(&quot;https://www.doc88.com/assets/images/skin/skin-paper1-img.png&quot;) repeat fixed;">
+	<iframe id="startIFrame" name="startIFrame" style="display:none" src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/saved_resource.html"></iframe>
+	<!-- 新手引导 -->
+	<div class="users-guide" style="display: none">
+	</div>
+	<div class="topshop" style="">
+  <div class="mainpart">
+    <div class="tabs2">
+      <ul class="tab">
+        <li id="skins1" onclick="setTab(&#39;skins&#39;,1,2)" class="current">图案背景</li>
+        <li id="skins2" onclick="setTab(&#39;skins&#39;,2,2)">纯色背景</li>
+      </ul>
+      <div class="tabcont">
+      <div id="skin_panel_1" class="skin-panel">
+        <div id="con_skins_1">
+          <ul class="skin-list" id="skin-list-img">
+          </ul>
+        </div>
+		</div>
+		<div id="skin_panel_2" class="skin-panel">
+        <div id="con_skins_2" class="hide">
+          <ul class="skin-list" id="skin-list-color">
+          <li id="customColorLi"><div class="skinimg"><input class="pink-color jscolor {onFineChange:&#39;colorUpdates(this)&#39;,position:&#39;right&#39;,padding:0, shadow:false,borderWidth:0, backgroundColor:&#39;transparent&#39;, insetColor:&#39;transparent&#39;}" value="ffffff" autocomplete="off" style="background-image: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><div class="addcolor"></div><span class="checked"></span></div><p>自定义颜色</p></li></ul>
+		</div>
+        </div>
+		<div class="skinpaging">
+            <a href="javascript:void(0)" class="prevskin"></a>
+            <a href="javascript:void(0)" class="nextskin"></a>
+          </div>
+      </div>
+      <!--end tabcont-->
+    </div>
+    <!--end tab2-->
+  </div>
+  <!--end mainpart-->
+</div>
+<!--end topshop-->
+
+<div class="header" id="header" style="display: none;">
+  <div class="mainpart">
+<div class="main-header">
+<div class="logo">
+		<a href="https://www.doc88.com/">
+        <!-- <img src="https://static.doc88.com/assets/images/doc88.png" style="display:none"/> -->
+            <!-- <img src="https://static.doc88.com/assets/images/logo1.png" class="logoimg"/> -->
+            <div class="logoimg"></div>
+            <!--[if IE 6]>
+            <img src="assets/images/logo1.gif"/>
+            <![endif]-->
+            </a>
+        </div>
+
+        <div class="mainnav">
+            <ul class="nav">
+                <li><a href="https://www.doc88.com/">首页</a></li>
+                <li class="dropdown">
+                    <a href="https://www.doc88.com/list.html">文档 <span class="arrow"></span></a>
+                    <div class="dorpmenu2 hide">
+                        <ul class="categorys">
+							<li><a class="subnav" href="https://www.doc88.com/list-593-0.html" target="_blank" title="行业资料">行业资料</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-442-0.html" target="_blank" title="考试资料">考试资料</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-441-0.html" target="_blank" title="教学课件">教学课件</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-440-0.html" target="_blank" title="学术论文">学术论文</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-443-0.html" target="_blank" title="技术资料">技术资料</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-444-0.html" target="_blank" title="金融财经">金融财经</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-445-0.html" target="_blank" title="研究报告">研究报告</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-446-0.html" target="_blank" title="法律文献">法律文献</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-447-0.html" target="_blank" title="管理文献">管理文献</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-448-0.html" target="_blank" title="社会科学">社会科学</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-449-0.html" target="_blank" title="生活休闲">生活休闲</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-574-0.html" target="_blank" title="计算机">计算机</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-687-0.html" target="_blank" title="经济文库">经济文库</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-720-0.html" target="_blank" title="数字媒体">数字媒体</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-702-0.html" target="_blank" title="教材教辅">教材教辅</a></li>
+							<li><a class="subnav" href="https://www.doc88.com/list-730-0.html" target="_blank" title="企业档案">企业档案</a></li>
+                        </ul>
+                        <sup class="arr"></sup>
+                    </div>
+                </li>
+				<li><a href="https://www.doc88.com/t-list.html">任务</a></li>
+                <li><a href="https://www.doc88.com/b-list.html">文辑</a></li>
+<!--                <li><a href="https://www.daokeyuedu.com" target="_blank">阅读器</a></li -->&gt;
+            </ul>
+        </div>
+        <!--end mainnav-->
+
+	      <div class="usershop">
+		<ul class="login-bar-con">
+      <li id="loginBar">
+
+                    <div class="user1">
+                        <a class="login" href="javascript:DOC88Window.win({message:&#39;/js/home/window.html?v=1.5&amp;act=window_login&amp;forward=&#39;,height:270,width:600,title:&#39;道客巴巴账号登录&#39;,iframe:true});">登录</a><a class="register" href="javascript:DOC88Window.win({message:&#39;/js/home/window.html?v=1.5&amp;act=window_reg&amp;forward=&#39;,height:465,width:600,title:&#39;注册一个新的道客巴巴账号&#39;,iframe:true});"></a>
+                    </div>
+               
+
+    
+
+                 
+  </li>
+		</ul>
+		<ul class="search-bar-con">
+			<li class="shop1">
+        <div class="search-nav">
+          <form class="bigsearch" id="searchForm" method="post" onsubmit="return search_submit();" target="_blank">
+              <input type="text" placeholder=" 在道客巴巴十亿文档库中搜索..." class="stext" onfocus="this.placeholder=&#39;&#39;" onblur="if(this.value==&#39;&#39;)this.placeholder=&#39; 在道客巴巴数亿文档库中搜索...&#39;;" id="keyword" autocomplete="off">
+                              <input type="submit" class="sbtncss" value="">
+                        </form>
+          <div class="search-rhint">
+            <ul class="hint-list">
+            
+            </ul>
+          </div>
+        </div>
+			</li>
+			<li class="shop1 last">
+				<button type="button" title="上传文档" class="btnupload2" onclick="showLoginWindow(&#39;/uc/index.php?act=upload&#39;,&#39;上传文档&#39;,&#39;登录后，可将您的文档上传至道客巴巴&#39;);" style="display: none;"><i class="iconfont"></i></button>
+				<button type="button" title="上传文档" class="btnupload3" onclick="showLoginWindow(&#39;/uc/index.php?act=upload&#39;,&#39;上传文档&#39;,&#39;登录后，可将您的文档上传至道客巴巴&#39;);"><i class="iconfont"></i> 上传文档</button>
+			</li>
+		</ul>
+    </div>
+	    <!--end shop-->
+  </div>
+  </div>
+  <!--end mainpart-->
+  <div class="skin-peeler">
+    <a href="javascript:void(0)">
+      <!-- <img src="https://static.doc88.com/assets/images/icons/skin-peeler.png" class="ie6png" /> -->
+      <!--[if IE 6]>
+      <img src="https://static.doc88.com/assets/images/icons/skin-peeler-ie6.png" />
+      <![endif]-->
+    </a>
+  </div>
+  <!--end skin-peeler -->
+  <div class="skintips" style="display: none;">
+    <div class="skintips-bg"></div>
+    <!-- <img src="https://static.doc88.com/assets/images/tips/skintips.png" class="ie6png" /> -->
+    <!--[if IE 6]>
+    <img src="https://static.doc88.com/assets/images/tips/skintips-for-ie6.png" />
+    <![endif]-->
+    <a href="javascript:void(0)" title="关闭" class="close"></a>
+    <a href="javascript:void(0)" title="试试" class="into "></a>
+  </div>
+  <!--end skintips-->
+</div>
+	<div class="toolbar" id="toolbar" style="position: fixed; width: 100%;">
+		<div class="mainpart clearfix" style="position: relative;">
+			<div class="tb-item">
+				<button class="btnmin" id="btndown1"><i class="iconfont"></i> 下载</button>
+				<button class="btnmin3" id="print_btn"><i class="iconfont"></i> 打印</button>
+			</div>
+			<div class="line"></div>
+			<ul class="tb-item" id="item-page-panel">
+				<li class="disable"><a href="javascript:;" title="上一页" id="prePageButton"><i class="iconfont"></i></a></li>
+				<li class="text"><input class="num" type="text" value="1" id="pageNumInput" autocomplete="off"> /
+					3
+				</li>
+				<li><a href="javascript:;" title="下一页" id="nextPageButton"><i class="iconfont"></i></a></li>
+				<li class="line"></li>
+				<li><a href="javascript:;" title="放大" id="zoomInButton"><i class="iconfont"></i></a></li>
+				<li><a href="javascript:;" title="缩小" id="zoomOutButton"><i class="iconfont"></i></a></li>
+			</ul>
+			<div class="line"></div>
+			<!-- low version panel -->
+			
+			<div class="tb-item" id="item-doc-panel">
+				<div class="doc-item" id="doc-view"><div class="item-edit-con" id="docview_pro_panel" style="display: none; top: 39px;">
+				<div class="panel-list" id="doc-panel-view">
+					<div class="panel-title">视图设置</div>
+					<ul class="panel-type">
+						<li class="disable">
+							<a href="javascript:void(0)" title="单页" id="listModelButton">
+								<i class="iconfont"></i><span>单页</span>
+							</a>
+						</li>
+						<li class="disable">
+							<a href="javascript:void(0)" title="双页" id="dblModelButton">
+								<i class="iconfont"></i><span>双页</span>
+							</a>
+						</li>
+						<li style="display: none;">
+							<a href="javascript:void(0)" title="全屏" id="frscreen">
+								<i class="iconfont"></i><span>全屏</span>
+							</a>
+						</li>
+						<li style="display: none;">
+							<a href="javascript:void(0)" title="恢复" id="quitFrscreen">
+								<i class="iconfont"></i><span>恢复</span>
+							</a>
+						</li>
+						<li class="disable">
+							<a href="javascript:void(0)" title="缩略图" id="thumbModelButton">
+								<i class="iconfont"></i><span>缩略图</span>
+							</a>
+						</li>
+						<li style="" class="disable">
+							<a href="javascript:void(0)" title="幻灯片" id="pptModelButton">
+								<i class="iconfont"></i><span>幻灯片</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+					<span class="tool"><i class="iconfont"></i>视图</span>
+				</div>
+				<div class="doc-item" id="doc-sign" type="highlight" text="高亮">
+					<span class="tool"><i class="iconfont"></i><b>标记</b></span>
+					<i class="iconfont more"></i>
+				</div>
+				<div class="doc-item" id="doc-note" type="shape">
+					<span class="tool"><i class="iconfont"></i><b>批注</b></span>
+					<i class="iconfont more"></i>
+				</div>
+			</div>
+			<div class="line"></div>
+			<ul class="tb-item" id="min-screen-search">
+				<li><a href="javascript:;" title="搜索" id=""><i class="iconfont"></i></a></li>
+				<li class="line"></li>
+			</ul>
+			<div class="tb-item" id="item-search-panel">
+				<form class="min-search-form" action="https://www.doc88.com/p-0894363907651.html?r=1" onsubmit="return false;">
+					<span class="min-btn" id="docSearchButton" title="搜全文"><i class="iconfont"></i></span>
+					<span class="min-text"><input type="text" onfocus="this.placeholder=&#39;&#39;" onblur="if(this.value==&#39;&#39;)this.placeholder=&#39; 搜全文...&#39;;" placeholder=" 搜全文..." id="docKeywordInput" autocomplete="off"></span>
+				</form>
+				<div class="min-search-result" id="min-search-result">
+					<div class="search-range-item" style="display: none;" id="search-way-doc">
+						<a class="sug-btn" href="javascript:void(0)" id="docSearchButton2">搜本文档</a>
+						<span class="min-btn" id="docSearchLoad" style="display:none"><img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/ajax-soap-loader.gif" alt=""></span>
+						<i class="iconfont"></i>
+						<b></b>
+					</div>
+					<div class="search-range-item" style="display: none;" id="search-way-all">
+						<a class="sug-btn" href="javascript:void(0)" id="searchTextSiteButton">搜全站</a>
+						<i class="iconfont"></i>
+						<b></b>
+					</div>
+					<!-- 本文档的搜索结果 -->
+					<div class="search-range-item" style="display: none;" id="textSearchResultDiv">
+						<i class="iconfont"></i>
+						<b></b>
+						<span class="s-result iconfont" id="searchExitButton" title="关闭搜索"></span>
+						<span class="s-result iconfont" id="preSearchButton" title="下一个"></span>
+						<span class="s-result iconfont" id="nextSearchButton" title="上一个"></span>
+						<span class="s-result text" id="searchNoSpan"></span>
+						<span class="s-result text" id="searchResultSpan"><span id="currentIndexSpan">1</span> / <span id="totalResultSpan">1</span></span>
+					</div>
+					<!-- 历史记录 阅读记录-->
+					<div class="search-else-tips"></div>
+				</div>
+			</div>
+			<div class="save-tips">批注本地保存成功，开通会员云端永久保存 <span class="vip-btn">去开通 <i class="iconfont"></i></span><i class="iconfont save-closed"></i></div>
+			<ul class="tb-item fr">
+				<li id="li_save" class="disable">
+					<a href="javascript:void(0)" title="保存" id="btn_save"><i class="iconfont"></i></a>
+				</li>
+				<li id="collect_btn"><a href="javascript:void(0)" title="收藏"><i class="iconfont"></i></a></li>
+				<li id="add_corpus_btn"><a href="javascript:void(0)" title="加入文辑"><i class="iconfont"></i></a>
+				</li>
+				<li class="line"></li>
+				<li id="complaintButton"><a href="javascript:void(0)" title="举报此文档"><i class="iconfont"></i></a>
+				</li>
+				<li id="claimButton"><a href="javascript:void(0)" title="认领此文档"><i class="iconfont"></i></a>
+				</li>
+			</ul>
+		</div>
+		<!--end mainpart-->
+	</div>
+	<!--end readshop-->
+	<!-- panel -->
+	<div class="item-edit-con" id="annotate_pro_panel" style="display: none; top: 39px;" r_s="0">
+		<div class="edit-closed iconfont"></div>
+		<!-- 视图设置 -->
+		<div class="panel-list" id="doc-panel-sign" style="display: none;">
+			<div class="panel-title">标记设置</div>
+			<div class="panel-type2">
+				<a class="active" href="javascript:void(0)" title="高亮" id="btn_highlight">
+					<i class="iconfont"></i>
+					<span>高亮</span>
+				</a>
+				<a href="javascript:void(0)" title="下划线" id="btn_underline">
+					<i class="iconfont"></i>
+					<span>下划线</span>
+				</a>
+				<a href="javascript:void(0)" title="删除线" id="btn_throughline">
+					<i class="iconfont"></i>
+					<span>删除线</span>
+				</a>
+				<a href="javascript:void(0)" title="波浪线" id="btn_wavyline">
+					<i class="iconfont"></i>
+					<span>波浪线</span>
+				</a>
+			</div>
+		</div>
+		<h2 id="pro_shape_label" style="display: none;">画笔设置</h2>
+		<div class="brush-types" id="pro_shape_types" style="display: none;">
+			<span class="iconfont" title="画笔工具" id="btn_pencil"></span>
+			<span class="iconfont " title="直线工具" id="btn_line"></span>
+			<span class="iconfont" title="箭头工具" id="btn_arrow"></span>
+			<span class="iconfont" title="矩形工具" id="btn_rectangle"></span>
+			<span class="iconfont" title="圆形工具" id="btn_oval"></span>
+			<span class="iconfont" title="五角星" id="btn_star" style="display: none;"></span>
+			<span class="iconfont" title="文本" id="btn_text"></span>
+		</div>
+		<h2 id="pro_color_label">线条颜色</h2>
+		<div class="color-pinkup">
+			<span class="pink-box" id="pro_color_FF3029"><span class="pink1"></span></span>
+			<span class="pink-box" id="pro_color_FFFF00"><span class="pink2"></span></span>
+			<span class="pink-box" id="pro_color_A8DB00"><span class="pink3"></span></span>
+			<span class="pink-box" id="pro_color_00CBFF"><span class="pink4"></span></span>
+			<span class="pink-box" id="pro_color_3063CF"><span class="pink5"></span></span>
+			<span class="pink-box" id="pro_color_CD96FF" style="margin-right: 0"><span class="pink6"></span></span>
+		</div>
+		<div class="color-pinkup">
+			<span class="pink-box" id="pro_color_7030A0"><span class="pink7"></span></span>
+			<span class="pink-box" id="pro_color_8FA4D1"><span class="pink8"></span></span>
+			<span class="pink-box" id="pro_color_4ED785"><span class="pink9"></span></span>
+			<span class="pink-box" id="pro_color_FFA032"><span class="pink10"></span></span>
+			<span class="pink-box" id="pro_color_DEBC53"><span class="pink11"></span></span>
+			<span class="pink-box" id="pro_color_custom" style="margin-right: 0">
+				<span class="pink12">
+					<input ﻿="" id="pro_custom_inp" class="pink-color jscolor {onFineChange:&#39;Common.colorUpdate(this)&#39;,position:&#39;left&#39;,padding:0, shadow:false,borderWidth:0, backgroundColor:&#39;transparent&#39;, insetColor:&#39;transparent&#39;}" value="ffffff" autocomplete="off" style="background-image: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);">
+				</span>
+				<span class="color-custom"></span>
+			</span>
+		</div>
+		<div id="pro_font_panel">
+			<h2>字体设置</h2>
+			<div class="font-selected">
+				<div class="font-nav">
+					<span>宋体</span>
+					<i class="iconfont"></i>
+				</div>
+				<ul class="hide">
+					<li>微软雅黑</li>
+					<li style="font-family: 宋体;">宋体</li>
+					<li style="font-family: 黑体;">黑体</li>
+					<li style="font-family: 楷体;">楷体</li>
+					<li style="font-family: arial;">Arial</li>
+				</ul>
+			</div>
+			<div class="slider-box" id="pro_fontsize_panel">
+				<h3>文字大小</h3>
+				<div class="slider-content spx">
+					<input type="hidden" class="font-slider" value="48" id="fontsize-slider" style="display: none;"><div class="slider-container theme-blue" style="width: 210px;">			<div class="back-bar">                <div class="selected-bar" style="width: 86px; left: 0px;"></div>                <div class="pointer low" style="display: none;"></div><div class="pointer-label" style="display: none;">123456</div>                <div class="pointer high" style="left: 79px;"></div><div class="pointer-label">48</div>                <div class="clickable-dummy"></div>            </div>            <div class="scale"></div>		</div>
+				</div>
+			</div>
+		</div>
+		<div class="slider-box" id="pro_opacity_panel">
+			<h3>透明度</h3>
+			<div class="slider-content sprecent">
+				<input type="hidden" class="opacity-slider" value="100" id="opacity-slider" style="display: none;"><div class="slider-container theme-blue" style="width: 210px;">			<div class="back-bar">                <div class="selected-bar" style="width: 210px; left: 0px;"></div>                <div class="pointer low" style="display: none;"></div><div class="pointer-label" style="display: none;">123456</div>                <div class="pointer high" style="left: 203px;"></div><div class="pointer-label">100</div>                <div class="clickable-dummy"></div>            </div>            <div class="scale"></div>		</div>
+			</div>
+		</div>
+		<div class="slider-box" id="pro_linewidth_panel">
+			<h3>线条粗细</h3>
+			<div class="slider-content">
+				<input type="hidden" class="line-slider" value="1" id="linewidth-slider" style="display: none;"><div class="slider-container theme-blue" style="width: 210px;">			<div class="back-bar">                <div class="selected-bar" style="width: 0px; left: 0px;"></div>                <div class="pointer low" style="display: none;"></div><div class="pointer-label" style="display: none;">123456</div>                <div class="pointer high" style="left: -7px;"></div><div class="pointer-label">1</div>                <div class="clickable-dummy"></div>            </div>            <div class="scale"></div>		</div>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+
+		<div class="mainpart" id="mainpart">
+			<div class="layout02" id="mainPanel">
+				<div class="boxright hide" id="boxright-catalog"></div>
+				<div class="boxright" id="boxright" style="position: fixed; left: 1182px; top: 48px;">
+					<div class="commonbox3" id="box3" style="display: none;">
+						<div class="box">
+							<div class="usercard">
+								<dl class="imgtxt01">
+									<dt>
+										<img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/m.jpg">
+																													</dt>
+									<dd>
+										<h5>
+																						<a href="https://www.doc88.com/a7c29390119d1e3160750d626b852df4" class="username" target="_blank" title="xingjingqi..">
+												xingjingqi..
+											</a>
+																						<a href="javascript:;" title="给TA发私信" class="mail"><i class="iconfont"></i></a>
+
+										</h5>
+										<p class="upload-time">上传于：2014-04-09
+										</p>
+										<p>粉丝量：3
+										</p>
+									</dd>
+								</dl>
+
+								<div class="dropbox">
+									<div class="weibo">
+										<p>
+											该文档贡献者很忙，什么也没留下。
+										</p>
+									</div>
+								</div>
+								<a href="javascript:;" title="展开" class="drop"><i class="iconfont"></i></a>
+							</div>
+						</div>
+					</div>
+					<!--end commonbox3-->
+					<button class="btndown2" id="btndown2"><i class="iconfont"></i>
+						下载此文档					</button>
+					<span style="display:none">
+						<button class="btn" onclick="download_scan()"><i class="iconfont"></i> 直接下载</button>
+					</span>
+					<ul class="side-tab" style="display: block;">
+						<li tab_id="rel_tab" class="current" id="reg_tab_li">相关</li>
+						<li tab_id="catalog_tab" id="catalog_tab_li">目录</li>
+						<li tab_id="note_tab" id="note_tab_li">笔记</li>
+						<li tab_id="bookmark_tab" id="bookmark_tab_li">书签</li>
+					</ul>
+					<div class="stab-con" id="rel_tab" style="display: block;">
+						<div class="commonbox6" id="relatebox" style="padding:0 0;"><div class="sd-side">
+<h3><a href="https://www.doc88.com/tag/%E4%B8%80%E7%A7%8D%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%81%92%E6%B5%81%E6%BA%90%E7%94%B5%E8%B7%AF%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0" target="_blank" class="sd-more">更多</a>相关文档 </h3>
+<ul class="sd-side-box">   
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_1&#39;)" href="https://www.doc88.com/p-8901732550957.html?s=rel&amp;id=1" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_8901732550957_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_2&#39;)" href="https://www.doc88.com/p-7902431838803.html?s=rel&amp;id=2" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_7902431838803_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_3&#39;)" href="https://www.doc88.com/p-2951217692835.html?s=rel&amp;id=3" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_2951217692835_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_4&#39;)" href="https://www.doc88.com/p-11787181684809.html?s=rel&amp;id=4" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_11787181684809_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_5&#39;)" href="https://www.doc88.com/p-94459018703845.html?s=rel&amp;id=5" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_94459018703845_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;rel_doc_6&#39;)" href="https://www.doc88.com/p-67161474760982.html?s=rel&amp;id=6" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_67161474760982_1"><em>一</em><em>种</em><em>高</em><em>精</em><em>度</em><em>恒</em><em>流</em><em>源</em><em>电</em><em>路</em><em>的</em><em>设</em><em>计</em><em>与</em><em>实</em><em>现</em></p>
+				<p class="sd-side-hot">
+					星级：
+					<i class="iconfont current"></i><i class="iconfont current"></i><i class="iconfont"></i><i class="iconfont"></i><i class="iconfont"></i>
+            		<span class="sd-side-pages">3 页</span>
+                </p>
+			</span>
+		</a>
+	</li>
+      
+</ul>
+</div>
+<div class="sd-side" style="margin-top:10px;">
+<h3><a href="https://www.doc88.com/tag/%E4%B8%80%E7%A7%8D%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%81%92%E6%B5%81%E6%BA%90%E7%94%B5%E8%B7%AF%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0" target="_blank" class="sd-more">更多</a>猜你喜欢 </h3>
+<ul class="sd-side-box" id="recommedul">   
+       
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_1&#39;)" href="https://www.doc88.com/p-003703458117.html?s=like&amp;id=1" target="_blank" title="实用恒流源电路设计">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_003703458117">实用恒流源电路设计</p>
+				
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_2&#39;)" href="https://www.doc88.com/p-670130042521.html?s=like&amp;id=2" target="_blank" title="基于OP07芯片的恒流源电路设计">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_670130042521">基于OP07芯片的恒流源电路设计</p>
+				
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_3&#39;)" href="https://www.doc88.com/p-614924958059.html?s=like&amp;id=3" target="_blank" title="高精度420mA恒流源电路的设计">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_614924958059">高精度420mA恒流源电路的设计</p>
+				
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_4&#39;)" href="https://www.doc88.com/p-172100723720.html?s=like&amp;id=4" target="_blank" title="（毕业论文）高精度恒流源的设计与制作">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_172100723720">（毕业论文）高精度恒流源的设计与制作</p>
+				
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_5&#39;)" href="https://www.doc88.com/p-7324099336956.html?s=like&amp;id=5" target="_blank" title="一种高精度恒流源电路的设计与实现">
+			<b class="iconfont bg-pdf"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_7324099336956">一种高精度恒流源电路的设计与实现</p>
+				
+			</span>
+		</a>
+	</li>
+      
+	 <li>
+		<a onclick="Common.doEvent(&#39;like_doc_6&#39;)" href="https://www.doc88.com/p-61361677303171.html?s=like&amp;id=6" target="_blank" title="场效应管工作在恒流区">
+			<b class="iconfont bg-ppt"></b>
+			<span class="sd-side-con">
+				<p class="title" id="hl_61361677303171">场效应管工作在恒流区</p>
+				
+			</span>
+		</a>
+	</li>
+      
+</ul>
+</div>
+                
+</div>
+						<!--end commonbox3-->
+					</div>
+					<div class="stab-con" id="catalog_tab">
+						<div class="side-default">
+							<p>暂无目录</p>
+							<i class="iconfont"></i>
+							<div class="side-default-tips">点击鼠标右键菜单,创建目录</div>
+						</div>
+						<div class="commonbox6">
+							<div class="sd-side" style="max-height: 530px; height: 530px;">
+								<div class="dTree-con">
+									<div class="dTree-nav" id="ct-nav-panel" style="display:none">
+										<a class="node-list" id="cTopAddLeaf" href="https://www.doc88.com/p-0894363907651.html?r=1#" title="新建" onclick="return false;"><i class="iconfont"></i>新建</a>
+										<a class="node-list" id="cTopEdit" href="https://www.doc88.com/p-0894363907651.html?r=1#" title="编辑" onclick="return false;"><i class="iconfont"></i>编辑</a>
+										<a class="node-list" id="cTopRemove" href="https://www.doc88.com/p-0894363907651.html?r=1#" title="删除" onclick="return false;"><i class="iconfont"></i>删除</a>
+									</div>
+									<ul id="catalog-panel" class="ztree" style="max-height: 520px; height: 520px;"></ul>
+								</div>
+							</div>
+						</div>
+						<div id="ct-r-menu">
+
+						<ul><li id="rmCatalogAdd">添加节点</li><li id="rmCatalogAddLeaf">添加子节点</li><li id="rmCatalogEdit">重命名</li><li id="rmCatalogRemove">删除</li></ul><ul><li id="rmCatalogSetPosition">设置目标位置</li><li id="rmCatalogOpenAll">展开全部</li><li id="rmCatalogCloseAll">收起全部</li></ul></div>
+					</div>
+					<div class="stab-con" id="note_tab">
+						<div class="side-default">
+							<p>暂无笔记</p>
+							<i class="iconfont"></i>
+							<div class="side-default-tips">选择文本，点击鼠标右键菜单，添加笔记</div>
+						</div>
+						<div class="commonbox6">
+							<div class="note-catalog" id="note-catalog">
+								<div class="catalog-nav" style="display: none;">
+									<i id="catalog-btn" class="btn iconfont"></i>
+									<span class="close hide" title="关闭搜索"></span>
+									<input class="text" id="note_keyword" type="text">
+								</div>
+								<ul class="note-box" style="max-height: 530px; height: 530px;">
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="stab-con" id="bookmark_tab">
+						<div class="side-default">
+							<p>暂无书签</p>
+							<i class="iconfont"></i>
+							<div class="side-default-tips">在左侧文档中，点击鼠标右键，添加书签</div>
+						</div>
+						<div class="commonbox6">
+							<div class="bookmark-list" id="bookmark-panel" style="max-height: 530px; height: 530px;">
+							</div>
+						</div>
+					</div>
+				<a class="sidebar-promotion" href="https://reader.doc88.com/?id=0894363907651" target="_blank"></a></div>
+				<!--end boxright-->
+				<div class="boxleft" id="boxleft">
+					<!-- zip -->
+					
+																<div class="commonbox2 doctopbox" id="box1">
+									<div class="doctopic">
+										<h1 title="一种高精度恒流源电路的设计与实现">
+											<b class="iconfont bg-pdf"></b>
+											一种高精度恒流源电路的设计与实现
+										</h1>
+																																								<div class="docoutline" style="display: block;">
+											<div class="attribute">
+												格式：PDF
+												<i class="iconfont line"></i>
+												页数：3
+												<i class="iconfont line"></i>
+												上传日期：2014-04-09 11:48:50
+												<i class="iconfont line"></i>
+												浏览次数：176
+																								<i class="iconfont line"></i>
+												<i class="iconfont orange"></i>
+												<span id="downloadpriceid">下载积分：<font color="red">1000</font></span>
+																								<i class="iconfont line" style="display: none;"></i>
+
+												<span class="client-show" id="open-with-client" style="display: none;"><i class="iconfont blue"></i>
+													用阅读器打开</span>
+												<!-- <span class="client-show" onclick="window.open('https://www.docpda.com/?id=0894363907651')"><i class="iconfont blue">&#xe782;</i> 用阅读器打开</span> -->
+																								<i class="iconfont line"></i>
+												<span class="client-show" id="add_cart"><i class="iconfont"></i>
+													加入阅读清单</span>
+																							</div>
+											<div class="switch" id="switch2"></div>
+										</div>
+																													</div>
+								</div>
+																<div class="smallimg" id="thumbPanel" sd="1">
+									<div class="top_bar">
+										<div class="dock-side">
+											<i class="left iconfont active" title="左侧"></i>
+											<i class="right iconfont" title="右侧"></i>
+											<i class="float iconfont" title="浮动"></i>
+										</div>
+										<div class="close iconfont"></div>
+									</div>
+									<ul class="imgtxt07 it07w1220" id="pagethumblist">
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div id="pptContainer">
+									<div class="page_view" id="pageContainer"><div id="blankThumb" style="display:none;height:1px;"></div><div class="outer_page" id="outer_page_1" px="202" py="95"><div class="page_pb" id="pagepb_1"></div><canvas class="postil_page" zoom="1" id="postil_1" width="970" height="1416"></canvas><canvas class="inner_page" zoom="1" ls="1" ss="0" id="page_1" style="BACKGROUND:url(https://static.doc88.com/assets/images/page-loading.gif) no-repeat center;width:970px; height:1416px;" fs="0" lz="1" width="1455" height="2124"></canvas></div><div id="dragdrop" mv="1"></div></div><div class="surplus" id="continue_page"><div class="surplus-inner"><p>还剩&nbsp;2&nbsp;页未读，是否继续阅读？</p><p class="uploader">此文档由&nbsp;xingjingqi..&nbsp;分享于&nbsp;2014-04-09</p><div class="surplus-operate"><div id="captcha_reading"><style>.safe-bg,.safe-captcha{background-image: url(/api.php?act=verify_img&v=0.8923840557181211&pw=null&st=1)}</style><input type="hidden" id="captchaCode" name="captchaCode" value="0"><div class="grade_warp" style="display: block;"><div class="safefixed" style="display: none;"><div class="safe-bg" style="width:nullpx"></div><div class="safe-captcha" id="slider_1734957760123" style="left:0px;"></div></div><div class="User_ratings User_grade" id="div_fraction0"><div class="ratings_bars"><span id="title_1734957760123" style="display: none;">0</span><span id="captcha_reslut" style="display: none;">0</span><div class="scale" id="bar_1734957760123"><div style="width:0px"></div><span id="btn_1734957760123" style="left:0px;"></span><p id="lable_1734957760123" class="nc-lang-cnt" style="display: block;">请拖动滑块继续阅读</p><p id="ok_1734957760123" class="nc-lang-cnt-ok" style="display: none;"></p></div><span class="bars_10" style="display: none;">100</span></div></div></div></div>&nbsp;&nbsp;<a class="surplus-down" href="javascript:;" id="downbtn4">不看了，直接下载</a></div></div></div>
+								</div>
+																<div class="surplus" id="readEndDiv" style="display:none;height:240px;">
+									<div class="art-like">
+										<div class="success-like">成功点赞+1</div>
+										<div class="like-num">
+											
+										</div>
+									</div>
+																											<p>全文阅读已结束，下载本文需要使用</p>
+																																				<p class="uploader2"><i class="iconfont"></i>
+										1000 积分
+									</p>
+																		<div class="surplus-operate">
+																														<div class="surplus-btn-mid" id="downbtn3">
+											<i class="iconfont"></i>下载此文档
+										</div>
+
+																				<a class="surplus-down" href="javascript:;" id="getxdfbtn" style="display: none;">VIP用户免费下载XDF文档</a>
+																													</div>
+									<!-- 
+            <p class="share">分享至
+                <a href="javascript:;" onclick="listShare(262941683,'5');"><i class="iconfont dc">&#xe74a;</i> </a>
+                <a href="javascript:;" id="shareWxBtn"><i class="iconfont wx">&#xe71c;</i> </a>
+                <a href="javascript:;" id="shareQqBtn"><i class="iconfont qq">&#xe71d;</i></a>
+                <a href="javascript:;" onclick="share(product_id);"><i class="iconfont am">&#xe71f;</i></a>
+            </p>
+             -->
+								</div>
+																<div class="commonbox1" onselectstart="return false;" style="-moz-user-select:none;">
+									<div class="topic">
+										<h2>阅读了该文档的用户还阅读了这些文档</h2>
+									</div>
+									<div class="prev"></div>
+									<div class="next"></div>
+									<div class="box" id="bookbox" style="height:214px;"><ul class="um_imgtxt04" id="bookListUL">
+      <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2013/04/29/039432981448_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="一种高精度数控双极性恒流源电路的设计" href="https://www.doc88.com/p-039432981448.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2013/04/29/039432981448_120.png">
+                                <span class="no_of_pages">7 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-039432981448.html" target="_blank">一种高精度数控双极性恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2015/03/13/1718511789806_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="一种高精度数控双极性恒流源电路的设计" href="https://www.doc88.com/p-1718511789806.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2015/03/13/1718511789806_120.png">
+                                <span class="no_of_pages">2 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-1718511789806.html" target="_blank">一种高精度数控双极性恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2017/09/17/8912847129157_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="一种高精度恒流源电路" href="https://www.doc88.com/p-8912847129157.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2017/09/17/8912847129157_120.png">
+                                <span class="no_of_pages">6 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-8912847129157.html" target="_blank">一种高精度恒流源电路</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2012/09/04/614924958059_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="高精度420mA恒流源电路的设计" href="https://www.doc88.com/p-614924958059.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2012/09/04/614924958059_120.png">
+                                <span class="no_of_pages">2 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-614924958059.html" target="_blank">高精度420mA恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2016/05/25/6062349572282_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="高精度4-20mA恒流源电路的设计　" href="https://www.doc88.com/p-6062349572282.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2016/05/25/6062349572282_120.png">
+                                <span class="no_of_pages">2 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-6062349572282.html" target="_blank">高精度4-20mA恒流源电路的设计　</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2015/02/05/7833344463925_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="[精品]高精度420mA恒流源电路的设计" href="https://www.doc88.com/p-7833344463925.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2015/02/05/7833344463925_120.png">
+                                <span class="no_of_pages">3 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-7833344463925.html" target="_blank">[精品]高精度420mA恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2015/04/06/6823244591886_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="高精度420ma恒流源电路的设计" href="https://www.doc88.com/p-6823244591886.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2015/04/06/6823244591886_120.png">
+                                <span class="no_of_pages">3 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-6823244591886.html" target="_blank">高精度420ma恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2012/04/21/196104861411_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="高精度420mA恒流源电路的设计" href="https://www.doc88.com/p-196104861411.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2012/04/21/196104861411_120.png">
+                                <span class="no_of_pages">3 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-196104861411.html" target="_blank">高精度420mA恒流源电路的设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2017/05/06/0426373869472_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="《电路设计技巧》讲座  高精度恒流源电路设计" href="https://www.doc88.com/p-0426373869472.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2017/05/06/0426373869472_120.png">
+                                <span class="no_of_pages">1 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-0426373869472.html" target="_blank">《电路设计技巧》讲座  高精度恒流源电路设计</a></h3>
+        </div>
+      </li>
+          <li class="book0">
+        <div class="books">
+        
+        	<div class="um_thumbnail_list hover_thumbnail">
+                                <a style="background: url(&quot;https://png.doc88.com/2011/04/29/19312222845_120.png&quot;) center center no-repeat rgb(255, 255, 255);" title="一种交流恒流源电路的设计" href="https://www.doc88.com/p-19312222845.html" target="_blank" rel="nofollow" orig="https://png.doc88.com/2011/04/29/19312222845_120.png">
+                                <span class="no_of_pages">4 p.</span><span class="outer_border"></span></a>
+                                </div>
+        </div>
+        <div class="names">
+          <h3><a href="https://www.doc88.com/p-19312222845.html" target="_blank">一种交流恒流源电路的设计</a></h3>
+        </div>
+      </li>
+    </ul>
+</div>
+								</div>
+								<div id="commentDiv"><div class="comment" id="discuss">
+  <h4>发表评论</h4>
+  <form id="form_leaveword" name="form_leaveword" method="post">
+	 <textarea class="textarea4" id="txtMessage" name="txtMessage" onclick="checkLogin()" style="resize:none"></textarea>
+	 <input type="hidden" name="pcode" value="0894363907651">
+	<input type="hidden" id="msgdocurl" name="msgdocurl" value="https://www.doc88.com/p-0894363907651.html?r=1">
+	<table>
+	  <tbody><tr>
+		<td align="left">验证码：<input type="text" id="checkcode" name="code" class="textcsss" maxlength="4" onkeyup="checkCode(this,&#39;commonCodeTip&#39;)">
+		<img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/check.php" name="codeimage" border="0" id="codeimage" style="vertical-align:middle; margin-right:0px" title="点击可更换验证码" onclick="reloadcodeimage()">
+		<label for="checkcode"><a href="javascript:;" onclick="reloadcodeimage();">换一张</a></label>
+		<i id="commonCodeTip" class="iconfont formtip4" style="display:none"></i>
+				</td>
+		<td align="right"><label><input type="checkbox" name="anonymous" value="1">&nbsp;匿名评论</label></td>
+	  </tr>
+	  <tr>
+		<td align="left"><button type="button" class="btncss1" onclick="formSubmit()" id="msgSubmitButton">提交</button><img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/ajax-soap-loader(1).gif" class="formtip4" id="commentLoadImg" style="display:none"></td>
+		<td align="right"></td>
+	  </tr>
+	</tbody></table>
+  </form>
+</div>
+<!--end comment-->
+<div class="commentlist" id="commentlist"><div class="pgimp">
+
+    </div>
+
+       </div>
+<!--end commentlist-->
+
+</div>
+							</div>
+						</div>
+					</div>
+				</div>
+								<span id="downtestw" style="visibility:hidden;position:absolute;bottom:0px;"><span class="link">
+						一种高精度恒流源电路的设计与实现
+					</span></span>
+				<div id="blkinfo"></div>
+				<div id="loadDiv" style="display:none">
+					<div style="width:100%; margin-left:auto; margin-right:auto; text-align:center;list-style:none; padding-top:20px;">
+						<ul style="list-style:none;">
+							<li style="padding-top:60px"><img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/ajax-loader.gif"></li>
+						</ul>
+					</div>
+				</div>
+
+								<div class="activelist">
+	<div class="mainpart">
+		<div class="columns">
+			<h3><a href="https://www.doc88.com/help/about.html" target="_blank">关于我们</a></h3>
+			<ul>
+				<li><a href="https://www.doc88.com/help/about.html" target="_blank">关于道客巴巴</a></li>
+				<li><a href="https://www.doc88.com/help/join_wysjs.html" target="_blank">人才招聘</a></li>
+				<li><a href="https://www.doc88.com/help/contact.html" target="_blank">联系我们</a></li>
+			</ul>
+			<ul>
+				<li><a href="https://www.doc88.com/help/copyright_bqsm.html" target="_blank">网站声明</a></li>
+				<li><a href="https://www.doc88.com/help/websitemap.html" target="_blank">网站地图</a></li>
+				<li><a href="https://www.doc88.com/app.html" target="_blank">APP下载</a></li>
+			</ul>
+		</div>
+		<div class="columns">
+			<h3><a href="https://www.doc88.com/help/help_list.html" target="_blank">帮助中心</a></h3>
+			<ul>
+				<li><a href="https://www.doc88.com/help/help_info_1_1.html" target="_blank">会员注册</a></li>
+				<li><a href="https://www.doc88.com/help/help_info_4_18.html" target="_blank">文档下载</a></li>
+				<li><a href="https://www.doc88.com/help/help_info_4_19.html" target="_blank">如何获取积分</a></li>
+			</ul>
+		</div>
+		<div class="columns">
+			<h3>关注我们</h3>
+			<ul>
+				<li><a href="http://weibo.com/doc88" target="_blank" class="weibo">新浪微博</a>
+
+					<!-- 
+				<iframe width="63" scrolling="no" height="24" frameborder="0" marginheight="0" marginwidth="0" border="0" allowtransparency="true" src="http://widget.weibo.com/relationship/followbutton.php?language=zh_cn&width=63&height=24&uid=1747483471&style=1&btn=red&dpc=1"></iframe>
+				 -->
+				</li>
+			</ul>
+		</div>
+		<div class="columns-ad">
+			<div class="qrcode">
+				<img src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/weixin.jpg">
+				<p>关注微信公众号</p>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<!--end activelist-->
+
+<div class="footer" id="footer">
+	<div class="mainpart" style="min-width:950px;">
+		<div class="copyrught">
+			<p>道客巴巴网站 版权所有&nbsp;&nbsp;|&nbsp;©2008-2024&nbsp;&nbsp;|&nbsp;&nbsp;网站备案：<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备18056798号-1</a>&nbsp;&nbsp;京公网安备11010802036365号
+
+							</p>
+		</div>
+		<div class="tel">
+			<a href="https://www.doc88.com/help/contact.html" target="_blank" class="service-qq" title="在线客服"></a>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>
+<!--end footer-->
+<div class="toplayer-shop" style="right: 128px;">
+		<div class="gotop" id="cart">
+		<a href="https://www.doc88.com/shopping_cart.php?act=cart" title="阅读清单" class="imglogo" target="_blank"><i class="iconfont"></i><span class="car-num">1</span></a>
+		<a href="https://www.doc88.com/shopping_cart.php?act=cart" title="阅读清单" class="txtlogo" target="_blank">阅读<br>清单</a>
+	</div>
+
+	<div class="gotop" style="display: none;">
+		<a onclick="Common.doEvent(&#39;rtools_daoke_read&#39;)" href="https://www.docpda.com/?id=0894363907651" target="_blank" title="Sigma阅读" class="imglogo"><i class="iconfont"></i></a>
+		<a onclick="Common.doEvent(&#39;rtools_daoke_read&#39;)" href="https://www.docpda.com/?id=0894363907651" target="_blank" title="Sigma阅读" class="txtlogo">Sigma<br>阅读</a>
+	</div>
+
+	<div class="gotop" id="wx_read" style="display: block;" onclick="weixin_read(&#39;0894363907651&#39;)">
+		<a onclick="Common.doEvent(&#39;rtools_weixin_read&#39;)" href="javascript:void(0)" title="微信阅读" class="imglogo"><i class="iconfont"></i></a>
+		<a onclick="Common.doEvent(&#39;rtools_weixin_read&#39;)" href="javascript:void(0)" title="微信阅读" class="txtlogo">微信<br>阅读</a>
+	</div>
+	<div class="gotop" id="app_read" style="display: block;" onclick="app_read(&#39;0894363907651&#39;)">
+		<a onclick="Common.doEvent(&#39;rtools_app_read&#39;)" href="javascript:void(0)" title="APP阅读" class="imglogo"><i class="iconfont"></i></a>
+		<a onclick="Common.doEvent(&#39;rtools_app_read&#39;)" href="javascript:void(0)" title="APP阅读" class="txtlogo">APP<br>阅读</a>
+	</div>
+			<div class="gotop" id="gotop">
+		<a onclick="Common.doEvent(&#39;rtools_goto_top&#39;)" href="javascript:void(0)" title="返回顶部" class="imglogo"><i class="iconfont"></i></a>
+			<a onclick="Common.doEvent(&#39;rtools_goto_top&#39;)" href="javascript:void(0)" title="返回顶部" class="txtlogo">返回<br>顶部</a>
+	</div>
+		<!--div class="gotop" id="gotop"></div-->
+</div>
+
+
+<script src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/sea.js.下载"></script>
+<script>
+	var isEdge = navigator.userAgent.indexOf("Edge") > -1;
+	var baseUrl = "https://static.doc88.com";
+	if (isEdge) {
+		baseUrl = "";
+	}
+	var Core = null;
+	seajs.config({
+		base: baseUrl + "/resources/js/modules/",
+		alias: {
+			"jquery": "jquery-1.8.1.min.js"
+		},
+		vars: {
+			'path': '.min',
+			'version': '3.53'
+		}
+	});
+	seajs.use("https://static.doc88.com/assets/css/window.css?v=1.222");
+	seajs.use("https://static.doc88.com/resources/Iconfont/iconfont.css?v=1.283");
+		seajs.use('main-v2{path}.js?v={version}', function (m_main) {
+		Core = m_main;
+		m_main.init("GTxSGu0i1kPc3gtZCL363mNQCmNYDKEfEm3QBuJTFKtaFuxbFOEdDOjT3iRiHQ9duWr5DOsi1kMc3m2YBl9hEurf3kfRzLxkHurhBO9g3kfi0L3c3gJAHQ9jCp363kP!1qvS2k050KDQ2qMizLxRuWtRBO9hCN9jHurl3kfi0kPX2LUR2LUR1p3c3gJAFovi1i3T2k352KMQ1K0izLxeCoViCuxAFovi1i3X0SHQ2knX2p3c3mXYCQlduQ5hBosi1ixh2Q0T1q050KMX1ovXCq0X2kPW2qJj2k3QHknV0mrm2L3c3m5ZHQeABmNeCp363ghZBmEbFo5gDojdzi3c3gJADONgCo2YEo5U3kfi0T3c3gJACO9WBmXYHovi1i3T3iRiEOt!EN9bDQ9d3kfRzLxRBmERHurf3kfiFIrUDI06uL9DzWJdCT5jBQ0!1L5kBQVDzS3R0qrDzSPUuL8R1tRY0Kn52K0Q0SjR2SHV0p3c3gJABmNeCp363lXV2OsR0NXV2SlkCNXV1oNj1NXV2Q2iCtXV2oth2lXV2kPV0lXV2mvU0tXV2ms50NXV2SsS2tXV1OrlClXV2SH!2NXV1OxiCtXV1Oxh0tXV2OsRCtXV2o35CtXV2S2i0L3c3gJACO9kuQCYDmVhEL363lJMri3c3gxlBONUCorADN9ZCI0i1i3XCKnU2SnXyWlUBtrhGthQDM2MCUeF2sttyQZFps2X2WDTrtRYtqPS0tlQqktxBINq0KnaHtCIHlhMEjloEshpyQnWrUeSFNRYqMcToNEasg0UDgrpFm5FFuEtFV2J2lxfsjhUtmZLGgZdDoR5DIZp0V2SDURWBgxMpseaElCOsWJl2oeZBOt12QxrGmEsrUhksmNHGMVN0OZssVCjElRYCS0TvmRQEuER0Q9HsNCUqQx1tSClsulXEORVojZwDuNRrkhcsgPUDktvHoUXBWtZ2q26HlxgsIPV0jtIEVJVHsXKFUUQDot6puDREtNisMlzFKMR0IJoBMlqHkruoj2zGthaBonXDNtpsUhMoutm0Q2FpQlurIJlCKrC2utODMV2CoEopVEy0jMizLxTCoXADN9ZCL363k3Q0kjU0qH!0T3c3mnVqo9jCoRi1i3X3iRiDW2c3kfi0p3c3mVRDL360pRiBuJT3kfiEIxVCp3c3gxlBoNZBl9RHoEluQ2YEo5U3kfTzLxRHoElvQ9VBgvi1k0c3mhlHorqFuZl3kfX1KsT2kHc3g2hBotuForUFL360pRiDONgCsldCm8i1i3RDNto0McSCqxq0N26DsUh0gMSsqxZttvRDshu0N22HSJRttHRpS2l0l0RsWZXEl3RDofV0lrtoKNXpNMTDsrk0IJttkJz0QsTsSJqGgNS2qNzpNHTqNtH0seMtKNzsKUizLxeHuhvBmE3ColgFIvi1k3S2LRiFoCAGmlR3kfRzLx6uQrYHV9ZCL363i3c3mETBWtRuQlj3kfi2KDR0sVOsjrzotRYuL8aCklopVJarMCDzQZMCQEsstxcBUxkGuEYvUEStNNwruEcsQh1yUXCDIty0gtmsoriEj5kqmVasSrKEtPXCNrh1slI2qlbttr6HsrsoNsSFME6rmltsINeqjtb2thqFWZuqmNtqStDzQX!BmhTqS2fGIZtBo3WrKlhGgxvEIHVptMizLxiBQ9auQlj3kfRzLxlHgrAFO9SEL363mhUEIJS1lRYuL9lHgvT0K3dCO9k1KndHQ9e3iRiFoVguQhYDWvi1ixfEIrRDSZDzVRYDL5jBQ0!1L5kBQUizLxfCoNjCuxxBmCY3kfiuL3X1KsT2kCD3i3c3mhlHorlDlJhCQtxBmCY3kfiuL3SuL3izLxfCoNjCux0BQNjsWrhEOsi1ixD3kJD3i3c3mCZDg2UtmllEV2UHurl3kfiuL3RuL3izLxRuW2WCi363kj5zq3R0qvR2KP5zq3R0qvR2KP50qMU1KsRuUvTEWErpj8!3iRiDONTEN9TCoNj3kfRzLxSDmRi1kMc3g2TBOlj3kfi2SH!1KlsoMrSpO2YvoEW2jV!GqxyFVto2mEeBjj5EsXDzUttBM5L2VHUEQC3BKJdCU51rSlRpmV!qUryqINkDghtCgtFBjhZvkNgHVnUBNJNojE01NCFCWCxpIJr2tEg0VZmvQCeFgZ03iRiDItiBOlSFL360pRiBO9gFo5lCL363kPizLxcBQEZBl9eCoViCuxAFovi1i3izLxYEQ5vEoxcFu2f3kfRzLxmBWxeHurAFo2YBi363kXi3O2cHu2SwtRiFo2YBmCYBgvnHmDeDOrmuL3+xi2!CqEi2qc8uL9iwi3c3m2YEo5UuQ2YCOsi1i3S0q0W0S0S2K050SsS2S0W0SsS1q050S0S2k0V0SDS1KxM0S3S2k0T0SjS2K0X0SHS1K0S0jvS0q0S0SHS2k0Q0SnS0q0V0jvS0qxM0SPTrK0X0SDS2kxM0SMS2S0S0SvS1q0V0SDS2S0V0SjTrKHX2SHQ2kHX2jHW0K0W2knW2kHT0SHQrKDR2S3Q1K0V2j3Q1qDT2jMQ1KHW2jsW0KH50S3izLxVBmlYBl9TCoClDl9kBQrl3kfi3iRiEo5ZBQ5AHQ9jCp363i3c3gtVFovi1i3W0qPT0qvXHorm1qCk0q0QHkxjHkJm0ovX0QMW2SnT0L3c3mraFovi1ixKpuJtrsjR2gZq1tNOsstlvj85Fkx0Bmt3tSljGlNvCKJ0BksXqKJu0NraoKNspNHRDktmrj9oHWhg0tZLqNtr0INvsSJXElx3EuJe0gNLFkJX0NE3FghapOZyBqJVEl3RtUVr0trdsSJzvmVMsuhjpO9Q1u22DM8izLxjBWEdBO9hCN9RDmlkCp363kMRzkPR3iRiHgt5CuxABo9dCuji1kPc3g2UHurlqWxjCuxKFOtkFQldCT360LRiCOXpCoVhFo5sFoVlDT363kPizLxRuQldCOt!3kfi0L3c3g2UHurlvm9VCQhU3kfRzLxSEONUCsrYHU2fCo2a3kfXzLxQFuJACO9k3kfi0L3c3gxmuWtTBL363i3c3g2lDgClDl9UFoVl3kfX2S0U1qsW2Ss51q0QzLxSFurlEuxcuW2UHurZHT363mhUEIJS1lRYuL9SEONUFo0dCO9k1KndHQ9e3iRiBOleFurAEIlRCp360LRiEmlR3kfi0L3c3gCZDN9SEONTEN9UFoVl3kfRzLxTEV9ZCi360LRiDQleDOXl3kfRzLxhBm9dGoVYEu2AEL360IU=");
+	});
+</script>
+<script language="JavaScript" type="text/javascript" src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/window.js.下载"></script><div><div id="maskLevel" style="position:absolute;top:0;left:0;display:none;text-align:center;z-index:10000;"></div><div id="ym-window" style="position:absolute;z-index:10001;display:none"><div class="ym-tl" id="ym-tl"><div class="ym-tr"><div class="ym-tc" style="cursor:move;"><div class="ym-header-text" id="ym-header-text"></div><div class="ym-header-tools"><div class="DOC88Window_min" title="最小化"><strong>0</strong></div><div class="DOC88Window_max" title="最大化"><strong>1</strong></div><div class="DOC88Window_close" title="关闭"><strong>r</strong></div></div></div></div></div><div class="ym-ml" id="ym-ml"><div class="ym-mr"><div class="ym-mc"><div class="ym-body" style="position:relative;z-index:99"></div></div></div></div><div class="ym-ml" id="ym-btnl"><div class="ym-mr"><div class="ym-btn"></div></div></div><div class="ym-bl" id="ym-bl"><div class="ym-br"><div class="ym-bc"></div></div></div></div></div>
+<!--[if lt IE 10]>
+<script type="text/javascript" src="https://static.doc88.com/assets/iecss3/PIE.js"></script>
+<![endif]-->
+<script type="application/ld+json">
+{
+	"@context": "https://ziyuan.baidu.com/contexts/cambrian.jsonld",
+	"@id": "https://www.doc88.com/p-0894363907651.html", 
+	"appid": "1546865933989969", 
+	"title":"一种高精度恒流源电路的设计与实现",
+	"images": [
+		"https://png.doc88.com/2014/04/09/0894363907651_160.png"
+	],
+	"description": "",
+	"pubDate": "2014-04-09T11:48:50",
+	"upDate": "2014-04-09T11:48:50",
+	"data":{
+        "WebPage":{
+            "headline":"一种高精度恒流源电路的设计与实现",
+            "tag":["一种高精度恒"],
+            "wapUrl":"https://www.doc88.com/p-0894363907651.html",
+            "pcUrl":"https://www.doc88.com/p-0894363907651.html",
+            "mipUrl":"https://www.doc88.com/mip-0894363907651.html",
+            "datePublished":"2014-04-09T11:48:50",
+        }
+    }
+}
+</script>
+<script language="javascript" src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/count.js.下载"></script>
+
+<div><iframe src="./一种高精度恒流源电路的设计与实现 - 道客巴巴_files/count.html" width="0" height="0" style="display:none"></iframe></div><div id="right-menu" class="right-menu" style="display: none;"><ul class="annotateMenu" id="rmenu_root_pen" style=""><li id="rmenu_pen"><span class="iconfont check"></span><a href="javascript:void(0)">画笔</a></li><li id="rmenu_bookmark"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+B</span>添加书签</a></li></ul><ul class="annotateMenu" id="rmenu_root_base" style=""><li id="rmenu_mouse" class="active" style="display: none;"><span class="iconfont check"></span><a href="javascript:void(0)">文本选择</a></li><li class="disabled" id="rmenu_undo"><a href="javascript:void(0)"><span class="short-cuts">ALT+Z</span>撤销</a></li><li class="disabled" id="rmenu_redo"><a href="javascript:void(0)"><span class="short-cuts">ALT+Y</span>恢复</a></li><li id="rmenu_delete" style="display:none;"><a href="javascript:void(0)"><span class="short-cuts">Del</span>删除批注</a></li> <li class="disabled" id="rmenu_save"><a href="javascript:void(0)"><span class="short-cuts">ALT+S</span>保存批注</a></li></ul><ul class="annotateMenu" id="rmenu_root_page" style=""><li id="rmenu_prepage" class="disabled"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts"></span>上一页</a></li><li id="rmenu_nextpage"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts"></span>下一页</a></li><li id="rmenu_firstpage" class="disabled"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">Home</span>第一页</a></li><li id="rmenu_endpage"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">End</span>最后一页</a></li></ul><ul class="annotateMenu" id="rmenu_root_text" style=""><li id="rmenu_note"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+N</span>添加笔记</a></li><li id="rmenu_highlight"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+H</span>高亮</a></li><li id="rmenu_underline"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+U</span>下划线</a></li><li id="rmenu_throughline"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+T</span>删除线</a></li><li id="rmenu_wavyline"><span class="iconfont check"></span><a href="javascript:void(0)"><span class="short-cuts">ALT+W</span>波浪线</a></li></ul><ul id="rmenu_root_quicktext"><li id="rmenu_show_annotate" style="display:none"><span class="iconfont check" style="display:block"></span><a href="javascript:void(0)">显示批注</a></li><li id="rmenu_quicktext"><span class="iconfont check"></span><a href="javascript:void(0)">显示快捷批注</a></li></ul><ul id="rmenu_root_ext"><li id="rmenu_print"><a href="javascript:void(0);">打印当前页</a></li><li id="rmenu_copy"><a href="javascript:;" onclick="copyText()">复制文本</a></li><li id="rmenu_search" style="display:none;"><a href="javascript:void(0);"></a></li></ul><ul id="rmenu_root_skin"><li id="rmenu_skin"><a href="javascript:void(0)">设置默认背景</a></li><li id="rmenu_ppt_ani" style="display:none"><span class="iconfont nextsub"></span><a href="javascript:void(0)">翻页动画</a><div class="right-menu-sub"><span type="diamondIn"><i class="iconfont"></i>菱形转场</span><span type="circleIn"><i class="iconfont"></i>圆形转场</span><span type="clipSectorIn"><i class="iconfont"></i>扇形转场</span><span type="clipRectSpIn"><i class="iconfont"></i>十字星转场</span><span type="filterpIn"><i class="iconfont"></i>模糊转场</span><span type="carIn"><i class="iconfont"></i>车轮转场</span><span type="flowIn"><i class="iconfont"></i>百花齐放</span><span type="blindsIn"><i class="iconfont"></i>百叶窗</span></div></li><li id="rmenu_ppt"><a href="javascript:void(0)">进入幻灯片模式</a></li><li id="rmenu_exit_ppt" style="display:none;"><a href="javascript:void(0)">退出幻灯片模式</a></li><li id="rmenu_img_catalog"><span class="iconfont check"></span><a href="javascript:void(0)">显示预览缩率图</a></li><li id="rmenu_right_panel"><span class="iconfont check" style="display:block"></span><a href="javascript:void(0)">显示右侧边栏</a></li></ul></div><div id="left-menu" class="left-menu" uuid="" type="highlight" color="A8DB00" style="display: none;"><div class="left-menu-top"><div id="lmenu_copy" class="left-menu-btn ">复制</div><div id="lmenu_search" class="left-menu-btn ">搜索</div><div id="lmenu_highlight" class="left-menu-btn active">高亮</div><div id="lmenu_note" class="left-menu-btn">笔记</div><div id="lmenu_underline" class="left-menu-btn">下划线</div></div><ul class="left-menu-color"><li color="FFFF00"><span class="color-btn"><span class="color-btn-1"></span></span></li><li color="A8DB00" class="active"><span class="color-btn"><span class="color-btn-2"></span></span></li><li color="00CBFF"><span class="color-btn"><span class="color-btn-3"></span></span></li><li color="8FA4D1"><span class="color-btn"><span class="color-btn-4"></span></span></li><li color="CD96FF"><span class="color-btn"><span class="color-btn-5"></span></span></li><li color="FFA032"><span class="color-btn"><span class="color-btn-6"></span></span></li><li color="FF3029"><span class="color-btn"><span class="color-btn-7"></span></span></li><li color="close" class="close"><i class="iconfont"></i></li></ul></div></body></html>

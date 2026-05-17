@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#define STU_NUM  40
+#define COURSE_NUM 10
+  struct student
+{
+	int number;
+	char name[15];
+	int score [COURSE_NUM];
+	int sum;
+	float average;
+};
+typedef struct student STU;
+void AppendScore (STU *head,int n, int m)
+{
+	int j;
+	STU *p;
+	for (p=head;p<head+n;p++)
+	{
+		printf("\nInput number:");
+		scanf("%d",&p->number);
+		printf("Input name:");
+		scanf("%s",p->name);
+		for(j=0;j<m;j++)
+		{
+			printf("Input score%d:",j+1);
+			scanf("%d",p->score+j);
+		}
+	}
+}
+void  PrintScore(STU *head,int n,int m)
+{
+	STU *p;
+	int i;
+	char str[100]={'\0'},temp[3];
+	strcat(str,"Number     Name");
+	for(i=1;i<=m;i++)
+	{
+		strcat(str,"Score");
+		itoa(i,temp,10);
+		strcat(str,temp);
+		strcat(str," ");
+	 } 
+	 strcat(str,"    sum   average");
+	 printf("%s",str);
+	 for(p=head;p<head+n;p++)
+	 {
+	 	printf("\nNo.%3d%8s",p->number,p->name);
+	 	for(i=0;i<m;i++)
+	 	{
+	 		printf("%7d",p->score[i]);
+		 }
+	 	printf("%11d%3.2f\n",p->sum,p->average);
+	 }
+}
+void TotalScore(STU *head,int n,int m)
+{
+	STU *p;
+	int i;
+	for(p=head;p<head+n;p++)
+	{
+		p->sum = 0;
+		for(i=0;i<m;i++)
+		{
+			p->sum = p->sum + p->score[i];
+		}
+		p->average = (float)p->sum/m;
+	}
+}
+void SortScore(STU *head,int n)
+{
+	int i,j,k;
+	STU temp;
+	for (i=0;i<n-1;i++)
+	{
+		k=i;
+		for(j=i;j<n;j++)
+		{
+			if((head+j)->sum>(head+k)->sum)
+			{
+				k=j;
+			}
+		}
+		if(k!=i)
+		{
+			temp = *(head+k);
+			*(head+k) = *(head+i);
+			*(head+i) = temp;
+		}
+	}
+}
+int SearchNum(STU *head,int num,int n)
+{
+	int i;
+	for(i=0;i<n;i++)
+	{
+		if((head+i)->number == num)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+void SearchScore(STU *head,int n,int m)
+{
+	int number ,findNo;
+	printf("Please Input the number you want to search:");
+	scanf("%d",&number);
+	findNo = SearchNum(head,number,n);
+	if(findNo == -1)
+	{
+		printf("\nNot found!\n");
+	}
+	else
+	{
+		PrintScore(head+findNo,1,m);
+	}
+}
+char Menu(void)
+{
+	char ch;
+	printf("\nManagement for Students score\n");
+	printf("1.Append      record\n");
+	printf("2.List        record\n");
+	printf("3.Search      record\n");
+	printf("4.Sort        record\n");
+	printf("0.Exit\n");
+	printf("Please Input your choice:");
+	scanf("%c",&ch);
+	return ch;
+}
+int main(void)
+{
+	char ch;
+	int m,n;
+	STU stu[STU_NUM];
+	printf("Input student number number and course number(n<40,m<10):");
+	scanf("%d,%d",&n,&m);
+	while(1)
+	{
+		ch=Menu();
+		switch(ch)
+		{  
+			case'1':AppendScore(stu,n,m);
+			        TotalScore(stu,n,m);
+			        break;
+			case'2':PrintScore(stu,n,m);
+					break;
+			case'3':SearchScore(stu,n,m);
+					break;
+			case'4':SortScore(stu,n);
+					printf("\nSorted result\n");
+					PrintScore(stu,n,m);
+					break;
+			case'0':exit(0);
+					printf("End of program!");
+					break;
+			default: printf("Input error!");
+		}
+	}
+	return 0;
+}
+
+
+
+
+

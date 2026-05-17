@@ -1,0 +1,140 @@
+@charset "utf-8";
+/*网站头部 和 阅读页*/
+.topshop,#header,.activelist,#footer{min-width: 1280px;}
+.btnupload2{display:none !important;}
+.btnupload3{display:block !important;}
+
+.mainpart{margin:auto;width:1280px;}
+.bigsearch .stext { width: 310px; }
+.layout02 .boxleft{margin-right: 310px!important;}
+.layout02 .boxright{width: 300px;}
+
+.btndown2{
+	width: 100%;
+	background: #EF9601;
+	border-radius: 4px;
+}
+.btndown2:hover{
+	background: #F69F01;
+}
+
+.toolbar-focus .tb-item.fr{
+    /*width: 128px;*/
+}
+.toolbar-focus .min-search-form .min-text input{
+	width: 297px;
+}
+
+.commonbox6 .sd-side-con{max-width: 256px;}
+.commonbox6 .sd-side-con .title{
+	max-width: 256px;
+}
+
+
+/*新旧补充*/
+#backups .min-search-form{margin: 3px 10px 0;}
+#backups .min-search-result{padding: 0 16px;}
+#backups .brush-types span{margin-right: 20px}
+#backups .pink-box{margin: 7px 26px 7px 0;}
+#backups .font-selected{width: 271px;}
+#backups .font-selected ul{width: 269px;}
+
+
+
+
+.dk-side-gif,
+.iamge1,
+.iamge2{
+	width: 300px;
+	height: 300px;
+}
+.iamge1{background-image: url(../../images/reading/daoke300.jpg?v=3);}
+.iamge2{background-image: url(../../images/reading/daokes300.jpg);}
+.sidebar-promotion{
+	width: 300px;
+	height: 300px;
+	background-image: url(../../images/reading/sigma300.jpg?v=1);
+}
+.sidebar-recommended{
+	width: 300px;
+	height: 300px;
+	background-image: url(../../images/reading/s300.jpg.jpg?v=1);
+}
+.dk-side{
+	width: 298px;
+	height: 298px;
+	background-image: url(../../images/reading/298@1x.jpg?v=1);
+}
+.dk-side h3{
+	font-size: 24px;
+    padding-top: 92px;
+}
+.dk-side .dk-content{
+	line-height: 24px;
+    font-size: 18px;
+}
+.dk-btn{width: 200px;margin: 27px auto;}
+.dk-content p:first-child{margin-bottom: 2px;}
+.dk-content-orange {margin: 10px 30px 0;}
+.dk-content-orange p {font-size: 13px;}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),only screen and (min--moz-device-pixel-ratio: 2),only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2) {
+	.iamge1{
+	    background-image: url(../../images/reading/daoke300@2x.jpg?v=3);
+		background-size: 300px 300px;
+	}
+	.iamge2{
+	    background-image: url(../../images/reading/daokes300@2x.jpg);
+		background-size: 300px 300px;
+	}
+	.dk-side {
+		background-image: url(../../images/reading/298@2x.jpg?v=1);
+		background-size: 298px 298px;
+	}
+	.sidebar-recommended {
+		background-image: url(../../images/reading/s300@2x.jpg?v=1);
+		background-size: 300px 300px;
+	}
+	.sidebar-promotion {
+		background-image: url(../../images/reading/sigma300@2x.jpg?v=1);
+		background-size: 300px 300px;
+	}
+}
+.bannerside{
+	width: 300px;
+	height: 300px;
+}
+.bannerside img{
+	width: 300px;
+	height: 300px;
+}
+/*任务其他-详情*/
+.each_task_con{width: 960px;}
+.detail_con .process{margin: 15px 0 0 170px;}
+
+/*找文档列表页*/
+.detail{width: 1280px;}
+.detail_nav_top{width: 1280px;}
+.detail{width: 1280px;}
+.completionRight_con{width: 298px;}
+.each_task_con{width: 960px;}
+
+
+/*文辑的列表页*/
+.wrapper{width: 1280px;}
+.corpus .con{width: 1030px;}
+/*文辑详情页*/
+.corpus-detail{width: 1280px;}
+.detail-con{width: 1000px;}
+/*文辑活动*/
+.corpus-recommend img{width: 233px;}
+
+
+/*vip*/
+.vipPrivileges-content li{width: 304px;}
+.bookline li{margin-right: 35px;}
+
+.servicediv{width: 630px;}
+.servicediv img{margin-left: 76px;}
+
+.viplev li{width: 305px;}
+.vipSbanner{background-size: cover;}

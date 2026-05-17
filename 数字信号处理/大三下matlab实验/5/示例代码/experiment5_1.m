@@ -1,0 +1,14 @@
+N=16;
+xn=[ones(1,N/4),zeros(1,3*N/4)];
+Xk=dfs(xn,N);
+x=idfs(Xk,N);
+n=0:N-1;
+k=0:N-1;
+subplot(2,2,1);stem(n,xn);
+title('x(n)');axis([-1,3*N,1.1*min(xn),1.1*max(xn)]);
+subplot(2,2,2);stem(n,abs(x));
+title('IDFS|X(k)|');axis([-1,3*N,1.1*min(abs(x)),1.1*max(abs(x))]);
+subplot(2,2,3),stem(k,abs(Xk));
+title('|X(k)|');axis([-1,3*N,1.1*min(abs(Xk)),1.1*max(abs(Xk))]);
+subplot(2,2,4),stem(k,angle(Xk));
+title('arg|X(k)|');axis([-1,3*N,1.1*min(angle(Xk)),1.1*max(angle(Xk))]);

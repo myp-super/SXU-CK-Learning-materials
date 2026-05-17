@@ -1,0 +1,14 @@
+N=100
+xn=[0,1,2,3,4,5,6,7,zeros(1,N-8)];
+n=0:N-1;
+k=0:N-1;
+Xk=xn*exp(-j*2*pi/N).^(n'*k);
+x=(Xk*exp(j*2*pi/N).^(n'*k))/N;  %DFT
+subplot(2,2,1);stem(n,xn);
+title('x(n)');axis([-1,N,1.1*min(xn),1.1*max(xn)]);
+subplot(2,2,2);stem(n,abs(x));
+title('IDFT|X(k)|');axis([-1,N,1.1*min(abs(x)),1.1*max(abs(x))]);
+subplot(2,2,3),stem(k,abs(Xk));
+title('|X(k)|');axis([-1,N,1.1*min(abs(Xk)),1.1*max(abs(Xk))]);
+subplot(2,2,4),stem(k,angle(Xk));
+title('arg|X(k)|');axis([-1,N,1.1*min(angle(Xk)),1.1*max(angle(Xk))]);

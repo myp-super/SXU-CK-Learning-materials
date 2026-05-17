@@ -1,0 +1,12 @@
+n=1:15
+a=0.1;
+w=1.6*pi;
+x=exp((a+j*w)*n);
+subplot(2,2,1);plot(n,real(x));
+title('复指数信号实部');
+subplot(2,2,3);stem(n,real(x));
+title('复指数序列实部');
+subplot(2,2,2);plot(n,imag(x));
+title('复指数信号虚部');
+subplot(2,2,4);stem(n,imag(x));
+title('复指数序列虚部');

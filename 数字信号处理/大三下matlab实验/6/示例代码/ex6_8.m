@@ -1,0 +1,15 @@
+n1=-10;
+n2=10;
+a1=0.5;
+a2=2;
+na1=n1:0;x1=a1.^na1;
+na2=0:n2;x2=a2.^na2;
+subplot(2,2,1);plot(na1,x1);
+title('实指数信号（a<1）');
+subplot(2,2,3);stem(na1,x1);
+title('实指数序列（a<1）');
+subplot(2,2,2);plot(na2,x2);
+title('实指数信号（a>1）');
+subplot(2,2,4);stem(na2,x2);
+title('实指数序列（a<1）');
+box
