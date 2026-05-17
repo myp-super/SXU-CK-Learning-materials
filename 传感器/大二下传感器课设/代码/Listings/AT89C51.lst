@@ -1,0 +1,137 @@
+C51 COMPILER V9.54   AT89C51                                                               06/05/2025 19:56:59 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE AT89C51
+OBJECT MODULE PLACED IN .\Objects\AT89C51.obj
+COMPILER INVOKED BY: D:\51\C51\BIN\C51.EXE AT89C51.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\AT89C5
+                    -1.lst) TABS(2) OBJECT(.\Objects\AT89C51.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          
+   4          sbit P0_6 = P0^6;    
+   5          sbit P1_0 = P1^0;    
+   6          sbit P1_1 = P1^1;    
+   7          sbit P2_1 = P2^1;    
+   8          sbit P3_2 = P3^2;    
+   9          
+  10          
+  11          unsigned int alarm_time = 0;  
+  12          bit alarm_flag = 0;           
+  13          bit switch_state = 1;         
+  14          bit alarm_triggered = 0;      
+  15          
+  16          
+  17          void System_Init();           
+  18          void Delay_ms(unsigned int ms); 
+  19          
+  20          void main() {
+  21   1          System_Init();
+  22   1          
+  23   1          while(1) {
+  24   2              
+  25   2              if (P0_6 == 0 && switch_state == 1 && !alarm_triggered) {
+  26   3                  Delay_ms(20);  
+  27   3                  if (P0_6 == 0) {  
+  28   4                      
+  29   4                      alarm_flag = 1;
+  30   4                      alarm_triggered = 1;  
+  31   4                      alarm_time = 0;       
+  32   4                      P1_0 = 0;     
+  33   4                      P1_1 = 1;     
+  34   4                      P2_1 = 1;     
+  35   4                  }
+  36   3              }
+  37   2              switch_state = P0_6;  
+  38   2              
+  39   2              
+  40   2              if (alarm_flag && alarm_time >= 100) {  
+  41   3                  alarm_flag = 0;
+  42   3                  alarm_triggered = 0;  
+  43   3                  P1_0 = 1;     
+  44   3                  P1_1 = 0;     
+  45   3                  P2_1 = 0;     
+  46   3              }
+  47   2              
+  48   2              
+  49   2              if (!alarm_flag) {
+  50   3                  P1_0 = 1;     
+  51   3                  P1_1 = 0;     
+  52   3                  P2_1 = 0;     
+  53   3              }
+  54   2          }
+C51 COMPILER V9.54   AT89C51                                                               06/05/2025 19:56:59 PAGE 2   
+
+  55   1      }
+  56          
+  57          
+  58          void System_Init() {
+  59   1         
+  60   1          P1_0 = 1;    
+  61   1          P1_1 = 0;
+  62   1          P2_1 = 0;
+  63   1          
+  64   1          TMOD |= 0x01;     
+  65   1          TH0 = 0x3C;       
+  66   1          TL0 = 0xB0;
+  67   1          ET0 = 1;          
+  68   1          TR0 = 1;          
+  69   1          
+  70   1         
+  71   1          IT0 = 1;          
+  72   1          EX0 = 1;          
+  73   1          
+  74   1          EA = 1;           
+  75   1      }
+  76          
+  77          
+  78          void Timer0_ISR() interrupt 1 {
+  79   1          static unsigned char count = 0;  
+  80   1          
+  81   1          
+  82   1          TH0 = 0x3C;
+  83   1          TL0 = 0xB0;
+  84   1          
+  85   1          
+  86   1          if (++count >= 2) {
+  87   2              count = 0;
+  88   2              if (alarm_flag) {
+  89   3                  alarm_time++;  
+  90   3              }
+  91   2          }
+  92   1      }
+  93          
+  94          
+  95          void Ext0_ISR() interrupt 0 {
+  96   1          Delay_ms(20);  
+  97   1          if (P3_2 == 0 && alarm_flag) {  
+  98   2              alarm_flag = 0;
+  99   2              alarm_triggered = 0;  
+ 100   2              P1_0 = 1;     
+ 101   2              P1_1 = 0;     
+ 102   2              P2_1 = 0;     
+ 103   2          }
+ 104   1      }
+ 105          void Delay_ms(unsigned int ms) {
+ 106   1          unsigned int i, j;
+ 107   1          for (i = 0; i < ms; i++)
+ 108   1              for (j = 0; j < 123; j++);  
+ 109   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    251    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   AT89C51                                                               06/05/2025 19:56:59 PAGE 3   
+
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

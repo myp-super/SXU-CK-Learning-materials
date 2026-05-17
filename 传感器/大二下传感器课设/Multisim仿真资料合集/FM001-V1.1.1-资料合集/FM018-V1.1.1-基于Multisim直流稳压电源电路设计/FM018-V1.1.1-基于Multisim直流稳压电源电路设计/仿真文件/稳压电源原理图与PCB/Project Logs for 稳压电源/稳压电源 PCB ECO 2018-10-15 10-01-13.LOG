@@ -1,0 +1,53 @@
+Added Component: Designator=LM1(TO254P1510-3_4N)
+Added Component: Designator=LM2(TO254P1510-3_4N)
+Added Component: Designator=LM3(TO254P1510-3_4N)
+Added Component: Designator=LM4(TO254P1510-3_4N)
+Added Component: Designator=P1(HDR1X2)
+Added Component: Designator=P2(HDR1X2)
+Added Component: Designator=P3(HDR1X2)
+Added Component: Designator=P4(HDR1X2)
+Added Component: Designator=P5(HDR1X2)
+Added Component: Designator=T1(TRF_6)
+Added Pin To Net: NetName=+5V Pin=LM2-3
+Added Pin To Net: NetName=+5V Pin=P2-1
+Added Pin To Net: NetName=+5V Pin=P2-2
+Added Net: Name=+5V
+Added Pin To Net: NetName=+12V Pin=LM1-3
+Added Pin To Net: NetName=+12V Pin=LM2-1
+Added Pin To Net: NetName=+12V Pin=P1-1
+Added Pin To Net: NetName=+12V Pin=P1-2
+Added Net: Name=+12V
+Added Pin To Net: NetName=-5V Pin=LM4-3
+Added Pin To Net: NetName=-5V Pin=P5-1
+Added Pin To Net: NetName=-5V Pin=P5-2
+Added Net: Name=-5V
+Added Pin To Net: NetName=-12V Pin=LM3-3
+Added Pin To Net: NetName=-12V Pin=LM4-1
+Added Pin To Net: NetName=-12V Pin=P4-1
+Added Pin To Net: NetName=-12V Pin=P4-2
+Added Net: Name=-12V
+Added Pin To Net: NetName=GND Pin=LM1-2
+Added Pin To Net: NetName=GND Pin=LM2-2
+Added Pin To Net: NetName=GND Pin=LM3-2
+Added Pin To Net: NetName=GND Pin=LM4-2
+Added Net: Name=GND
+Added Pin To Net: NetName=NetC4_1 Pin=LM1-1
+Added Net: Name=NetC4_1
+Added Pin To Net: NetName=NetC7_2 Pin=LM3-1
+Added Net: Name=NetC7_2
+Added Pin To Net: NetName=NetD1_2 Pin=T1-4
+Added Net: Name=NetD1_2
+Added Pin To Net: NetName=NetD1_4 Pin=T1-3
+Added Net: Name=NetD1_4
+Added Pin To Net: NetName=NetD2_2 Pin=T1-6
+Added Net: Name=NetD2_2
+Added Pin To Net: NetName=NetD2_4 Pin=T1-5
+Added Net: Name=NetD2_4
+Added Pin To Net: NetName=NetP3_1 Pin=P3-1
+Added Pin To Net: NetName=NetP3_1 Pin=T1-2
+Added Net: Name=NetP3_1
+Added Pin To Net: NetName=NetP3_2 Pin=P3-2
+Added Pin To Net: NetName=NetP3_2 Pin=T1-1
+Added Net: Name=NetP3_2
+Added Class: Name=稳压电源
+Added Room: Name=稳压电源

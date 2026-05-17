@@ -1,0 +1,33 @@
+Removed Pin From Net: NetName=GND Pin=C?-1
+Removed Member From Class: ClassName=稳压电源 Member=C?
+Added Component: Designator=C1(CAPPR2-5x6.8)
+Added Component: Designator=C4(CAPPR2-5x6.8)
+Added Component: Designator=C5(CAPPR2-5x6.8)
+Added Component: Designator=C6(CAPR2.54-5.1x3.2)
+Added Component: Designator=C7(CAPPR2-5x6.8)
+Added Component: Designator=C8(CAPPR2-5x6.8)
+Added Component: Designator=C9(CAPPR2-5x6.8)
+Added Pin To Net: NetName=+5V Pin=C1-1
+Added Pin To Net: NetName=GND Pin=C1-2
+Added Pin To Net: NetName=NetC4_1 Pin=C4-1
+Added Pin To Net: NetName=GND Pin=C4-2
+Added Pin To Net: NetName=+12V Pin=C5-1
+Added Pin To Net: NetName=GND Pin=C5-2
+Added Pin To Net: NetName=GND Pin=C6-1
+Added Pin To Net: NetName=NetC4_1 Pin=C6-2
+Added Pin To Net: NetName=GND Pin=C7-1
+Added Pin To Net: NetName=GND Pin=C8-1
+Added Pin To Net: NetName=-12V Pin=C8-2
+Added Pin To Net: NetName=GND Pin=C9-1
+Added Pin To Net: NetName=-5V Pin=C9-2
+Added Pin To Net: NetName=NetC7_2 Pin=C7-2
+Added Pin To Net: NetName=NetC7_2 Pin=LM3-1
+Added Net: Name=NetC7_2
+Added Member To Class: ClassName=稳压电源 Member=Component C1 Cap Pol1
+Added Member To Class: ClassName=稳压电源 Member=Component C4 Cap Pol1
+Added Member To Class: ClassName=稳压电源 Member=Component C5 Cap Pol1
+Added Member To Class: ClassName=稳压电源 Member=Component C6 Cap
+Added Member To Class: ClassName=稳压电源 Member=Component C7 Cap Pol1
+Added Member To Class: ClassName=稳压电源 Member=Component C8 Cap Pol1
+Added Member To Class: ClassName=稳压电源 Member=Component C9 Cap Pol1
+Added Room: Name=稳压电源

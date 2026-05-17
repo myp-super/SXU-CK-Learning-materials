@@ -1,0 +1,234 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        06/05/2025  19:57:02  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\51\C51\BIN\BL51.EXE .\Objects\STARTUP.obj, .\Objects\AT89C51.obj TO .\Objects\111 PRINT (.\Listings\111.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (?C_STARTUP)
+  .\Objects\AT89C51.obj (AT89C51)
+  D:\51\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\111 (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0003H     UNIT         ?DT?AT89C51
+                    000BH     0015H                  *** GAP ***
+            BIT     0020H.0   0000H.3   UNIT         ?BI?AT89C51
+                    0020H.3   0000H.5                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0003H     ABSOLUTE     
+                    0006H     0005H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+                    000EH     07F2H                  *** GAP ***
+            CODE    0800H     008CH     UNIT         ?C_C51STARTUP
+            CODE    088CH     004FH     UNIT         ?PR?EXT0_ISR?AT89C51
+            CODE    08DBH     004CH     UNIT         ?PR?MAIN?AT89C51
+            CODE    0927H     0026H     UNIT         ?PR?TIMER0_ISR?AT89C51
+            CODE    094DH     0020H     UNIT         ?PR?_DELAY_MS?AT89C51
+            CODE    096DH     001AH     UNIT         ?PR?SYSTEM_INIT?AT89C51
+            CODE    0987H     000EH     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\111 (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?AT89C51
+  +--> ?C_INITSEG
+
+?PR?MAIN?AT89C51
+  +--> ?PR?SYSTEM_INIT?AT89C51
+  +--> ?PR?_DELAY_MS?AT89C51
+
+*** NEW ROOT ***************************************************
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/05/2025  19:57:02  PAGE 2
+
+
+
+?PR?EXT0_ISR?AT89C51
+  +--> ?PR?_DELAY_MS?AT89C51
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\111 (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0800H         SEGMENT       ?C_C51STARTUP
+  I:0021H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0803H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0800H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0800H         LINE#         133
+  C:0802H         LINE#         134
+  C:0803H         LINE#         135
+  C:0804H         LINE#         136
+  C:0806H         LINE#         185
+  C:0809H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        AT89C51
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:096DH         PUBLIC        System_Init
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  C:0927H         PUBLIC        Timer0_ISR
+  B:00A8H.7       PUBLIC        EA
+  B:0020H.0       PUBLIC        alarm_flag
+  B:0090H.0       PUBLIC        P1_0
+  B:0090H.1       PUBLIC        P1_1
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/05/2025  19:57:02  PAGE 3
+
+
+  B:00A0H.1       PUBLIC        P2_1
+  B:00B0H.2       PUBLIC        P3_2
+  B:0080H.6       PUBLIC        P0_6
+  B:0020H.1       PUBLIC        switch_state
+  D:0009H         PUBLIC        alarm_time
+  C:08DBH         PUBLIC        main
+  C:088CH         PUBLIC        Ext0_ISR
+  C:094DH         PUBLIC        _Delay_ms
+  B:0020H.2       PUBLIC        alarm_triggered
+  D:0089H         PUBLIC        TMOD
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  D:008AH         PUBLIC        TL0
+  B:0088H.4       PUBLIC        TR0
+  -------         PROC          MAIN
+  C:08DBH         LINE#         20
+  C:08DBH         LINE#         21
+  C:08DEH         LINE#         23
+  C:08DEH         LINE#         25
+  C:08E7H         LINE#         26
+  C:08EEH         LINE#         27
+  C:08F1H         LINE#         29
+  C:08F3H         LINE#         30
+  C:08F5H         LINE#         31
+  C:08FAH         LINE#         32
+  C:08FCH         LINE#         33
+  C:08FEH         LINE#         34
+  C:0900H         LINE#         35
+  C:0900H         LINE#         36
+  C:0900H         LINE#         37
+  C:0904H         LINE#         40
+  C:0912H         LINE#         41
+  C:0914H         LINE#         42
+  C:0916H         LINE#         43
+  C:0918H         LINE#         44
+  C:091AH         LINE#         45
+  C:091CH         LINE#         46
+  C:091CH         LINE#         49
+  C:091FH         LINE#         50
+  C:0921H         LINE#         51
+  C:0923H         LINE#         52
+  C:0925H         LINE#         53
+  C:0925H         LINE#         54
+  -------         ENDPROC       MAIN
+  -------         PROC          SYSTEM_INIT
+  C:096DH         LINE#         58
+  C:096DH         LINE#         60
+  C:096FH         LINE#         61
+  C:0971H         LINE#         62
+  C:0973H         LINE#         64
+  C:0976H         LINE#         65
+  C:0979H         LINE#         66
+  C:097CH         LINE#         67
+  C:097EH         LINE#         68
+  C:0980H         LINE#         71
+BL51 BANKED LINKER/LOCATER V6.22                                                      06/05/2025  19:57:02  PAGE 4
+
+
+  C:0982H         LINE#         72
+  C:0984H         LINE#         74
+  C:0986H         LINE#         75
+  -------         ENDPROC       SYSTEM_INIT
+  -------         PROC          TIMER0_ISR
+  -------         DO            
+  D:0008H         SYMBOL        count
+  -------         ENDDO         
+  C:0927H         LINE#         78
+  C:092BH         LINE#         82
+  C:092EH         LINE#         83
+  C:0931H         LINE#         86
+  C:093AH         LINE#         87
+  C:093DH         LINE#         88
+  C:0940H         LINE#         89
+  C:0948H         LINE#         90
+  C:0948H         LINE#         91
+  C:0948H         LINE#         92
+  -------         ENDPROC       TIMER0_ISR
+  -------         PROC          EXT0_ISR
+  C:088CH         LINE#         95
+  C:08A9H         LINE#         96
+  C:08B0H         LINE#         97
+  C:08B6H         LINE#         98
+  C:08B8H         LINE#         99
+  C:08BAH         LINE#         100
+  C:08BCH         LINE#         101
+  C:08BEH         LINE#         102
+  C:08C0H         LINE#         103
+  C:08C0H         LINE#         104
+  -------         ENDPROC       EXT0_ISR
+  -------         PROC          _DELAY_MS
+  D:0006H         SYMBOL        ms
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  -------         ENDDO         
+  C:094DH         LINE#         105
+  C:094DH         LINE#         107
+  C:0957H         LINE#         108
+  C:096CH         LINE#         109
+  -------         ENDPROC       _DELAY_MS
+  -------         ENDMOD        AT89C51
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 011DH BYTE (13%) *
+******************************************************************************
+
+Program Size: data=12.3 xdata=0 code=414
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
