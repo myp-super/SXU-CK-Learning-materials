@@ -1,0 +1,19 @@
+model_parameters:
+  onnx_model: '/data/best.onnx'
+  output_model_file_prefix: 'trash_yolov5'
+  march: 'berkeley'
+input_parameters:
+  input_name: 'images'
+  input_shape: '1x3x640x640'
+  input_type_rt: 'nv12'           
+  input_type_train: 'rgb'         
+  input_layout_train: 'nchw'     
+  norm_type: 'data_scale'         
+  scale_value: 0.003921568627451  
+calibration_parameters:
+  cal_data_dir: '/data/calibration'
+  calibration_type: 'max'
+compiler_parameters:
+  compile_mode: 'latency'  
+  debug: False
+  core_num: 2             

@@ -1,0 +1,41 @@
+#include "stm32f10x.h"                  // Device header
+#include "Delay.h"
+int main(void)
+	
+{
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	
+	/**********************************************/
+	GPIO_InitTypeDef GPIO_InitStructure;
+	/*GPIO_InitTypeDef是typedef重命名，用于结构体变量声明，GPIO_InitStructure结构体变量名字，用来命名自定义的初始化结构体*/
+	/**********************************************/
+	
+	/**********************************************/
+	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_Out_PP;
+	/*结构体的引用：‘名称.子项’，另外GPIO_Mode是标准库定义的枚举变量GPIOMode_TypeDef，里面定义了8种输入输出方式*/
+	/**********************************************/
+	
+	/**********************************************/
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_1;
+	/*该子项，用来选择引脚，直接赋GPIO管脚名称即可*/
+	/**********************************************/
+	
+	/**********************************************/
+	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	/*GPIO_Speed是标准库定义的枚举变量GPIOSpeed_TypeDef,里面定义了GPIO 输出速度配置*/
+	/**********************************************/
+	
+	/**********************************************/
+	GPIO_Init(GPIOA,&GPIO_InitStructure);
+	/*调用GPIO初始化函数，传递形参，进行GPIO的初始化，其中形参为两个：第一个为选择GPIO口（A、B……）；
+	第二个传递自定义的初始化结构体（要传递指针变量！！）*/
+	/**********************************************/
+	
+	while(1)
+	{
+		GPIO_ResetBits(GPIOB,GPIO_Pin_12);
+		Delay_ms(500);
+		GPIO_SetBits(GPIOB,GPIO_Pin_12);
+		Delay_ms(500);
+	}
+}

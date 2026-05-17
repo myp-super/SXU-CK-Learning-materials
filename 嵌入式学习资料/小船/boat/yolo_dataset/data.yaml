@@ -1,0 +1,9 @@
+
+path: C:\Users\Lenovo\Desktop\ultralytics-main\yolo_dataset # 数据集根目录
+train: images/train
+val: images/val
+test: images/test
+
+# Classes
+nc: 8
+names: ['ball', 'bottle', 'branch', 'grass', 'leaf', 'milk-box', 'plastic-bag', 'plastic-garbage']

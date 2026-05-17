@@ -1,0 +1,1854 @@
+/L1"C/C++" C_LANG Line Comment = // Block Comment On = /* Block Comment Off = */ Escape Char = \ String Chars = "' File Extensions = C CPP CC CXX H HPP AWK
+/Delimiters = ~!@%^&*()-+=|\/{}[]:;"'<> ,	.?
+/Function String = "%^([a-zA-Z_0-9^[^]*]+^)[ ^t]+([^p*&:, ^t^[^]a-zA-Z_0-9.!]++)[~;]"
+/Function String 1 = "%[a-zA-Z_0-9*]*::^([a-zA-Z_0-9^~]+^)[ ^t^p]++([^p*&:, ^t^[^]/*^-'=:&a-zA-Z_0-9./(!]++)[~;]"
+/Function String 2 = "%[a-zA-Z_0-9^][a-zA-Z_0-9^[^]]+[ ^t*]+^([a-zA-Z_0-9]+^)[ ^t]++([^p*&:, ^t^[^]a-zA-Z_0-9./(!]++)[~;]"
+/Function String 3 = "%[a-zA-Z_0-9*&$^[^]*]+[ ^t]+[a-zA-Z_0-9*&$^[^]]+[ ^t*]+^([a-zA-Z_0-9]+^)[ ^t]++([^p*&:, ^t^[^]a-zA-Z_0-9./(!]++)[~;]"
+/Function String 4 = "%[a-z_0-9^[^]*]++ [a-z_0-9*^[^]]+[ ^t]++[a-z_0-9*^[^]]+[ ^t]++^([*a-z_0-9]+^)[ ^t]++([^p*&:, ^t^[^]a-z_0-9./(!]++)[~;]"
+/Function String 5 = "%^([a-zA-Z_0-9^[^]*]+^)[ ^t]++([^p*&:, ^t^[^]a-zA-Z_0-9./()!]++)[~;]"
+/Member String = "^([A-Za-z0-9_:.]+^)[ ^t^*&]+$S[ ^t]++[(-);,]"
+/Variable String = "%[ ^t]++^([!-ÿ~ ^t<>]+^)*[~a-z]$S[ ^t;,()^-]"
+/Indent Strings = "{" "if" "else" ":"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "["
+/Close Brace Strings = "}" ")" "]"
+/Open Fold Strings = "{"
+/Close Fold Strings = "}"
+/C1"Keywords" STYLE_KEYWORD
+#define #elif #else #endif #error #if #ifdef #ifndef #include #include_next #line #pragma #undef
+__asm __based __cdecl __declspec __except __far __fastcall __finally __fortran __huge __inline __int16
+__int32 __int64 __int8 __interrupt __leave __loadds __near __pascal __saveregs __segment __segname __self
+__stdcall __try __uuidof
+auto
+bool break
+case char const continue
+default defined do double
+else enum extern
+float for
+goto
+if int
+long
+register return
+short signed sizeof static struct switch
+typedef
+union unsigned
+void volatile
+while
+__asm __based __cdecl __declspec __except __far __fastcall __finally __fortran __huge __inline __int16 __int32 __int64 __int8 __interrupt __leave __loadds __near __pascal __saveregs __segment __segname __self __stdcall __try __uuidof
+#define #error #include #include_next #elif #if #line #else #ifdef #pragma #endif #ifndef #undef
+/C2"C++ Keywords" STYLE_KEYWORD
+__multiple_inheritance __single_inheritance __virtual_inheritance
+catch class const_cast
+delete dynamic_cast
+explicit export
+false friend
+inline
+mutable
+namespace new
+operator
+private protected public
+reinterpret_cast
+static_cast
+template this throw true try typeid typename
+using
+virtual
+wchar_t
+/C3"Microsoft C extensions" STYLE_EXTENSION
+dllexport dllimport
+naked
+thread
+uuid
+/C4"Operators" STYLE_OPERATOR
+!
+%
+&
+*
++
+-
+// /
+<
+=
+>
+^
+|
+~
+
+/L2"Visual Basic" VB_LANG Line Comment = ' File Extensions = BAS FRM CLS VB VBS VBA CTL
+/Function String = "%[a-z ^t]++^{Sub^}^{Function^}*("
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/Indent Strings = "Then" "Select Case" "Do While" "Else" "Do" "<td>" "<tr>"
+/Unindent Strings = "End" "Next" "End If" "End Select" "Loop" "End Select" "Loop While" "Else" "</TD>" "</tr>"
+/Open Fold Strings = "If" "ElseIf" "Else" "Function" "Sub" "Select Case" "With"
+/Close Fold Strings = "ElseIf" "Else" "End If" "End Function" "End Sub" "End Select" "End With"
+/Ignore Fold Strings = "Exit Function" "Exit Sub" "Declare Function"
+/C1"Functions" STYLE_FUNCTION
+Abs Array Asc AscB AscW Atn Avg
+CBool CByte CCur CDate CDbl CInt CLng CSng CStr CVDate CVErr CVar Cdec Choose Chr ChrB ChrW Command Cos
+Count CreateObject CurDir
+DDB Date DateAdd DateDiff DatePart DateSerial DateValue Day Dir DoEvents
+EOF Environ Error Exp
+FV FileAttr FileDateTime FileLen Fix Format FreeFile
+GetAllStrings GetAttr GetAutoServerSettings GetObject GetSetting
+Hex Hour
+IIf IMEStatus IPmt InStr Input InputB InputBox InstB Int IsArray IsDate IsEmpty IsError IsMissing IsNull
+IsNumeric IsObject
+LBound LCase LOF LTrim Left LeftB Len LenB LoadPicture Loc
+MIRR Max Mid MidB Min Minute Month MsgBox
+NPV NPer Now
+Oct
+PPmt PV Partition Pmt
+QBColor
+RGB RTrim Rate Right RightB Rnd
+SLN SYD Second Seek Sgn Shell Sin Space Spc Sqr StDev StDevP Str StrComp StrConv String Sum Switch
+Tab Tan Time TimeSerial TimeValue Timer Trim TypeName
+UBound UCase
+Val Var VarP VarType
+Weekday
+Year
+/C2"Methods" STYLE_METHOD
+Accept Activate Add AddCustom AddFile AddFromFile AddFromTemplate AddItem AddNew AddToAddInToolbar
+AddToolboxProgID Append AppendChunk Arrange Assert AsyncRead
+BatchUpdate BeginTrans Bind
+CanPropertyChange Cancel CancelAsyncRead CancelBatch CancelUpdate CaptureImage CellText CellValue Circle
+Clear ClearFields ClearSel ClearSelCols Clone Close Cls ColContaining ColumnSize CommitTrans
+CompactDatabase Compose Connect Copy CopyQueryDef CreateDatabase CreateDragImage CreateEmbed CreateField
+CreateGroup CreateIndex CreateLink CreatePreparedStatement CreatePropery CreateQuery CreateQueryDef
+CreateRelation CreateTableDef CreateUser CreateWorkspace Customize
+Delete DeleteColumnLabels DeleteColumns DeleteRowLabels DeleteRows DoVerb Drag Draw
+Edit EditCopy EditPaste EndDoc EnsureVisible EstablishConnection Execute ExtractIcon
+Fetch FetchVerbs Files FillCache Find FindFirst FindItem FindLast FindNext FindPrevious Forward
+GetBookmark GetChunk GetClipString GetData GetFirstVisible GetFormat GetHeader GetLineFromChar GetNumTicks
+GetRows GetSelectedPart GetText GetVisibleCount GoBack GoForward
+Hide HitTest HoldFields
+Idle InitializeLabels InsertColumnLabels InsertColumns InsertObjDlg InsertRowLabels InsertRows Item
+KillDoc
+Layout Line LinkExecute LinkPoke LinkRequest LinkSend Listen LoadFile LoadResData LoadResPicture
+LoadResString LogEvent
+MakeCompileFile MakeReplica MoreResults Move MoveData MoveFirst MoveLast MoveNext MovePrevious
+NavigateTo NewPage NewPassword NextRecordset
+OLEDrag OnAddinsUpdate OnConnection OnDisconnection OnStartupComplete Open OpenConnection OpenDatabase
+OpenQueryDef OpenRecordset OpenResultset OpenURL Overlay
+PSet PaintPicture PastSpecialDlg Paste PeekData Play Point PopulatePartial PopupMenu Print PrintForm
+PropertyChanged
+Quit
+Raise RandomDataFill RandomFillColumns RandomFillRows ReFill ReadFromFile ReadProperty Rebind Refresh
+RefreshLink RegisterDatabase Reload Remove RemoveAddInFromToolbar RemoveItem Render RepairDatabase Reply
+ReplyAll Requery ResetCustom ResetCustomLabel ResolveName RestoreToolbar Resync Rollback RollbackTrans
+RowBookmark RowContaining RowTop
+Save SaveAs SaveFile SaveToFile SaveToOle1File SaveToolbar Scale ScaleX ScaleY Scroll SelPrint Select
+SelectAll SelectPart Send SendData Set SetAutoServerSettings SetData SetFocus SetOption SetSize SetText
+SetViewport Show ShowColor ShowFont ShowHelp ShowOpen ShowPrinter ShowSave ShowWhatsThis SignOff SignOn
+Size Span SplitContaining StartLabelEdit StartLogging Stop Synchronize
+TextHeight TextWidth ToDefaults TwipsToChartPart TypeByChartType
+Update UpdateControls UpdateRecord UpdateRow Upto
+WhatsThisMode WriteProperty
+ZOrder
+rdoCreateEnvironment rdoRegisterDataSource
+/C3"Events" STYLE_EVENT
+AccessKeyPress AfterAddFile AfterChangeFileName AfterCloseFile AfterColEdit AfterColUpdate AfterDelete
+AfterInsert AfterLabelEdit AfterRemoveFile AfterUpdate AfterWriteFile AmbienChanged ApplyChanges Associate
+AsyncReadComplete AxisActivated AxisLabelActivated AxisLabelSelected AxisLabelUpdated AxisSelected
+AxisTitleActivated AxisTitleSelected AxisTitleUpdated AxisUpdated
+BeforeClick BeforeColEdit BeforeColUpdate BeforeConnect BeforeDelete BeforeInsert BeforeLabelEdit
+BeforeLoadFile BeforeUpdate ButtonClick ButtonCompleted ButtonGotFocus ButtonLostFocus
+Change ChartActivated ChartSelected ChartUpdated Click ColEdit ColResize Collapse ColumnClick Compare
+ConfigChageCancelled ConfigChanged ConnectionRequest
+DataArrival DataChanged DataUpdated DblClick Deactivate DevModeChange DeviceArrival DeviceOtherEvent
+DeviceQueryRemove DeviceQueryRemoveFailed DeviceRemoveComplete DeviceRemovePending Disconnect
+DisplayChanged Dissociate DoGetNewFileName Done DonePainting DownClick DragDrop DragOver DropDown
+EditProperty EnterCell EnterFocus Event ExitFocus Expand
+FootnoteActivated FootnoteSelected FootnoteUpdated
+GotFocus
+HeadClick
+InfoMessage IniProperties Initialize ItemActivated ItemAdded ItemCheck ItemClick ItemReloaded ItemRemoved
+ItemRenamed ItemSeletected
+KeyDown KeyPress KeyUp
+LeaveCell LegendActivated LegendSelected LegendUpdated LinkClose LinkError LinkNotify LinkOpen Load
+LostFocus
+MouseDown MouseMove MouseUp
+NodeClick
+OLECompleteDrag OLEDragDrop OLEDragOver OLEGiveFeedback OLESetData OLEStartDrag ObjectMove OnAddNew OnComm
+Paint PanelClick PanelDblClick PathChange PatternChange PlotActivated PlotSelected PlotUpdated
+PointActivated PointLabelActivated PointLabelSelected PointLabelUpdated PointSelected PointUpdated
+PowerQuerySuspend PowerResume PowerStatusChanged PowerSuspend
+QueryChangeConfig QueryComplete QueryCompleted QueryTimeout QueryUnload
+ReadProperties Reposition RequestChangeFileName RequestWriteFile Resize ResultsChanged RowColChange
+RowCurrencyChange RowResize RowStatusChanged
+SelChange SelectionChanged SendComplete SendProgress SeriesActivated SeriesSelected SeriesUpdated
+SettingChanged SplitChange StateChanged StatusUpdate SysColorsChanged
+Terminate TimeChanged TitleActivated TitleSelected
+UnboundAddData UnboundDeleteRow UnboundGetRelativeBookmark UnboundReadData UnboundWriteData Unload UpClick
+Updated
+Validate ValidationError
+WillAssociate WillChangeData WillDissociate WillExecute WillUpdateRows WithEvents WriteProperties
+/C4"Statements" STYLE_STATEMENT
+AppActivate
+Base Beep Boolean ByRef ByVal
+Call Case ChDir ChDrive Const
+Declare DefBool DefByte DefCur DefDate DefDbl DefDec DefInt DefLng DefObj DefSng DefStr DefVar Deftype
+DeleteSetting Dim Do Double
+Else ElseIf End Enum Erase Event Exit Explicit
+False FileCopy Finalize For ForEach Friend Function
+Get GoSub GoTo
+If Implements Imports Integer
+Kill
+LSet Let LineInput Lock
+Me MkDir MyBase MyBase.Finalize MyBase.New
+Name Namespace New Next Nothing
+On OnError Option Overrides
+Private Property Protected Public Put
+RSet RaiseEvent Randomize ReDim ReadOnly Rem Reset Resume Return RmDir
+SavePicture SaveSetting SendKeys SetAttr Static String Structure Sub
+Then To True Type
+Unlock
+Wend While Width With Write
+/C5"Operators" STYLE_OPERATOR
+&
+*
++
+-
+.
+// /
+<
+=
+And AndAlso As
+Eqv
+Imp Is
+Like
+Mod
+Not
+Or OrElse
+Xor
+\
+^
+
+/L3"HTML" HTML_LANG Nocase Noquote Block Comment On = <!-- Block Comment Off = -->  File Extensions = HTM HTML SHTML HTT HTA HTX CFM JSP PHP PHTML ASP
+/Delimiters = ~!@$%^&*()+=|\{}[]:;"'<> ,	.?
+/Function String = "<form*>"
+/Member String = "$S[ ^t]++=[ ^t&]++new[ ^t]+^([A-Za-z_]+[A-Za-z0-9_]++^)"
+/Variable String = "$S[ ^t]++=[ ^t&]++new[ ^t]+^([A-Za-z_]+[A-Za-z0-9_]++^)"
+/Indent Strings = "<"
+/Unindent Strings = "</"
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/C1"Tags" STYLE_TAG
+<A </A> <ABBR> <ABBR </ABBR> <ABOVE> <ACRONYM> <ACRONYM </ACRONYM> <ADDRESS> <ADDRESS </ADDRESS>
+<APPLET </APPLET> <AREA </AREA <ARRAY>
+<B> <B </B> <BASE <BASEFONT <BDO> <BDO </BDO> <BGSOUND <BIG> <BIG </BIG> <BLINK> <BLINK </BLINK>
+<BLOCKQUOTE> <BLOCKQUOTE </BLOCKQUOTE> <BODY> <BODY </BODY> <BOX> <BR/> <BR> <BR <BUTTON> </BUTTON>
+<CAPTION> <CAPTION </CAPTION> <CENTER> <CENTER </CENTER> <CITE> <CITE </CITE> <CODE> <CODE </CODE>
+<COL> <COL <COLGROUP> <COLGROUP </COLGROUP> <COMMENT> </COMMENT>
+<DD> <DD </DD> <DEL> <DEL </DEL> <DFN> <DFN </DFN> <DIR> <DIR </DIR> <DIV> <DIV </DIV> <DL> <DL </DL>
+<DT> <DT </DT>
+<EM> <EM </EM> <EMBED
+<FIELDSET> <FIELDSET </FIELDSET> <FIG> <FONT </FONT> <FORM> <FORM </FORM> <FRAME <FRAMESET </FRAMESET>
+<H1> <H1 </H1> <H2> <H2 </H2> <H3> <H3 </H3> <H4> <H4 </H4> <H5> <H5 </H5> <H6> <H6 </H6> <HEAD> <HEAD
+</HEAD> <HR/> <HR> <HR <HTML> <HTML </HTML>
+<I> <I </I> <IFRAME> </IFRAME> <ILAYER> </ILAYER> <IMG <INPUT> <INPUT <INS> <INS </INS> <ISINDEX> <ISINDEX
+<KBD> <KBD </KBD>
+<LABEL> <LABEL </LABEL> <LAYER> <LAYER </LAYER> <LEGEND> <LEGEND </LEGEND> <LI> <LI </LI> <LINK <LISTING>
+</LISTING>
+<MAP </MAP> <MARQUEE </MARQUEE> <MENU> <MENU </MENU> <META <MULTICOL> </MULTICOL>
+<NEXTID <NOBR> </NOBR> <NOFRAMES> </NOFRAMES> <NOLAYER> </NOLAYER> <NOSCRIPT> </NOSCRIPT> <NOTE> </NOTE>
+<OBJECT> <OBJECT </OBJECT> <OL> <OL </OL> <OPTGROUP> <OPTGROUP </OPTGROUP> <OPTION> <OPTION </OPTION>
+<P> <P </P> <PARAM <PRE> <PRE </PRE>
+<Q> <Q </Q> <QUOTE>
+<RANGE> <ROOT>
+<S> <S </S> <SAMP> <SAMP </SAMP> <SCRIPT> <SCRIPT </SCRIPT> <SELECT> <SELECT </SELECT> <SMALL> <SMALL
+</SMALL> <SOUND <SPACER> <SPAN> <SPAN </SPAN> <SQRT> <STRIKE> <STRIKE </STRIKE> <STRONG> <STRONG </STRONG>
+<STYLE> <STYLE </STYLE> <SUB> <SUB </SUB> <SUP> <SUP </SUP>
+<TABLE> <TABLE </TABLE> <TBODY> <TBODY </TBODY> <TD> <TD </TD> <TEXT> <TEXTAREA> <TEXTAREA </TEXTAREA>
+<TFOOT> <TFOOT </TFOOT> <TH> <TH </TH> <THEAD> <THEAD </THEAD> <TITLE> </TITLE> <TR> <TR </TR> <TT>
+<TT </TT>
+<U> <U </U> <UL> <UL </UL>
+<VAR> <VAR </VAR>
+<WBR>
+<XMP> </XMP>
+// />
+>
+/C2"Attributes" STYLE_ATTRIBUTE
+ABBR= ACCEPT-CHARSET= ACCEPT= ACCESSKEY= ACTION= ALIGN= ALINK= ALT= ARCHIVE= AXIS=
+BACKGROUND= BEHAVIOR BEHAVIOR> BELOW BELOW> BGCOLOR= BORDER=
+CELLPADDING= CELLSPACING= CHAR= CHAROFF= CHARSET= CHECKED CHECKED> CITE= CLASS= CLASSID= CLEAR= CODE=
+CODEBASE= CODETYPE= COLOR= COLS= COLSPAN= COMPACT COMPACT> CONTENT= COORDS=
+DATA= DATETIME= DECLARE DECLARE> DEFER DEFER> DIR= DISABLED DISABLED>
+ENCTYPE=
+FACE= FOR= FRAME= FRAMEBORDER= FRAMESPACING=
+HEADERS= HEIGHT= HIDDEN= HREF= HREFLANG= HSPACE= HTTP-EQUIV=
+ID= ISMAP=
+LABEL= LANG= LANGUAGE= LINK= LONGDESC= LOOP=
+MAILTO= MARGINHEIGHT= MARGINWIDTH= MAXLENGTH= MEDIA= METHOD= MULTIPLE MULTIPLE>
+NAME= NOHREF NOHREF> NORESIZE NORESIZE> NOSHADE NOSHADE> NOWRAP NOWRAP>
+OBJECT= ONBLUR= ONCHANGE= ONCLICK= ONDBLCLICK= ONFOCUS= ONKEYDOWN= ONKEYPRESS= ONKEYUP= ONLOAD=
+ONMOUSEDOWN= ONMOUSEMOVE= ONMOUSEOUT= ONMOUSEOVER= ONMOUSEUP= ONRESET= ONSELECT= ONSUBMIT= ONUNLOAD=
+PROFILE= PROMPT=
+READONLY READONLY> REL= REV= ROWS= ROWSPAN= RULES=
+SCHEME= SCOPE= SCROLLING= SELECTED SELECTED> SHAPE= SIZE= SPAN= SRC= STANDBY= START= STYLE= SUMMARY=
+TABINDEX= TARGET= TEXT= TITLE= TOPMARGIN= TYPE=
+URL= USEMAP=
+VALIGN= VALUE= VALUETYPE= VERSION= VLINK= VSPACE=
+WIDTH=
+=
+
+/L4"Java" JAVA_LANG Line Comment = // Block Comment On = /* Block Comment Off = */ Escape Char = \ File Extensions = JAV JAVA
+/Delimiters = ~!@%^&*()-+=|\/{}[]:;"'<> ,	.?
+/Function String = "%[ ^t]++[ps][a-z]+ [a-z0-9]+ ^(*(*)^)*{$"
+/Function String 1 = "%[ ^t]++[ps][a-z]+ [a-z0-9]+ ^(*(*)^)[ ^t]++$"
+/Member String = "^([A-Za-z0-9_:.]+^)[ ^t*&]+$S[ ^t]++[(=);,]"
+/Variable String = "^([A-Za-z0-9_:.]+^)[ ^t*&]+$S[ ^t]++[(=);,]"
+/Indent Strings = "{"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/Open Fold Strings = "{"
+/Close Fold Strings = "}"
+/C1 STYLE_KEYWORD
+abstract
+boolean break byte
+case catch char class continue
+default do double
+else extends
+false final finally float for
+if implements import instanceof int interface
+length long
+native new null
+package private protected public
+return
+short static super switch synchronized
+this threadsafe throw throws transient true try
+void
+while
+/C2 STYLE_FUNCTION
+AWTError AWTEvent AWTEventMulticaster AWTException AbstractMethodError AccessException Acl AclEntry
+AclNotFoundException ActionEvent ActionListener Adjustable AdjustmentEvent AdjustmentListener Adler32
+AlreadyBoundException Applet AppletContext AppletStub AreaAveragingScaleFilter ArithmeticException Array
+ArrayIndexOutOfBoundsException ArrayStoreException AudioClip
+BeanDescriptor BeanInfo Beans BigDecimal BigInteger BindException BitSet Boolean BorderLayout
+BreakIterator BufferedInputStream BufferedOutputStream BufferedReader BufferedWriter Button ButtonPeer
+Byte ByteArrayInputStream ByteArrayOutputStream
+CRC32 Calendar CallableStatement Canvas CanvasPeer CardLayout Certificate CharArrayReader CharArrayWriter
+CharConversionException Character CharacterIterator Checkbox CheckboxGroup CheckboxMenuItem
+CheckboxMenuItemPeer CheckboxPeer CheckedInputStream CheckedOutputStream Checksum Choice ChoiceFormat
+ChoicePeer Class ClassCastException ClassCircularityError ClassFormatError ClassLoader
+ClassNotFoundException Clipboard ClipboardOwner CloneNotSupportedException Cloneable
+CollationElementIterator CollationKey Collator Color ColorModel Compiler Component ComponentAdapter
+ComponentEvent ComponentListener ComponentPeer ConnectException ConnectIOException Connection Constructor
+Container ContainerAdapter ContainerEvent ContainerListener ContainerPeer ContentHandler
+ContentHandlerFactory CropImageFilter Cursor Customizer
+DGC DSAKey DSAKeyPairGenerator DSAParams DSAPrivateKey DSAPublicKey DataFlavor DataFormatException
+DataInput DataInputStream DataOutput DataOutputStream DataTruncation DatabaseMetaData DatagramPacket
+DatagramSocket DatagramSocketImpl Date DateFormat DateFormatSymbols DecimalFormat DecimalFormatSymbols
+Deflater DeflaterOutputStream Dialog DialogPeer Dictionary DigestException DigestInputStream
+DigestOutputStream Dimension DirectColorModel Double Driver DriverManager DriverPropertyInfo
+EOFException EmptyStackException Enumeration Error Event EventListener EventObject EventQueue
+EventSetDescriptor Exception ExceptionInInitializerError ExportException
+FeatureDescriptor Field FieldPosition File FileDescriptor FileDialog FileDialogPeer FileInputStream
+FileNameMap FileNotFoundException FileOutputStream FileReader FileWriter FilenameFilter FilterInputStream
+FilterOutputStream FilterReader FilterWriter FilteredImageSource Float FlowLayout FocusAdapter FocusEvent
+FocusListener Font FontMetrics FontPeer Format Frame FramePeer
+GZIPInputStream GZIPOutputStream Graphics GregorianCalendar GridBagConstraints GridBagLayout GridLayout
+Group
+Hashtable HttpURLConnection
+IOException Identity IdentityScope IllegalAccessError IllegalAccessException IllegalArgumentException
+IllegalComponentStateException IllegalMonitorStateException IllegalStateException
+IllegalThreadStateException Image ImageConsumer ImageFilter ImageObserver ImageProducer
+IncompatibleClassChangeError IndexColorModel IndexOutOfBoundsException IndexedPropertyDescriptor
+InetAddress Inflater InflaterInputStream InputEvent InputStream InputStreamReader Insets
+InstantiationError InstantiationException Integer InternalError InterruptedException
+InterruptedIOException IntrospectionException Introspector InvalidClassException InvalidKeyException
+InvalidObjectException InvalidParameterException InvocationTargetException ItemEvent ItemListener
+ItemSelectable
+Key KeyAdapter KeyEvent KeyException KeyListener KeyManagementException KeyPair KeyPairGenerator
+Label LabelPeer LastOwnerException LayoutManager LayoutManager2 Lease LightweightPeer
+LineNumberInputStream LineNumberReader LinkageError List ListPeer ListResourceBundle LoaderHandler Locale
+LocateRegistry LogStream Long
+MalformedURLException MarshalException Math MediaTracker Member MemoryImageSource Menu MenuBar MenuBarPeer
+MenuComponent MenuComponentPeer MenuContainer MenuItem MenuItemPeer MenuPeer MenuShortcut MessageDigest
+MessageFormat Method MethodDescriptor MissingResourceException Modifier MouseAdapter MouseEvent
+MouseListener MouseMotionAdapter MouseMotionListener MulticastSocket
+Naming NegativeArraySizeException NoClassDefFoundError NoRouteToHostException NoSuchAlgorithmException
+NoSuchElementException NoSuchFieldError NoSuchFieldException NoSuchMethodError NoSuchMethodException
+NoSuchObjectException NoSuchProviderException NotActiveException NotBoundException NotOwnerException
+NotSerializableException NullPointerException Number NumberFormat NumberFormatException
+ObjID Object ObjectInput ObjectInputStream ObjectInputValidation ObjectOutput ObjectOutputStream
+ObjectStreamClass ObjectStreamException Observable Observer Operation OptionalDataException
+OutOfMemoryError OutputStream OutputStreamWriter Owner
+PaintEvent Panel PanelPeer ParameterDescriptor ParseException ParsePosition Permission PipedInputStream
+PipedOutputStream PipedReader PipedWriter PixelGrabber Point Polygon PopupMenu PopupMenuPeer
+PreparedStatement Principal PrintGraphics PrintJob PrintStream PrintWriter PrivateKey Process Properties
+PropertyChangeEvent PropertyChangeListener PropertyChangeSupport PropertyDescriptor PropertyEditor
+PropertyEditorManager PropertyEditorSupport PropertyResourceBundle PropertyVetoException ProtocolException
+Provider ProviderException PublicKey PushbackInputStream PushbackReader
+RGBImageFilter RMIClassLoader RMIFailureHandler RMISecurityException RMISecurityManager RMISocketFactory
+Random RandomAccessFile Reader Rectangle Registry RegistryHandler Remote RemoteCall RemoteException
+RemoteObject RemoteRef RemoteServer RemoteStub ReplicateScaleFilter ResourceBundle ResultSet
+ResultSetMetaData RuleBasedCollator Runnable Runtime RuntimeException
+SQLException SQLWarning ScrollPane ScrollPanePeer Scrollbar ScrollbarPeer SecureRandom Security
+SecurityException SecurityManager SequenceInputStream Serializable ServerCloneException ServerError
+ServerException ServerNotActiveException ServerRef ServerRuntimeException ServerSocket Shape Short
+Signature SignatureException Signer SimpleBeanInfo SimpleDateFormat SimpleTimeZone Skeleton
+SkeletonMismatchException SkeletonNotFoundException Socket SocketException SocketImpl SocketImplFactory
+SocketSecurityException Stack StackOverflowError Statement StreamCorruptedException StreamTokenizer String
+StringBuffer StringBufferInputStream StringCharacterIterator StringIndexOutOfBoundsException StringReader
+StringSelection StringTokenizer StringWriter StubNotFoundException SyncFailedException System SystemColor
+TextArea TextAreaPeer TextComponent TextComponentPeer TextEvent TextField TextFieldPeer TextListener
+Thread ThreadDeath ThreadGroup Throwable Time TimeZone Timestamp TooManyListenersException Toolkit
+Transferable Types
+UID URL URLConnection URLEncoder URLStreamHandler URLStreamHandlerFactory UTFDataFormatException
+UnexpectedException UnicastRemoteObject UnknownError UnknownHostException UnknownServiceException
+UnmarshalException Unreferenced UnsatisfiedLinkError UnsupportedEncodingException
+UnsupportedFlavorException
+VMID Vector VerifyError VetoableChangeListener VetoableChangeSupport VirtualMachineError Visibility Void
+Window WindowAdapter WindowEvent WindowListener WindowPeer WriteAbortedException Writer
+ZipEntry ZipException ZipFile ZipInputStream ZipOutputStream
+/C3"Operators" STYLE_OPERATOR
+!
+%
+&
+*
++
+-
+// /
+<
+=
+>
+^
+|
+~
+
+/L5"Perl" PERL_LANG Line Comment = # Line Comment Preceding Chars = [~[^]^^$/\(] Escape Char = \ File Extensions = CGI PL PM PLX
+/Delimiters = ~!@$%^&*()+=|\/{}[]:;"'<> 	,.?\`/
+/Function String   = "%[ ^t]++sub[ ^t]+^([a-zA-Z0-9_]+^)[#]"
+/Function String 1 = "%[ ^t]++sub[ ^t]+^([a-zA-Z0-9_]+^)[ ^t{^p]"
+/Function String 2 = "%[ ^t]++sub[ ^t]+^([a-zA-Z0-9_]+^)[ ^t]++(*)[ ^t{^p#]"
+/Function String 3 = "%[ ^t]++^([a-zA-Z0-9_]+^):[ ^t^p]"
+/Indent Strings = "{"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "["
+/Close Brace Strings = "}" ")" "]"
+/Open Fold Strings = "{"
+/Close Fold Strings = "}"
+/C1"Keywords" STYLE_KEYWORD
+-A -B -C -M -O -R -S -T -W -X -b -c -d -e -f -g -k -l -o -p -r -s -t -u -w -x -z
+continue
+do
+else elsif exit
+for foreach
+goto
+if
+last local
+my
+next no
+our
+package
+redo require return
+sub
+unless until use
+while
+/C2"Functions" STYLE_FUNCTION
+accept alarm atan2
+bind binmode bless
+caller chdir chmod chomp chop chown chr chroot close closedir connect cos crypt
+dbmclose dbmopen defined delete die dump
+each endgrent endhostent endnetent endprotoent endpwent endservent eof eval exec exists exit exp
+fcntl fileno flock fork format formline
+getc getgrent getgrgid getgrname gethostbyaddr gethostbyname gethostent getlogin getnetbyaddr getnetbyname
+getnetent getpeername getpgrp getppid getpriority getprotobyname getprotobynumber getprotoent getpwent
+getpwnam getpwuid getservbyname getservbyport getservent getsockname getsockopt glob gmtime grep
+hex
+index int ioctl
+join
+keys kill
+lc lcfirst length link listen localtime log lstat
+map mkdir msgctl msgget msgrcv msgsnd
+oct open opendir ord
+pack pipe pop pos print printf push
+quotemeta
+rand read readdir readline readlink recv ref rename reset reverse rewinddir rindex rmdir
+scalar seek seekdir select semctl semgett semop send setgrent sethostent setnetent setpgrp setpriority
+setprotoent setpwent setservent setsockopt shift shmctl shmget shmread shmwrite shutdown sin sleep socket
+socketpair sort splice split sprintf sqrt srand stat study substr symlink syscall sysopen sysread system
+syswrite
+tell telldir tie tied time times truncate
+uc ucfirst umask undef unlink unpack unshift utime
+values vec
+wait waitpid wantarray warn write
+/C3 STYLE_EXTENSION
+AUTOLOAD
+BEGIN
+CHECK CLEAR CLOSE CORE
+DELETE DESTROY
+END EXISTS EXTEND
+FETCH FETCHSIZE FIRSTKEY
+GETC
+INIT
+NEXTKEY
+POP PRINT PRINTF PUSH
+READ READLINE
+SHIFT SPLICE STORE STORESIZE SUPER
+TIEARRAY TIEHANDLE TIEHASH TIESCALAR
+UNIVERSAL UNSHIFT UNTIE
+WRITE
+__DATA__ __END__ __FILE__ __LINE__ __PACKAGE__
+attributes attrs autouse
+base blib bytes
+charnames constant
+diagnostics
+fields filetest
+integer
+less lib locale
+open ops overload
+perllocal
+re require
+sigtrap strict subs
+use utf8
+vars
+warnings
+/C4"Operators" STYLE_OPERATOR
+!
+& &&
+*
++ ++
+- ->
+// /
+< <= <=>
+= => =~
+> >=
+^
+and
+eq
+ge gt
+le lt
+m
+ne not
+or
+q qq qw qx
+s
+tr
+x xor
+y
+| ||
+~
+
+/L6"XML" XML_LANG Noquote Block Comment On = <!-- Block Comment Off = --> File Extensions = XML XUL XSD XSL XSLT
+/Delimiters = ~@$%^&*()+=|\{};"'<> ,
+/Function String = "name=*">"
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/C1"Elements" STYLE_ELEMENT
+** <
+<a </a> <abbr> <abbr </abbr> <above> <abstract> </abstract> <acronym> </acronym> <activity> </activity>
+<actor> <actor </actor> <add> <add </add> <addName </addName> <addSpan <addrLine> <address> <address
+</address> <addressList> </addressList> <admin </admin> <affiliation> </affiliation> <alt <altGrp
+</altGrp> <analytic> </analytic> <anchor <any> </any> <app> <app </app> <applet </applet> <apply <arc
+<area </area <arg <argument> </argument> <array> <att> <att </att> <attDef> <attDef </attDef> <attList>
+<attList </attList> <attName> </attName> <attlDecl> <attlDecl </attlDecl> <author> </author> <authority>
+</authority> <availability> <availability </availability>
+<b> <b </b> <back> <back </back> <base <baseWsd <basefont <bdo> </bdo> <bgsound <bibl> <bibl </bibl>
+<biblFull> </biblFull> <biblScope> <biblStruct> <biblStruct </biblStruct> <bicond> </bicond> <big> <big
+</big> <birth> <birth </birth> <birthDate> <birthPlace> <blink> <blink </blink> <bloc </bloc> <blockquote>
+<blockquote </blockquote> <body> <body </body> <box> </box> <br/> <br> <br <broadcast> </broadcast>
+<button> </button> <byline> </byline>
+<c> <c </c> <caesura> <calEvent> </calEvent> <camera> </camera> <caption> <caption </caption> <case>
+<castGroup> <castGroup </castGroup> <castItem> <castItem </castItem> <castList> </castList> <catDesc>
+</catDesc> <catRef <category </category> <cb> <cb <cell> <cell </cell> <center> <center </center>
+<certainty <cf> </cf> <change> <change </change> <channel </channel> <character> <character </character>
+<characters> </characters> <children/> <children> <children <cit> </cit> <cite> <cite </cite> <city>
+</city> <cl> <cl </cl> <class> <class </class> <classCode <classDecl> </classDecl> <classDoc> <classDoc
+</classDoc> <classes> <classes </classes> <closer> </closer> <code> <code </code> <codedCharSet>
+<codedCharSet <col> </col> <colgroup> </colgroup> <colloc> <colloc </colloc> <comment> </comment>
+<commentary </commentary> <cond> </cond> <constitution </constitution> <contents/> <corr> <corr
+</corr> <correction> </correction> <country> <country </country> <creation> </creation> <creationDate>
+</creationDate>
+<damage> <damage </damage> <dataDesc> </dataDesc> <dataType> <date> <date </date> <dateRange </dateRange>
+<dateStruct> <dateStruct </dateStruct> <dateline> </dateline> <day> <day </day> <dd> <dd </dd> <def>
+</def> <default> <define-macro </define-macro> <define-script> </define-script> <define-style <del>
+<del </del> <delSpan <derivation </derivation> <desc> <desc </desc> <descrip> <descrip </descrip> <dfn>
+<dfn </dfn> <dft> <dir> <dir </dir> <direction <display-group> <display-group </display-group> <distance>
+<distance </distance> <distinct </distinct> <distributor> </distributor> <div0> <div0 </div0> <div1>
+<div1 </div1> <div2> <div2 </div2> <div3> <div3 </div3> <div4> <div4 </div4> <div5> <div5 </div5> <div6>
+<div6 </div6> <div7> <div7 </div7> <div> <div </div> <divGen <dl> <dl </dl> <doc> </doc> <docAuthor>
+</docAuthor> <docDate> <docEdition> </docEdition> <docImprint> </docImprint> <docTitle> </docTitle>
+<domain </domain> <dt> <dt </dt>
+<eLeaf <eTree </eTree> <earliesttime <edition> <edition </edition> <editionStmt> </editionStmt> <editor>
+<editor </editor> <editorialDecl> <editorialDecl </editorialDecl> <education> </education> <eg> </eg>
+<egwd> </egwd> <elemDecl> <elemDecl </elemDecl> <em> <em </em> <embed <emph> <emph </emph> <encodingDesc>
+</encodingDesc> <ent </ent> <entDoc> <entDoc </entDoc> <entName> <entName </entName> <entitySet>
+<entitySet <entry> <entry </entry> <entryFree> </entryFree> <epigraph> <epigraph </epigraph> <epilogue>
+</epilogue> <equipment> </equipment> <equiv <etym> </etym> <eval> </eval> <event <exceptions> <exceptions
+</exceptions> <exemplum> <exemplum </exemplum> <expan </expan> <extFigure <extent> </extent>
+<external-graphic
+<f </f> <fAlt> <fAlt </fAlt> <fDecl> <fDecl </fDecl> <fDescr> </fDescr> <fLib </fLib> <factuality
+</factuality> <fieldset> </fieldset> <fig> <figDesc> </figDesc> <figure </figure> <fileDesc> </fileDesc>
+<files> <files </files> <firstLang> </firstLang> <font </font> <foreName> <foreName </foreName> <foreign>
+<foreign </foreign> <forest> <forest </forest> <forestGrp> </forestGrp> <form> <form </form> <formula>
+<formula </formula> <frame <frameset </frameset> <front> </front> <fs> <fs </fs> <fsConstraints>
+<fsConstraints </fsConstraints> <fsDecl </fsDecl> <fsDescr> <fsLib </fsLib> <fsdDecl <funder> </funder>
+<fvLib </fvLib> <fw </fw>
+<gap> <gap <gen> </gen> <genName> </genName> <geog> </geog> <geogName> <geogName </geogName> </gfn> <gi>
+<gi </gi> <gloss> <gloss </gloss> <gram </gram> <gramGrp> <gramGrp </gramGrp> <graph </graph> <group>
+</group>
+<h1> <h1 </h1> <h2> <h2 </h2> <h3> <h3 </h3> <h4> <h4 </h4> <h5> <h5 </h5> <h6> <h6 </h6> <h> </h> <hand>
+<hand <handList> </handList> <handShift> <handShift <head> <head </head> <headItem> <headItem </headItem>
+<headLabel> <headLabel </headLabel> <hi> <hi </hi> <hom> <hom </hom> <home> </home> <horizontal-rule/>
+<hour> <hour </hour> <hps </hps> <hr/> <hr> <hr <hsn> </hsn> <html> </html> <hwd> </hwd> <hyph> </hyph>
+<hyphenation </hyphenation>
+<i> <i </i> <iNode <id <idno> <idno </idno> <if> <iff> <iframe> </iframe> <ihs> </ihs> <ilayer> </ilayer>
+<img <imprimatur> <imprint> </imprint> <index <input> <input <ins> <interaction <interp <interpGrp>
+<interpGrp </interpGrp> <interpretation> <intervaltime <invoke </invoke> <isindex> <item> <item </item>
+<itype> <itype </itype>
+<join <joinGrp </joinGrp>
+<kbd> <kbd </kbd> <keywords> <keywords </keywords> <kinesic
+<l> <l </l> <label> <label </label> <lacunaEnd> <lacunaStart> <lang> </lang> <langKnown> </langKnown>
+<langUsage> </langUsage> <language> <language </language> <latesttime <layer> <lb> <lb <lbl> <lbl </lbl>
+<leaf <legend> </legend> <lem> <lem <lg1> <lg1 </lg1> <lg2> <lg2 </lg2> <lg3> <lg3 </lg3> <lg4> <lg4
+</lg4> <lg5> <lg5 </lg5> <lg> <lg </lg> <li> <li </li> <line-field </line-field> <line> <link> <link
+</link> <linkGrp </linkGrp> <list-item </list-item> <list> <list </list> <listBibl> </listBibl>
+<listing> </listing> <locale> <locator <log <logtarget </logtarget>
+<m> <m </m> <map </map> <marquee </marquee> <measure </measure> <meeting> </meeting> <mentioned>
+<mentioned </mentioned> <menu> <menu </menu> <metDecl> <metDecl </metDecl> <meta <milestone <minus>
+<minus <minute> <minute </minute> <monogr> </monogr> <month> <month </month> <mood> <move <msr <multicol>
+</multicol> <mylink </mylink>
+<name> <name </name> <nameLink> </nameLink> <nbr <nextid <nobr> </nobr> <node <noframes> </noframes>
+<nolayer> </nolayer> <none> <normalization> <normalization </normalization> <noscript> </noscript>
+<note> <note </note> <notesStmt> </notesStmt> <null> <num> <num </num> <number> </number>
+<oRef> <oRef <oVar> <oVar </oVar> <object> </object> <occasion> <occasion </occasion> <occupation>
+<occupation </occupation> <offset> </offset> <ofig> <ol> <ol </ol> <omit> <omit </omit> <opener> </opener>
+<optgroup> </optgroup> <option> <option </option> <org> </org> <orgDivn </orgDivn> <orgName </orgName>
+<orgTitle </orgTitle> <orgType </orgType> <orig> <orig </orig> <ornament </ornament> <orth> <orth </orth>
+<otherForm>
+<p> <p </p> <pReg> <pVar <page> <para <paragraph> <paragraph </paragraph> <param <parents> <part> <part
+</part> <particDesc> </particDesc> <particLinks> <particLinks </particLinks> <participant> <participant
+</participant> <participantGrp> <pause> <pb> <pb <per> <performance> </performance> <persName> <persName
+</persName> <person </person> <personGrp> </personGrp> <ph> </ph> <phr> <phr </phr> <place> </place>
+<placeName> <placeName </placeName> <plus> <plus <pos> </pos> <PostBox> </postBox> <postCode> </postCode>
+<pr> </pr> <pre> <pre </pre> <preparedness <principal> </principal> <profileDesc> </profileDesc>
+<projectDesc> </projectDesc> <prologue> </prologue> <pron> <pron </pron> <ptr <pubPlace> </pubPlace>
+<publicationStmt> </publicationStmt> <publisher> </publisher> <purgetime <purpose <purposes> </purposes>
+<q> <q </q> <quotation </quotation> <quote> </quote>
+<range> <rate <rdg> <rdg </rdg> <rdgGrp </rdgGrp> <re> <re </re> <recording </recording> <recordingStmt>
+</recordingStmt> <ref> <ref </ref> <refsDecl> <refsDecl </refsDecl> <reg> <reg </reg> <region> <region
+</region> <relPlace> </relPlace> <relation <relationship </relationship> <remarks> <rendition </rendition>
+<residence> </residence> <resp> </resp> <respStmt> </respStmt> <respons <restore </restore> <revisionDesc>
+</revisionDesc> <role> <role </role> <roleDesc> </roleDesc> <roleName> <roleName </roleName> <root/>
+<root> <root <row> <row </row> <rs> <rs </rs> <rule> <rule </rule>
+<s> <s </s> <salute> </salute> <samp> <samp </samp> <samplingDecl> </samplingDecl> <schedule </schedule>
+<script> <script </script> <scriptStmt </scriptStmt> <scroll </scroll> <second> <second </second> <seg1>
+<seg1 </seg1> <seg> <seg </seg> <segmentation> </segmentation> <select-elements> </select-elements>
+<select> <select </select> <sense> <sense </sense> <sequence> </sequence> <series> </series> <seriesStmt>
+</seriesStmt> <seriesTitle> </seriesTitle> <set> </set> <setting> <setting </setting> <settingDesc>
+</settingDesc> <settle> <settle </settle> <settlement </settlement> <shift> <shift <sic> <sic </sic>
+<signed> <signed </signed> <small> <small </small> <soCalled> <soCalled </soCalled> <socecStatus>
+<socecStatus <sound> <sound </sound> <sourceDesc> </sourceDesc> <sp> <sp </sp> <space <spacer> <span>
+<span </span> <spanGrp </spanGrp> <speaker> </speaker> <sponsor> </sponsor> <sqrt> <stage> <stage </stage>
+<state> <state </state> <stdVals> </stdVals> <step <str> <str </str> <street> </street> <stress> <strike>
+<strike </strike> <string> </string> <strong> <strong </strong> <style-rule> </style-rule> <style>
+<style </style> <sub> <sub </sub> <subc> </subc> <sup> <sup </sup> <superEntry> </superEntry> <supplied>
+<supplied </supplied> <surName> <surName </surName> <syll> </syll> <sym <symbol <table> <table </table>
+<tag> </tag> <tagDoc> </tagDoc> <tagUsage </tagUsage> <tagsDecl> </tagsDecl> <target-element/>
+<target-element </target-element> <taxonomy </taxonomy> <tbody> <tbody </tbody> <td> <td </td> <tech>
+<tech </tech> <tei.2> </tei.2> <teiCorpus.2> </teiCorpus.2> <teiFsd2> </teiFsd2> <teiHeader> <teiHeader
+</teiHeader> <term> <term </term> <termEntry> <termEntry </termEntry> <text> <text </text> <textClass>
+</textClass> <textDesc> <textDesc </textDesc> <textarea> <textarea </textarea> <tfoot> <tfoot </tfoot>
+<th> <th </th> <thead> <thead </thead> <then> <tig </tig> <time> <time </time> <timeLine> <timeLine
+</timeLine> <timeRange </timeRange> <timeStruct> <timeStruct </timeStruct> <title-style <title> <title
+</title> <titlePage> <titlePage </titlePage> <titlePart> <titlePart </titlePart> <titleStmt> <titleStmt
+</titleStmt> <tns </tns> <tr> <tr </tr> <trailer> </trailer> <trans> <trans </trans> <tree </tree>
+<triangle </triangle> <tsd> </tsd> <tt> <tt </tt>
+<u> <u </u> <ul> <ul </ul> <uncertain> <unclear> <unclear </unclear> <usg> <usg </usg>
+<vAlt> <vAlt </vAlt> <vDefault> </vDefault> <vRange> </vRange> <val> </val> <valDesc> </valDesc>
+<valList> <valList </valList> <valRange> </valRange> <var> <var </var> <variantEncoding>
+<variantEncoding </variantEncoding> <view> </view> <vocal <vol>
+<w> <w </w> <warning-para </warning-para> <wbr> <week> <week </week> <what> <when <who> </who> <wit>
+<witDetail </witDetail> <witEnd> <witList> </witList> <witStart> <witness </witness> <work> </work>
+<writing </writing> <writingSystemDeclaration> <writingSystemDeclaration </writingSystemDeclaration>
+<xml> </xml> <xmp> </xmp> <xptr <xr> <xr </xr> <xref <xsl> </xsl>
+<year> <year </year>
+// />
+>
+<
+<%
+%> 
+?>
+<? <?xml
+]]>
+<![CDATA[
+/C2"Attributes" STYLE_ATTRIBUTE
+-
+24hour=
+=
+NSDef=
+SrcDef=
+TEI= TEIForm=
+abbr= absolute= action= active= adj= adjFrom= adjTo= afiicode= age= agent= align= alink= all= allusion=
+alt= am= ana= ancestor= anchored= arity= assertedValue= attribute= authority=
+background-color= background= baseForm= baseType= behavior below bgcolor= border=
+calendar= cap= cause= cellpadding= cellspacing= cert= certainty= character= chars= children= class=
+classid= clear= code= codebase= codedCharSet= color= cols= colspan= complete= composite= content-role=
+content= coords= copyOf= corr= corresp= crdate= creator=
+data= date= dateCreated= dateUpdated= day= decls= default= definition= degree= delim= depPtr= depend=
+desc= descendant= descriptive= dim= dir= direct= direction discrete= doc= doctype= domains= dt:type=
+dt:values= dur=
+ed= encoding= end-indent= end= enjamb= entity= entityLoc= entitySet= entityStd= eol= evaluate= event=
+exact= excl= exclude= expan= expand= extendTarg= extent=
+fVal= face= feats= feature= field-width= first-line-start-indent= first= follow= following=
+font-family-name= font-family= font-posture= font-size= font-style= font-weight= for= form= frameborder=
+framespacing= from= fsd= full= function=
+gi= given= gradual= group= grpPtr=
+h= hand= has-value= height= hidden= hour= href= hspace= http-equiv=
+id= ident= image= inDegree= included= index= ink= inline= inst= interval= ismap= iso639= iterated=
+key=
+label2= label= lang= language= left-margin= lemma= length= level1= level2= level3= level4= level= lexpunc=
+line-spacing= lines= link= loc= location= locus= loop=
+macro= mailto= margin-bottom= margin-left= margin-top= marginheight= marginwidth= marker= marks=
+maxOccurs= mergedin= met= method= minOccurs= mlang= mode= multiple mutExcl= mutual=
+n= name= names= new= next= nohref none= noresize norm= noshade notation=
+occurs= old= onblur onchange= onclick onfocus onload only= onmouseout onmouseover onsubmit= opt= ord=
+order= org= orig= origin= outDegree=
+padding= parent= part= passive= pattern= per= perf= place= pm= position= prefix= prev= previous= prompt=
+quadding=
+real= reason= refunit= reg= rel= rend= render= required= resp= result= rev= rhyme= right-margin= role=
+rows= rowspan=
+sameAs= sample= scheme= scope= scribe= script= scrolling= select= selected sex= shape= show= sic= sigil=
+since= size= social= some= sort= source= space-after= space-before= space= span= split= src= standalone=
+start start-indent= start= status= string= style= subtype= synch=
+targFunc= targOrder= targType= target= targetEnd= targets= terminal= text-align= text= theme= time=
+timezone= title= to= token= topmargin= trans= type=
+ucs-4= uniform= unit= url= usage= use=
+valign= value= valueTo= varSeq= version= vlink= vspace=
+weights= where= who= width= wit= wscale= wsd=
+xl-role= xl-title= xml:link= xmlns xmlns:cmi xmlns:dt
+zone=
+/C3"Commands" STYLE_COMMAND
+edit else enjamb
+for function
+global globincl
+if interpret
+return
+then
+var
+while
+/C4"MSXMS schema nodes"
+<AttributeType </AttributeType>
+<ElementType </ElementType>
+<Schema </Schema>
+/C5"MSXMS schema attributes"
+<attribute> <attribute </attribute>
+/C6"MSXMS schema element list"
+<element> <element </element> /element>
+
+/L7"C#" CSHARP_LANG Line Comment = // Block Comment On = /* Block Comment Off = */ Escape Char = \ String Chars = "' File Extensions = CS
+/Delimiters = ~!@%^&*()-+=|\/{}[]:;"'<> ,	.?
+/Function String = "%[a-zA-Z_]*)[~;]"
+/Member String = "^([A-Za-z0-9_:.]+^)[ ^t*&]+$S[ ^t]++[(=;]"
+/Variable String = "^([A-Za-z0-9_:.]+^)[ ^t*&]+$S[ ^t]++[(=;]"
+/Indent Strings = "{"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "["
+/Close Brace Strings = "}" ")" "]"
+/Open Fold Strings = "{" "#region"
+/Close Fold Strings = "}" "#endregion"
+/C1"Keywords" STYLE_KEYWORD
+abstract as auto
+base break
+case catch const continue
+default do
+else event explicit extern
+false finally fixed for foreach
+goto
+if implicit in internal
+lock
+namespace null
+operator out override
+params private protected public
+readonly ref return
+sealed stackalloc static switch
+this throw true try
+unsafe using
+virtual void
+while
+/C2"C# Data Types" STYLE_KEYWORD
+bool byte
+char class
+decimal delegate double
+enum
+float
+int interface
+long
+object
+sbyte short string struct
+uint ulong ushort
+/C3"C# Preprocessor Directives" STYLE_EXTENSION
+#define #elif #else #endif #endregion #error #if #line #region #undef #warning
+/C4"Operators" STYLE_OPERATOR
+!
+%
+&
+*
++
+-
+// /
+:
+<
+=
+>
+?
+^
+checked
+is
+new
+sizeof
+typeof
+unchecked
+|
+
+/L8"PHP" PHP_LANG Nocase EnableMLS Line Comment = // Line Comment Alt = # Block Comment On = /* Block Comment Off = */ Escape Char = \ String Chars = "' File Extensions = INC PHP3 PHP4
+/Delimiters = ~!%^&*()-+=|\/{}[]:;"'` ,	.
+/Function String = "%[^t ]++function[^t ]+^([a-z0-9_&]+^)"
+/Function String 1 = "%[^t ]++function[^t ]+^([~{]+^)"
+/Indent Strings = "{"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "["
+/Close Brace Strings = "}" ")" "]"
+/Open Fold Strings = "{"
+/Close Fold Strings = "}"
+/C1"Control Structures" STYLE_KEYWORD
+;
+break
+case continue
+default do
+else elseif endfor endif endswitch endwhile
+for foreach function
+if include
+require return
+switch
+while
+{
+}
+/C2"Tags" STYLE_TAG
+<?
+<?PHP
+?>
+/C3"Variables" STYLE_VARIABLE
+** $ &
+/C4"Operators" STYLE_OPERATOR
+! !=
+%
+& &&
+* *=
++ ++ +=
+- -- -= ->
+. .=
+// / /=
+:
+< << <=
+= == =>
+> >>
+?
+@
+^
+AND
+OR
+XOR
+| ||
+~
+/C5"Built-in Functions" STYLE_FUNCTION
+abs acos addcslashes addslashes apache_lookup_uri apache_note array array_count_values array_flip
+array_keys array_merge array_pad array_pop array_push array_reverse array_shift array_slice array_splice
+array_unshift array_values array_walk arsort asin asort aspell_check aspell_check_raw aspell_new
+aspell_suggest aster_date atan atan2
+base64_decode base64_encode base_convert basename bcadd bccomp bcdiv bcmod bcmul bcpow bcscale bcsqrt
+bcsub bin2hex bindec
+ceil chdir checkdate checkdnsrr chgrp chmod chop chown chr chunk_split clearstatcache closedir closelog
+compact convert_cyr_string copy cos count count_chars cpdf_add_annotation cpdf_add_outline cpdf_arc
+cpdf_begin_text cpdf_circle cpdf_clip cpdf_close cpdf_closepath cpdf_closepath_fill_stroke
+cpdf_closepath_stroke cpdf_continue_text cpdf_curveto cpdf_end_text cpdf_fill cpdf_fill_stroke
+cpdf_finalize cpdf_finalize_page cpdf_global_set_document_limits cpdf_import_jpeg cpdf_lineto cpdf_moveto
+cpdf_open cpdf_output_buffer cpdf_page_init cpdf_place_inline_image cpdf_rect cpdf_restore cpdf_rlineto
+cpdf_rotate cpdf_save cpdf_save_to_file cpdf_scale cpdf_set_char_spacing cpdf_set_creator
+cpdf_set_current_page cpdf_set_font cpdf_set_horiz_scaling cpdf_set_keywords cpdf_set_leading
+cpdf_set_page_animation cpdf_set_subject cpdf_set_text_matrix cpdf_set_text_pos cpdf_set_text_rendering
+cpdf_set_text_rise cpdf_set_title cpdf_set_word_spacing cpdf_setdash cpdf_setflat cpdf_setgray
+cpdf_setgray_fill cpdf_setgray_stroke cpdf_setlinecap cpdf_setlinejoin cpdf_setlinewidth
+cpdf_setmiterlimit cpdf_setrgbcolor cpdf_setrgbcolor_fill cpdf_setrgbcolor_stroke cpdf_show cpdf_show_xy
+cpdf_stringwidth cpdf_stroke cpdf_text cpdf_translate crypt current
+date dba_close dba_delete dba_exists dba_fetch dba_firstkey dba_insert dba_nextkey dba_open dba_optimize
+dba_popen dba_replace dba_sync dbase_add_record dbase_close dbase_create dbase_delete_record
+dbase_get_record dbase_get_record_with_name dbase_numfields dbase_numrecords dbase_open dbase_pack
+dbase_replace_record dblist dbmclose dbmdelete dbmexists dbmfetch dbmfirstkey dbminsert dbmnextkey dbmopen
+dbmreplace debugger_off debugger_on decbin dechex decoct delete dir dirname diskfreespace dl doubleval
+each easter_days echo empty end ereg ereg_replace eregi eregi_replace error_log error_reporting
+escapeshellcmd exec exp explode extension_loaded extract
+fclose fdf_close fdf_create fdf_get_file fdf_get_status fdf_get_value fdf_next_field_name fdf_open
+fdf_save fdf_set_ap fdf_set_file fdf_set_status fdf_set_value feof fflush fgetc fgetcsv fgets fgetss file
+file_exists fileatime filectime filegroup fileinode filemtime fileowner fileperms filepro
+filepro_fieldcount filepro_fieldname filepro_fieldtype filepro_fieldwidth filepro_retrieve
+filepro_rowcount filesize filetype flock floor fopen fpassthru fputs fread frenchtojd fseek fsockopen
+ftell ftp_cdup ftp_chdir ftp_connect ftp_delete ftp_fget ftp_fput ftp_get ftp_login ftp_mdtm ftp_mkdir
+ftp_nlist ftp_pasv ftp_put ftp_pwd ftp_quit ftp_rawlist ftp_rename ftp_rmdir ftp_site ftp_size ftp_systype
+func_get_arg func_get_args func_num_args fwrite
+get_cfg_var get_current_user get_html_translation_table get_magic_quotes_gpc get_magic_quotes_runtime
+get_meta_tags getallheaders getdate getenv gethostbyaddr gethostbyname gethostbynamel getimagesize
+getlastmod getmxrr getmyinode getmypid getmyuid getprotobyname getprotobynumber getrandmax getrusage
+getservbyname getservbyport gettimeofday gettype gmdate gmmktime gmstrftime gregoriantojd gzclose gzeof
+gzfile gzgetc gzgets gzgetss gzopen gzpassthru gzputs gzread gzrewind gzseek gztell gzwrite
+header hexdec htmlentities htmlspecialchars
+ibase_bind ibase_close ibase_connect ibase_execute ibase_fetch_row ibase_free_query ibase_free_result
+ibase_num_fields ibase_pconnect ibase_prepare ibase_query ibase_timefmt ifx_affected_rows
+ifx_blobinfile_mode ifx_byteasvarchar ifx_close ifx_connect ifx_copy_blob ifx_create_blob ifx_create_char
+ifx_do ifx_error ifx_errormsg ifx_fetch_row ifx_fieldproperties ifx_fieldtypes ifx_free_blob ifx_free_char
+ifx_free_result ifx_free_slob ifx_get_blob ifx_get_char ifx_getsqlca ifx_htmltbl_result ifx_nullformat
+ifx_num_fields ifx_num_rows ifx_pconnect ifx_prepare ifx_query ifx_textasvarchar ifx_update_blob
+ifx_update_char ifxus_close_slob ifxus_create_slob ifxus_open_slob ifxus_read_slob ifxus_seek_slob
+ifxus_tell_slob ifxus_write_slob imagearc imagechar imagecharup imagecolorallocate imagecolorat
+imagecolorclosest imagecolorexact imagecolorresolve imagecolorset imagecolorsforindex imagecolorstotal
+imagecolortransparent imagecopyresized imagecreate imagecreatefromgif imagedashedline imagedestroy
+imagefill imagefilledpolygon imagefilledrectangle imagefilltoborder imagefontheight imagefontwidth
+imagegif imageinterlace imageline imageloadfont imagepolygon imagepsbbox imagepsencodefont imagepsfreefont
+imagepsloadfont imagepstext imagerectangle imagesetpixel imagestring imagestringup imagesx imagesy
+imagettfbbox imagettftext imap_8bit imap_alerts imap_append imap_base64 imap_binary imap_body imap_check
+imap_clearflag_full imap_close imap_createmailbox imap_delete imap_deletemailbox imap_errors imap_expunge
+imap_fetch_overview imap_fetchbody imap_fetchheader imap_fetchstructure imap_getmailboxes
+imap_getsubscribed imap_header imap_headers imap_last_error imap_listmailbox imap_listsubscribed imap_mail
+imap_mail_compose imap_mail_copy imap_mail_move imap_mailboxmsginfo imap_msgno imap_num_msg
+imap_num_recent imap_open imap_ping imap_qprint imap_renamemailbox imap_reopen imap_rfc822_parse_adrlist
+imap_rfc822_write_address imap_scanmailbox imap_search imap_setflag_full imap_sort imap_status
+imap_subscribe imap_uid imap_undelete imap_unsubscribe imap_utf7_decode imap_utf7_encode imap_utf8 implode
+in_array intval is_array is_dir is_double is_executable is_file is_float is_int is_integer is_link is_long
+is_object is_readable is_real is_string is_writeable isset
+jddayofweek jdmonthname jdtofrench jdtogregorian jdtojewish jdtojulian jewishtojd join juliantojd
+key krsort ksort
+ldap_add ldap_bind ldap_close ldap_connect ldap_count_entries ldap_delete ldap_dn2ufn ldap_err2str
+ldap_errno ldap_error ldap_explode_dn ldap_first_attribute ldap_first_entry ldap_free_result
+ldap_get_attributes ldap_get_dn ldap_get_entries ldap_get_values ldap_get_values_len ldap_list
+ldap_mod_add ldap_mod_del ldap_mod_replace ldap_modify ldap_next_attribute ldap_next_entry ldap_read
+ldap_search ldap_unbind link linkinfo list log log10 lstat ltrim
+mail max mcal_append_event mcal_close mcal_date_compare mcal_date_valid mcal_day_of_week mcal_day_of_year
+mcal_days_in_month mcal_delete_event mcal_event_init mcal_event_set_alarm mcal_event_set_category
+mcal_event_set_class mcal_event_set_description mcal_event_set_end mcal_event_set_recur_daily
+mcal_event_set_recur_monthly_mday mcal_event_set_recur_monthly_wday mcal_event_set_recur_none
+mcal_event_set_recur_weekly mcal_event_set_recur_yearly mcal_event_set_start mcal_event_set_title
+mcal_fetch_current_stream_event mcal_fetch_event mcal_is_leap_year mcal_list_alarms mcal_list_events
+mcal_next_recurrence mcal_open mcal_snooze mcal_store_event mcal_time_valid mcrypt_cbc mcrypt_cfb
+mcrypt_create_iv mcrypt_ecb mcrypt_get_block_size mcrypt_get_cipher_name mcrypt_get_key_size mcrypt_ofb
+md5 metaphone mhash mhash_count mhash_get_block_size mhash_get_hash_name microtime min mkdir mktime msql
+msql_affected_rows msql_close msql_connect msql_create_db msql_createdb msql_data_seek msql_dbname
+msql_drop_db msql_dropdb msql_error msql_fetch_array msql_fetch_field msql_fetch_object msql_fetch_row
+msql_field_seek msql_fieldflags msql_fieldlen msql_fieldname msql_fieldtable msql_fieldtype
+msql_free_result msql_list_dbs msql_list_fields msql_list_tables msql_listdbs msql_listfields
+msql_listtables msql_num_fields msql_num_rows msql_numfields msql_numrows msql_pconnect msql_query
+msql_regcase msql_result msql_select_db msql_selectdb msql_tablename mssql_close mssql_connect
+mssql_data_seek mssql_fetch_array mssql_fetch_field mssql_fetch_object mssql_fetch_row mssql_field_length
+mssql_field_name mssql_field_seek mssql_field_type mssql_free_result mssql_get_last_message
+mssql_min_error_severity mssql_min_message_severity mssql_num_fields mssql_num_rows mssql_pconnect
+mssql_query mssql_result mssql_select_db mt_getrandmax mt_rand mt_srand mysql_affected_rows
+mysql_change_user mysql_close mysql_connect mysql_create_db mysql_data_seek mysql_db_query mysql_drop_db
+mysql_errno mysql_error mysql_fetch_array mysql_fetch_field mysql_fetch_lengths mysql_fetch_object
+mysql_fetch_row mysql_field_flags mysql_field_len mysql_field_name mysql_field_seek mysql_field_table
+mysql_field_type mysql_free_result mysql_insert_id mysql_list_dbs mysql_list_fields mysql_list_tables
+mysql_num_fields mysql_num_rows mysql_pconnect mysql_query mysql_result mysql_select_db mysql_tablename
+next nl2br number_format
+ocibindbyname ocicolumnisnull ocicolumnname ocicolumnsize ocicolumntype ocicommit ocidefinebyname ocierror
+ociexecute ocifetch ocifetchinto ocifetchstatement ocifreecursor ocifreestatement ociinternaldebug
+ocilogoff ocilogon ocinewcursor ocinewdescriptor ocinlogon ocinumcols ociparse ociplogon ociresult
+ocirollback ocirowcount ociserverversion ocistatementtype octdec odbc_autocommit odbc_binmode odbc_close
+odbc_close_all odbc_commit odbc_connect odbc_cursor odbc_do odbc_exec odbc_execute odbc_fetch_into
+odbc_fetch_row odbc_field_len odbc_field_name odbc_field_type odbc_free_result odbc_longreadlen
+odbc_num_fields odbc_num_rows odbc_pconnect odbc_prepare odbc_result odbc_result_all odbc_rollback
+odbc_setoption opendir openlog ora_bind ora_close ora_columnname ora_columntype ora_commit ora_commitoff
+ora_commiton ora_error ora_errorcode ora_exec ora_fetch ora_getcolumn ora_logoff ora_logon ora_open
+ora_parse ora_rollback ord
+parse_str parse_url passthru pclose pdf_add_annotation pdf_add_outline pdf_arc pdf_begin_page pdf_circle
+pdf_clip pdf_close pdf_close_image pdf_closepath pdf_closepath_fill_stroke pdf_closepath_stroke
+pdf_continue_text pdf_curveto pdf_end_page pdf_endpath pdf_execute_image pdf_fill pdf_fill_stroke
+pdf_get_info pdf_lineto pdf_moveto pdf_open pdf_open_gif pdf_open_jpeg pdf_open_memory_image
+pdf_place_image pdf_put_image pdf_rect pdf_restore pdf_rotate pdf_save pdf_scale pdf_set_char_spacing
+pdf_set_duration pdf_set_font pdf_set_horiz_scaling pdf_set_info_author pdf_set_info_creator
+pdf_set_info_keywords pdf_set_info_subject pdf_set_info_title pdf_set_leading pdf_set_parameter
+pdf_set_text_matrix pdf_set_text_pos pdf_set_text_rendering pdf_set_text_rise pdf_set_transition
+pdf_set_word_spacing pdf_setdash pdf_setflat pdf_setgray pdf_setgray_fill pdf_setgray_stroke
+pdf_setlinecap pdf_setlinejoin pdf_setlinewidth pdf_setmiterlimit pdf_setrgbcolor pdf_setrgbcolor_fill
+pdf_setrgbcolor_stroke pdf_show pdf_show_boxed pdf_show_xy pdf_skew pdf_stringwidth pdf_stroke
+pdf_translate pfsockopen pg_close pg_cmdtuples pg_connect pg_dbname pg_errormessage pg_exec pg_fetch_array
+pg_fetch_object pg_fetch_row pg_fieldisnull pg_fieldname pg_fieldnum pg_fieldprtlen pg_fieldsize
+pg_fieldtype pg_freeresult pg_getlastoid pg_host pg_loclose pg_locreate pg_loopen pg_loreadpg_loreadall
+pg_lounlink pg_lowrite pg_numfields pg_numrows pg_options pg_pconnect pg_port pg_result pg_tty
+php_logo_guid phpinfo phpversion pi popen pos posix_ctermid posix_getcwd posix_getegid posix_geteuid
+posix_getgid posix_getgrgid posix_getgrnam posix_getgroups posix_getlogin posix_getpgid posix_getpgrp
+posix_getpid posix_getppid posix_getpwnam posix_getpwuid posix_getrlimit posix_getsid posix_getuid
+posix_isatty posix_kill posix_mkfifo posix_setgid posix_setpgid posix_setsid posix_setuid posix_times
+posix_ttyname posix_uname pow preg_grep preg_match preg_match_all preg_quote preg_replace preg_split prev
+print print_r printf putenv
+quoted_printable_decode quotemeta
+rand range rawurldecode rawurlencode readdir readfile readgzfile readlink recode_file recode_string rename
+reset rewind rewinddir rmdir round rsort
+sem_acquire sem_get sem_release session_decode session_destroy session_encode session_id
+session_is_registered session_module_name session_name session_register session_save_path session_start
+session_unregister set_file_buffer set_magic_quotes_runtime set_socket_blocking set_time_limit setcookie
+setlocale settype shm_attach shm_detach shm_get_var shm_put_var shm_remove shm_remove_var shuffle
+similar_text sin sizeof snmp_get_quick_print snmp_set_quick_print snmpget snmpset snmpwalk snmpwalkoid
+sort soundex split sprintf sql_regcase sqrt srand stat str_repeat str_replace strcasecmp strchr strcmp
+strcspn strftime strip_tags stripcslashes stripslashes stristr strlen strpos strrchr strrev strrpos strspn
+strstr strtok strtolower strtoupper strtr strval substr substr_replace sybase_affected_rows sybase_close
+sybase_connect sybase_data_seek sybase_fetch_array sybase_fetch_field sybase_fetch_object sybase_fetch_row
+sybase_field_seek sybase_free_result sybase_num_fields sybase_num_rows sybase_pconnect sybase_query
+sybase_result sybase_select_db symlink syslog system
+tan tempnam time touch trim
+uasort ucfirst ucwords uksort umask unlink unset urldecode urlencode usort utf8_decode utf8_encode
+var_dump virtual vm_addalias vm_adduser vm_delalias vm_deluser vm_passwd
+wddx_add_vars wddx_deserialize wddx_packet_end wddx_packet_start wddx_serialize_value wddx_serialize_vars
+xml_error_string xml_get_current_byte_index xml_get_current_column_number xml_get_current_line_number
+xml_get_error_code xml_parse xml_parser_create xml_parser_free xml_parser_get_option xml_parser_set_option
+xml_set_character_data_handler xml_set_default_handler xml_set_element_handler
+xml_set_external_entity_ref_handler xml_set_object xml_set_processing_instruction_handler
+xml_set_unparsed_entity_decl_handler
+yp_first yp_get_default_domain yp_master yp_match yp_next yp_order
+zend_logo_guid
+/C6"Built-in Constants" STYLE_EXTENSION
+__FILE__ __LINE__
+CL_EXPUNGE CP_MOVE CP_UID CRYPT_BLOWFISH CRYPT_EXT_DES CRYPT_MD5 CRYPT_STD_DES
+DOCUMENT_ROOT
+E_CORE_ERROR E_CORE_WARNING E_ERROR E_NOTICE E_PARSE E_WARNING
+FALSE FT_INTERNAL FT_PEEK FT_UID
+GATEWAY_INTERFACE
+HTTP_ACCEPT HTTP_ACCEPT_CHARSET HTTP_ACCEPT_LANGUAGE HTTP_CONNECTION HTTP_ENCODING HTTP_HOST HTTP_REFERER
+HTTP_USER_AGENT
+LATT_MARKED LATT_NOINFERIORS LATT_NOSELECT LATT_UNMARKED LC_ALL LC_COLLATE LC_CTYPE LC_MONETARY LC_NUMERIC
+LC_TIME
+MCAL_APRIL MCAL_AUGUST MCAL_DECEMBER MCAL_FEBRUARY MCAL_FRIDAY MCAL_JANUARY MCAL_JULY MCAL_MARCH
+MCAL_MAYMCAL_JUNE MCAL_MONDAY MCAL_NOVEMBER MCAL_OCTOBER MCAL_RECUR_DAILY MCAL_RECUR_MONTHLY_MDAY
+MCAL_RECUR_MONTHLY_WDAY MCAL_RECUR_NONE MCAL_RECUR_WEEKLY MCAL_RECUR_YEARLY MCAL_SATURDAY MCAL_SEPTEMBER
+MCAL_SUNDAY MCAL_THURSDAY MCAL_TUESDAY MCAL_WEDNESDAY MCRYPT_CRYPT MCRYPT_DES MCRYPT_DES_COMPAT
+MCRYPT_GOST MCRYPT_IDEA MCRYPT_RC2 MCRYPT_RC6 MCRYPT_SAFER128 MCRYPT_SAFER64 MCRYPT_TEAN MCRYPT_ThreeWAY
+MCRYPT_TripleDES MCRYPT_TWOFISH MCRYPT_TWOFISH128 MCRYPT_TWOFISH192 MHASH_CRC32 MHASH_CRC32B MHASH_GOST
+MHASH_HAVAL MHASH_MD5 MHASH_RIPEMD128 MHASH_RIPEMD160 MHASH_SHA1 MHASH_SNEFRU MHASH_TIGER
+OCI_ASSOC OCI_B_BLOB OCI_B_CFILE OCI_B_CLOB OCI_B_FILE OCI_B_ROWID OCI_COMMIT_ON_SUCCESS OCI_D_FILE
+OCI_D_LOB OCI_D_ROWID OCI_DEFAULT OCI_NUM OCI_RETURN_LOBS ODBC_BINMODE_CONVERT ODBC_BINMODE_PASSTHRU
+ODBC_BINMODE_RETURN OP_ANONYMOUS OP_HALFOPEN OP_READONLY
+PATH_TRANSLATED PCRE_ANCHORED PCRE_CASELESS PCRE_DOLLAR_ENDONLY PCRE_DOTALL PCRE_EXTENDED PCRE_EXTRA
+PCRE_MULTILINE PCRE_NOTBOL PCRE_NOTEOL PCRE_UNGREEDY PGSQL_ASSOC PGSQL_BOTH PGSQL_NUM PHP_OS PHP_VERSION
+PREG_PATTERN_ORDER PREG_SET_ORDER PREG_SPLIT_NO_EMPTY
+QUERY_STRING
+REMOTE_ADDR REMOTE_PORT REQUEST_METHOD REQUEST_URI RETURN_NULLS
+SCRIPT_FILENAME SCRIPT_NAME SERVER_ADMIN SERVER_NAME SERVER_PORT SERVER_PROTOCOL SERVER_SIGNATURE
+SERVER_SOFTWARE SQL_CUR_DEFAULT SQL_CUR_USE_DRIVER SQL_CUR_USE_IF_NEEDED SQL_CUR_USE_ODBC
+TRUE
+XML_ERROR_ASYNC_ENTITY XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF XML_ERROR_BAD_CHAR_REF
+XML_ERROR_BINARY_ENTITY_REF XML_ERROR_DUPLICATE_ATTRIBUTE XML_ERROR_EXTERNAL_ENTITY_HANDLING
+XML_ERROR_INCORRECT_ENCODING XML_ERROR_INVALID_TOKEN XML_ERROR_JUNK_AFTER_DOC_ELEMENT
+XML_ERROR_MISPLACED_XML_PI XML_ERROR_NO_ELEMENTS XML_ERROR_NO_MEMORY XML_ERROR_NONE
+XML_ERROR_PARAM_ENTITY_REF XML_ERROR_PARTIAL_CHAR XML_ERROR_RECURSIVE_ENTITY_REF XML_ERROR_SYNTAX
+XML_ERROR_TAG_MISMATCH XML_ERROR_UNCLOSED_CDATA_SECTION XML_ERROR_UNCLOSED_TOKEN
+XML_ERROR_UNDEFINED_ENTITY XML_ERROR_UNKNOWN_ENCODING XML_OPTION_CASE_FOLDING XML_OPTION_TARGET_ENCODING
+/C7"Built-in Variables" STYLE_VARIABLE
+argc argv
+HTTP_COOKIE_VARS HTTP_GET_VARS HTTP_POST_VARS
+PHP_SELF
+/C8"Keywords" STYLE_KEYWORD
+$_COOKIE $_ENV $_FILES $_GET $_POST $_REQUEST $_SERVER $_SESSION $argc $argv $GLOBALS $HTTP_COOKIE_VARS
+$HTTP_ENV_VARS $HTTP_GET_VARS $HTTP_POST_FILES $HTTP_POST_VARS $HTTP_SERVER_VARS $HTTP_SESSION_VARS
+$PHP_SELF $this
+__autoload __call __clone __construct __destruct __get __set __sleep __wakeup
+abstract as
+break
+case catch cfunction class continue
+declare default die do
+else elseif enddeclare endfor endforeach endif endswitch endwhile eval exit extends
+false final for foreach function
+global
+if implements include include_once interface
+namespace NULL
+old_function
+parent private protected public
+require require_once return
+static stdClass switch
+throw true try
+var
+while
+
+/L9"JavaScript" JSCRIPT_LANG Line Comment = // Block Comment On = /* Block Comment Off = */ Escape Char = \ String Chars = '" File Extensions = JS
+/Delimiters = ~!@%^&*()-+=|\/{}[]:;"'<> ,	.?
+/Function String = "%[ ^t]++function^(*(*)^)"
+/Function String 1 = "%[ ^t]++^(*^)=[ ^t]++function*(*)"
+/Indent Strings = "{" "else"
+/Unindent Strings = "}"
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/Open Fold Strings = "{"
+/Close Fold Strings = "}"
+/C1"Keywords" STYLE_KEYWORD
+abstract
+break byte
+case catch char class const continue
+default delete do double
+else extends
+false final finally float for function
+goto
+if implements import in instanceof int interface
+long
+native null
+package private protected public
+reset return
+short static super switch synchronized
+this throw transient true try
+var void
+while with
+/C2"Objects" STYLE_OPERATOR
+Anchor Applet Area Arguments Array
+Boolean Button
+Checkbox Collection Crypto
+Date Dictionary Document Drive Drives
+Element Enumerator Event
+File FileObject FileSystemObject FileUpload Folder Folders Form Frame Function
+Global
+HTMLElement Hidden History
+Image Infinity Input
+JSObject JavaArray JavaClass JavaObject JavaPackage
+Layer Link
+Math MimeType
+Navigator Number
+Object Option
+Packages Password Plugin PrivilegeManager
+Random RegExp
+Select String Submit
+Text Textarea
+URL
+VBArray
+WScript Window
+screen
+/C3"Methods and Properties" STYLE_METHOD
+ActiveXObject
+E Echo
+FromPoint
+HandleEvent Height
+LN10 LN2 LOG10E LOG2E Links
+MAX_VALUE MIN_VALUE
+NEGATIVE_INFINITY NaN
+PI POSITIVE_INFINITY
+SQRT1_2 SQRT2
+TYPE
+UTC
+above abs acos action activeElement alert alinkColor all altKey anchor anchors appCodeName appName
+appVersion applets apply arguments arity asin assign atan atan2 atob availHeight availLeft availTop
+availWidth
+back background below bgColor big blink blur bold border borderWidths bottom btoa button
+call callee caller cancelBubble captureEvents ceil charAt charCodeAt charset checked children className
+classes clear clearInterval clearTimeout click clientInformation clientX clientY close closed colorDepth
+compile complete concat confirm constructir contains contextual cookie cos crypto ctrlKey current
+data defaultCharset defaultChecked defaultSelected defaultStatus defaultValue description
+disableExternalCapture disablePrivilege document domain
+element elements embeds enableExternalCapture enablePrivilege enabledPlugin encoding escape eval event
+exec exp expando
+fgColor fileName find fixed floor focus fontColor fontSize form forms forward frames fromCharCode
+fromElement
+get getAttribute getClass getDate getDay getFullYear getHours getMember getMilliseconds getMinutes
+getMonth getSeconds getSelection getSlot getTime getTimezoneOffset getUTCDate getUTCDay getUTCFullYear
+getUTCHours getUTCMilliseconds getUTCMinutes getUTCMonth getUTCSeconds getWindow getYear global go
+hash hidden history home host hostName href hspace
+id ids ignoreCase images index indexOf inner innerHTML innerText innerWidth insertAdjacentHTML
+insertAdjacentText isFinite isNaN italics
+java javaEnabled join
+keyCode
+lang language lastIndex lastIndexOf lastMatch lastModified lastParen layerX layerY layers left leftContext
+length link linkColor load location locationBar log lowsrc
+margins match max menubar method mimeTypes min modifiers moveAbove moveBelow moveBy moveTo moveToAbsolute
+multiline
+name navigate navigator netscape next number
+offscreenBuffering offset offsetHeight offsetLeft offsetParent offsetTop offsetWidth offsetX offsetY
+onHelp onabort onblur onchange onclick ondblclick ondragdrop onerror onfocus onkeydown onkeypress onkeyup
+onload onmousedown onmousemove onmouseout onmouseover onmouseup onmove onreset onresize onsubmit onunload
+open opener options outerHTML outerHeight outerText outerWidth
+paddings pageX pageXOffset pageY pageYOffset parent parentElement parentLayer parentWindow parse
+parseFloat parseInt pathname personalbar pixelDepth platform plugins pop port pow preference previous
+print prompt protocol prototype push
+random readyState reason referrer refresh releaseEvents reload removeAttribute removeMember replace
+resizeBy resizeTo returnValue reverse right rightContext round
+screenX screenY scroll scrollBy scrollIntoView scrollTo scrollbars search select selected selectedIndex
+self setAttribute setDay setFullYear setHotkeys setHours setInterval setMember setMilliseconds setMinutes
+setMonth setResizable setSeconds setSlot setTime setTimeout setUTCDate setUTCFullYear setUTCHours
+setUTCMillseconds setUTCMinutes setUTCMonth setUTCSeconds setYear setZOptions shift shiftKey siblingAbove
+siblingBelow signText sin slice smallsort source sourceIndex splice split sqrt src srcElement srcFilter
+status statusbar stop strike style sub submit substr substring suffixes sun sup systemLanguage
+tagName tags taint taintEnabled tan target test text title toElement toGMTString toLocaleString
+toLowerCase toString toUTCString toUpperCase toolbar top type typeof
+unescape unshift untaint unwatch userAgent userLanguage
+value valueOf visibility vlinkColor vspace
+watch which width window write writeln
+x
+y
+zIndex
+/C4"Operators" STYLE_OPERATOR
+!
+$
+%
+&
+*
++
+-
+// /
+:
+<
+=
+>
+?
+[
+]
+^
+is
+new
+sizeof
+typeof
+unchecked
+|
+~
+/C5"Separs" STYLE_OPERATOR
+(
+)
+,
+;
+{
+}
+
+/L10"VBScript Active Server Pages" Nocase ASP_LANG Line Comment = ' Line Comment Alt = REM Block Comment On = /* Block Comment Off = */ Block Comment On Alt = <!-- Block Comment Off Alt = --> String Chars = " File Extensions =
+/Delimiters = ~!@%^&*()_-+=|\{}[]:;"'<> ,	.?
+/Function String = "%[ ,^t]++^{Public^}^{Private^} ^(^{Function^}^{Sub^}*^)(*[)]++*"
+/Function String 1 = "%[ ,^t]++^(^{Function^}^{Sub^}*^)(*)"
+/Function String 2 = "%[ ,^t]++^{Public^}^{Private^} ^(Property ^{Let^}^{Get^}*^)(*)*"
+/Function String 3 = "%[ ,^t]++^(Property ^{Let^}^{Get^}*^)(*)*"
+/Function String 4 = "%[ ,^t]++^{Function^}^{Sub^} ^(*)"
+/Open Brace Strings =  "{" "(" "[" "<"
+/Close Brace Strings = "}" ")" "]" ">"
+/Indent Strings = "Then" "Select Case" "Do While" "Do" "Else" "ElseIf" "<td>" "<tr>"
+/Unindent Strings = "End If" "Loop" "End" "Next" "Loop While" "Else" "ElseIf" "</TD>" "</tr>"
+/Open Fold Strings = "If" "ElseIf" "Function" "Sub" "Case Else" "Case" "Else" "With"
+/Close Fold Strings = "ElseIf" "Case Else" "End If" "End Function" "End Sub" "Exit Sub" "End Select" "End With" "Case" "Else"
+/C1"Tags" STYLE_TAG
+%>
+<%
+/C2"VBFunctions" STYLE_FUNCTION
+&
+Abs Array Asc AscB AscW Atn Avg
+CBool CByte CCur CDate CDbl Cdec Choose Chr ChrB ChrW CInt CLng Command Cos Count CreateObject CSng CStr
+CurDir CVar CVDate CVErr
+Date DateAdd DateDiff DatePart DateSerial DateValue Day DDB Dir DoEvents
+Environ EOF Error Exp
+FileAttr FileDateTime FileLen Fix Format FreeFile FV
+GetAllStrings GetAttr GetAutoServerSettings GetObject GetSetting
+Hex Hour
+IIf IMEStatus Input InputB InputBox InstB InStr Int IPmt IsArray IsDate IsEmpty IsError IsMissing IsNull
+IsNumeric IsObject
+LBound LCase Left LeftB Len LenB LoadPicture Loc LOF Log LTrim
+Max Mid MidB Min Minute MIRR Month MsgBox
+Now NPer NPV
+Oct
+Partition Pmt PPmt PV
+QBColor
+Rate RGB Right RightB Rnd RTrim
+Second Seek Sgn Shell Sin SLN Space Spc Sqr StDev StDevP Str StrComp StrConv String Sum Switch SYD
+Tab Tan Time Timer TimeSerial TimeValue Trim TypeName
+UBound UCase
+Val Var VarP VarType
+Weekday
+Year
+/C3"VBMethods" STYLE_METHOD
+Accept Activate Add AddCustom AddFile AddFromFile AddFromTemplate AddItem AddNew AddToAddInToolbar
+AddToolboxProgID Append AppendChunk Arrange Assert AsyncRead
+BatchUpdate BeginTrans Bind Buffer
+CacheControl Cancel CancelAsyncRead CancelBatch CancelUpdate CanPropertyChange CaptureImage CellText
+CellValue Charset Circle Clear ClearFields ClearSel ClearSelCols Clone Close Cls ColContaining ColumnSize
+CommitTrans CompactDatabase Compose Connect ContentType Copy CopyQueryDef CreateDatabase CreateDragImage
+CreateEmbed CreateField CreateGroup CreateIndex CreateLink CreatePreparedStatement CreatePropery
+CreateQuery CreateQueryDef CreateRelation CreateTableDef CreateUser CreateWorkspace Customize
+Delete DeleteColumnLabels DeleteColumns DeleteRowLabels DeleteRows DoVerb Drag Draw
+Edit EditCopy EditPaste EndDoc EnsureVisible EstablishConnection Execute Expires ExpiresAbsolute
+ExtractIcon
+Fetch FetchVerbs Files FillCache Find FindFirst FindItem FindLast FindNext FindPrevious Forward
+GetBookmark GetChunk GetClipString GetData GetFirstVisible GetFormat GetHeader GetLineFromChar GetNumTicks
+GetRows GetSelectedPart GetText GetVisibleCount GoBack GoForward
+Hide HitTest HoldFields HTMLEncode
+Idle InitializeLabels InsertColumnLabels InsertColumns InsertObjDlg InsertRowLabels InsertRows
+IsClientConnected Item
+KillDoc
+Layout Line LinkExecute LinkPoke LinkRequest LinkSend Listen LoadFile LoadResData LoadResPicture
+LoadResString LogEvent
+MakeCompileFile MakeReplica MapPath MoreResults Move MoveData MoveFirst MoveLast MoveNext MovePrevious
+NavigateTo NewPage NewPassword NextRecordset
+OLEDrag OnAddinsUpdate OnConnection OnDisconnection OnStartupComplete Open OpenConnection OpenDatabase
+OpenQueryDef OpenRecordset OpenResultset OpenURL Overlay
+PaintPicture Paste PastSpecialDlg PeekData Play Point PopulatePartial PopupMenu Print PrintForm
+PropertyChanged PSet
+Quit
+Raise RandomDataFill RandomFillColumns RandomFillRows rdoCreateEnvironment rdoRegisterDataSource
+ReadFromFile ReadProperty Rebind ReFill Refresh RefreshLink RegisterDatabase Reload Remove
+RemoveAddInFromToolbar RemoveItem Render RepairDatabase Reply ReplyAll Requery ResetCustom
+ResetCustomLabel ResolveName RestoreToolbar Resync Rollback RollbackTrans RowBookmark RowContaining RowTop
+Save SaveAs SaveFile SaveToFile SaveToolbar SaveToOle1File Scale ScaleX ScaleY ScriptTimeout Scroll Select
+SelectAll SelectPart SelPrint Send SendData SessionID Set SetAutoServerSettings SetData SetFocus SetOption
+SetSize SetText SetViewport Show ShowColor ShowFont ShowHelp ShowOpen ShowPrinter ShowSave ShowWhatsThis
+SignOff SignOn Size Span SplitContaining StartLabelEdit StartLogging Status Stop Synchronize
+TextHeight TextWidth Timeout ToDefaults TwipsToChartPart TypeByChartType
+Update UpdateControls UpdateRecord UpdateRow Upto URLEncode
+WhatsThisMode Write WriteProperty
+ZOrder
+/C4"VBEvents" STYLE_EVENT
+AccessKeyPress AddHeader AfterAddFile AfterChangeFileName AfterCloseFile AfterColEdit AfterColUpdate
+AfterDelete AfterInsert AfterLabelEdit AfterRemoveFile AfterUpdate AfterWriteFile AmbienChanged
+AppendToLog ApplyChanges Associate AsyncReadComplete AxisActivated AxisLabelActivated AxisLabelSelected
+AxisLabelUpdated AxisSelected AxisTitleActivated AxisTitleSelected AxisTitleUpdated AxisUpdated
+BeforeClick BeforeColEdit BeforeColUpdate BeforeConnect BeforeDelete BeforeInsert BeforeLabelEdit
+BeforeLoadFile BeforeUpdate BinaryWrite ButtonClick ButtonCompleted ButtonGotFocus ButtonLostFocus
+Change ChartActivated ChartSelected ChartUpdated Click ColEdit Collapse ColResize ColumnClick Compare
+ConfigChageCancelled ConfigChanged ConnectionRequest
+DataArrival DataChanged DataUpdated DblClick Deactivate DeviceArrival DeviceOtherEvent DeviceQueryRemove
+DeviceQueryRemoveFailed DeviceRemoveComplete DeviceRemovePending DevModeChange Disconnect DisplayChanged
+Dissociate DoGetNewFileName Done DonePainting DownClick DragDrop DragOver DropDown
+EditProperty EnterCell EnterFocus ExitFocus Expand
+Flush FootnoteActivated FootnoteSelected FootnoteUpdated
+GotFocus
+HeadClick
+InfoMessage IniProperties Initialize ItemActivated ItemAdded ItemCheck ItemClick ItemReloaded ItemRemoved
+ItemRenamed ItemSeletected
+KeyDown KeyPress KeyUp
+LeaveCell LegendActivated LegendSelected LegendUpdated LinkClose LinkError LinkNotify LinkOpen Load
+LostFocus
+MouseDown MouseMove MouseUp
+NodeClick
+ObjectMove OLECompleteDrag OLEDragDrop OLEDragOver OLEGiveFeedback OLESetData OLEStartDrag OnAddNew OnComm
+OnEnd OnStart
+Paint PanelClick PanelDblClick PathChange PatternChange PlotActivated PlotSelected PlotUpdated
+PointActivated PointLabelActivated PointLabelSelected PointLabelUpdated PointSelected PointUpdated
+PointLabelSelected PointLabelUpdated PointSelected PointUpdated
+PowerQuerySuspend PowerResume PowerStatusChanged PowerSuspend
+QueryChangeConfig QueryComplete QueryCompleted QueryTimeout QueryUnload
+ReadProperties Redirect Reposition RequestChangeFileName RequestWriteFile Resize ResultsChanged
+RowColChange RowCurrencyChange RowResize RowStatusChanged
+SelChange SelectionChanged SendComplete SendProgress SeriesActivated SeriesSelected SeriesUpdated
+SettingChanged SplitChange StateChanged StatusUpdate SysColorsChanged
+SelChange SelectionChanged SendComplete SendProgress SeriesActivated
+StatusUpdate SysColorsChanged
+Terminate TimeChanged TitleActivated TitleSelected
+UnboundAddData UnboundDeleteRow UnboundGetRelativeBookmark UnboundReadData UnboundWriteData Unload UpClick
+Updated
+UnboundWriteData Unload UpClick Updated
+Validate ValidationError
+WriteProperties
+WillAssociate WillChangeData WillDissociate WillExecute WillUpdateRows WriteProperties
+/C5"VBStatements" STYLE_STATEMENT
+AppActivate
+Base Beep
+Call Case ChDir ChDrive Const
+DefBool DefByte DefCur DefDate DefDbl DefDec DefInt DefLng DefObj DefSng DefStr Deftype DefVar
+DeleteSetting Dim Do
+Else ElseIf End Enum Erase Event Exit Explicit
+FileCopy For ForEach Function
+Get GoSub GoTo
+If Implements
+Kill
+Let LineInput Lock LSet
+MkDir
+Name Next
+On OnError Option
+Private Property Public Put
+RaiseEvent Randomize ReDim Reset Resume Return RmDir RSet
+SavePicture SaveSetting SendKeys SetAttr Static Step Sub
+Then To Type
+Unlock
+Wend While Width With
+/C6"Objects"
+Application
+ClientCertificate Cookies
+Form
+ObjectContext
+QueryString
+Request Response
+Server ServerVariables Session
+/C7"Constants"
+CDROM
+False Fixed ForAppending ForReading ForWriting
+RAMDisk Remote Removable
+True
+Unknown
+vbArray vbBinaryCompare vbBlack vbBlue vbBoolean vbByte vbCr vbCrLf vbCurrency vbCyan vbDataObject vbDate
+vbDecimal vbDouble vbEmpty vbError vbFalse vbFirstFourDays vbFirstFullWeek vbFirstJan1 vbFormFeed vbFriday
+vbGeneralDate vbGreen vbInteger vbLf vbLong vbLongDate vbLongTime vbMagenta vbMonday vbNewLine vbNull
+vbNullChar vbNullString vbObject vbObjectError vbRed vbSaturday vbShortDate vbShortTime vbSingle vbString
+vbSunday vbTab vbTextCompare vbThursday vbTrue vbTuesday vbUseSystem vbUseSystemDayOfWeek vbVariant
+vbVerticalTab vbWednesday vbWhite vbYellow
+vbNullChar vbNullString 
+vbObject vbObjectError vbRed vbSaturday vbShortDate vbShortTime vbSingle
+vbString vbSunday vbTab vbTextCompare vbThursday vbTrue vbTuesday
+vbUseSystem vbUseSystemDayOfWeek 
+
+/L11"CSS" CSS_LANG Nocase Noquote Block Comment On = /* Block Comment Off = */ File Extensions = CSS
+/Delimiters = ,.:;	{ }
+/C1"HTML Tags"
+A ABOVE ACTIVE ADDRESS APPLET AREA ARRAY
+B BASE BASEFONT BGSOUND BIG BLINK BLOCKQUOTE BODY BR
+CAPTION CENTER CITE CODE
+DD DFN DIR DIV DL DT
+EM EMBED
+FIG FIRST-LETTER FIRST-LINE FONT FORM FRAME FRAMESET
+H H1 H2 H3 H4 H5 H6 HEAD HR HTML
+I IMG INPUT ISINDEX
+KBD
+LI LINK
+MAP MARQUEE MENU META
+NEXTID NOBR NOFRAMES NOSCRIPT NOTE
+OL OPTION
+P PRE
+RANGE ROOT
+SAMP SCRIPT SELECT SMALL SOUND SPAN SQRT STRIKE STRONG STYLE SUB SUP
+TABLE TD TEXT TEXTAREA TH TITLE TR TT
+U UL
+VAR VISITED
+WBR
+/C2"CSS Properties"
+background background-attachment background-color background-image background-position background-repeat
+border border-bottom border-bottom-width border-color border-left border-left-width border-right
+border-right-width border-style border-top border-top-width border-width
+border-style border-top border-top-width border-width
+clear color
+display
+float font font-family font-size font-style font-variant font-weight
+height
+letter-spacing line-height list-style list-style-image list-style-position list-style-type
+list-style-type
+margin margin-bottom margin-left margin-right margin-top
+padding padding-bottom padding-left padding-right padding-top
+text-align text-decoration text-indent text-transform
+vertical-align
+white-space width word-spacing
+/C3"CSS Values"
+aqua auto
+baseline black blink block blue bold bolder both bottom
+capitalize center circle cursive
+dashed decimal disc dotted double
+fantasy fixed fuchsia
+gray green groove
+inline inset inside italic
+justify
+large larger left lighter lime line-through list-item lower-alpha lower-roman lowercase
+lowercase
+maroon medium middle monospace
+navy no-repeat none normal nowrap
+oblique olive outset outside overline
+pre purple
+red repeat repeat-x repeat-y rgb ridge right
+sans-serif scroll serif silver small small-caps smaller solid square sub super
+teal text-bottom text-top thick thin top transparent
+underline upper-alpha upper-roman uppercase url
+white
+x-large x-small xx-large xx-small
+yellow
+
+/L12"Microchip PIC Asm" AASM_LANG Nocase Line Comment = ; File Extensions = ASM INC
+/Delimiters = ~!@$%^&*()-+=|\{}[]:;"'<> ,	.?
+/Function String = "%[a-z_]*"
+/C1"ASSEMBLER DIRECTIVES"
+#DEFINE #INCLUDE #UNDEFINE
+BANKISEL BANKSEL
+CBLOCK CODE CONSTANT
+
+DATA DB DE DT DW
+ELSE END ENDC ENDIF ENDM ENDW EQU ERROR ERRORLEVEL EXITM EXPAND EXTERN
+FILL
+GLOBAL
+IDATA IF IFDEF IFNDEF
+LIST LOCAL
+MACRO MESSG
+NOEXPAND NOLIST
+ORG
+PAGE PAGESEL PROCESSOR
+RADIX RES
+SET SPACE SUBTITLE
+TITLE
+UDATA UDATA_OVR UDATA_SHR
+VARIABLE
+WHILE
+__BADRAM __CONFIG __IDLOCS __MAXRAM
+=
+/C2"PIC16C5X INSTRUCTION SET"
+addwf andlw andwf
+bcf bsf btfsc btfss
+call clrf clrw clrwdt comf
+decf decfsz
+goto
+incf incfsz iorlw iorwf
+movf movlw movwf
+nop
+option
+retlw rlf rrf
+sleep subwf swapf
+tris
+xorlw xorwf
+/C3"PIC16CXX INSTRUCTION SET"
+addlw
+retfie return
+sublw
+/C4"PIC17CXXX INSTRUCTION SET"
+addwfc
+btg
+cpfseq cpfsgt cpfslt
+daw dcfsnz
+infsnz
+lcall
+movfp movlb movlr movpf mullw mulwf
+negw
+rlcf rlncf rrcf rrncf
+setf subwfb
+tablrd tablwt tlrd tlwt tstfsz
+/C5"PRE-DEFINED REGISTER LABELS"
+ADCON0 ADCON1 ADRES
+CCP1CON CCP2CON CCPR1H CCPR1L CCPR2H CCPR2L CMCON
+EEADR EECON1 EECON2 EEDATA
+F FSR
+GPIO
+INDF INTCON
+LCDCON LCDD00 LCDD01 LCDD02 LCDD03 LCDD04 LCDD05 LCDD06 LCDD07 LCDD08 LCDD09 LCDD10 LCDD11 LCDD12 LCDD13 LCDD14 LCDD15 LCDPS LCDSE
+OSCCAL
+PCL PCLATH PCON PIE1 PIE2 PIR1 PIR2 PORTA PORTB PORTC PORTD PORTE PORTF PORTG PR2
+RCREG RCSTA RTCC
+SPBRG SSPADD SSPBUF SSPCON SSPSTAT STATUS
+T1CON T2CON TMR0 TMR1H TMR1L TMR2 TRISA TRISB TRISC TRISD TRISE TRISF TRISG TXREG TXSTA
+VRCON
+W WREG
+/C6"PRE-DEFINED BIT LABELS"
+ADCS0 ADCS1 ADIE ADIF ADON
+BF BO BRGH
+C C1OUT C2OUT
+CAL0 CAL1 CAL2 CAL3 CAL4 CAL5
+CCP1IE CCP1IF CCP1M0 CCP1M1 CCP1M2 CCP1M3 CCP1X CCP1Y
+CCP2IE CCP2IF CCP2M0 CCP2M1 CCP2M2 CCP2M3 CCP2X CCP2Y
+CHS0 CHS1 CHS2
+CKE CKP CM0 CM1 CM2 CIS CMIE CMIF CREN CS0 CS1 CSRC
+DA DC
+EEIE EEIF
+FERR
+GIE GO_DONE
+IBF IBOV INTE INTEDG INTF IRP
+LCDEN LCDIE LCDIF LMUX0 LMUX1 LP0 LP1 LP2 LP3
+NOT_PD NOT_RBPU NOT_RBWU NOT_TO
+OBF OERR
+P PA0 PA1 PCFG0 PCFG1 PCFG2 PEIE POR PS0 PS1 PS2 PSA PSPIE PSPIF PSPMODE
+RBIE RBIF RBWUF RCIE RCIF RD
+RP0 RP1 RW RX9 RX9D
+S SE0 SE5 SE9 SE12 SE16 SE20 SE27 SE29
+SLPEN SMP SPEN SREN SSPEN SSPIE SSPIF SSPM0 SSPM1 SSPM2 SSPM3 SSPOV SYNC
+T0CS T0IE T0IF T0SE
+T1CKPS0 T1CKPS1 T1OSCEN
+T2CKPS0 T2CKPS1
+TMR1CS TMR1IE TMR1IF TMR1ON TMR2IE TMR2IF TMR2ON
+TOUTPS3 TOUTPS2 TOUTPS1 TOUTPS0
+TRISE0 TRISE1 TRISE2 TRMT
+TX89 TX9 TX9D TXD8 TXEN TXIE TXIF
+UA
+VGEN VR0 VR1 VR2 VR3 VREN VROE VRR
+WCOL WR WREN WRERR
+Z
+/C7"SYMBOLS"
++
+,
+-
+// /
+<
+>
+/C8"SPECIALS"
+ADDCF ADDDCF
+BC BNC BNDC BZ BNZ
+CLRC CLRDC CLRZ
+MOVFN
+NEGF
+SETC SETDC SETZ SKPC SKPNC SKPDC SKPNDC SKPZ SKPNZ SUBCF SUBDCF
+TSTF
+
+/L13"MSSQL" Nocase Block Comment On = /* Block Comment Off = */ Line Comment = -- String Chars = "' File Extensions = SQL TQL
+/Delimiters = @%^&*()-+|\/[];"'<> ,	.
+/Indent Strings = "begin" "else"
+/Unindent Strings = "end" "else"
+/Function String = "%create [a-zA-Z_]*"
+/C1"Commands"
+action add all alter and any as asc authorization avg
+backup begin between break browse bulk by
+cascade case check checkpoint close clustered coalesce collate column commit committed compute confirm constraint contains containstable continue controlrow convert count 
+create cross current current_date current_time current_timestamp current_user cursor
+database dbcc deallocate declare default delete deny desc disable disk distinct distributed double drop dummy dump
+else enable end errlvl errorexit escape except exec execute exists exit
+fetch file fillfactor floppy for foreign forward_only freetext freetexttable from full function
+go goto grant group
+having holdlock
+identity identity_insert identitycol if in index inner insert intersect into is isolation
+join
+key kill
+left level like lineno load
+mirrorexit move
+national no nocheck nonclustered not nounload null nullif
+of off offsets on once only open opendatasource openquery openrowset option or order outer over
+percent perm permanent pipe plan precision prepare primary print privileges proc procedure processexit public
+raiserror read readtext read_only reconfigure recovery references repeatable replication restore restrict return returns revoke right rollback rowcount rowguidcol rule
+save schema select serializable session_user set setuser shutdown some statistics stats system_user
+table tape temp temporary textsize then to top tran transaction trigger truncate tsequal
+uncommitted union unique update updatetext use user
+values varying view
+waitfor when where while with work writetext
+
+/C2"Data types"
+bigint binary bit
+char character 
+datetime dec decimal 
+float
+image int integer
+money
+nchar ntext numeric nvarchar
+real
+smalldatetime smallint smallmoney sql_variant sysname
+text timestamp tinyint
+uniqueidentifier
+varbinary varchar 
+
+/C3"Stored procedures"
+sp_abort_xact sp_add_agent_parameter sp_add_agent_profile sp_add_server_sortinfo sp_addalias sp_addapprole sp_addarticle sp_adddistpublisher sp_adddistributiondb 
+sp_adddistributor sp_addextendedproc sp_addgroup sp_addlinkedserver sp_addlinkedsrvlogin sp_addlogin sp_addmergearticle sp_addmergefilter sp_addmergepublication 
+sp_addmergepullsubscription sp_addmergepullsubscription_agent sp_addmergesubscription sp_addmessage sp_addpublication sp_addpublication_snapshot sp_addpublisher 
+sp_addpullsubscription sp_addpullsubscription_agent sp_addremotelogin sp_addrole sp_addrolemember sp_addserver sp_addsrvrolemember sp_addsubscriber sp_addsubscriber_schedule 
+sp_addsubscription sp_addsynctriggers sp_addtype sp_addumpdevice sp_adduser sp_altermessage sp_approlepassword sp_article_validation sp_articlecolumn sp_articlefilter 
+sp_articlesynctranprocs sp_articleview sp_attach_db sp_attach_single_file_db sp_autostats sp_bindefault sp_bindrule sp_bindsession sp_blockcnt sp_catalogs sp_catalogs_rowset 
+sp_certify_removable sp_change_subscription_properties sp_change_users_login sp_changearticle sp_changedbowner sp_changedistpublisher sp_changedistributiondb 
+sp_changedistributor_password sp_changedistributor_property sp_changegroup sp_changemergearticle sp_changemergefilter sp_changemergepublication sp_changemergepullsubscription 
+sp_changemergesubscription sp_changeobjectowner sp_changepublication sp_changesubscriber sp_changesubscriber_schedule sp_changesubscription sp_changesubstatus 
+sp_check_for_sync_trigger sp_check_removable sp_check_removable_sysusers sp_check_sync_trigger sp_checknames sp_cleanupwebtask sp_column_privileges sp_column_privileges_ex 
+sp_column_privileges_rowset sp_columns sp_columns_ex sp_columns_rowset sp_commit_xact sp_configure sp_create_removable sp_createorphan sp_createstats sp_cursor sp_cursor_list 
+sp_cursorclose sp_cursorexecute sp_cursorfetch sp_cursoropen sp_cursoroption sp_cursorprepare sp_cursorunprepare sp_databases sp_datatype_info sp_db_upgrade sp_dbcmptlevel 
+sp_dbfixedrolepermission sp_dboption sp_dbremove sp_ddopen sp_defaultdb sp_defaultlanguage sp_deletemergeconflictrow sp_denylogin sp_depends sp_describe_cursor 
+sp_describe_cursor_columns sp_describe_cursor_tables sp_detach_db sp_diskdefault sp_distcounters sp_drop_agent_parameter sp_drop_agent_profile sp_dropalias sp_dropapprole 
+sp_droparticle sp_dropdevice sp_dropdistpublisher sp_dropdistributiondb sp_dropdistributor sp_dropextendedproc sp_dropgroup sp_droplinkedsrvlogin sp_droplogin 
+sp_dropmergearticle sp_dropmergefilter sp_dropmergepublication sp_dropmergepullsubscription sp_dropmergesubscription sp_dropmessage sp_droporphans sp_droppublication 
+sp_droppublisher sp_droppullsubscription sp_dropremotelogin sp_droprole sp_droprolemember sp_dropserver sp_dropsrvrolemember sp_dropsubscriber sp_dropsubscription 
+sp_droptype sp_dropuser sp_dropwebtask sp_dsninfo sp_enumcodepages sp_enumcustomresolvers sp_enumdsn sp_enumfullsubscribers sp_enumoledbdatasources sp_execute sp_executesql 
+sp_fallback_MS_sel_fb_svr sp_fetchshowcmdsinput sp_fixindex sp_fkeys sp_foreign_keys_rowset sp_foreignkeys sp_fulltext_catalog sp_fulltext_column sp_fulltext_database 
+sp_fulltext_getdata sp_fulltext_service sp_fulltext_table sp_generatefilters sp_get_distributor sp_getarticlepkcolbitmap sp_getbindtoken sp_GetMBCSCharLen 
+sp_getmergedeletetype sp_gettypestring sp_grant_publication_access sp_grantdbaccess sp_grantlogin sp_help sp_help_agent_default sp_help_agent_parameter sp_help_agent_profile 
+sp_help_fulltext_catalogs sp_help_fulltext_catalogs_cursor sp_help_fulltext_columns sp_help_fulltext_columns_cursor sp_help_fulltext_tables sp_help_fulltext_tables_cursor 
+sp_help_publication_access sp_helpallowmerge_publication sp_helparticle sp_helparticlecolumns sp_helpconstraint sp_helpdb sp_helpdbfixedrole sp_helpdevice sp_helpdistpublisher 
+sp_helpdistributiondb sp_helpdistributor sp_helpdistributor_properties sp_helpextendedproc sp_helpfile sp_helpfilegroup sp_helpgroup sp_helpindex sp_helplanguage sp_helplog 
+sp_helplogins sp_helpmergearticle sp_helpmergearticleconflicts sp_helpmergeconflictrows sp_helpmergedeleteconflictrows sp_helpmergefilter sp_helpmergepublication 
+sp_helpmergepullsubscription sp_helpmergesubscription sp_helpntgroup sp_helppublication sp_helppublication_snapshot sp_helppublicationsync sp_helppullsubscription 
+sp_helpremotelogin sp_helpreplicationdb sp_helpreplicationdboption sp_helpreplicationoption sp_helprole sp_helprolemember sp_helprotect sp_helpserver sp_helpsort sp_helpsql 
+sp_helpsrvrole sp_helpsrvrolemember sp_helpstartup sp_helpsubscriber sp_helpsubscriberinfo sp_helpsubscription sp_helpsubscription_properties sp_helptext sp_helptrigger 
+sp_helpuser sp_indexes sp_indexes_rowset sp_indexoption sp_isarticlecolbitset sp_IsMBCSLeadByte sp_link_publication sp_linkedservers sp_linkedservers_rowset sp_lock 
+sp_lockinfo sp_logdevice sp_makestartup sp_makewebtask sp_mergedummyupdate sp_mergesubscription_cleanup sp_mergesubscriptioncleanup sp_monitor sp_MS_marksystemobject 
+sp_MS_replication_installed sp_MS_upd_sysobj_category sp_MSactivate_auto_sub sp_MSadd_distributor_alerts_and_responses sp_MSadd_mergereplcommand sp_MSadd_repl_job 
+sp_MSaddanonymousreplica sp_MSaddarticletocontents sp_MSaddexecarticle sp_MSaddguidcolumn sp_MSaddguidindex sp_MSaddinitialarticle sp_MSaddinitialpublication 
+sp_MSaddinitialsubscription sp_MSaddlogin_implicit_ntlogin sp_MSaddmergepub_snapshot sp_MSaddmergetriggers sp_MSaddpub_snapshot sp_MSaddpubtocontents sp_MSaddupdatetrigger 
+sp_MSadduser_implicit_ntlogin sp_MSarticlecleanup sp_MSarticletextcol sp_MSbelongs sp_MSchange_priority sp_MSchangearticleresolver sp_MScheck_agent_instance 
+sp_MScheck_uid_owns_anything sp_MScheckatpublisher sp_MScheckexistsgeneration sp_MScheckmetadatamatch sp_MScleanup_subscription sp_MScleanuptask sp_MScontractsubsnb 
+sp_MScreate_dist_tables sp_MScreate_distributor_tables sp_MScreate_mergesystables sp_MScreate_pub_tables sp_MScreate_replication_checkup_agent 
+sp_MScreate_replication_status_table sp_MScreate_sub_tables sp_MScreateglobalreplica sp_MScreateretry sp_MSdbuseraccess sp_MSdbuserpriv sp_MSdeletecontents 
+sp_MSdeletepushagent sp_MSdeleteretry sp_MSdelrow sp_MSdelsubrows sp_MSdependencies sp_MSdoesfilterhaveparent sp_MSdrop_6x_replication_agent 
+sp_MSdrop_distributor_alerts_and_responses sp_MSdrop_mergesystables sp_MSdrop_object sp_MSdrop_pub_tables sp_MSdrop_replcom sp_MSdrop_repltran sp_MSdrop_rladmin 
+sp_MSdrop_rlcore sp_MSdrop_rlrecon sp_MSdroparticleprocs sp_MSdroparticletombstones sp_MSdroparticletriggers sp_MSdropconstraints sp_MSdropmergepub_snapshot sp_MSdropretry 
+sp_MSdummyupdate sp_MSenum_replication_agents sp_MSenum_replication_job sp_MSenum3rdpartypublications sp_MSenumallpublications sp_MSenumchanges sp_MSenumcolumns 
+sp_MSenumdeletesmetadata sp_MSenumgenerations sp_MSenummergepublications sp_MSenumpartialchanges sp_MSenumpartialdeletes sp_MSenumpubreferences sp_MSenumreplicas 
+sp_MSenumretries sp_MSenumschemachange sp_MSenumtranpublications sp_MSexists_file sp_MSexpandbelongs sp_MSexpandnotbelongs sp_MSexpandsubsnb sp_MSfilterclause 
+sp_MSflush_access_cache sp_MSflush_command sp_MSforeach_worker sp_MSforeachdb sp_MSforeachtable sp_MSgen_sync_tran_procs sp_MSgenreplnickname sp_MSgentablenickname 
+sp_MSget_col_position sp_MSget_colinfo sp_MSget_oledbinfo sp_MSget_publisher_rpc sp_MSget_qualifed_name sp_MSget_synctran_commands sp_MSget_type sp_MSgetalertinfo 
+sp_MSgetchangecount sp_MSgetconflictinsertproc sp_MSgetlastrecgen sp_MSgetlastsentgen sp_MSgetonerow sp_MSgetreplicainfo sp_MSgetreplnick sp_MSgetrowmetadata sp_MSguidtostr 
+sp_MShelp_distdb sp_MShelp_replication_status sp_MShelpcolumns sp_MShelpfulltextindex sp_MShelpindex sp_MShelpmergearticles sp_MShelpobjectpublications sp_MShelptype 
+sp_MSIfExistsRemoteLogin sp_MSindexcolfrombin sp_MSindexspace sp_MSinit_replication_perfmon sp_MSinsertcontents sp_MSinsertdeleteconflict sp_MSinsertgenhistory 
+sp_MSinsertschemachange sp_MSis_col_replicated sp_MSis_pk_col sp_MSkilldb sp_MSload_replication_status sp_MSlocktable sp_MSloginmappings sp_MSmakearticleprocs 
+sp_MSmakeconflictinsertproc sp_MSmakeexpandproc sp_MSmakegeneration sp_MSmakeinsertproc sp_MSmakejoinfilter sp_MSmakeselectproc sp_MSmakesystableviews sp_MSmaketempinsertproc 
+sp_MSmakeupdateproc sp_MSmakeviewproc sp_MSmaptype sp_MSmark_proc_norepl sp_MSmatchkey sp_MSmergepublishdb sp_MSmergesubscribedb sp_MSobjectprivs sp_MSpad_command 
+sp_MSproxiedmetadata sp_MSpublicationcleanup sp_MSpublicationview sp_MSpublishdb sp_MSrefcnt sp_MSregistersubscription sp_MSreinit_failed_subscriptions sp_MSrepl_addrolemember 
+sp_MSrepl_dbrole sp_MSrepl_droprolemember sp_MSrepl_encrypt sp_MSrepl_linkedservers_rowset sp_MSrepl_startup sp_MSreplcheck_connection sp_MSreplcheck_publish 
+sp_MSreplcheck_pull sp_MSreplcheck_subscribe sp_MSreplicationcompatlevel sp_MSreplrole sp_MSreplsup_table_has_pk sp_MSscript_beginproc sp_MSscript_begintrig1 
+sp_MSscript_begintrig2 sp_MSscript_delete_statement sp_MSscript_dri sp_MSscript_endproc sp_MSscript_endtrig sp_MSscript_insert_statement sp_MSscript_multirow_trigger 
+sp_MSscript_params sp_MSscript_security sp_MSscript_singlerow_trigger sp_MSscript_sync_del_proc sp_MSscript_sync_del_trig sp_MSscript_sync_ins_proc sp_MSscript_sync_ins_trig 
+sp_MSscript_sync_upd_proc sp_MSscript_sync_upd_trig sp_MSscript_trigger_assignment sp_MSscript_trigger_exec_rpc sp_MSscript_trigger_fetch_statement 
+sp_MSscript_trigger_update_checks sp_MSscript_trigger_updates sp_MSscript_trigger_variables sp_MSscript_update_statement sp_MSscript_where_clause sp_MSscriptdatabase 
+sp_MSscriptdb_worker sp_MSsetaccesslist sp_MSsetalertinfo sp_MSsetartprocs sp_MSsetbit sp_MSsetconflictscript sp_MSsetconflicttable sp_MSsetfilteredstatus 
+sp_MSsetfilterparent sp_MSsetlastrecgen sp_MSsetlastsentgen sp_MSsetreplicainfo sp_MSsetreplicastatus sp_MSsetrowmetadata sp_MSsettopology sp_MSsetupbelongs 
+sp_MSSQLDMO70_version sp_MSSQLOLE_version sp_MSSQLOLE65_version sp_MSsubscribedb sp_MSsubscriptions sp_MSsubscriptionvalidated sp_MSsubsetpublication 
+sp_MStable_has_unique_index sp_MStable_not_modifiable sp_MStablechecks sp_MStablekeys sp_MStablenamefromnick sp_MStablenickname sp_MStablerefs sp_MStablespace 
+sp_MStestbit sp_MStextcolstatus sp_MSunc_to_drive sp_MSuniquecolname sp_MSuniquename sp_MSuniqueobjectname sp_MSuniquetempname sp_MSunmarkreplinfo 
+sp_MSunregistersubscription sp_MSupdate_agenttype_default sp_MSupdate_replication_status sp_MSupdatecontents sp_MSupdategenhistory sp_MSupdateschemachange 
+sp_MSupdatesysmergearticles sp_msupg_createcatalogcomputedcols sp_msupg_dosystabcatalogupgrades sp_msupg_dropcatalogcomputedcols sp_msupg_recreatecatalogfaketables 
+sp_msupg_recreatesystemviews sp_msupg_removesystemcomputedcolumns sp_msupg_upgradecatalog sp_MSuplineageversion sp_MSvalidatearticle sp_OACreate sp_OADestroy 
+sp_OAGetErrorInfo sp_OAGetProperty sp_OAMethod sp_OASetProperty sp_OAStop sp_objectfilegroup sp_oledbinfo sp_password sp_pkeys sp_prepare sp_primary_keys_rowset 
+sp_primarykeys sp_probe_xact sp_procedure_params_rowset sp_procedures_rowset sp_processinfo sp_processmail sp_procoption sp_provider_types_rowset sp_publication_validation 
+sp_publishdb sp_recompile sp_refreshsubscriptions sp_refreshview sp_reinitmergepullsubscription sp_reinitmergesubscription sp_reinitpullsubscription sp_reinitsubscription 
+sp_remoteoption sp_remove_tempdb_file sp_remove_xact sp_removedbreplication sp_removesrvreplication sp_rename sp_renamedb sp_replcmds sp_replcounters sp_repldone sp_replflush 
+sp_replica sp_replication_agent_checkup sp_replicationdboption sp_replicationoption sp_replincrementlsn sp_replpostcmd sp_replsetoriginator sp_replshowcmds sp_replsync 
+sp_repltrans sp_replupdateschema sp_reset_connection sp_revoke_publication_access sp_revokedbaccess sp_revokelogin sp_runwebtask sp_scan_xact sp_schemata_rowset 
+sp_script_synctran_commands sp_scriptdelproc sp_scriptinsproc sp_scriptmappedupdproc sp_scriptpkwhereclause sp_scriptupdateparams sp_scriptupdproc sp_sdidebug 
+sp_sem_start_mail sp_server_info sp_serveroption sp_setapprole sp_setnetname sp_spaceused sp_special_columns sp_sproc_columns sp_sqlexec sp_sqlregister sp_srvrolepermission 
+sp_start_xact sp_stat_xact sp_statistics sp_statistics_rowset sp_stored_procedures sp_subscribe sp_subscription_cleanup sp_subscriptioncleanup sp_table_privileges 
+sp_table_privileges_ex sp_table_privileges_rowset sp_table_validation sp_tableoption sp_tables sp_tables_ex sp_tables_info_rowset sp_tables_rowset sp_tempdbspace 
+sp_unbindefault sp_unbindrule sp_unmakestartup sp_unprepare sp_unsubscribe sp_updatestats sp_user_counter1 sp_user_counter10 sp_user_counter2 sp_user_counter3 
+sp_user_counter4 sp_user_counter5 sp_user_counter6 sp_user_counter7 sp_user_counter8 sp_user_counter9 sp_validatelogins sp_validlang sp_validname sp_who sp_who2 
+spt_committab spt_datatype_info spt_datatype_info_ext spt_fallback_db spt_fallback_dev spt_fallback_usg spt_monitor spt_provider_types spt_server_info spt_values 
+xp_availablemedia xp_check_query_results xp_cleanupwebtask xp_cmdshell xp_deletemail xp_dirtree xp_displayparamstmt xp_dropwebtask xp_dsninfo xp_enum_activescriptengines 
+xp_enum_oledb_providers xp_enumcodepages xp_enumdsn xp_enumerrorlogs xp_enumgroups xp_eventlog xp_execresultset xp_fileexist xp_findnextmsg xp_fixeddrives 
+xp_get_mapi_default_profile xp_get_mapi_profiles xp_get_tape_devices xp_getfiledetails xp_getnetname xp_grantlogin xp_initcolvs xp_intersectbitmaps xp_load_dummy_handlers 
+xp_logevent xp_loginconfig xp_logininfo xp_makewebtask xp_mergexpusage xp_msver xp_msx_enlist xp_ntsec_enumdomains xp_ntsec_enumgroups xp_ntsec_enumusers xp_oledbinfo 
+xp_param_dump xp_perfend xp_perfmonitor xp_perfsample xp_perfstart xp_printstatements xp_proxiedmetadata xp_qv xp_readerrorlog xp_readmail xp_regaddmultistring xp_regdeletekey 
+xp_regdeletevalue xp_regenumvalues xp_regread xp_regremovemultistring xp_regwrite xp_revokelogin xp_runwebtask xp_sendmail xp_servicecontrol xp_showcolv xp_showlineage 
+xp_snmp_getstate xp_snmp_raisetrap xp_sprintf xp_sqlagent_enum_jobs xp_sqlagent_is_starting xp_sqlagent_monitor xp_sqlagent_notify xp_sqlinventory xp_sqlmaint xp_sqlregister 
+xp_sqltrace xp_sscanf xp_startmail xp_stopmail xp_subdirs xp_terminate_process xp_test_mapi_profile xp_trace_addnewqueue xp_trace_deletequeuedefinition xp_trace_destroyqueue 
+xp_trace_enumqueuedefname xp_trace_enumqueuehandles xp_trace_eventclassrequired xp_trace_flushqueryhistory xp_trace_generate_event xp_trace_getappfilter 
+xp_trace_getconnectionidfilter xp_trace_getcpufilter xp_trace_getdbidfilter xp_trace_getdurationfilter xp_trace_geteventfilter xp_trace_geteventnames xp_trace_getevents 
+xp_trace_gethostfilter xp_trace_gethpidfilter xp_trace_getindidfilter xp_trace_getntdmfilter xp_trace_getntnmfilter xp_trace_getobjidfilter xp_trace_getqueueautostart 
+xp_trace_getqueuecreateinfo xp_trace_getqueuedestination xp_trace_getqueueproperties xp_trace_getreadfilter xp_trace_getserverfilter xp_trace_getseverityfilter 
+xp_trace_getspidfilter xp_trace_gettextfilter xp_trace_getuserfilter xp_trace_getwritefilter xp_trace_loadqueuedefinition xp_trace_opentracefile xp_trace_pausequeue 
+xp_trace_restartqueue xp_trace_savequeuedefinition xp_trace_setappfilter xp_trace_setconnectionidfilter xp_trace_setcpufilter xp_trace_setdbidfilter xp_trace_setdurationfilter 
+xp_trace_seteventclassrequired xp_trace_seteventfilter xp_trace_sethostfilter xp_trace_sethpidfilter xp_trace_setindidfilter xp_trace_setntdmfilter xp_trace_setntnmfilter 
+xp_trace_setobjidfilter xp_trace_setqueryhistory xp_trace_setqueueautostart xp_trace_setqueuecreateinfo xp_trace_setqueuedestination xp_trace_setreadfilter 
+xp_trace_setserverfilter xp_trace_setseverityfilter xp_trace_setspidfilter xp_trace_settextfilter xp_trace_setuserfilter xp_trace_setwritefilter xp_trace_startconsumer 
+xp_trace_toeventlogconsumer xp_trace_tofileconsumer xp_unc_to_drive xp_unload_dummy_handlers xp_updatecolvbm xp_updatelineage xp_varbintohexstr xp_writesqlinfo
+
+/C4"Operators"
+!
+!=
+%
+(
+)
++
+-
+// /
+<
+<=
+=
+>
+>=
+[
+]
+|
+LIKE
+
+/C5"System Tables"
+deleted
+inserted
+sysallocations sysalternates sysaltfiles syscacheobjects syscharsets syscolumns syscomments sysconfigures sysconstraints syscurconfigs syscursorcolumns syscursorrefs 
+syscursors syscursortables sysdatabases sysdepends sysdevices sysfilegroups sysfiles sysfiles1 sysforeignkeys sysfulltextcatalogs sysindexes sysindexkeys syslanguages 
+syslockinfo syslocks syslogins sysmembers sysmessages sysobjects sysoledbusers sysperfinfo syspermissions sysprocesses sysprotects sysreferences
+sysremote_catalogs sysremote_column_privileges sysremote_columns
+sysremote_foreign_keys
+sysremote_indexes
+sysremote_primary_keys sysremote_provider_types
+sysremote_schemata sysremote_statistics
+sysremote_table_privileges sysremote_tables sysremote_views
+sysremotelogins
+syssegments
+sysservers
+systypes
+sysusers
+sysxlogins
+
+/C6"Global Variables"
+connections cpu_busy cursor_rows
+datefirst dbts
+error
+fetch_status
+identity idle io_busy
+langid language lock_timeout
+max_connections max_precision
+nestlevel
+options
+packet_errors packet_received pack_sent patindex procid
+remserver rowcount
+servername servicename spid
+textptr textsize textvalid timeticks total_errors total_read total_write trancount
+version
+
+/C7"Functions"
+abs acos app_name ascii asin atan atn2 avg
+binary_checksum
+case cast ceiling charindex checksum checksum_agg
+coalesce collationproperty col_length col_name columns_updated columnproperty convert cos cot count count_big current_timestamp current_user cursor_status
+databaseproperty databasepropertyex datalength dateadd datediff datename datepart day db_id db_name degrees difference
+exp
+file_id file_name filegroup_id filegroup_name filegroupproperty fileproperty floor
+fn_helpcollations fn_listextendedproperty fn_servershareddrives fn_trace_geteventinfo fn_trace_getfilterinfo fn_trace_getinfo fn_trace_gettable fn_virtualfilestats
+formatmessage fulltextcatalogproperty fulltextserviceproperty
+getansinull getdate getutcdate grouping
+has_dbaccess host_id host_name 
+ident_current ident_incr ident_seed index_col indexkey_property indexproperty is_member is_srvrolemember isdate isnull isnumeric
+left len log log10 lower ltrim
+max min month
+newid nullif
+object_id object_name objectproperty
+parsename patindex permissions pi power
+quotename
+radians rand replace replicate reverse right round rowcount_big rtrim
+scope_identity serverproperty sessionproperty session_user sign sin soundex space sqare sql_variant_property
+sqrt stats_date stdev stdevp str stuff substring sum suser_sid suser_sname system_user
+tan typeproperty
+unicode upper user_id user_name
+var varp
+year
+
+/L14"ASM" Line Comment = ; File Extensions = S ASM INC
+/C1"COMMAND"
+A AB ACC ADD ADDC ANL AJMP ACALL 
+B 
+CLR CJNE CPL C 
+DEC DIV DA DJNZ DPTR DPL DPH DW DB 
+EA ET2 ES ET1 EX1 ET0 EX0 EQU  
+INC IP IDL IE  
+JMP JZ JNZ JC JNC JBC JB JNB
+LJMP LCALL 
+MOV MOVX MOVC MUL 
+NOP 
+ORG ORL
+PUSH POP P0 P1 P2 P3 PSW PT2 PS PT1 PX1 PT0 PX0 PD 
+RL RR RLC RRC RETI RET R0 R1 R2 R3 R4 R5 R6 R7 RLDH RLDL RI REN RB8 
+SUBB SWAP SETB SJMP SP SBUF SCON SM0 SM1 SM2 SMOD 
+TMOD TCON T2CON TH0 TL0 TH1 TL1 TH2 TL2 TI TR0 TR1 TR2 TF0 TF1 TF2 TB8 
+XCH XCHD 
+
+/C2"JBT COMMAND"
+BENDCOMMAND BOOLVAR0 BOOLVAR1 BKCOLOR BYTEINPAGE0 BYTEINPAGE
+CARMODEL CSTYPE CARDICIDX COLOR CODE0 CODE1 CODE_STATUS COLUMN0 COLUMN1 COLUMN0L COLUMN0H COLUMN1L COLUMN1H C_RXD C_TXD C_TXD_STATUS C_RXD_STATUS COMMAND CURCOMMAND 
+DSMODULENO DPH0_RES DPL0_RES DPL0 DPH0 DPL1 DPH1 DOWN_KEY DS_LINESINPAGE DS_TOP DS_CPCMD DS_CPINDEX DS_TOTAL DTCBASE DTCBASESYS  
+ENTER_KEY ESCAPE_KEY ENDVAR ENDVAR_END
+FBITNUM FBIT1 FBIT2 FBIT3 FBIT4
+GF0 GF1 GLOBAL_VAR GLOBAL_VAR_END
+HELP_KEY
+IBITNUM
+KCTRL KEYIN0 KEYIN1
+LANGUAGE LINE0 LINE1 LEFT_KEY LCTRL LOCAL_VAR LCD_EN LCD_BYTE0 LCD_BYTE1 LCD_BYTE2 LCD_BYTE3 LCD_BYTE4 LCD_BYTE5 LCD_BYTE6 LCD_BYTE7 LCD_BYTE8 LOCAL_VAR_END
+MODULE MENURETVAL MENUNUMBER MENUCURLINE MDLMENULEVEL
+NO_KEY
+OP0H OP0L OP1H OP1L OP_H OP_L 
+PROGRAMLOADED PLIBADDR PSROMADDR PCARDLO_HI0 PADDR0 PADDR0_RES PCARDLO_HI
+RIGHT_KEY RIDX RTOLLEN RESBASE R_PS_STATUS
+SIGN SELSYS_MENUNUM SELITEM_MENUNUM S_CH S_CH_STATUS SIDX STOLLEN SP_START SYSTEM SOUND SWITCH_KEY
+T0COUNTER T1COUNTER T1MAX
+UP_KEY 
+WRITESROM WTCOLOR WBCOLOR WN1COLOR WN2COLOR
+
+/C3"JBT FUNCTION"
+ADD_COLUMN0_AB ADD_COLUMN0_ACC ADD_DPTR_AB ADD_DPTR_ACC ALLSYSTEMDTC ATOI AUTODETECT_55H
+BIT8CRYPT
+CALLBACK CARD_ADDWORD CARD_DECDPTR CARD_INCDPTR CARD_INITDTC_ CARD_INITRES_ CARD_OFFSET CARD_SUBWORD CHECKMENU CVTRRSPACE
+DECWORD DELAY_10MS DELAY_1MS DELAY_20MS DISPLAY_ACC_255 DISPLAY_ACC_99 DISPLAY_ACC_FF DISPLAY_DS DISPLAY_DS_DIS DISPLAY_DTC DISPLAY_NUMBACK DISPLAY_NUMBER DISPLAY_SYSDTC DIS_MATH_RESULT DIVIDE DROPRIGHTREAR DTCEXIST
+ENTERCODE ENTERDTC_2 ENTERDTC_3 ENTERDTC_5 EOF_BIN ERASEBLOCK EXTOFFSET 
+FMINUS FPLUS
+GETACC_CARD GETACC_LIB GETACC_RAM GETACC_ROM GETCODE_STATUS GETCOMPANY_LCARD GETCOMPARE_LCARD GETCOMPARE_LIB GETDSPID_DIS GETDSTOTAL_DIS GETDTCBASE_CP GETKEY GETLAG_LCARD GETLOCKSTATUS_LIB GETMAKEDATE_LCARD GETMAKEDATE_LIB GETMASTERNO_LIB GETMENUFRAME GETMENUFRAME_ GETPRGNO_LCARD GETPRGTOL_LCARD GETSA_SYSTEM GETSERIALNO_LCARD GETSYSPAR_LIB GETSYS_SSTR GETVERSION_LCARD GETVERSION_LIB GET_DPTR0_CARD GET_DPTR0_LIB GET_DPTR0_RAM GET_DPTR0_ROM GET_DPTR1_CARD GET_DPTR1_LIB GET_DPTR1_RAM GET_DPTR1_ROM GET_R_PS GOON_YN
+HZ_ZOOM
+INCWORD INIT_CHECKMENU INIT_DSSAVERAM INIT_DTCRAM INIT_HARDWARE INIT_MENU INIT_SCOM INIT_SCOM9 ITOA
+KBHIT KERNELEND
+LCD_CLS LCD_PCLS LCD_PUTPIXELOFF LCD_PUTPIXELON LIB_DECDPTR LIB_INCDPTR LINEH LINEV LISTSYSALLDTC LIST_SYSDTC LOADCARPAR_ LOADDATASTREAM_ LOADDATA_CARD LOADDATA_LIB LOADDATA_ROM LOADDR_ LOADDTCTEXT_ LOADIDINFO_LCARD LOADMENU LOADMENU_ LOADMENU_DIS_ LOADPROGRAM_CARD LOADSTRING LOADSTRING_ LOADTEXT_CARD LOADTEXT_LIB LOAD_DISSYSDTC LOAD_DTCDISFORMAT LOAD_PRINTDTC LOCATECAR_SYS LOCATECPNAME LOCATEDTC_ LOCATEDTC_CARD_ LOCATEMENUTEXT LOCATEMENUTXT_DIS LOCATERES_ LOCATERES_CARD_ LOCATESYS_LSTR LOCATESYS_SSTR LSD_LIN0COL0 LSD_PROMPTOFF LSD_PROMPTON
+MD_256CARDRAM MD_CARDRAM MD_LIBRAM MD_RAMRAM MD_ROMRAM MENU_DIS MID_ALIGN MINUS MKDSCOMMAND MKDSCOMMAND_DIS MKDSINDEX MKDSINDEX_DIS MK_MATH_RESULT MOVEDATA4K_RAM MULTI
+OUTTEXTB_RAM OUTTEXTB_ROM OUTTEXTXY_CARD OUTTEXTXY_LIB OUTTEXTXY_RAM OUTTEXT_RAM OUTTEXT_ROM 
+PLUS PRINTDTC PRINTDTCCODE PRINTSTRING_RAM PUTCHAR PUTCHAR_BACK PUTDIALOG PUTDIALOG_ PUTDTCTABLE PUTDTCTITLE PUTFACE PUTFACE PUTHZ16 PUTHZ16_BACK PUTMAINFACE PUTSTRING PUTSTRING_ PUTTEXTWIN PUTTEXTWIN_ PUT_DTCNOTEXIST PUT_NUMBACK PUT_NUMBER PUT_SYSNOTTEST PUT_SYSOK PUT_SYSTESTERR PUT_TABLE PUT_TWFRAME PUTFACE_
+RECEIVEBYTE RECTANGLE 
+SAVEDTCRAM SAVEIDINFO_LCARD SAVELAG_LCARD SAVELOCK_LIB SAVEMASTERNO_LIB SAVEPRGNO_LCARD SAVESYSPAR_LIB SAVEUNLOCK_LIB SEARCHDTC SELAPPENTRANCE SELECTMENU SELECTMODULE SELECTSYSTEM SELECT_CARDIC SENDACC_5BPS SENDBYTE SENDBYTE9_EVEN SENDBYTE9_ODD SETDTCBASE_CP SET_CODE_STATUS SET_C_RXD SET_C_TXD SET_DISABLE_R_PS SET_DPTR0_RAM SET_DPTR1_RAM SET_DR_TESTED SET_SYS_DTC SET_SYS_OK SET_SYS_TESTERR SET_SYS_TOLDTC SET_S_CH SKIPFACEFRAME SM_RESTOREMENU SM_SAVEMENU SOUND_L SOUND_S STRCAT_RAM STRCPY_RAM STRLEN_RAM SUBB_COLUMN0_AB SUBB_COLUMN0_ACC SUBB_DPTR_AB SUBB_DPTR_ACC SYSDTC_DPTR1OVER SYSTEMDTC_DPTR 
+WAIT_ENTERKEY WAIT_ESCAPEKEY WARN_SOUND WRITECARD WRITELIB
+
+/C4"JBT RAM&ROM"
+APP_FIXXRAM APP_EXTXRAM 
+CARPAR
+DATABLOCK0 DATABLOCK1 DATABLOCK2 DATABLOCK3 DATABLOCK4 DATABLOCK5 DATABLOCK6 DATABLOCK7 DATABLOCK8 DTCRAM
+POINTER1 POINTER2 POINTER3 POINTER4 POINTER5 POINTER6
+RBUF RBUF_
+TMPBUF TBUF TEXTWINDOW
