@@ -1,0 +1,250 @@
+\chapter{级联二选一数据选择器}
+
+\section{第一步：解决什么问题}
+
+单个2选1 MUX只能从2路数据中选择1路。如果要从更多路数据中选择，怎么办？
+
+\textbf{方案}：用多个2选1 MUX级联，构建更大的MUX。
+
+\begin{keypoint}[级联MUX的本质]
+用最基础的2选1 MUX作为构建单元，通过\textbf{分层选择}的方式扩展选择能力。
+
+2选1 $\to$ 4选1 $\to$ 8选1 $\to$ 16选1 $\to$ ...
+\end{keypoint}
+
+\section{第二步：用2选1 MUX构建4选1 MUX}
+
+先看2选1 MUX的基本符号：$Y = \overline{S} \cdot D_0 + S \cdot D_1$
+
+\textbf{用3个2选1 MUX构建4选1 MUX}：
+
+\begin{center}
+\begin{tikzpicture}
+  % First layer: two 2:1 MUXes
+  \node[draw, minimum width=2cm, minimum height=0.8cm] (mux0) at (0,2) {MUX 2:1};
+  \node[draw, minimum width=2cm, minimum height=0.8cm] (mux1) at (0,0) {MUX 2:1};
+  % Second layer: one 2:1 MUX
+  \node[draw, minimum width=2cm, minimum height=0.8cm] (mux2) at (4,1) {MUX 2:1};
+
+  % Inputs to first layer
+  \node (D0) at (-3,2.5) {$D_0$}; \draw[->] (D0) -- (mux0);
+  \node (D1) at (-3,1.5) {$D_1$}; \draw[->] (D1) -- (mux0);
+  \node (D2) at (-3,0.5) {$D_2$}; \draw[->] (D2) -- (mux1);
+  \node (D3) at (-3,-0.5) {$D_3$}; \draw[->] (D3) -- (mux1);
+
+  % First layer outputs to second layer
+  \draw[->] (mux0.east) -- ++(0.5,0) |- (mux2.west |- 2);
+  \draw[->] (mux1.east) -- ++(0.5,0) |- (mux2.west |- 0);
+
+  % Selection
+  \node (S0) at (-2,-2) {$S_0$};
+  \draw[->] (S0) -- (0,-1.5) node[above] {};
+
+  \node (S1) at (4,-2) {$S_1$};
+
+  % Output
+  \node (Y) at (7,1) {$Y$};
+  \draw[->] (mux2.east) -- (Y);
+\end{tikzpicture}
+\end{center}
+
+\textbf{工作原理}：
+\begin{itemize}
+  \item $S_0$ 控制第一层两个MUX：分别从 $(D_0,D_1)$ 和 $(D_2,D_3)$ 中各选一个
+  \item $S_1$ 控制第二层MUX：从第一层两个结果中选一个
+  \item 结果：$(S_1,S_0)$ 决定了选择 $D_0, D_1, D_2, D_3$ 中的哪一个
+\end{itemize}
+
+\section{第三步：真值表}
+
+\begin{center}
+\begin{tabular}{|c|c||c|c|c|}
+\hline
+$S_1$ & $S_0$ & 第一层左MUX输出 & 第一层右MUX输出 & 最终输出 $Y$ \\
+\hline
+0 & 0 & $D_0$ & $D_2$ & $D_0$ \\
+0 & 1 & $D_1$ & $D_3$ & $D_1$ \\
+1 & 0 & $D_0$ & $D_2$ & $D_2$ \\
+1 & 1 & $D_1$ & $D_3$ & $D_3$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{第四步：逻辑推导}
+
+级联MUX的逻辑表达式可以通过代入法推导：
+
+第一层输出：
+\begin{align}
+  F_0 &= \overline{S_0} \cdot D_0 + S_0 \cdot D_1 \\
+  F_1 &= \overline{S_0} \cdot D_2 + S_0 \cdot D_3
+\end{align}
+
+第二层输出：
+\begin{align}
+  Y &= \overline{S_1} \cdot F_0 + S_1 \cdot F_1 \\
+    &= \overline{S_1} \cdot (\overline{S_0} \cdot D_0 + S_0 \cdot D_1)
+     + S_1 \cdot (\overline{S_0} \cdot D_2 + S_0 \cdot D_3) \\
+    &= \overline{S_1}\cdot\overline{S_0}\cdot D_0
+     + \overline{S_1}\cdot S_0 \cdot D_1
+     + S_1\cdot\overline{S_0} \cdot D_2
+     + S_1\cdot S_0 \cdot D_3
+\end{align}
+
+\textbf{这正是标准4选1 MUX的逻辑表达式！} 证明级联等价于一个完整的$2^n$选1 MUX。
+
+\section{第五步：结构化设计——通用级联规律}
+
+\textbf{树形结构}：
+
+\begin{itemize}
+  \item \textbf{第一层}：$2^{n-1}$ 个2选1 MUX（用最低位 $S_0$ 选择）
+  \item \textbf{第二层}：$2^{n-2}$ 个2选1 MUX（用 $S_1$ 选择）
+  \item \textbf{...}
+  \item \textbf{第n层}：1个2选1 MUX（用最高位 $S_{n-1}$ 选择）
+\end{itemize}
+
+总MUX数量：$2^n - 1$ 个2选1 MUX。
+
+\section{第六步：为什么这样设计}
+
+\begin{enumerate}
+  \item \textbf{为什么2选1是基础构建块？}
+
+  2选1 MUX是最简单的MUX（1位选择线），在FPGA中通常对应一个LUT（查找表）。任何更大的MUX都可以由2选1 MUX级联构建。
+
+  \item \textbf{树形结构的深层意义？}
+
+  每一层将数据组数减半：
+  \begin{itemize}
+    \item 输入：$2^n$ 路数据
+    \item 第一层后：$2^{n-1}$ 路
+    \item 第二层后：$2^{n-2}$ 路
+    \item ...
+    \item 第n层后：1路（最终输出）
+  \end{itemize}
+
+  这本质上是锦标赛淘汰赛的结构——每一轮淘汰一半。
+
+  \item \textbf{延迟分析}：
+
+  级联MUX的关键路径（从数据输入到输出）经过 $n$ 级2选1 MUX。每级延迟约1-2个门延迟。
+\end{enumerate}
+
+\section{第七步：考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：用2选1 MUX构建8选1 MUX}
+
+  需要 $2^3 - 1 = 7$ 个2选1 MUX。三层结构：4+2+1。
+
+  \item \textbf{变式2：用4选1 MUX构建16选1 MUX}
+
+  5片4选1 MUX：4片第一层 + 1片第二层（作为最终选择）。
+
+  \item \textbf{变式3：不对称级联}
+
+  例如：用1片4选1 + 1片2选1构建6选1 MUX（实际数据输入不足$2^n$个时的处理方法）。
+
+  \item \textbf{变式4：MUX树实现逻辑函数}
+
+  将逻辑函数的变量从低位到高位接选择线，用MUX树实现多变量函数。这是MUX做通用逻辑的关键应用。
+\end{enumerate}
+
+\section{第八步：VHDL实现}
+
+\begin{lstlisting}[caption={用2选1 MUX级联构建4选1 MUX（结构级）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux2to1 is
+  port (
+    D0, D1 : in  std_logic;
+    S      : in  std_logic;
+    Y      : out std_logic
+  );
+end mux2to1;
+
+architecture behavioral of mux2to1 is
+begin
+  Y <= D0 when S = '0' else D1;
+end behavioral;
+
+-- ========================================
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4to1_cascade is
+  port (
+    D : in  std_logic_vector(3 downto 0);
+    S : in  std_logic_vector(1 downto 0);
+    Y : out std_logic
+  );
+end mux4to1_cascade;
+
+architecture structural of mux4to1_cascade is
+  signal F0, F1 : std_logic;  -- 第一层输出
+
+  component mux2to1 is
+    port (D0, D1 : in std_logic; S : in std_logic; Y : out std_logic);
+  end component;
+begin
+  -- 第一层：S(0)选择
+  mux_a: mux2to1 port map (D(0), D(1), S(0), F0);
+  mux_b: mux2to1 port map (D(2), D(3), S(0), F1);
+  -- 第二层：S(1)选择
+  mux_c: mux2to1 port map (F0, F1, S(1), Y);
+end structural;
+\end{lstlisting}
+
+\section{第九步：Testbench验证}
+
+\begin{lstlisting}[caption={级联MUX Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4to1_cascade_tb is
+end mux4to1_cascade_tb;
+
+architecture test of mux4to1_cascade_tb is
+  signal D : std_logic_vector(3 downto 0);
+  signal S : std_logic_vector(1 downto 0);
+  signal Y : std_logic;
+
+  component mux4to1_cascade is
+    port (
+      D : in  std_logic_vector(3 downto 0);
+      S : in  std_logic_vector(1 downto 0);
+      Y : out std_logic
+    );
+  end component;
+begin
+  uut: mux4to1_cascade port map (D, S, Y);
+
+  stimulus: process
+  begin
+    D <= "1010";
+    S <= "00"; wait for 10 ns;  -- Y=D0=0
+    S <= "01"; wait for 10 ns;  -- Y=D1=1
+    S <= "10"; wait for 10 ns;  -- Y=D2=0
+    S <= "11"; wait for 10 ns;  -- Y=D3=1
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\section{第十步：如何快速解题}
+
+\begin{examtip}[级联MUX快速解题法]
+\begin{enumerate}
+  \item \textbf{$n$选1 MUX所需2选1 MUX数目} = $n-1$
+  \item \textbf{树形结构}：每层将数据组数减半
+  \item \textbf{选择位分配}：最低位控制第一层，最高位控制最后一层
+  \item \textbf{关键路径} = $n$级2选1 MUX延迟（$n = \log_2(N)$）
+\end{enumerate}
+\end{examtip}
+
+\textbf{秒杀：用2选1 MUX构建任意MUX的公式}
+
+$2^n$选1 MUX 需要 $(2^n - 1)$ 个2选1 MUX，分 $n$ 层。第 $k$ 层（从1开始）有 $2^{n-k}$ 个MUX，由 $S_{k-1}$ 控制。

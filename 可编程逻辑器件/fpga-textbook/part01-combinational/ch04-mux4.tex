@@ -1,0 +1,253 @@
+\chapter{4选1数据选择器（MUX）}
+
+\section{第一步：解决什么问题}
+
+想象一个场景：你需要从4个数据源中选择1个传给后续电路。
+
+\begin{itemize}
+  \item 不是同时传4个——那需要4条数据通路
+  \item 而是：用2根选择线指定"要哪一个"，1根数据线输出
+\end{itemize}
+
+\begin{keypoint}[MUX的本质]
+数据选择器（Multiplexer, MUX）= 一个受控的多路开关
+
+$2^n$ 个数据输入 $\to$ $n$ 条选择线 $\to$ 1个输出
+
+选择线决定"哪一路数据通向输出"
+\end{keypoint}
+
+\section{第二步：输入输出关系}
+
+4选1 MUX：
+
+\begin{itemize}
+  \item \textbf{数据输入}：$D_0, D_1, D_2, D_3$
+  \item \textbf{选择输入}：$S_1, S_0$（2位，选择哪个数据输入）
+  \item \textbf{输出}：$Y$
+  \item \textbf{功能}：$Y = D_{(S_1 S_0)}$
+\end{itemize}
+
+\section{第三步：真值表}
+
+\begin{center}
+\begin{tabular}{|c|c||c|}
+\hline
+$S_1$ & $S_0$ & $Y$ \\
+\hline
+0 & 0 & $D_0$ \\
+0 & 1 & $D_1$ \\
+1 & 0 & $D_2$ \\
+1 & 1 & $D_3$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{第四步：逻辑推导}
+
+从真值表可以写出：
+
+\begin{equation}
+  Y = \overline{S_1} \cdot \overline{S_0} \cdot D_0
+    + \overline{S_1} \cdot S_0 \cdot D_1
+    + S_1 \cdot \overline{S_0} \cdot D_2
+    + S_1 \cdot S_0 \cdot D_3
+\end{equation}
+
+\textbf{关键观察}：MUX的每个选择组合对应一个\textbf{乘积项}。
+
+\begin{itemize}
+  \item 选择线产生最小项（$\overline{S_1}\cdot\overline{S_0}$, $\overline{S_1}\cdot S_0$等）
+  \item 每个数据输入与其对应的最小项AND
+  \item 所有结果OR起来
+\end{itemize}
+
+\section{第五步：结构化设计}
+
+4选1 MUX内部结构 = 4个3输入AND门 + 1个4输入OR门 + 2个反相器：
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  % Inputs
+  \node (D0) at (-4,3) {$D_0$};
+  \node (D1) at (-4,1) {$D_1$};
+  \node (D2) at (-4,-1) {$D_2$};
+  \node (D3) at (-4,-3) {$D_3$};
+  \node (S1) at (-4,-5) {$S_1$};
+  \node (S0) at (-4,-6) {$S_0$};
+
+  % Internal structure is complex, using simplified representation
+  \node[draw, minimum width=4cm, minimum height=5cm,
+        label=above:MUX 4选1] (mux) at (0,0) {};
+
+  \node (Y) at (3,0) {$Y$};
+  \draw[->] (mux.east) -- (Y);
+
+  % Selection notation
+  \node at (0,-3.5) {\small $S_1S_0$};
+\end{tikzpicture}
+\end{center}
+
+\section{第六步：为什么这样设计}
+
+\begin{enumerate}
+  \item \textbf{为什么MUX是"万能"的组合逻辑？}
+
+  因为MUX输出 = $\sum$（选择最小项 $\cdot$ 数据输入）。
+
+  如果把数据输入当作"该最小项是否参与"的控制：
+  \begin{itemize}
+    \item $D_k = 1$：该最小项参与（函数包含此最小项）
+    \item $D_k = 0$：该最小项不参与
+  \end{itemize}
+
+  所以：\textbf{任何$n$变量逻辑函数都可以用一个$2^n$选1 MUX实现}！
+
+  只需将函数真值表的输出列接到MUX的数据输入端。
+
+  \item \textbf{为什么MUX能节省资源？}
+
+  将"多路数据"变成"一路分时复用"——不需要为每路数据各建一条独立通路。这是时分复用的基本思想。
+
+  \item \textbf{MUX与译码器的关系？}
+
+  译码器产生所有$2^n$个最小项（$n$输入$\to$$2^n$输出），MUX选择其中一个输出。实际上，MUX = 译码器 + AND-OR结构。
+\end{enumerate}
+
+\section{第七步：考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：用MUX实现任意逻辑函数（必考！）}
+
+  \textbf{方法}：将函数的变量接选择线，真值表的输出值接数据输入。
+
+  例：实现 $F(A,B,C) = \sum m(0,1,4,6,7)$
+
+  用8选1 MUX：$D_0=1, D_1=1, D_2=0, D_3=0, D_4=1, D_5=0, D_6=1, D_7=1$
+
+  \textbf{降维技巧}：用$2^{n-1}$选1 MUX实现$n$变量函数
+
+  选择线只接$n-1$个变量，第$n$个变量（或其反变量）接到某些数据输入端。
+
+  例：用4选1 MUX实现3变量函数 $F(A,B,C)$
+
+  将A,B接选择线 $S_1,S_0$，C（或其反）接到某些数据输入端。
+
+  \item \textbf{变式2：双4选1 MUX（8选1功能）}
+
+  两片4选1 MUX + 一片2选1 MUX = 8选1 MUX。
+
+  \item \textbf{变式3：带使能端的MUX}
+
+  使能端E=0时，输出固定为0（或高阻态），无论选择线是什么。
+
+  \item \textbf{变式4：MUX扩展}
+
+  $n$选1 MUX可以通过级联构建更大的MUX。例如：4片4选1 MUX + 1片4选1 MUX = 16选1 MUX。
+\end{enumerate}
+
+\section{第八步：VHDL实现}
+
+\begin{lstlisting}[caption={4选1 MUX（多种实现方式）}]
+-- 方式1: with-select (最简洁)
+architecture with_select of mux4to1 is
+begin
+  with S select
+    Y <= D(0) when "00",
+         D(1) when "01",
+         D(2) when "10",
+         D(3) when "11",
+         '0'   when others;
+end with_select;
+
+-- 方式2: when-else (条件信号赋值)
+architecture when_else of mux4to1 is
+begin
+  Y <= D(0) when S = "00" else
+       D(1) when S = "01" else
+       D(2) when S = "10" else
+       D(3) when S = "11" else
+       '0';
+end when_else;
+
+-- 方式3: process + case
+architecture proc_case of mux4to1 is
+begin
+  process(S, D)
+  begin
+    case S is
+      when "00" => Y <= D(0);
+      when "01" => Y <= D(1);
+      when "10" => Y <= D(2);
+      when "11" => Y <= D(3);
+      when others => Y <= '0';
+    end case;
+  end process;
+end proc_case;
+\end{lstlisting}
+
+\begin{lstlisting}[caption={完整4选1 MUX实体}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4to1 is
+  port (
+    D : in  std_logic_vector(3 downto 0);
+    S : in  std_logic_vector(1 downto 0);
+    Y : out std_logic
+  );
+end mux4to1;
+\end{lstlisting}
+
+\section{第九步：Testbench验证}
+
+\begin{lstlisting}[caption={4选1 MUX Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4to1_tb is
+end mux4to1_tb;
+
+architecture test of mux4to1_tb is
+  signal D : std_logic_vector(3 downto 0);
+  signal S : std_logic_vector(1 downto 0);
+  signal Y : std_logic;
+
+  component mux4to1 is
+    port (
+      D : in  std_logic_vector(3 downto 0);
+      S : in  std_logic_vector(1 downto 0);
+      Y : out std_logic
+    );
+  end component;
+begin
+  uut: mux4to1 port map (D, S, Y);
+
+  stimulus: process
+  begin
+    D <= "1010";  -- 固定数据输入
+    S <= "00"; wait for 10 ns;  -- Y = D0 = 0
+    S <= "01"; wait for 10 ns;  -- Y = D1 = 1
+    S <= "10"; wait for 10 ns;  -- Y = D2 = 0
+    S <= "11"; wait for 10 ns;  -- Y = D3 = 1
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\section{第十步：如何快速解题}
+
+\begin{examtip}[MUX快速解题法]
+\begin{enumerate}
+  \item \textbf{用MUX实现逻辑函数}：真值表的输出列 = MUX的数据输入列（这是最快的做法）
+  \item \textbf{降维法}：$n$变量函数 $\to$ 用$2^{n-1}$选1 MUX。剩余的1个变量（或其反）接数据输入
+  \item \textbf{级联扩展}：小MUX + 小MUX = 大MUX
+  \item \textbf{VHDL}：with-select 是最简洁的MUX写法，综合结果就是MUX硬件
+\end{enumerate}
+\end{examtip}
+
+\textbf{秒杀必考题：用MUX实现逻辑函数}
+
+\noindent 题：用8选1 MUX实现 $F(A,B,C) = \sum m(0, 3, 5, 6)$
+
+\noindent 解：$D_0=1, D_1=0, D_2=0, D_3=1, D_4=0, D_5=1, D_6=1, D_7=0$

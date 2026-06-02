@@ -1,0 +1,177 @@
+\chapter{分频器考试变式题}
+
+\section*{题目1：2分频器（直接取Q0）}
+
+\textbf{题目}：用最简单的方法实现2分频器。
+
+\textbf{分析}：计数器最低位Q0天然2分频。只需一个D触发器每拍翻转。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+process(clk, rst_n)
+begin
+  if rst_n = '0' then q <= '0';
+  elsif rising_edge(clk) then q <= not q; end if;
+end process;
+\end{lstlisting}
+\textbf{输出频率}：$f_{out} = f_{clk} / 2$
+
+\section*{题目2：4分频器（直接取Q1）}
+
+\textbf{题目}：用计数器实现4分频器。
+
+\textbf{分析}：2位计数器，Q1=4分频。直接取Q1作为输出。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal cnt : std_logic_vector(1 downto 0);
+process(clk) begin
+  if rising_edge(clk) then cnt <= cnt + 1; end if;
+end process;
+clk_div4 <= cnt(1);  -- Q1天然4分频
+\end{lstlisting}
+
+\section*{题目3：10分频器（占空比50\%）}
+
+\textbf{题目}：设计10分频器，占空比50\%。
+
+\textbf{分析}：
+\begin{itemize}
+  \item 模10计数器（0-9）
+  \item cnt 0-4输出0，cnt 5-9输出1
+  \item 每个周期5拍低+5拍高
+\end{itemize}
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal cnt : std_logic_vector(3 downto 0);
+process(clk, rst_n)
+begin
+  if rst_n = '0' then cnt <= "0000";
+  elsif rising_edge(clk) then
+    if cnt = "1001" then cnt <= "0000";
+    else cnt <= cnt + 1; end if;
+  end if;
+end process;
+clk_div10 <= '0' when cnt < "0101" else '1';  -- 0-4低, 5-9高
+\end{lstlisting}
+
+\section*{题目4：3分频器（占空比非50\%）}
+
+\textbf{题目}：设计3分频器。
+
+\textbf{分析}：
+\begin{itemize}
+  \item 模3计数器（0→1→2→0）
+  \item 简单方案：cnt=0,1输出0，cnt=2输出1（1/3占空比）
+  \item 50\%占空比方案：需要上升沿+下降沿双计数器
+\end{itemize}
+
+\section*{题目5：5分频器}
+
+\textbf{题目}：设计5分频器。
+
+\textbf{分析}：模5计数器，占空比3/5或使用双沿方法实现50\%占空比。
+
+\section*{题目6：100分频器}
+
+\textbf{题目}：用50MHz时钟产生500kHz信号，设计分频器。
+
+\textbf{分析}：$M = 50\text{MHz} / 500\text{kHz} = 100$。模100计数器。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+constant M : integer := 100;
+signal cnt : integer range 0 to M-1;
+process(clk, rst_n)
+begin
+  if rst_n = '0' then cnt <= 0;
+  elsif rising_edge(clk) then
+    if cnt = M-1 then cnt <= 0; else cnt <= cnt + 1; end if;
+  end if;
+end process;
+clk_out <= '0' when cnt < M/2 else '1';
+\end{lstlisting}
+
+\section*{题目7：秒脉冲发生器}
+
+\textbf{题目}：用100MHz时钟产生1Hz秒脉冲。
+
+\textbf{分析}：$M = 100,000,000$。需要27位计数器（$2^{26} < 10^8 < 2^{27}$）。
+
+\section*{题目8：多级分频器}
+
+\textbf{题目}：用2分频+5分频级联实现10分频。
+
+\textbf{分析}：$M_{total} = M_1 \times M_2 = 2 \times 5 = 10$。
+
+\section*{题目9：可调分频比的计数器}
+
+\textbf{题目}：设计分频比可动态设置的分频器（DIV从1到16可调）。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal cnt : std_logic_vector(3 downto 0);
+process(clk) begin
+  if rising_edge(clk) then
+    if cnt = DIV - 1 then cnt <= "0000";
+    else cnt <= cnt + 1; end if;
+  end if;
+end process;
+\end{lstlisting}
+
+\section*{题目10：占空比可调的分频器}
+
+\textbf{题目}：设计10分频器，占空比可调（高电平持续周期数DUTY可配置）。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+clk_out <= '0' when cnt < DUTY else '1';
+\end{lstlisting}
+
+\section*{题目11：正交分频器（I/Q输出）}
+
+\textbf{题目}：设计分频器同时输出I和Q两路信号，Q比I延迟90度。
+
+\textbf{分析}：需要4分频才能产生90度相位差。I从cnt[1]取，Q从特定比较值取。
+
+\section*{题目12：50\%占空比的奇数分频器}
+
+\textbf{题目}：设计占空比50\%的5分频器。
+
+\textbf{分析}：使用正沿2分频 + 负沿2分频组合的方法。
+
+\section*{题目13：给定分频器输出波形，推断分频比}
+
+\textbf{题目}：输出信号每8个输入时钟周期完成一个完整周期，求分频比。
+
+\textbf{解}：$M = 8$（8分频）。
+
+\section*{题目14：分析Qn分频输出频率}
+
+\textbf{题目}：时钟100MHz，求4位计数器Q0、Q1、Q2、Q3的输出频率。
+
+\textbf{解}：
+\begin{itemize}
+  \item Q0: $100/2=50$MHz
+  \item Q1: $100/4=25$MHz
+  \item Q2: $100/8=12.5$MHz
+  \item Q3: $100/16=6.25$MHz
+\end{itemize}
+
+\section*{题目15：分频器级联频率计算}
+
+\textbf{题目}：100MHz → 5分频 → 7分频，最终输出频率？
+
+\textbf{解}：$f_{out} = 100\text{MHz} / (5 \times 7) = 100/35 \approx 2.857\text{MHz}$
+
+\begin{examtip}[分频器类题目的统一解法]
+\begin{enumerate}
+  \item \textbf{计算分频比}：$M = f_{in} / f_{out}$
+  \item \textbf{设计模M计数器}
+  \item \textbf{偶数分频：}cnt < M/2输出0，否则输出1
+  \item \textbf{奇数分频：}用双沿技术实现50\%占空比
+  \item \textbf{$2^N$分频：}直接取Qn输出（最简单）
+  \item \textbf{级联：}总M = 各级M的乘积
+\end{enumerate}
+\end{examtip}

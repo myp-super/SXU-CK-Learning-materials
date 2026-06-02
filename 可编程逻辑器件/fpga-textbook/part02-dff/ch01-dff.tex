@@ -1,0 +1,340 @@
+\chapter{D触发器深度解析}
+
+\section{为什么组合逻辑不能存储信息}
+
+让我们做一个思维实验。
+
+假设你想"记住"数字5。你用一个组合逻辑电路产生输出5：
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=3cm, minimum height=1.5cm] (cl) at (0,0) {组合逻辑};
+  \node (in) at (-3,0) {输入(某种编码)};
+  \node (out) at (3,0) {输出 = 5};
+  \draw[->] (in) -- (cl);
+  \draw[->] (cl) -- (out);
+\end{tikzpicture}
+\end{center}
+
+\textbf{问题来了}：如果切断输入（或输入改变），5就消失了。
+
+组合逻辑的输出\textbf{始终等于}$f(\text{输入})$。没有输入就没有输出。输出不能独立于输入而存在。
+
+\begin{keypoint}[组合逻辑的根本限制]
+组合逻辑 = 无记忆电路
+
+输出$(t) = f($输入$(t))$——输出在任何时刻都直接由当前输入决定。
+
+它不能脱离输入而独立"保持"一个值。
+\end{keypoint}
+
+\section{为什么需要存储}
+
+数字系统中大量的操作需要"记住"值：
+
+\begin{itemize}
+  \item 计数器需要记住"当前计到几了"
+  \item 寄存器需要记住"上次存了哪个数"
+  \item 状态机需要记住"我当前在哪个状态"
+  \item 累加器需要记住"累加和是多少"
+\end{itemize}
+
+这些都是"信息需要跨越时间而保持"的场景。
+
+\textbf{跨越时间} = 记忆 = 存储 = 需要一种能"保持"信息的元件。
+
+\section{什么叫状态？什么叫记忆？}
+
+\begin{definition}[状态]
+\textbf{状态} = 系统在某个时刻的全部内部信息的快照。
+
+时钟驱动下，状态的变迁构成了时序电路的行为。
+\end{definition}
+
+\begin{definition}[记忆]
+\textbf{记忆} = 在输入消失后，信息仍然被保留的能力。
+
+D触发器的记忆：在时钟上升沿捕获D输入，之后即使D改变，Q输出保持上一次捕获的值不变，直到下一个时钟上升沿。
+\end{definition}
+
+\section{D触发器到底保存了什么}
+
+\begin{keypoint}[D触发器的本质]
+\textbf{D触发器是一个1-bit存储单元。}
+
+\begin{itemize}
+  \item 它在每个时钟上升沿"采样"D输入的值
+  \item 将采样到的值保持到输出Q上
+  \item 这个值一直保持到下一个时钟上升沿
+\end{itemize}
+\end{keypoint}
+
+\subsection{D触发器的输入输出}
+
+\begin{itemize}
+  \item \textbf{D（Data）}：数据输入——下一个时钟沿要存储什么值
+  \item \textbf{CLK（Clock）}：时钟信号——决定"什么时候"采样
+  \item \textbf{Q}：数据输出——当前存储的值
+  \item \textbf{$\overline{Q}$}：Q的反相（部分D触发器有此输出）
+\end{itemize}
+
+\section{时钟上升沿发生什么}
+
+当时钟从0变1的那一瞬间（上升沿$\uparrow$），D触发器做一件事：
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.8\textwidth}
+\begin{center}
+\textbf{采样D的值} $\to$ \textbf{锁存到内部} $\to$ \textbf{驱动到Q输出}
+\end{center}
+\end{minipage}%
+}
+\end{center}
+
+\textbf{在上升沿之前}：Q保持旧值（上一次采样时的D值）
+
+\textbf{在上升沿那一瞬间}：Q更新为新值（当前D的值）
+
+\textbf{在上升沿之后}：即使D变化，Q保持不变（直到下一个上升沿）
+
+\subsection{逐拍分析：D触发器的一次工作过程}
+
+假设初始状态：Q = 0。
+
+\begin{beatanalysis}[D触发器单次采样过程]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{时刻} & \textbf{CLK} & \textbf{D} & \textbf{Q} \\
+\hline
+上升沿到达前 & 0 & 1 & 0 （保持旧值）\\
+\textbf{上升沿瞬间} & 0→1（$\uparrow$）& 1 & \textbf{1}（采样并更新！）\\
+上升沿之后 & 1 & 0 & 1 （保持采样值，不理D变化）\\
+上升沿之后 & 1 & x（任意）& 1 （仍然保持）\\
+下一次上升沿 & 0→1（$\uparrow$）& 0 & \textbf{0}（采样新的D值！）\\
+\hline
+\end{tabular}
+\end{center}
+\end{beatanalysis}
+
+\textbf{关键洞察}：
+\begin{itemize}
+  \item 在非上升沿时刻，D可以随便变化，Q纹丝不动
+  \item 只有上升沿那一瞬间，D的值被"捕获"
+  \item 捕获后Q保持该值，像一个"时间冻结"的样本
+\end{itemize}
+
+\section{Q(n)和Q(n+1)到底是什么意思}
+
+这是数字逻辑中最核心的概念之一：
+
+\begin{definition}[Q(n) vs Q(n+1)]
+\begin{itemize}
+  \item \textbf{Q(n)} = 第n个时钟周期内（上升沿之后），触发器的\textbf{当前}输出
+  \item \textbf{Q(n+1)} = 第n+1个时钟上升沿到达后，触发器的\textbf{下一个}输出
+\end{itemize}
+
+Q(n) 和 Q(n+1) 之间恰好差一个时钟周期。
+\end{definition}
+
+对于D触发器：
+
+\begin{equation}
+  \boxed{Q(n+1) = D(n)}
+\end{equation}
+
+\textbf{含义}：下一个时钟上升沿之后Q的值 = 当前上升沿时采样的D值。
+
+\begin{center}
+\begin{tikzpicture}
+  \draw[->] (0,0) -- (8,0) node[right] {时间};
+  \draw (1,0.5) -- (1,-0.5) node[below] {第n拍};
+  \draw (3,0.5) -- (3,-0.5);
+  \draw (5,0.5) -- (5,-0.5) node[below] {第n+1拍};
+  \draw (7,0.5) -- (7,-0.5) node[below] {第n+2拍};
+
+  \node at (1,0.8) {$\uparrow$};
+  \node at (3,0.8) {$\uparrow$};
+  \node at (5,0.8) {$\uparrow$};
+  \node at (7,0.8) {$\uparrow$};
+
+  \node at (2,1.5) {Q保持D(上一拍值)};
+  \node at (4,1.5) {Q(n)};
+  \node at (6,1.5) {Q(n+1)=D(n)};
+\end{tikzpicture}
+\end{center}
+
+\section{FPGA中的寄存器资源与D触发器关系}
+
+\begin{keypoint}[FPGA寄存器的本质]
+FPGA中的"寄存器"(Register/Flip-Flop)就是一个D触发器。
+
+\begin{itemize}
+  \item 每个LE（Logic Element）/Slice包含若干个D触发器
+  \item 当你在VHDL中写 \texttt{signal x : std\_logic} 并在process中赋值，综合器就把x映射到一个D触发器
+  \item \texttt{std\_logic\_vector(7 downto 0)} = 8个D触发器并排
+\end{itemize}
+\end{keypoint}
+
+总结关系：
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (vhdl) at (0,2) {VHDL signal};
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (dff) at (0,0) {D触发器};
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (fpga) at (0,-2) {FPGA寄存器};
+
+  \draw[->] (vhdl) -- (dff) node[midway,right] {综合成};
+  \draw[->] (dff) -- (fpga) node[midway,right] {对应};
+
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (vec) at (5,2) {vector(7:0)};
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (8dff) at (5,0) {8个D触发器};
+  \node[draw, minimum width=2.5cm, minimum height=1cm] (8reg) at (5,-2) {8个寄存器};
+
+  \draw[->] (vec) -- (8dff) node[midway,right] {综合成};
+  \draw[->] (8dff) -- (8reg) node[midway,right] {对应};
+\end{tikzpicture}
+\end{center}
+
+\section{D触发器的VHDL实现}
+
+\begin{lstlisting}[caption={D触发器VHDL实现（带异步复位）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity dff is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;  -- 异步复位（低有效）
+    D     : in  std_logic;
+    Q     : out std_logic
+  );
+end dff;
+
+architecture behavioral of dff is
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      Q <= '0';              -- 异步复位
+    elsif rising_edge(clk) then
+      Q <= D;                -- 时钟上升沿：采样D并输出到Q
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\subsection{VHDL中的关键点}
+
+\begin{enumerate}
+  \item \texttt{process(clk, rst\_n)}：敏感信号列表包含CLK和复位
+  \item \texttt{if rst\_n = '0' then}：异步复位优先——复位不受时钟控制
+  \item \texttt{elsif rising\_edge(clk) then}：这才是"边沿触发"——只有在上升沿才执行
+  \item \texttt{Q <= D}：这是D触发器的核心行为——$Q(n+1) = D(n)$
+\end{enumerate}
+
+\subsection{综合成什么硬件}
+
+\begin{center}
+\begin{tikzpicture}
+  % D Flip-Flop schematic
+  \node[draw, minimum width=2cm, minimum height=3cm, label=above:D触发器] (dff) at (0,0) {};
+  \node (D) at (-2,1) {D};
+  \node (clk) at (-2,0) {CLK};
+  \node (rst) at (-2,-1) {rst\_n};
+  \node (Q) at (2,0) {Q};
+
+  \draw[->] (D) -- (dff.west |- D);
+  \draw[->] (clk) -- (dff.west |- clk);
+  \draw[->] (rst) -- (dff.west |- rst);
+  \draw[->] (dff.east |- Q) -- (Q);
+
+  \node at (0,-2.5) {\small 内部：主从锁存器结构};
+\end{tikzpicture}
+\end{center}
+
+\section{D触发器 + 组合逻辑 = 一切时序电路}
+
+现在我们有：
+\begin{itemize}
+  \item \textbf{组合逻辑}：能做计算，但不能存储
+  \item \textbf{D触发器}：能存储1 bit，但不能计算
+\end{itemize}
+
+把它们结合起来：
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2cm, minimum height=1cm] (cl) at (0,2) {组合逻辑};
+  \node[draw, minimum width=2cm, minimum height=1cm] (dff) at (0,0) {D触发器};
+
+  \draw[->] (cl.east) -- ++(1,0) |- (dff.east) node[midway,right] {D};
+  \draw[->] (dff.west) -- ++(-1,0) |- (cl.west) node[midway,left] {Q（反馈）};
+
+  \node at (3,-2) {\textbf{这就构成了状态机！}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Q（状态输出）} $\to$ 组合逻辑计算 $\to$ 产生新的D $\to$ 下一个时钟沿存入D触发器 $\to$ 新状态！
+
+这就是所有同步时序电路的核心结构。
+
+\begin{keypoint}[时序电路核心模型]
+$$\text{当前状态} \xrightarrow{\text{组合逻辑}} \text{下一状态} \xrightarrow{\text{时钟沿}} \text{存入D触发器}$$
+
+时钟驱动状态向前流动。每个时钟周期，状态更新一次。
+\end{keypoint}
+
+\section{Testbench验证}
+
+\begin{lstlisting}[caption={D触发器Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity dff_tb is
+end dff_tb;
+
+architecture test of dff_tb is
+  signal clk, rst_n, D, Q : std_logic;
+  constant clk_period : time := 20 ns;
+
+  component dff is
+    port (clk, rst_n, D : in std_logic; Q : out std_logic);
+  end component;
+begin
+  uut: dff port map (clk, rst_n, D, Q);
+
+  -- 时钟生成
+  clk_process: process
+  begin
+    clk <= '0'; wait for clk_period/2;
+    clk <= '1'; wait for clk_period/2;
+  end process;
+
+  -- 测试序列
+  stimulus: process
+  begin
+    rst_n <= '0'; D <= '0'; wait for 30 ns;  -- 复位
+    rst_n <= '1';             wait for 5 ns;
+
+    D <= '1'; wait for clk_period;  -- 上升沿采样D=1
+    D <= '0'; wait for clk_period;  -- 上升沿采样D=0
+    D <= '1'; D <= '0' after 5 ns;  -- 在非上升沿改变D（Q不会变）
+    wait for clk_period;
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\section{D触发器体系总结}
+
+\begin{enumerate}
+  \item \textbf{一个D触发器 = 1 bit存储}：能记住一个二进制位
+  \item \textbf{时钟沿触发}：只有在上升沿（或下降沿）才采样和更新
+  \item \textbf{Q(n+1) = D(n)}：D触发器的特征方程，一切推导的基础
+  \item \textbf{N个D触发器并排}：可以存储N位数据（寄存器）
+  \item \textbf{组合逻辑+D触发器}：构成一切同步时序电路
+\end{enumerate}
+
+\textbf{下一步}：将D触发器串联起来——得到计数器、移位寄存器、状态机等一切有趣的电路。

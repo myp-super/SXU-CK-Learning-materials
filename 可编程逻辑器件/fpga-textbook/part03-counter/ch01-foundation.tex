@@ -1,0 +1,199 @@
+\chapter{计数器统一框架：从状态机视角理解计数器}
+
+\section{最重要的一句话}
+
+\begin{keypoint}[计数器的本质]
+\textbf{计数器就是一个状态机，它的状态转移函数是：}
+
+$$\text{下一状态} = \text{当前状态} + 1 \quad (\text{模} N)$$
+
+计数器不是"一个能计数的东西"，而是"一个状态在0到N-1之间循环的时序电路"。
+\end{keypoint}
+
+\section{什么是状态}
+
+回顾D触发器：每个D触发器保存1 bit信息。
+
+4个D触发器并排：
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=1cm, minimum height=0.8cm] (q3) at (3,0) {Q3};
+  \node[draw, minimum width=1cm, minimum height=0.8cm] (q2) at (1.5,0) {Q2};
+  \node[draw, minimum width=1cm, minimum height=0.8cm] (q1) at (0,0) {Q1};
+  \node[draw, minimum width=1cm, minimum height=0.8cm] (q0) at (-1.5,0) {Q0};
+
+  \node at (3,-1.5) {$\times 8$};
+  \node at (1.5,-1.5) {$\times 4$};
+  \node at (0,-1.5) {$\times 2$};
+  \node at (-1.5,-1.5) {$\times 1$};
+
+  \node at (0.75,-2.5) {存储的值 = $8\times Q_3 + 4\times Q_2 + 2\times Q_1 + 1\times Q_0$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{状态} = 这四个Q值在某个时刻的\textbf{具体组合}。
+
+例如：
+\begin{itemize}
+  \item 状态"5" = Q3Q2Q1Q0 = 0101
+  \item 状态"12" = Q3Q2Q1Q0 = 1100
+  \item 状态"0" = Q3Q2Q1Q0 = 0000
+\end{itemize}
+
+\section{什么是状态转移}
+
+\textbf{状态转移}：在时钟沿驱动下，系统从当前状态变为下一个状态。
+
+计数器中的状态转移规则只有一条：
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.7\textwidth}
+\begin{center}
+$$\text{如果当前状态} = i \quad (i < N-1)$$
+$$\text{则下一状态} = i + 1$$
+
+$$\text{如果当前状态} = N-1$$
+$$\text{则下一状态} = 0$$
+\end{center}
+\end{minipage}%
+}
+\end{center}
+
+\textbf{N = 模值——计数器在0 到 N-1之间循环。}
+
+\section{为什么计数器本质是状态机}
+
+状态机有三个要素：
+\begin{enumerate}
+  \item \textbf{当前状态}：计数器当前计数值
+  \item \textbf{状态转移函数}：$S_{next} = (S_{current} + 1) \bmod N$
+  \item \textbf{时钟驱动}：每个时钟上升沿，状态更新一次
+\end{enumerate}
+
+计数器完美符合状态机的定义。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, ->, >=stealth, node distance=1.5cm]
+  \node[draw, circle] (s0) at (0,0) {0};
+  \node[draw, circle] (s1) at (2,0) {1};
+  \node[draw, circle] (s2) at (4,0) {2};
+  \node[draw, circle] (s3) at (6,0) {3};
+  \node[draw, circle] (s4) at (7,2) {...};
+  \node[draw, circle] (sn) at (6,4) {N-1};
+
+  \draw (s0) -- (s1);
+  \draw (s1) -- (s2);
+  \draw (s2) -- (s3);
+  \draw (s3) -- (s4);
+  \draw (s4) -- (sn);
+  \draw (sn) edge[bend right=40] (s0);
+
+  \node at (3,-1.5) {\small 状态循环：0→1→2→3→...→N-1→0→1→...};
+\end{tikzpicture}
+\end{center}
+
+\section{为什么计数器本质是"当前状态+1"}
+
+这听起来像废话——但这恰恰是最重要的理解。
+
+计数器的核心操作是：
+
+\begin{equation}
+  \text{Reg}[3:0] \leftarrow \text{Reg}[3:0] + 1
+\end{equation}
+
+用硬件实现：
+\begin{enumerate}
+  \item \textbf{寄存器}（D触发器组）存储当前计数值（当前状态）
+  \item \textbf{加法器}（组合逻辑）计算 "当前状态 + 1"（下一状态）
+  \item \textbf{时钟沿}到来时，加法器的输出存入寄存器（状态更新）
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2.5cm, minimum height=1.2cm] (reg) at (0,0) {寄存器（状态）};
+  \node[draw, minimum width=2cm, minimum height=1cm] (add) at (4,0) {+1};
+
+  \draw[->] (reg.east) -- (add.west) node[midway,above] {当前状态};
+  \draw[->] (add.east) -- ++(1,0) |- (reg.north) node[near end,right] {下一状态};
+
+  \node at (0,-1.5) {\small 反馈环：状态 $\to$ +1 $\to$ 下一状态 $\to$ 存回寄存器};
+\end{tikzpicture}
+\end{center}
+
+\textbf{这个反馈环是计数器（以及所有状态机）的硬件本质。}
+
+\section{通用计数器设计流程}
+
+\begin{designflow}[通用计数器设计流程——适用于任何模值]
+\begin{enumerate}
+  \item \textbf{确定模值N}：计数器从0计到N-1，共N个状态
+  \item \textbf{确定寄存器位宽k}：$k = \lceil \log_2 N \rceil$（能满足表示N-1的最小位数）
+  \item \textbf{设计状态转移}：当前状态 + 1（这是所有二进制计数器的共同逻辑）
+  \item \textbf{设计回零条件}：当当前状态 = N-1 时（这是不同计数器的唯一区别）
+    \begin{itemize}
+      \item 进位置1（表示一轮计数完成）
+      \item 下一状态 = 0
+    \end{itemize}
+  \item \textbf{验证状态完整性}：确保从0到N-1的每个状态都能正确转移，且状态N不会出现
+  \item \textbf{转换成VHDL}：
+    \begin{itemize}
+      \item 标准写法：if rising\_edge(clk) then count <= count + 1;
+      \item 加上清零条件：if count = N-1 then count <= 0;
+    \end{itemize}
+  \end{enumerate}
+\end{designflow}
+
+\section{为什么所有计数器本质上是一个问题}
+
+看下面几个需求：
+\begin{itemize}
+  \item "设计一个模12计数器"：0→1→...→11→0→1→...
+  \item "设计一个模24计数器"：0→1→...→23→0→1→...
+  \item "设计一个模60计数器"：0→1→...→59→0→1→...
+\end{itemize}
+
+它们的\textbf{区别只有一个}：清零条件不同。
+
+\begin{itemize}
+  \item 模12：count = 11 时清零（即 1100 时回零）
+  \item 模24：count = 23 时清零（即 10111 时回零）
+  \item 模60：count = 59 时清零（即 111011 时回零）
+\end{itemize}
+
+\textbf{除此之外，其余所有逻辑完全相同！}
+
+这就是为什么我们要建立一个统一框架来理解所有计数器。
+
+\begin{keypoint}[计数器统一公式]
+\textbf{任意模N二进制计数器：}
+
+\begin{lstlisting}
+ if rising_edge(clk) then
+  if count = N-1 then
+    count <= 0;
+  else
+    count <= count + 1;
+  end if;
+end if;
+\end{lstlisting}
+
+唯一的参数：N（模值）
+\end{keypoint}
+
+\section{接下来的学习顺序}
+
+在建立了统一框架之后，我们将用这个框架统一推导：
+
+\begin{itemize}
+  \item \textbf{4位计数器}（模16，$N = 2^4$）——最基础
+  \item \textbf{模12计数器}——$N = 12$，需要4位 + 回零逻辑
+  \item \textbf{模24计数器}——$N = 24$，需要5位 + 回零逻辑
+  \item \textbf{模60计数器}——$N = 60$，需要6位 + 回零逻辑
+  \item \textbf{模为任意值的计数器}——通用设计方法
+  \item \textbf{BCD计数器}（模10，B个位/十位分开编码）
+  \item \textbf{BCD模24/模60}——多位BCD级联
+\end{itemize}
+
+你会发现它们都是从同一个模板稍加修改得到的。

@@ -1,0 +1,298 @@
+\chapter{8-3编码器}
+
+\section{第一步：解决什么问题}
+
+想象一个场景：你的FPGA有8个按键，编号0到7。用户按下其中一个按键。
+
+\begin{itemize}
+  \item 如果用8根信号线传给处理器，需要8个引脚——浪费资源
+  \item 更好的方案：用3根信号线传递"哪个按键被按下"的信息
+  \item 因为 $2^3 = 8$，3根线恰好能表示8种状态
+\end{itemize}
+
+\textbf{编码器（Encoder）的本质}：将 $2^n$ 个输入信号，压缩成 $n$ 位二进制输出。
+
+\begin{keypoint}[编码器的本质]
+编码器 = 信号压缩器：$2^n$ 个输入 $\to$ $n$ 位输出
+
+8-3编码器：8个输入 $\to$ 3位输出
+\end{keypoint}
+
+\section{第二步：输入输出关系}
+
+\begin{itemize}
+  \item \textbf{输入}：$I_0, I_1, I_2, I_3, I_4, I_5, I_6, I_7$（8个输入信号，高电平有效）
+  \item \textbf{输出}：$Y_2, Y_1, Y_0$（3位二进制编码输出）
+  \item \textbf{约束}：任意时刻最多只有一个输入为1
+\end{itemize}
+
+当 $I_k = 1$（且其他输入为0）时，输出 $(Y_2 Y_1 Y_0)$ 应该等于 $k$ 的二进制表示。
+
+\section{第三步：真值表}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{有效输入} & $Y_2$ & $Y_1$ & $Y_0$ \\
+\hline
+$I_0 = 1$ & 0 & 0 & 0 \\
+$I_1 = 1$ & 0 & 0 & 1 \\
+$I_2 = 1$ & 0 & 1 & 0 \\
+$I_3 = 1$ & 0 & 1 & 1 \\
+$I_4 = 1$ & 1 & 0 & 0 \\
+$I_5 = 1$ & 1 & 0 & 1 \\
+$I_6 = 1$ & 1 & 1 & 0 \\
+$I_7 = 1$ & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{第四步：逻辑推导}
+
+观察真值表，找出每个输出位什么时候为1：
+
+\begin{itemize}
+  \item $Y_2 = 1$ 当 $I_4=1$ 或 $I_5=1$ 或 $I_6=1$ 或 $I_7=1$
+  \item $Y_1 = 1$ 当 $I_2=1$ 或 $I_3=1$ 或 $I_6=1$ 或 $I_7=1$
+  \item $Y_0 = 1$ 当 $I_1=1$ 或 $I_3=1$ 或 $I_5=1$ 或 $I_7=1$
+\end{itemize}
+
+因此，逻辑表达式为：
+
+\begin{align}
+  Y_2 &= I_4 + I_5 + I_6 + I_7 \\
+  Y_1 &= I_2 + I_3 + I_6 + I_7 \\
+  Y_0 &= I_1 + I_3 + I_5 + I_7
+\end{align}
+
+每个输出位都是若干输入的\textbf{逻辑或（OR）}。
+
+\section{第五步：结构化设计}
+
+8-3编码器内部结构：
+
+\begin{center}
+\begin{tikzpicture}
+  % Inputs
+  \foreach \x in {0,...,7} {
+    \node (I\x) at (0, -1.2*\x) {$I_\x$};
+  }
+  % OR gates
+  \node[american or port,rotate=-90] (or2) at (4,-2.5) {};
+  \node[american or port,rotate=-90] (or1) at (4,-5) {};
+  \node[american or port,rotate=-90] (or0) at (4,-7.5) {};
+
+  % Outputs
+  \node (Y2) at (5.5,-2.5) {$Y_2$};
+  \node (Y1) at (5.5,-5) {$Y_1$};
+  \node (Y0) at (5.5,-7.5) {$Y_0$};
+
+  % Connections for Y2
+  \draw (I4) -- ++(1.5,0) |- (or2.in 1);
+  \draw (I5) -- ++(1.5,0) |- (or2.in 2);
+  \draw (I6) -- ++(2.0,0) |- (or2.in 1);
+  \draw (I7) -- ++(2.5,0) |- (or2.in 2);
+
+  \draw (or2.out) -- (Y2);
+\end{tikzpicture}
+\end{center}
+
+\textbf{设计规律}：$Y_k$ 的输出 = 所有编号第 $k$ 位为1的输入的OR。
+
+\begin{itemize}
+  \item $Y_2$（bit 2 = 4的位）：连接 $I_4, I_5, I_6, I_7$（这些编号的二进制第2位都是1）
+  \item $Y_1$（bit 1 = 2的位）：连接 $I_2, I_3, I_6, I_7$
+  \item $Y_0$（bit 0 = 1的位）：连接 $I_1, I_3, I_5, I_7$
+\end{itemize}
+
+\section{第六步：为什么这样设计}
+
+\begin{enumerate}
+  \item \textbf{为什么用OR门？}
+
+  观察真值表：对于 $Y_k$，任何使 $Y_k=1$ 的输入条件之间是"或"的关系——只要其中任何一个条件满足，$Y_k$ 就是1。
+
+  \item \textbf{为什么输入之间存在约束？}
+
+  如果两个输入同时为1，OR门的输出仍然是1，但编码结果就错了（对应了另一个不需要的编码）。所以编码器假设同一时刻只有一个输入有效。
+
+  \item \textbf{优先级编码器的改进动机？}
+
+  当多个输入同时有效时，普通编码器产生错误输出。优先级编码器增加了优先级逻辑——一般编号大的输入优先级高。这需要用if-else级联逻辑而非简单OR门。
+\end{enumerate}
+
+\section{第七步：考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：16-4编码器}
+
+  将16个输入编码为4位输出。原理完全相同，只是规模扩大。$Y_3 = I_8 + I_9 + \cdots + I_{15}$，以此类推。
+
+  \item \textbf{变式2：优先级编码器（Priority Encoder）}
+
+  允许同时多个输入为1，输出最高优先级输入的编号。这是考试的热门考点。
+
+  优先级编码器的真值表（优先级：$I_7 > I_6 > \cdots > I_0$）：
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  $I_7$ & $I_6$ & $I_5$ & ... & $(Y_2 Y_1 Y_0)$ \\
+  \hline
+  1 & x & x & ... & 111 \\
+  0 & 1 & x & ... & 110 \\
+  0 & 0 & 1 & ... & 101 \\
+  \vdots & \vdots & \vdots & \ddots & \vdots \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \item \textbf{变式3：带使能端的编码器}
+
+  增加一个Enable输入，E=1时编码器正常工作，E=0时所有输出为0。
+
+  \item \textbf{变式4：输出有效的编码器}
+
+  增加一个GS（Group Select）输出，当任何输入有效时GS=1，否则GS=0。用于区分"选择了$I_0$"（输出000）和"没有选择"（输出也是000）。
+
+  \item \textbf{变式5：低电平有效的编码器}
+
+  输入和输出都是低电平有效（即0表示有效，1表示无效）。逻辑门类型可能需要相应改变。
+\end{enumerate}
+
+\section{第八步：VHDL实现}
+
+\subsection{普通8-3编码器}
+
+\begin{lstlisting}[caption={8-3编码器VHDL实现（if-else版本）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity encoder_8to3 is
+  port (
+    I : in  std_logic_vector(7 downto 0);
+    Y : out std_logic_vector(2 downto 0)
+  );
+end encoder_8to3;
+
+architecture behavioral of encoder_8to3 is
+begin
+  process(I)
+  begin
+    case I is
+      when "00000001" => Y <= "000";
+      when "00000010" => Y <= "001";
+      when "00000100" => Y <= "010";
+      when "00001000" => Y <= "011";
+      when "00010000" => Y <= "100";
+      when "00100000" => Y <= "101";
+      when "01000000" => Y <= "110";
+      when "10000000" => Y <= "111";
+      when others      => Y <= "000";
+    end case;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\subsection{优先级编码器}
+
+\begin{lstlisting}[caption={8-3优先级编码器（使用if-else级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity priority_encoder_8to3 is
+  port (
+    I : in  std_logic_vector(7 downto 0);
+    Y : out std_logic_vector(2 downto 0);
+    GS: out std_logic
+  );
+end priority_encoder_8to3;
+
+architecture behavioral of priority_encoder_8to3 is
+begin
+  process(I)
+  begin
+    GS <= '1';
+    if    I(7) = '1' then Y <= "111";
+    elsif I(6) = '1' then Y <= "110";
+    elsif I(5) = '1' then Y <= "101";
+    elsif I(4) = '1' then Y <= "100";
+    elsif I(3) = '1' then Y <= "011";
+    elsif I(2) = '1' then Y <= "010";
+    elsif I(1) = '1' then Y <= "001";
+    elsif I(0) = '1' then Y <= "000";
+    else
+      Y  <= "000";
+      GS <= '0';  -- 无有效输入
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\section{第九步：Testbench验证}
+
+\begin{lstlisting}[caption={8-3编码器Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity encoder_8to3_tb is
+end encoder_8to3_tb;
+
+architecture test of encoder_8to3_tb is
+  signal I : std_logic_vector(7 downto 0);
+  signal Y : std_logic_vector(2 downto 0);
+
+  component encoder_8to3 is
+    port (
+      I : in  std_logic_vector(7 downto 0);
+      Y : out std_logic_vector(2 downto 0)
+    );
+  end component;
+begin
+  uut: encoder_8to3 port map (I, Y);
+
+  stimulus: process
+  begin
+    -- 测试每个输入
+    I <= "00000001"; wait for 10 ns;
+    I <= "00000010"; wait for 10 ns;
+    I <= "00000100"; wait for 10 ns;
+    I <= "00001000"; wait for 10 ns;
+    I <= "00010000"; wait for 10 ns;
+    I <= "00100000"; wait for 10 ns;
+    I <= "01000000"; wait for 10 ns;
+    I <= "10000000"; wait for 10 ns;
+    -- 无输入
+    I <= "00000000"; wait for 10 ns;
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\textbf{验证要点}：
+\begin{itemize}
+  \item $I_0$ 有效时，$Y = 000$
+  \item $I_7$ 有效时，$Y = 111$
+  \item 中间值按二进制递增
+\end{itemize}
+
+\section{第十步：如何快速解题}
+
+\begin{examtip}[编码器快速解题法]
+\begin{enumerate}
+  \item \textbf{确定输入输出数量}：$2^n$ 输入对应 $n$ 位输出
+  \item \textbf{写表达式}：第 $k$ 个输出位 = 所有编号中该位为1的输入的OR
+  \item \textbf{优先级编码器}：用 if-else 级联，优先级从高到低
+  \item \textbf{常考陷阱}：$I_0$ 有效时输出000，需要GS信号区分"无输入"
+\end{enumerate}
+\end{examtip}
+
+\textbf{秒杀口诀}：每个输出位 = 输入编号该位为1的所有输入的OR。
+
+举例：
+\begin{itemize}
+  \item 4-2编码器：$Y_1 = I_2 + I_3$，$Y_0 = I_1 + I_3$
+  \item 16-4编码器：$Y_3 = I_8 + I_9 + \cdots + I_{15}$，$Y_2 = I_4 + I_5 + I_6 + I_7 + I_{12} + I_{13} + I_{14} + I_{15}$
+\end{itemize}
+
+规律推广：对于 $2^n$-$n$ 编码器，$Y_k = \sum I_i$，其中 $i$ 的二进制表示中第 $k$ 位为1。

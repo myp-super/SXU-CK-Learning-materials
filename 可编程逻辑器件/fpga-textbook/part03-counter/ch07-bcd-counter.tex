@@ -1,0 +1,126 @@
+\chapter{模10 BCD计数器}
+
+\section{BCD计数器与二进制计数器的本质区别}
+
+到目前为止，我们讨论的计数器都是\textbf{二进制计数器}：
+
+\begin{itemize}
+  \item 数是用\textbf{整个二进制数}表示的
+  \item 模12计数器：4位二进制（0000-1011），一个整体
+  \item 模60计数器：6位二进制（000000-111011），一个整体
+\end{itemize}
+
+\textbf{BCD计数器}完全不同：
+
+\begin{keypoint}[BCD计数器的本质]
+BCD（Binary-Coded Decimal）计数器将\textbf{每个十进制位}单独用一个4位二进制计数器来表示。
+
+\begin{itemize}
+  \item 每个十进制位 = 一个独立的模10计数器（0-9，4位）
+  \item 个位计到9后，产生进位给十位
+  \item 十位每收到一个进位，加1
+\end{itemize}
+\end{keypoint}
+
+\section{一位BCD计数器 = 模10计数器}
+
+一位十进制数字（0-9）需要一个模10计数器。
+
+\begin{enumerate}
+  \item \textbf{模值N}：$N = 10$
+  \item \textbf{寄存器位宽}：$k = 4$（$\lceil \log_2 10 \rceil = 4$）
+  \item \textbf{状态序列}：0000→0001→0010→...→1001(9)→0000(0)
+  \item \textbf{清零条件}：cnt = 9(1001)
+\end{enumerate}
+
+\section{逐拍状态分析}
+
+\begin{beatanalysis}[模10 BCD计数器]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{上升沿后Q} & \textbf{十进制} & \textbf{进位} \\
+\hline
+1 & 0001 & 1 & 0 \\
+2 & 0010 & 2 & 0 \\
+3 & 0011 & 3 & 0 \\
+4 & 0100 & 4 & 0 \\
+5 & 0101 & 5 & 0 \\
+6 & 0110 & 6 & 0 \\
+7 & 0111 & 7 & 0 \\
+8 & 1000 & 8 & 0 \\
+9 & 1001 & 9 & 0 \\
+\hline
+\rowcolor{yellow!20}
+\textbf{10} & \textbf{0000} & \textbf{0} & \textbf{1} \\
+\hline
+11 & 0001 & 1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+\end{beatanalysis}
+
+\textbf{关键观察}：模10计数器在状态9(1001)之后强制归零——而1001+1本应是1010(10)。所以\textbf{状态1010到1111(10-15)}永远不会出现。
+
+\section{VHDL实现}
+
+\begin{lstlisting}[caption={模10 BCD计数器（个位）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity bcd_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    count : out std_logic_vector(3 downto 0);
+    carry : out std_logic  -- 进位到十位
+  );
+end bcd_counter;
+
+architecture behavioral of bcd_counter is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "1001" then    -- = 9
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  count <= cnt;
+  carry <= '1' when cnt = "1001" else '0';
+end behavioral;
+\end{lstlisting}
+
+\section{BCD模10 vs 二进制模10}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{特性} & \textbf{二进制模10} & \textbf{BCD模10} \\
+\hline
+位宽 & 4位 & 4位 \\
+状态数 & 10个 & 10个 \\
+表示方式 & 二进制（整体） & 一个十进制位 \\
+清零条件 & cnt=1001(9) & cnt=1001(9) \\
+本质 & \multicolumn{2}{c|}{\textbf{完全相同——都是模10计数器！}} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{BCD模10 vs 多位BCD计数器}
+
+单个BCD计数器 = 模10计数器。
+
+\textbf{真正的BCD计数器}是指多位BCD级联：个位+十位+百位+...
+
+每个十进制位都是独立的模10计数器，个位向十位进位，十位向百位进位。
+
+\textbf{这将在下一章详细展开。}

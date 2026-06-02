@@ -1,0 +1,342 @@
+\chapter{序列检测器——状态机的核心应用}
+
+\section{什么是序列检测器}
+
+\textbf{序列检测器}：在串行输入流中检测特定模式的电路。
+
+输入：一串bit流（每个时钟周期输入1bit）
+输出：当检测到目标序列时，输出=1
+
+\begin{keypoint}[序列检测器的本质]
+序列检测器\textbf{一定}是一个状态机。
+
+为什么？因为它需要"记住已经匹配了序列的前几位"——
+这需要\textbf{记忆}。组合逻辑做不到——它不记得历史。
+\end{keypoint}
+
+\section{为什么序列检测器一定是状态机}
+
+考虑检测序列1011：
+
+假设当前输入流是：... 1 0 1 ...
+
+此时你看到了"101"，还剩一个"1"就匹配成功。
+
+这个"已经匹配了3位"的信息必须被记住。下一拍如果输入是1，就检测到了；如果是0，就需要重新开始匹配。
+
+\textbf{这个"记住了多少"就是状态。}
+
+\begin{keypoint}[状态在序列检测器中的含义]
+状态 = "目前已匹配了目标序列的前几位"
+
+\begin{itemize}
+  \item S0（初始）：匹配了0位（等待序列开始）
+  \item S1：匹配了1位
+  \item S2：匹配了2位
+  \item S3：匹配了3位
+  \item S4（检测到）：匹配了4位（完整序列！）
+\end{itemize}
+\end{keypoint}
+
+\section{1011序列检测器——非重叠检测}
+
+\subsection{状态定义}
+
+检测目标：1011
+
+状态含义（非重叠——检测到后重新开始）：
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{状态} & \textbf{含义（已匹配的前缀）} \\
+\hline
+S0 & 尚未匹配任何有效前缀（初始/复位后） \\
+S1 & 已匹配"1"（序列的第一个bit） \\
+S10 & 已匹配"10" \\
+S101 & 已匹配"101" \\
+\hline
+\end{tabular}
+\end{center}
+
+注意：状态名S10不是"状态编号为10"，而是"已匹配的前缀=10"（为了便于理解）。
+
+\subsection{状态转移图}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, node distance=3cm, auto, scale=0.85]
+  \node[draw, circle] (S0) at (0,0) {S0};
+  \node[draw, circle] (S1) at (3,0) {S1};
+  \node[draw, circle] (S10) at (6,0) {S10};
+  \node[draw, circle] (S101) at (9,0) {S101};
+
+  \draw (S0) edge[loop above] node{0/0} (S0);
+  \draw (S0) edge[bend left] node{1/0} (S1);
+  \draw (S1) edge[bend left] node{1/0} (S1);
+  \draw (S1) edge[bend left] node{0/0} (S10);
+  \draw (S10) edge[bend left] node{0/0} (S0);
+  \draw (S10) edge[bend left] node{1/0} (S101);
+  \draw (S101) edge[bend left=30] node{0/0} (S10);
+  \draw (S101) edge[bend left=40] node[above]{1/1} (S1);
+\end{tikzpicture}
+\end{center}
+
+\textbf{箭头标注：}输入/输出。例如"1/0"表示输入=1且输出=0，"1/1"表示输入=1且输出=1（检测到序列）。
+
+\subsection{状态转移分析}
+
+逐状态分析：
+
+\textbf{S0（初始）}：
+\begin{itemize}
+  \item 输入0：仍在S0（等第一个1）→ 输出0
+  \item 输入1：进入S1（匹配了1）→ 输出0
+\end{itemize}
+
+\textbf{S1（已匹配"1"）}：
+\begin{itemize}
+  \item 输入0：进入S10（匹配了"10"）→ 输出0
+  \item 输入1：停留在S1（输入1重新开始——"11"中第二个1可以是新序列的第一个1）→ 输出0
+\end{itemize}
+
+\textbf{S10（已匹配"10"）}：
+\begin{itemize}
+  \item 输入0：回到S0（"100"不匹配任何前缀，序列需要从1开始）
+  \item 输入1：进入S101（匹配了"101"）→ 输出0
+\end{itemize}
+
+\textbf{S101（已匹配"101"，还差最后一个1）}：
+\begin{itemize}
+  \item 输入0：回到S10（"1010"——后两位"10"可以是新序列的前缀）→ 输出0
+  \item 输入1：\textbf{检测到完整序列"1011"！} → 输出\textbf{1}，然后去S1（检测到后的1可以作为新序列的第一个1，因为是非重叠检测）
+\end{itemize}
+
+\subsection{状态转移表}
+
+\begin{center}
+\begin{tabular}{|c|c|c||c|c|}
+\hline
+\textbf{当前状态} & \textbf{输入} & \textbf{下一状态} & \textbf{输出} \\
+\hline
+S0 & 0 & S0 & 0 \\
+S0 & 1 & S1 & 0 \\
+S1 & 0 & S10 & 0 \\
+S1 & 1 & S1 & 0 \\
+S10 & 0 & S0 & 0 \\
+S10 & 1 & S101 & 0 \\
+S101 & 0 & S10 & 0 \\
+S101 & 1 & S1 & \textbf{1}（检测到！）\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{VHDL实现}
+
+\begin{lstlisting}[caption={1011序列检测器（非重叠）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_1011 is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    data_in : in  std_logic;
+    detected: out std_logic
+  );
+end seq_detector_1011;
+
+architecture fsm of seq_detector_1011 is
+  type state_type is (S0, S1, S10, S101);
+  signal state : state_type;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      state <= S0;
+    elsif rising_edge(clk) then
+      case state is
+        when S0 =>
+          if data_in = '1' then state <= S1; end if;
+          -- data_in='0'时默认保持S0（if不满足则不变）
+
+        when S1 =>
+          if data_in = '0' then
+            state <= S10;
+          end if;
+          -- data_in='1'时保持S1（不变）
+
+        when S10 =>
+          if data_in = '1' then
+            state <= S101;
+          else
+            state <= S0;
+          end if;
+
+        when S101 =>
+          if data_in = '1' then
+            state <= S1;  -- 检测到，重新开始
+          else
+            state <= S10;
+          end if;
+      end case;
+    end if;
+  end process;
+
+  -- 输出逻辑（Moore型：输出仅取决于状态）
+  detected <= '1' when (state = S101 and data_in = '1') else '0';
+end fsm;
+\end{lstlisting}
+
+\section{1101序列检测器}
+
+检测目标：1101
+
+状态定义：
+\begin{itemize}
+  \item S0：初始（匹配0位）
+  \item S1：已匹配"1"
+  \item S11：已匹配"11"
+  \item S110：已匹配"110"
+\end{itemize}
+
+当状态=S110且输入=1时：检测到"1101"！
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, node distance=3cm, auto]
+  \node[draw, circle] (S0) at (0,0) {S0};
+  \node[draw, circle] (S1) at (3,0) {S1};
+  \node[draw, circle] (S11) at (6,0) {S11};
+  \node[draw, circle] (S110) at (9,0) {S110};
+
+  \draw (S0) edge[loop above] node{0/0} (S0);
+  \draw (S0) edge[bend left] node{1/0} (S1);
+  \draw (S1) edge[bend left] node{0/0} (S0);
+  \draw (S1) edge[bend left] node{1/0} (S11);
+  \draw (S11) edge[bend left] node{1/0} (S11);
+  \draw (S11) edge[bend left] node{0/0} (S110);
+  \draw (S110) edge[bend left=30] node{0/0} (S0);
+  \draw (S110) edge[bend left=40] node{1/1} (S11);  % 检测到1101!
+\end{tikzpicture}
+\end{center}
+
+\section{重叠检测 vs 非重叠检测}
+
+这是\textbf{必考的区别}！
+
+\begin{definition}[重叠检测]
+检测到序列后，已匹配的后缀可以用于下一次匹配。
+
+例：输入 ...1011011...（检测1011，重叠）
+
+第一次检测：1 0 \textbf{1 1} 0 1 1 → 在位置4检测到1011
+第二次检测：1 0 1 \textbf{1 0 1 1} → 位置4的"11"中的第二个"1"开始新匹配
+\end{definition}
+
+\begin{definition}[非重叠检测]
+检测到序列后，重新从初始状态开始。
+
+例：输入 ...1011011...（检测1011，非重叠）
+
+第一次检测：1 0 \textbf{1 1} 0 1 1 → 在位置4检测到1011
+第二次检测：1 0 1 1 \textbf{0 1 1} ... → 从位置5重新开始（忽略位置4的后缀）
+\end{definition}
+
+\textbf{写作VHDL的区别}：
+
+重叠检测：在检测到状态，根据输入决定返回哪个状态（可能有重叠前缀）
+非重叠检测：检测到后，直接回到S0/S1（看具体情况）
+
+\section{考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：检测1011（重叠）}
+
+  检测后在S101状态，输入1→检测到，同时此1可作为新序列的第一个1，因此去S1（不是S0）。
+
+  \item \textbf{变式2：检测0101}
+
+  类似分析，状态名改为S0→S01→S010→S0101。
+
+  \item \textbf{变式3：检测1111}
+
+  4个连续的1。状态：S0→S1→S11→S111→（输入1时检测到）。
+
+  \item \textbf{变式4：同时检测多个序列}
+
+  如同时检测1011和1101。需要合并两个状态机。
+
+  \item \textbf{变式5：Mealy型 vs Moore型检测器}
+
+  Mealy：输出取决于状态+输入（输出可以早一拍）
+  Moore：输出仅取决于状态（输出晚一拍，但更稳定）
+
+  考试通常要求Moore型。
+\end{enumerate}
+
+\section{Testbench}
+
+\begin{lstlisting}[caption={1011序列检测器Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_tb is
+end seq_detector_tb;
+
+architecture test of seq_detector_tb is
+  signal clk, rst_n, data_in, detected : std_logic;
+  constant clk_period : time := 20 ns;
+
+  component seq_detector_1011 is
+    port (clk, rst_n, data_in : in std_logic; detected : out std_logic);
+  end component;
+begin
+  uut: seq_detector_1011 port map (clk, rst_n, data_in, detected);
+
+  clk_process: process
+  begin
+    clk <= '0'; wait for clk_period/2;
+    clk <= '1'; wait for clk_period/2;
+  end process;
+
+  stimulus: process
+  begin
+    rst_n <= '0'; wait for 30 ns;
+    rst_n <= '1'; wait for 5 ns;
+
+    -- 输入序列：1 0 1 1 0 1 0 1 1
+    data_in <= '1'; wait for clk_period;  -- S0→S1
+    data_in <= '0'; wait for clk_period;  -- S1→S10
+    data_in <= '1'; wait for clk_period;  -- S10→S101
+    data_in <= '1'; wait for clk_period;  -- S101→S1, detected=1!
+    data_in <= '0'; wait for clk_period;
+    data_in <= '1'; wait for clk_period;
+    data_in <= '0'; wait for clk_period;
+    data_in <= '1'; wait for clk_period;
+    data_in <= '1'; wait for clk_period;  -- 再次检测到!
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\begin{examtip}[序列检测器秒杀法]
+\textbf{第一步：确定状态}
+状态 = 已匹配的序列前缀（每个状态代表匹配了序列的前几位）
+
+\textbf{第二步：画状态图}
+对每个状态，考虑输入0和输入1分别去哪里
+
+\textbf{第三步：写状态转移表}
+
+\textbf{第四步：写VHDL}
+\begin{itemize}
+  \item type定义状态枚举
+  \item case语句处理每个状态
+  \item 检测到条件：在倒数第二个状态 + 最后一个匹配位
+\end{itemize}
+
+\textbf{关键技巧}：状态S101下输入1→检测到。但去哪？
+\begin{itemize}
+  \item 重叠检测：分析后几位能否作为新前缀→S1（"1011"最后的"1"可以是新序列的第一个"1"）
+  \item 非重叠检测：直接回S0
+\end{itemize}
+\end{examtip}

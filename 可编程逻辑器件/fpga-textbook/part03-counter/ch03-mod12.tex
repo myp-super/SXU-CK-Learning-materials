@@ -1,0 +1,173 @@
+\chapter{模12加法计数器}
+
+\section{应用统一框架}
+
+\begin{enumerate}
+  \item \textbf{模值N}：$N = 12$（状态：0, 1, 2, ..., 10, 11, 0, ...）
+  \item \textbf{寄存器位宽k}：$k = \lceil \log_2 12 \rceil = 4$（需要4位，但只用到12个状态）
+  \item \textbf{状态转移}：count $\leftarrow$ count + 1（与模16完全相同！）
+  \item \textbf{回零条件}：\textbf{这是唯一与模16不同的地方}
+    \begin{itemize}
+      \item 模16：自然溢出（1111+1=0000）
+      \item 模12：\textbf{需要显式清零}——当count = 11(1011)时，下一拍强制归0
+    \end{itemize}
+\end{enumerate}
+
+\section{逐拍状态分析}
+
+\subsection{关键问题：为什么模12不能自然溢出}
+
+模16：$2^4 = 16$，计数器恰好用完所有4位状态，1111 + 1 自然溢出为0000。
+
+模12：$2^4 = 16 > 12$，计数器有4个状态（1100到1111）不应当出现。如果没有清零逻辑，计数器的行为是：
+
+$$\text{...} \xrightarrow{} 11(1011) \xrightarrow{+1} 12(1100) \xrightarrow{+1} 13(1101) \xrightarrow{+1} 14(1110) \xrightarrow{+1} 15(1111) \xrightarrow{+1} 0(0000)$$
+
+这计到了16个状态而不是12个！所以必须\textbf{在状态11之后强制归零}。
+
+\begin{beatanalysis}[模12计数器前13拍]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{上升沿前Q} & \textbf{上升沿后Q} & \textbf{说明} \\
+\hline
+1 & 0000 & 0001 (1) & 正常+1 \\
+2 & 0001 & 0010 (2) & 正常+1 \\
+... & ... & ... & ... \\
+11 & 1010 & 1011 (11) & 正常+1 \\
+
+\hline
+\rowcolor{yellow!20}
+\textbf{12} & \textbf{1011} & \textbf{0000} (0) & \textbf{检测到11 → 强制清零！}\\
+\hline
+13 & 0000 & 0001 (1) & 重新开始新一轮计数 \\
+\hline
+\end{tabular}
+\end{center}
+\end{beatanalysis}
+
+\section{模12计数器内部硬件结构}
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2.5cm, minimum height=1.2cm] (reg) at (0,0) {4位寄存器};
+  \node[draw, minimum width=2cm, minimum height=1cm] (add) at (4,0) {+1};
+  \node[draw, trapezium, minimum width=1.5cm, minimum height=1cm] (mux) at (2,2) {MUX};
+
+  \draw[->] (reg.east) -- (add.west);
+  \draw[->] (add.east) -- ++(1,0) |- (mux.east);
+  \draw[->] (mux.west) -- ++(-1,0) |- (reg.north);
+
+  % Zero detect
+  \node[draw, minimum width=1.5cm, minimum height=0.8cm] (det) at (4,-2) {=11?};
+  \draw[->] (reg.east) -- ++(0.5,0) |- (det.west);
+  \draw[->] (det.north) -- (mux.south) node[midway,right] {\small sel};
+
+  \node at (0,-3) {\small 与模16相比只多了"=11检测+MUX清零"部分};
+\end{tikzpicture}
+\end{center}
+
+\textbf{与模16计数器的区别只有两处}：
+\begin{enumerate}
+  \item 增加了一个比较器（检测 count = 11）
+  \item 增加了一个MUX（选择：+1的结果 还是 0）
+\end{enumerate}
+
+其余部分一模一样。
+
+\section{VHDL实现}
+
+\begin{lstlisting}[caption={模12计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity counter_mod12 is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    count : out std_logic_vector(3 downto 0);
+    carry : out std_logic
+  );
+end counter_mod12;
+
+architecture behavioral of counter_mod12 is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "1011" then    -- = 11
+        cnt <= (others => '0');  -- 强制归零
+      else
+        cnt <= cnt + 1;       -- 正常+1
+      end if;
+    end if;
+  end process;
+
+  count <= cnt;
+  carry <= '1' when cnt = "1011" else '0';
+end behavioral;
+\end{lstlisting}
+
+\section{常见错误分析}
+
+\begin{examtip}[模12计数器的常见错误]
+\begin{enumerate}
+  \item \textbf{错误：忘记清零}
+
+  如果只写 \texttt{cnt <= cnt + 1} 而不加清零条件，得到的是模16计数器，不是模12。
+
+  \item \textbf{错误：清零条件写错}
+
+  清零条件是 \texttt{cnt = 11}，不是 \texttt{cnt = 12}。
+  因为计数器永远不会到达状态12——它在11的下一拍就被清零了。
+
+  \item \textbf{错误：位宽不够}
+
+  4位最大值是15(1111)，11(1011)在4位范围内，但如果你只用3位（最大值7），就无法表示8-11的状态。
+\end{enumerate}
+\end{examtip}
+
+\section{Testbench}
+
+\begin{lstlisting}[caption={模12计数器Testbench——验证完整12拍循环}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity counter_mod12_tb is
+end counter_mod12_tb;
+
+architecture test of counter_mod12_tb is
+  signal clk, rst_n, carry : std_logic;
+  signal count : std_logic_vector(3 downto 0);
+  constant clk_period : time := 20 ns;
+
+  component counter_mod12 is
+    port (clk, rst_n : in std_logic;
+          count : out std_logic_vector(3 downto 0);
+          carry : out std_logic);
+  end component;
+begin
+  uut: counter_mod12 port map (clk, rst_n, count, carry);
+
+  clk_process: process
+  begin
+    clk <= '0'; wait for clk_period/2;
+    clk <= '1'; wait for clk_period/2;
+  end process;
+
+  stimulus: process
+  begin
+    rst_n <= '0'; wait for 30 ns;
+    rst_n <= '1';
+    -- 观察2个完整循环（24拍）以确保清零正确
+    wait for clk_period * 25;
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\textbf{验证关键}：第12拍后 count 应该归0，第13拍 count = 1，证明循环正确。

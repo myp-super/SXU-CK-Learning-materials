@@ -1,0 +1,307 @@
+% =============================================================
+%  FPGA与VHDL考试复习全书
+%  围绕23个重点电路构建的完整知识体系
+% =============================================================
+
+\documentclass[12pt,a4paper,openany]{ctexbook}
+
+% =============================================================
+%  中文支持与字体
+% =============================================================
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5]
+\setCJKsansfont{SimHei}
+\setCJKmonofont{SimSun}
+
+% =============================================================
+%  页面布局
+% =============================================================
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.8cm,right=2.5cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\leftmark}}
+\fancyhead[RE]{\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% =============================================================
+%  数学与公式
+% =============================================================
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+
+% =============================================================
+%  图形与电路图
+% =============================================================
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{tikz-timing}
+\usetikzlibrary{arrows,shapes,chains,matrix,positioning,scopes,calc,
+                decorations.pathreplacing,decorations.markings,fit,
+                backgrounds,patterns,automata}
+
+% =============================================================
+%  表格
+% =============================================================
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{longtable}
+\usepackage{colortbl}
+
+% =============================================================
+%  代码清单 (VHDL)
+% =============================================================
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{vhdlcomment}{rgb}{0.0,0.5,0.0}
+\definecolor{vhdlkeyword}{rgb}{0.0,0.0,0.8}
+\definecolor{vhdlstring}{rgb}{0.6,0.1,0.1}
+\definecolor{vhdlnumber}{rgb}{0.5,0.5,0.5}
+\definecolor{vhdlbackground}{rgb}{0.97,0.97,0.97}
+
+\lstdefinelanguage{VHDL}{
+  morekeywords={
+    library,use,all,entity,is,port,in,out,inout,end,
+    architecture,of,begin,process,signal,variable,constant,
+    type,subtype,array,range,to,downto,others,then,
+    elsif,else,case,when,for,loop,generate,not,and,
+    or,xor,nand,nor,xnor,mod,rem,abs,component,generic,
+    map,wait,on,until,after,report,severity,assert,
+    std_logic,std_logic_vector,bit,bit_vector,integer,
+    boolean,character,string,positive,natural,unsigned,signed,
+    ieee,std_logic_1164,std_logic_arith,std_logic_unsigned,
+    numeric_std,rising_edge,falling_edge,event,clk,rst,reset
+  },
+  % Note: 'if' is a TeX primitive - handle it via emph to avoid conflicts
+  emph={if},
+  emphstyle=\color{vhdlkeyword}\bfseries,
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+  morestring=[b]'
+}[keywords,comments,strings]
+
+\lstset{
+  language=VHDL,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{vhdlkeyword}\bfseries,
+  commentstyle=\color{vhdlcomment}\itshape,
+  stringstyle=\color{vhdlstring},
+  numbers=left,
+  numberstyle=\tiny\color{vhdlnumber},
+  backgroundcolor=\color{vhdlbackground},
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!40},
+  tabsize=2,
+  breaklines=true,
+  breakatwhitespace=false,
+  captionpos=b,
+  showstringspaces=false,
+  xleftmargin=2em,
+  xrightmargin=1em,
+  aboveskip=1em,
+  belowskip=1em
+}
+
+% =============================================================
+%  超链接与书签
+% =============================================================
+\usepackage[colorlinks=true,
+            linkcolor=blue!60!black,
+            citecolor=green!50!black,
+            urlcolor=blue!60!black]{hyperref}
+
+% =============================================================
+%  其他工具
+% =============================================================
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{environ}
+
+% =============================================================
+%  自定义命令
+% =============================================================
+
+% 重点知识框
+\NewEnviron{keypoint}[1][重点]{%
+  \begin{center}
+  \begin{tikzpicture}
+  \node[draw=blue!60,fill=blue!5,rounded corners=5pt,
+        inner sep=8pt,text width=0.9\textwidth,align=left]
+  {\textbf{#1：}\BODY};
+  \end{tikzpicture}
+  \end{center}}
+
+% 考试技巧框
+\NewEnviron{examtip}[1][考试技巧]{%
+  \begin{center}
+  \begin{tikzpicture}
+  \node[draw=red!60,fill=red!3,rounded corners=5pt,
+        inner sep=8pt,text width=0.9\textwidth,align=left]
+  {\textbf{\textcolor{red!70!black}{#1：}}\BODY};
+  \end{tikzpicture}
+  \end{center}}
+
+% 设计流程框
+\NewEnviron{designflow}[1][设计流程]{%
+  \begin{center}
+  \begin{tikzpicture}
+  \node[draw=teal!60,fill=teal!3,rounded corners=5pt,
+        inner sep=8pt,text width=0.9\textwidth,align=left]
+  {\textbf{\textcolor{teal!70!black}{#1：}}\BODY};
+  \end{tikzpicture}
+  \end{center}}
+
+% 逐拍分析
+\NewEnviron{beatanalysis}[1][逐拍分析]{%
+  \begin{center}
+  \begin{tikzpicture}
+  \node[draw=orange!80,fill=orange!3,rounded corners=5pt,
+        inner sep=8pt,text width=0.9\textwidth,align=left]
+  {\textbf{\textcolor{orange!80!black}{#1：}}\BODY};
+  \end{tikzpicture}
+  \end{center}}
+
+% 真值表命令
+\newcommand{\ttable}[1]{%
+  \begin{center}
+  \begin{tabular}{#1}
+}
+
+\newcommand{\ettable}{%
+  \end{tabular}
+  \end{center}
+}
+
+% 状态标记
+\newcommand{\state}[1]{$\langle #1 \rangle$}
+
+% D触发器符号
+\newcommand{\DFF}{D触发器}
+
+% 上升沿
+\newcommand{\rising}{$\uparrow$}
+
+% 重点
+\newcommand{\imp}[1]{\textbf{\textcolor{red}{#1}}}
+
+% 时钟拍
+\newcommand{\clktick}[1]{\textbf{时钟第#1拍}}
+
+% =============================================================
+%  文档信息
+% =============================================================
+\title{\Huge \textbf{FPGA与VHDL考试复习全书}\\[0.5cm]
+       \Large 围绕23个重点电路构建的完整知识体系}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+% =============================================================
+%  前言
+% =============================================================
+\input{preface.tex}
+
+% =============================================================
+%  第一部分：组合逻辑电路体系
+% =============================================================
+\part{组合逻辑电路体系}
+
+\input{part01-combinational/ch01-encoder.tex}
+\input{part01-combinational/ch02-decoder.tex}
+\input{part01-combinational/ch03-bcd-decoder.tex}
+\input{part01-combinational/ch04-mux4.tex}
+\input{part01-combinational/ch05-comparator.tex}
+\input{part01-combinational/ch06-adder.tex}
+\input{part01-combinational/ch07-cascade-mux.tex}
+\input{part01-combinational/ch08-summary.tex}
+
+% =============================================================
+%  第二部分：D触发器体系
+% =============================================================
+\part{D触发器体系}
+
+\input{part02-dff/ch01-dff.tex}
+
+% =============================================================
+%  第三部分：计数器体系
+% =============================================================
+\part{计数器体系}
+
+\input{part03-counter/ch01-foundation.tex}
+\input{part03-counter/ch02-binary-counter.tex}
+\input{part03-counter/ch03-mod12.tex}
+\input{part03-counter/ch04-mod24.tex}
+\input{part03-counter/ch05-mod60.tex}
+\input{part03-counter/ch06-mod-arbitrary.tex}
+\input{part03-counter/ch07-bcd-counter.tex}
+\input{part03-counter/ch08-bcd-mod24-mod60.tex}
+
+% =============================================================
+%  第四部分：分频器体系
+% =============================================================
+\part{分频器体系}
+
+\input{part04-freq-divider/ch01-freq-divider.tex}
+
+% =============================================================
+%  第五部分：序列发生器体系
+% =============================================================
+\part{序列发生器体系}
+
+\input{part05-seq-generator/ch01-seq-generator.tex}
+
+% =============================================================
+%  第六部分：移位寄存器体系
+% =============================================================
+\part{移位寄存器体系}
+
+\input{part06-shift-reg/ch01-shift-reg.tex}
+
+% =============================================================
+%  第七部分：环形计数器体系
+% =============================================================
+\part{环形计数器体系}
+
+\input{part07-ring-counter/ch01-ring-counter.tex}
+
+% =============================================================
+%  第八部分：序列检测器体系
+% =============================================================
+\part{序列检测器体系}
+
+\input{part08-seq-detector/ch01-seq-detector.tex}
+
+% =============================================================
+%  第九部分：VHDL专题
+% =============================================================
+\part{VHDL硬件综合专题}
+
+\input{part09-vhdl/ch01-vhdl.tex}
+
+% =============================================================
+%  第十部分：考试训练体系
+% =============================================================
+\part{考试训练体系}
+
+\input{part10-exam/ch01-counter-problems.tex}
+\input{part10-exam/ch02-freq-div-problems.tex}
+\input{part10-exam/ch03-shift-reg-problems.tex}
+\input{part10-exam/ch04-ring-counter-problems.tex}
+\input{part10-exam/ch05-seq-detector-problems.tex}
+
+\end{document}

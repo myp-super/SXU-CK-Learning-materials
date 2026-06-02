@@ -1,0 +1,581 @@
+\chapter{分频器变式题（15题完整解析）}
+
+% ============================================================
+\section{题1：2分频器（D触发器自翻转）}
+
+\textbf{题目}：用D触发器实现2分频器。$f_{out}=f_{clk}/2$。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}一个D触发器，$\overline{Q}$接回D。每个时钟上升沿Q翻转一次。Q的周期=2个时钟周期→二分频。
+
+\textbf{【原理】}$D = \overline{Q}$ → $Q(n+1) = \overline{Q(n)}$ → 每拍翻转。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div2 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div2;
+
+architecture behavioral of div2 is
+  signal q : std_logic;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then q <= '0';
+    elsif rising_edge(clk) then q <= not q; end if;
+  end process;
+  clk_out <= q;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【波形】}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\draw[gray,thin] (0,2)--(8,2);
+\foreach \x in {0,...,7} {\draw[gray] (\x,1.8)--(\x,2.2);}
+\draw[blue,thick] (0,1)--(0.5,1)--(0.5,2)--(1.5,2)--(1.5,1)--(2.5,1)--(2.5,2)--(3.5,2)--(3.5,1)--(4.5,1);
+\node[left] at (0,1.5) {clk\_out};
+\node at (4,-0.5) {周期=2T → 频率=$f_{clk}/2$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{【验证】}Q(t)=0,1,0,1,... — 每2拍完成一个0→1→0循环。
+
+\end{solution}
+
+
+% ============================================================
+\section{题2：4分频器（用计数器Q1输出）}
+
+\textbf{题目}：用2位计数器，取Q1输出实现4分频。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}Q1每4拍完成一次0→1→0循环。频率=$f_{clk}/4$。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div4 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div4;
+
+architecture behavioral of div4 is
+  signal cnt : std_logic_vector(1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "00";
+    elsif rising_edge(clk) then cnt <= cnt + 1; end if;
+  end process;
+  clk_out <= cnt(1);  -- Q1天然4分频!
+end behavioral;
+\end{lstlisting}
+
+\textbf{【逐拍验证Q1】}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}\hline
+拍 & cnt & Q1 & 说明 \\ \hline
+1 & 01 & 0 & \\ \hline 2 & 10 & 1 & Q1翻转 \\ \hline
+3 & 11 & 1 & \\ \hline 4 & 00 & 0 & Q1翻转 \\ \hline
+\end{tabular}
+\end{center}
+Q1：0→0→1→1→0→0→... — 每4拍一个周期。
+
+\end{solution}
+
+
+% ============================================================
+\section{题3：8分频器（Q2输出）}
+
+\textbf{题目}：用3位计数器实现8分频。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+signal cnt : std_logic_vector(2 downto 0);
+-- cnt(2) = Q2, 天然8分频
+clk_out <= cnt(2);
+\end{lstlisting}
+
+\textbf{【通用公式】}$f_{Q_k} = f_{clk} / 2^{k+1}$
+
+\begin{center}
+\begin{tabular}{|c|c|}\hline
+输出位 & 分频比 \\ \hline
+Q0 & 2分频 \\ \hline Q1 & 4分频 \\ \hline
+Q2 & 8分频 \\ \hline Q3 & 16分频 \\ \hline
+Qk & $2^{k+1}$分频 \\ \hline
+\end{tabular}
+\end{center}
+
+\end{solution}
+
+
+% ============================================================
+\section{题4：6分频器（占空比50\%）}
+
+\textbf{题目}：设计6分频器，占空比50\%（3拍高+3拍低）。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}模6计数器（0-5）。cnt<3输出0，cnt≥3输出1。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div6 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div6;
+
+architecture behavioral of div6 is
+  signal cnt : std_logic_vector(2 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "000";
+    elsif rising_edge(clk) then
+      if cnt = "101" then cnt <= "000";  -- 模6
+      else cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt >= "011" else '0';  -- 0-2低, 3-5高
+end behavioral;
+\end{lstlisting}
+
+\textbf{【逐拍验证】}
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+拍 & cnt & clk\_out \\ \hline
+1 & 000 & 0 \\ \hline 2 & 001 & 0 \\ \hline
+3 & 010 & 0 \\ \hline 4 & 011 & 1 \\ \hline
+5 & 100 & 1 \\ \hline 6 & 101 & 1 \\ \hline
+7 & 000 & 0（新周期）\\ \hline
+\end{tabular}
+\end{center}
+3拍低+3拍高=6拍一个周期，占空比恰好50\%。
+
+\end{solution}
+
+
+% ============================================================
+\section{题5：10分频器}
+
+\textbf{题目}：设计10分频器，占空比50\%。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div10 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div10;
+
+architecture behavioral of div10 is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = "1001" then cnt <= "0000";
+      else cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt >= "0101" else '0';  -- 0-4低, 5-9高
+end behavioral;
+\end{lstlisting}
+
+\textbf{【偶数分频通用公式】}$\text{clk\_out} = 1 \text{ when } cnt \geq M/2 \text{ else } 0$
+
+\end{solution}
+
+
+% ============================================================
+\section{题6：3分频器（奇数分频，双沿法）}
+
+\textbf{题目}：设计占空比接近50\%的3分频器。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}偶数M/2阈值法对奇数M不会得到50\%占空比。解法：用上升沿+下降沿分别产生两个中间信号，然后OR组合。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div3 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div3;
+
+architecture behavioral of div3 is
+  signal cnt : std_logic_vector(1 downto 0);
+  signal pos_out, neg_out : std_logic;
+begin
+  -- 上升沿计数器
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "00";
+    elsif rising_edge(clk) then
+      if cnt = "10" then cnt <= "00"; else cnt <= cnt + 1; end if;
+    end if;
+  end process;
+
+  -- 上升沿产生信号
+  process(clk) begin
+    if rising_edge(clk) then
+      if cnt = 0 then pos_out <= '1'; else pos_out <= '0'; end if;
+    end if;
+  end process;
+
+  -- 下降沿产生信号（比上升沿延迟半个周期）
+  process(clk) begin
+    if falling_edge(clk) then
+      neg_out <= pos_out;
+    end if;
+  end process;
+
+  clk_out <= pos_out or neg_out;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【波形分析】}
+pos\_out：1-0-0-1-0-0-...（1/3占空比）
+neg\_out：0-1-0-0-1-0-...（延迟半拍）
+OR结果：1-1-0-1-1-0-...（接近50\%占空比！但实际是2高1低）
+
+\textbf{【奇数分频的占空比】}严格来说奇数分频无法实现精确50\%占空比（因为奇数个时钟周期不能等分），但双沿法可以做到接近50\%。
+
+\end{solution}
+
+
+% ============================================================
+\section{题7：5分频器}
+
+\textbf{题目}：设计5分频器（双沿法实现50\%占空比）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL——同3分频方案，仅改模值】}
+\begin{lstlisting}
+entity div5 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div5;
+
+architecture behavioral of div5 is
+  signal cnt : std_logic_vector(2 downto 0);  -- 3位, 模5
+  signal pos_out, neg_out : std_logic;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "000";
+    elsif rising_edge(clk) then
+      if cnt = "100" then cnt <= "000"; else cnt <= cnt + 1; end if;
+    end if;
+  end process;
+
+  process(clk) begin
+    if rising_edge(clk) then
+      if cnt < 2 then pos_out <= '1'; else pos_out <= '0'; end if;
+    end if;
+  end process;
+
+  process(clk) begin
+    if falling_edge(clk) then neg_out <= pos_out; end if;
+  end process;
+
+  clk_out <= pos_out or neg_out;
+end behavioral;
+\end{lstlisting}
+
+\end{solution}
+
+
+% ============================================================
+\section{题8：100分频器}
+
+\textbf{题目}：50MHz时钟→500kHz信号。求分频比M，写出VHDL。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}$M = f_{in}/f_{out} = 50\text{MHz}/500\text{kHz} = 100$。偶数分频，使用M/2阈值法。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity div100 is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end div100;
+
+architecture behavioral of div100 is
+  signal cnt : integer range 0 to 99;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= 0;
+    elsif rising_edge(clk) then
+      if cnt = 99 then cnt <= 0; else cnt <= cnt + 1; end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt >= 50 else '0';  -- M/2 = 50
+end behavioral;
+\end{lstlisting}
+
+\textbf{【位宽优化】}cnt用integer不需要手动计算位宽，综合器自动优化。也可用7位std\_logic\_vector（$2^7=128>99$）。
+
+\end{solution}
+
+
+% ============================================================
+\section{题9：秒脉冲发生器（1Hz）}
+
+\textbf{题目}：100MHz时钟→1Hz秒脉冲。$M=100{,}000{,}000$。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}M=100,000,000。需要$\lceil\log_2 10^8\rceil = 27$位计数器。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity sec_pulse is
+  port (clk_100MHz, rst_n : in std_logic; pulse_1Hz : out std_logic);
+end sec_pulse;
+
+architecture behavioral of sec_pulse is
+  constant M : integer := 100000000;
+  signal cnt : integer range 0 to M-1;
+begin
+  process(clk_100MHz, rst_n)
+  begin
+    if rst_n = '0' then cnt <= 0;
+    elsif rising_edge(clk_100MHz) then
+      if cnt = M-1 then cnt <= 0; else cnt <= cnt + 1; end if;
+    end if;
+  end process;
+  pulse_1Hz <= '1' when cnt < M/2 else '0';
+  -- 50\%占空比，周期1秒
+end behavioral;
+\end{lstlisting}
+
+\textbf{【注意】}100M用integer没问题——integer在VHDL中是32位有符号数，范围足够。
+
+\end{solution}
+
+
+% ============================================================
+\section{题10：可调分频比的分频器}
+
+\textbf{题目}：分频比DIV可动态设置（1-16）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity var_div is
+  port (clk, rst_n : in std_logic;
+        DIV : in std_logic_vector(3 downto 0); -- 分频比
+        clk_out : out std_logic);
+end var_div;
+
+architecture behavioral of var_div is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = DIV - 1 then cnt <= "0000";
+      else cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt < ('0' & DIV(3 downto 1)) else '0';
+  -- DIV/2作为阈值（50\%占空比）
+end behavioral;
+\end{lstlisting}
+
+\end{solution}
+
+
+% ============================================================
+\section{题11：占空比可调分频器}
+
+\textbf{题目}：M=10分频器，高电平持续拍数DUTY可配置。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity duty_div is
+  port (clk, rst_n : in std_logic;
+        DUTY : in std_logic_vector(3 downto 0);  -- 高电平拍数
+        clk_out : out std_logic);
+end duty_div;
+
+architecture behavioral of duty_div is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = "1001" then cnt <= "0000";  -- M=10
+      else cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt < DUTY else '0';
+  -- DUTY=5 → 50\%占空比, DUTY=2 → 20\%占空比
+end behavioral;
+\end{lstlisting}
+
+\textbf{【考试考点】}改变占空比 = 改变cnt的比较阈值。占空比 = DUTY/M。
+
+\end{solution}
+
+
+% ============================================================
+\section{题12：多级分频器级联}
+
+\textbf{题目}：先2分频再5分频→总10分频。写出完整VHDL，比较与直接10分频的区别。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity cascade_div is
+  port (clk, rst_n : in std_logic; clk_out : out std_logic);
+end cascade_div;
+
+architecture behavioral of cascade_div is
+  signal div2_out, div5_out : std_logic;
+  signal cnt5 : std_logic_vector(2 downto 0);
+begin
+  -- 第一级：2分频
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then div2_out <= '0';
+    elsif rising_edge(clk) then div2_out <= not div2_out; end if;
+  end process;
+
+  -- 第二级：5分频（以div2_out为时钟）
+  process(div2_out, rst_n)
+  begin
+    if rst_n = '0' then cnt5 <= "000";
+    elsif rising_edge(div2_out) then
+      if cnt5 = "100" then cnt5 <= "000"; else cnt5 <= cnt + 1; end if;
+    end if;
+  end process;
+  div5_out <= '1' when cnt5 >= 2 else '0';
+  clk_out <= div5_out;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【总M = $M_1 \times M_2 = 2 \times 5 = 10$】}
+
+\textbf{【两种方案比较】}
+\begin{itemize}
+  \item 级联：占用更少资源（级联比分频比小，每级计数器更小）
+  \item 直接模10：结构简单，单一时钟域
+  \item 级联的缺点：后级使用前级输出作为时钟，增加时钟偏斜风险（FPGA中一般不建议用逻辑输出做时钟）
+\end{itemize}
+
+\end{solution}
+
+
+% ============================================================
+\section{题13：给定波形推断分频比}
+
+\textbf{题目}：输出信号每12个输入时钟完成一个周期（6高6低）。求M。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}输出周期 = 12个输入时钟周期。
+
+$$M = \frac{T_{out}}{T_{clk}} = \frac{12}{1} = 12$$
+
+\textbf{【答】}分频比M=12（12分频器）。
+
+\textbf{【快速判断法】}数输出信号的周期包含几个输入时钟周期 → 就是几分频。
+
+\end{solution}
+
+
+% ============================================================
+\section{题14：Qn频率计算}
+
+\textbf{题目}：$f_{clk}=100$MHz，4位计数器。求Q0,Q1,Q2,Q3频率。
+
+\begin{solution}[完整解答]
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 输出 & 分频比 & 频率 \\ \hline
+Q0 & 2 & 50.0 MHz \\ \hline
+Q1 & 4 & 25.0 MHz \\ \hline
+Q2 & 8 & 12.5 MHz \\ \hline
+Q3 & 16 & 6.25 MHz \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【公式】}$f_{Q_k} = f_{clk} / 2^{k+1}$
+
+\textbf{【直观理解】}Q0每拍翻转→2分频。Q1每2拍翻转→4分频。Qk每$2^k$拍翻转→$2^{k+1}$分频。
+
+\end{solution}
+
+
+% ============================================================
+\section{题15：任意整数分频的统一设计流程}
+
+\textbf{题目}：总结任意整数分频M的统一设计流程。
+
+\begin{solution}[完整解答]
+
+\textbf{【统一流程】}
+
+\textbf{步骤1：计算分频比M}
+$$M = f_{in} / f_{out}$$
+
+\textbf{步骤2：判断M的奇偶性}
+\begin{itemize}
+  \item M为偶数 → 方案A（简单）
+  \item M为奇数 → 方案B（双沿法）
+\end{itemize}
+
+\textbf{步骤3（方案A：偶数分频）}
+\begin{itemize}
+  \item 设计模M计数器
+  \item clk\_out = '1' when cnt >= M/2 else '0'
+  \item 完美50\%占空比
+\end{itemize}
+
+\textbf{步骤3（方案B：奇数分频）}
+\begin{itemize}
+  \item 上升沿产生pos\_out（占空比尽量接近50\%）
+  \item 下降沿采样pos\_out得到neg\_out（延迟半拍）
+  \item clk\_out = pos\_out OR neg\_out
+\end{itemize}
+
+\textbf{步骤4：特殊情况}
+\begin{itemize}
+  \item $M=2^k$：直接用计数器Qk-1输出（最简单！）
+  \item 级联：$M=M_1\times M_2$，多级串联
+\end{itemize}
+
+\textbf{【VHDL模板（偶数分频）】}
+\begin{lstlisting}
+ if cnt = M-1 then cnt <= 0; else cnt <= cnt + 1; end if;
+clk_out <= '1' when cnt >= M/2 else '0';
+\end{lstlisting}
+
+\end{solution}
+
+\begin{quickkill}[分频器秒杀总结]
+\begin{enumerate}
+  \item $2^N$分频：直接取Q(N-1)，什么额外逻辑都不需要
+  \item 偶数分频：模M计数器，M/2阈值决定占空比
+  \item 奇数分频：双沿法（上升沿+下降沿+OR）
+  \item 级联总分频比：$M=M_1\times M_2$
+  \item 占空比 = 高电平拍数 / M
+\end{enumerate}
+\end{quickkill}

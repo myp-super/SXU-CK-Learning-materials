@@ -1,0 +1,86 @@
+\chapter{模60计数器}
+
+\section{应用统一框架}
+
+\begin{enumerate}
+  \item \textbf{模值N}：$N = 60$
+  \item \textbf{寄存器位宽k}：$k = \lceil \log_2 60 \rceil = 6$（$2^5=32<60<2^6=64$）
+  \item \textbf{状态转移}：count $\leftarrow$ count + 1
+  \item \textbf{回零条件}：count = 59(111011)时，强制归零
+\end{enumerate}
+
+\section{模60的实际意义}
+
+模60计数器是数字钟表的核心：
+\begin{itemize}
+  \item 秒：0-59（模60）
+  \item 分：0-59（模60）
+\end{itemize}
+
+一个完整的数字钟 = 模60秒 + 模60分 + 模24（或模12）时。
+
+\section{VHDL实现}
+
+\begin{lstlisting}[caption={模60二进制计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity counter_mod60 is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    count : out std_logic_vector(5 downto 0);
+    carry : out std_logic
+  );
+end counter_mod60;
+
+architecture behavioral of counter_mod60 is
+  signal cnt : std_logic_vector(5 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "111011" then    -- = 59
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  count <= cnt;
+  carry <= '1' when cnt = "111011" else '0';
+end behavioral;
+\end{lstlisting}
+
+\section{三种模值计数器的统一对比}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{参数} & \textbf{模12} & \textbf{模24} & \textbf{模60} \\
+\hline
+模值N & 12 & 24 & 60 \\
+位宽 & 4位 & 5位 & 6位 \\
+$2^k$ & 16 & 32 & 64 \\
+冗余状态数 & 4 & 8 & 4 \\
+清零条件 & cnt=11 & cnt=23 & cnt=59 \\
+清零二进制 & 1011 & 10111 & 111011 \\
+\hline
+VHDL差异 & \multicolumn{3}{c|}{\textbf{仅修改：位宽 + 清零比较值}} \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{keypoint}[所有二进制计数器的统一模板]
+\textbf{修改任意模N计数器的三个步骤：}
+
+1. 计算位宽：$k = \lceil \log_2 N \rceil$
+2. 修改信号位宽为k
+3. 修改清零条件为：cnt = N-1
+
+\textbf{其余逻辑完全不变。}
+\end{keypoint}

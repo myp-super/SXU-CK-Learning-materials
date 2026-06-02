@@ -1,0 +1,228 @@
+\chapter{模24 BCD计数器与模60 BCD计数器}
+
+\section{BCD级联的基本思想}
+
+多位BCD计数器 = 多个独立的模10计数器级联。
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2cm, minimum height=1.2cm] (unit) at (0,0) {个位(模10)};
+  \node[draw, minimum width=2cm, minimum height=1.2cm] (ten) at (3,0) {十位(模10)};
+
+  \draw[->] (unit.east) -- (ten.west) node[midway,above] {进位};
+
+  \node at (1.5,-1) {\small 个位每计满10，十位加1};
+\end{tikzpicture}
+\end{center}
+
+级联的本质：低位计数器每完成一轮（回到0），给高位计数器发一个"进位"脉冲，高位计数器加1。
+
+\section{模24 BCD计数器}
+
+模24 BCD = 十位（模2：0-2，计到23后归零）+ 个位（模10：0-9）
+
+等一下——这里有个问题。
+
+\subsection{两种实现方案}
+
+\textbf{方案A：纯BCD级联（个位模10 + 十位模3）}
+
+个位：模10（0-9），满9进位到十位
+十位：收到进位+1，但十位只在0-2之间循环（模3）
+
+清零条件：十位=2 且 个位=3（即23），下一拍归零
+注意不是十位=2且个位=9（即29）——那会得到30个状态！
+
+\textbf{方案B：两位BCD整体计数，满24清零}
+
+两位合并为8位（十位4位+个位4位），整体+1，到24(0010 0100)时清零。
+
+\subsection{方案A：BCD级联实现}
+
+\begin{lstlisting}[caption={模24 BCD计数器（方案A：级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity bcd_counter_mod24 is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    tens  : out std_logic_vector(3 downto 0);
+    units : out std_logic_vector(3 downto 0)
+  );
+end bcd_counter_mod24;
+
+architecture behavioral of bcd_counter_mod24 is
+  signal units_cnt : std_logic_vector(3 downto 0);
+  signal tens_cnt  : std_logic_vector(3 downto 0);
+  signal units_carry : std_logic;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      units_cnt <= (others => '0');
+      tens_cnt  <= (others => '0');
+      units_carry <= '0';
+
+    elsif rising_edge(clk) then
+      -- 检测满24清零
+      if tens_cnt = "0010" and units_cnt = "0011" then  -- 23
+        units_cnt <= (others => '0');
+        tens_cnt  <= (others => '0');
+        units_carry <= '0';
+      else
+        -- 个位计数
+        if units_cnt = "1001" then  -- 9
+          units_cnt <= (others => '0');
+          units_carry <= '1';
+        else
+          units_cnt <= units_cnt + 1;
+          units_carry <= '0';
+        end if;
+
+        -- 十位计数（收到进位时）
+        if units_carry = '1' then
+          tens_cnt <= tens_cnt + 1;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  tens  <= tens_cnt;
+  units <= units_cnt;
+end behavioral;
+\end{lstlisting}
+
+\subsection{方案B：统一计数}
+
+\begin{lstlisting}[caption={模24 BCD计数器（方案B：统一进位判断）}]
+-- 更简洁的实现：直接在同一个process中处理
+process(clk, rst_n)
+begin
+  if rst_n = '0' then
+    units_cnt <= (others => '0');
+    tens_cnt  <= (others => '0');
+  elsif rising_edge(clk) then
+    -- 先判断是否清零
+    if tens_cnt = "0010" and units_cnt = "0011" then  -- 23
+      units_cnt <= (others => '0');
+      tens_cnt  <= (others => '0');
+    -- 个位进位判断
+    elsif units_cnt = "1001" then  -- 9
+      units_cnt <= (others => '0');
+      tens_cnt  <= tens_cnt + 1;
+    else
+      units_cnt <= units_cnt + 1;
+    end if;
+  end if;
+end process;
+\end{lstlisting}
+
+\section{模60 BCD计数器}
+
+模60 BCD = 十位（模6：0-5）+ 个位（模10：0-9）
+
+清零条件：十位=5 且 个位=9（即59）
+
+\begin{lstlisting}[caption={模60 BCD计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity bcd_counter_mod60 is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    tens  : out std_logic_vector(3 downto 0);
+    units : out std_logic_vector(3 downto 0)
+  );
+end bcd_counter_mod60;
+
+architecture behavioral of bcd_counter_mod60 is
+  signal units_cnt : std_logic_vector(3 downto 0);
+  signal tens_cnt  : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      units_cnt <= (others => '0');
+      tens_cnt  <= (others => '0');
+    elsif rising_edge(clk) then
+      -- 满59清零
+      if tens_cnt = "0101" and units_cnt = "1001" then  -- 59
+        units_cnt <= (others => '0');
+        tens_cnt  <= (others => '0');
+      -- 个位满9进位
+      elsif units_cnt = "1001" then
+        units_cnt <= (others => '0');
+        tens_cnt  <= tens_cnt + 1;
+      else
+        units_cnt <= units_cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  tens  <= tens_cnt;
+  units <= units_cnt;
+end behavioral;
+\end{lstlisting}
+
+\section{BCD级联的通用模板}
+
+\begin{designflow}[多位BCD计数器通用模板]
+\textbf{个位计数器}：
+\begin{itemize}
+  \item 模10：计到9后清零，产生进位
+\end{itemize}
+
+\textbf{十位计数器}：
+\begin{itemize}
+  \item 收到进位后+1
+  \item 有自己独立的模值限制（取决于应用）
+  \item 模24：十位模3（0-2），满23清零
+  \item 模60：十位模6（0-5），满59清零
+\end{itemize}
+
+\textbf{整体清零条件}（同时清除个位和十位）：
+\begin{itemize}
+  \item 模24：十位=2 且 个位=3
+  \item 模60：十位=5 且 个位=9
+  \item 模12：十位=1 且 个位=1（如果要做成12的BCD）
+\end{itemize}
+\end{designflow}
+
+\section{数字钟表的完整结构}
+
+一个数字钟表 = 三个BCD计数器级联：
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=2.5cm, minimum height=1.2cm] (sec) at (0,0) {模60秒};
+  \node[draw, minimum width=2.5cm, minimum height=1.2cm] (min) at (3.5,0) {模60分};
+  \node[draw, minimum width=2.5cm, minimum height=1.2cm] (hour) at (7,0) {模24时};
+
+  \draw[->] (sec.east) -- (min.west) node[midway,above] {进位};
+  \draw[->] (min.east) -- (hour.west) node[midway,above] {进位};
+
+  \node at (3.5,-1.5) {\small 秒满60→分+1, 分满60→时+1, 时满24→清零};
+\end{tikzpicture}
+\end{center}
+
+这正是模24和模60 BCD计数器的典型应用场景。
+
+\section{计数器部分总结}
+
+\begin{keypoint}[计数器统一框架总结]
+\textbf{所有计数器本质上只有一个公式：}
+
+在时钟上升沿：$cnt \leftarrow cnt + 1$（如果$cnt = N-1$则$cnt \leftarrow 0$）
+
+\begin{itemize}
+  \item 二进制计数器：一个整体二进制数（4/5/6位）
+  \item BCD计数器：每个十进制位独立（个位+十位各4位）
+  \item 区别：表示方式不同，但核心转移逻辑完全相同
+  \item 模$2^N$计数器：唯一不需要显式清零的（自然溢出）
+  \item 所有其他模值：都需要"if cnt=N-1 then cnt<=0"的显式清零
+\end{itemize}
+\end{keypoint}

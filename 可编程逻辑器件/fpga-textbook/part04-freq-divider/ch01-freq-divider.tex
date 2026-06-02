@@ -1,0 +1,330 @@
+\chapter{用计数器设计分频器}
+
+\section{什么是分频}
+
+\textbf{分频}：将输入时钟信号的频率降低。
+
+\begin{itemize}
+  \item 输入：$f_{clk}$（例如100 MHz）
+  \item 输出：$f_{out} = f_{clk} / M$（例如50 MHz，25 MHz，1 Hz等）
+  \item M 称为\textbf{分频比}
+\end{itemize}
+
+\begin{keypoint}[分频器的本质]
+分频器 = 计数器 + 利用计数器的特定位作为输出
+
+$$\text{分频器不需要额外的硬件——计数器本身就是分频器！}$$
+\end{keypoint}
+
+\section{为什么计数器能够分频：从状态变化过程理解}
+
+\subsection{回顾4位计数器的状态序列}
+
+让我们重新观察4位二进制计数器的Q0、Q1、Q2、Q3的波形：
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  % Clock signal
+  \draw[gray] (0,4) -- (16,4);
+  \foreach \x in {0,1,...,16} {
+    \draw[gray] (\x,3.8) -- (\x,4.2);
+  }
+
+  % Q0: toggles every clock
+  \draw[blue, very thick] (0,3) -- (0.5,3) -- (0.5,4) -- (1.5,4) -- (1.5,3) -- (2.5,3) -- (2.5,4) -- (3.5,4) -- (3.5,3) -- (4.5,3) -- (4.5,4) -- (5.5,4) -- (5.5,3) -- (6.5,3) -- (6.5,4) -- (7.5,4);
+  \node[blue] at (-1,3.5) {Q0};
+
+  % Q1: toggles every 2 clocks
+  \draw[red, very thick] (0,1.5) -- (0.5,1.5) -- (0.5,2.5) -- (2.5,2.5) -- (2.5,1.5) -- (4.5,1.5) -- (4.5,2.5) -- (6.5,2.5) -- (6.5,1.5) -- (8.5,1.5);
+  \node[red] at (-1,2) {Q1};
+
+  % Q2: toggles every 4 clocks
+  \draw[green!60!black, very thick] (0,0) -- (0.5,0) -- (0.5,1) -- (4.5,1) -- (4.5,0) -- (8.5,0) -- (8.5,1) -- (12.5,1);
+  \node[green!60!black] at (-1,0.5) {Q2};
+
+  % Time axis
+  \draw[->] (0,-1) -- (10,-1) node[right] {时钟周期数};
+  \foreach \x in {0,1,...,9} {
+    \draw (\x,-1.2) -- (\x,-0.8);
+    \node at (\x,-1.5) {\small \x};
+  }
+\end{tikzpicture}
+\end{center}
+
+\subsection{关键观察}
+
+\begin{itemize}
+  \item \textbf{Q0}：每1个时钟周期翻转一次 → 周期 = $2T_{clk}$ → 频率 = $f_{clk} / 2$
+  \item \textbf{Q1}：每2个时钟周期翻转一次 → 周期 = $4T_{clk}$ → 频率 = $f_{clk} / 4$
+  \item \textbf{Q2}：每4个时钟周期翻转一次 → 周期 = $8T_{clk}$ → 频率 = $f_{clk} / 8$
+  \item \textbf{Q3}：每8个时钟周期翻转一次 → 周期 = $16T_{clk}$ → 频率 = $f_{clk} / 16$
+\end{itemize}
+
+\section{逐拍分析：为什么Q0天然二分频}
+
+\begin{beatanalysis}[Q0为什么二分频]
+观察Q0在每一拍的变化：
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{计数器值(Q3Q2Q1Q0)} & \textbf{Q0} & \textbf{Q0相对于上一拍} \\
+\hline
+0 & 0000 & \textbf{0} & — \\
+1 & 0001 & \textbf{1} & 翻转(0→1) \\
+2 & 0010 & \textbf{0} & 翻转(1→0) \\
+3 & 0011 & \textbf{1} & 翻转(0→1) \\
+4 & 0100 & \textbf{0} & 翻转(1→0) \\
+\hline
+\end{tabular}
+\end{center}
+\end{beatanalysis}
+
+\textbf{原因}：Q0是二进制计数的最低位。每次+1时：
+\begin{itemize}
+  \item 如果当前Q0=0，则+1后=1（翻转）
+  \item 如果当前Q0=1，则+1后=0且产生进位（翻转）
+\end{itemize}
+
+\textbf{无论什么情况，Q0一定翻转。}
+
+因此：Q0每2个时钟周期完成一次0→1→0的完整循环，频率恰好是时钟的一半。
+
+\section{逐拍分析：为什么Q1天然四分频}
+
+\begin{beatanalysis}[Q1为什么四分频]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{计数器值} & \textbf{Q1} & \textbf{Q1变化原因} \\
+\hline
+0 & 0000 & \textbf{0} & 初始 \\
+1 & 0001 & \textbf{0} & Q0未产生进位给Q1 \\
+2 & 0010 & \textbf{1} & Q0=1, +1使Q0翻转为0, 进位使Q1翻转为1 \\
+3 & 0011 & \textbf{1} & Q0从0翻转1, 无进位, Q1不变 \\
+4 & 0100 & \textbf{0} & Q0=1, +1进位, Q1从1翻转为0 \\
+\hline
+\end{tabular}
+\end{center}
+\end{beatanalysis}
+
+\textbf{原因}：Q1只有在Q0产生进位时才翻转。Q0每2拍产生一次进位，所以Q1每4拍完成一个0→1→0的循环。
+
+\section{通用规律}
+
+\begin{keypoint}[分频规律]
+在$N$位二进制计数器中：
+\begin{itemize}
+  \item $Q_0$ 频率 = $f_{clk} / 2$（2分频）
+  \item $Q_1$ 频率 = $f_{clk} / 4$（4分频）
+  \item $Q_2$ 频率 = $f_{clk} / 8$（8分频）
+  \item $Q_k$ 频率 = $f_{clk} / 2^{k+1}$（$2^{k+1}$分频）
+\end{itemize}
+
+这不是需要记忆的公式——这是计数器二进制表示的\textbf{自然结果}。
+\end{keypoint}
+
+\section{偶数分频}
+
+偶数分频是最简单的分频。用一个计数器，计到 M/2 - 1 时翻转输出。
+
+\subsection{6分频器设计}
+
+分频比M=6，即每6个时钟周期，输出完成一个完整周期（3个时钟高电平 + 3个时钟低电平）。
+
+\textbf{方案：}使用模6计数器（0→1→2→3→4→5→0），当计数值<3时输出0，≥3时输出1。
+
+\begin{beatanalysis}[6分频器逐拍分析]
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{计数器} & \textbf{输出} & \textbf{说明} \\
+\hline
+0 & 0 & 0 & 初始 \\
+1 & 1 & 0 & cnt < 3 \\
+2 & 2 & 0 & cnt < 3 \\
+3 & 3 & 1 & cnt ≥ 3（占空比50\%，3拍高） \\
+4 & 4 & 1 & cnt ≥ 3 \\
+5 & 5 & 1 & cnt ≥ 3 \\
+6 & 0 & 0 & 归零，开始新周期 \\
+\hline
+\end{tabular}
+
+输出周期 = 6个时钟周期 → 频率 = $f_{clk} / 6$
+\end{center}
+\end{beatanalysis}
+
+\begin{lstlisting}[caption={6分频器VHDL实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity div6 is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    clk_div6 : out std_logic
+  );
+end div6;
+
+architecture behavioral of div6 is
+  signal cnt : std_logic_vector(2 downto 0);  -- 3位，够表示0-5
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "101" then    -- = 5
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  -- cnt < 3 时输出0, cnt >= 3 时输出1 (50%占空比)
+  clk_div6 <= '0' when cnt < "011" else '1';
+end behavioral;
+\end{lstlisting}
+
+\section{奇数分频}
+
+奇数分频比偶数分频复杂。以3分频为例。
+
+\subsection{3分频器设计}
+
+要求：$f_{out} = f_{clk} / 3$，占空比接近50\%（但不可能完全50\%，因为奇数个时钟周期）。
+
+\textbf{方案：使用上升沿和下降沿分别产生两个信号，然后组合。}
+
+\begin{lstlisting}[caption={3分频器VHDL实现（占空比50\%）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity div3 is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    clk_div3 : out std_logic
+  );
+end div3;
+
+architecture behavioral of div3 is
+  signal cnt : std_logic_vector(1 downto 0);
+  signal clk_pos, clk_neg : std_logic;
+begin
+  -- 上升沿计数
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "10" then  -- = 2
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  -- 上升沿产生的信号
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      clk_pos <= '0';
+    elsif rising_edge(clk) then
+      if cnt = 0 then
+        clk_pos <= '1';
+      elsif cnt = 1 then
+        clk_pos <= '0';
+      end if;
+    end if;
+  end process;
+
+  -- 下降沿产生的信号
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      clk_neg <= '0';
+    elsif falling_edge(clk) then
+      if cnt = 0 then
+        clk_neg <= '1';
+      elsif cnt = 1 then
+        clk_neg <= '0';
+      end if;
+    end if;
+  end process;
+
+  clk_div3 <= clk_pos or clk_neg;
+end behavioral;
+\end{lstlisting}
+
+\section{任意整数分频的统一设计流程}
+
+\begin{designflow}[任意整数分频设计流程]
+\textbf{步骤1：确定分频比M}
+
+\textbf{步骤2：设计模M计数器}
+$$cnt: 0 \to 1 \to 2 \to \cdots \to M-1 \to 0$$
+
+\textbf{步骤3：确定输出逻辑}
+
+\textbf{偶数分频（M为偶数）}：
+\begin{itemize}
+  \item 在 cnt = 0 到 M/2-1 时输出低电平
+  \item 在 cnt = M/2 到 M-1 时输出高电平
+  \item 占空比恰好50\%
+\end{itemize}
+
+\textbf{奇数分频（M为奇数）}：
+\begin{itemize}
+  \item 用上升沿+下降沿双计数器产生两个信号
+  \item clk\_out = clk\_pos OR clk\_neg
+  \item 得到接近50\%占空比的输出
+\end{itemize}
+\end{designflow}
+
+\section{考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：用计数器直接取Qn输出实现$2^n$分频}
+
+  最简单：Q0=2分频，Q1=4分频，Q2=8分频
+
+  \item \textbf{变式2：设计任意偶数分频器}
+
+  套用统一模板，M/2作为阈值。
+
+  \item \textbf{变式3：设计占空比可调的分频器}
+
+  改变输出翻转的阈值点。例如对于M=10分频，如果想让占空比为20\%，则在cnt=1时变高，cnt=3时变低。
+
+  \item \textbf{变式4：多级分频器级联（分频比相乘）}
+
+  先2分频 $\to$ 再5分频 = 10分频。总M = $M_1 \times M_2$。
+
+  \item \textbf{变式5：用分频器产生特定频率}
+
+  如：100MHz时钟，产生1Hz信号 → M = 100,000,000。需要计数器能计到一亿。
+
+  \item \textbf{变式6：秒脉冲发生器}
+
+  M = 50,000,000（50MHz时钟 → 1Hz秒脉冲）。这是一个很大的计数器。
+\end{enumerate}
+
+\section{分频器与计数器的关系总结}
+
+\begin{keypoint}[核心关系]
+\textbf{分频器 = 计数器 + 利用输出位}
+
+\begin{itemize}
+  \item 计数器提供"每M个时钟循环一次"的机制
+  \item 分频器利用了这个循环来产生低频信号
+  \item 计数器中的每一位Qk天然就是$2^{k+1}$分频输出
+  \item 任意分频比 = 模M计数器 + 输出比较逻辑
+\end{itemize}
+
+\textbf{分频器不需要独立的电路——它是计数器的一种应用方式。}
+\end{keypoint}

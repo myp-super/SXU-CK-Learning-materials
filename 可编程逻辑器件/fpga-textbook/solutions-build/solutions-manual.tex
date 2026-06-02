@@ -1,0 +1,95 @@
+% =============================================================
+%  FPGA与VHDL考试变式题解析册
+%  每题含：分析→状态图→设计→VHDL→Testbench→波形→秒杀
+% =============================================================
+
+\documentclass[12pt,a4paper,openany]{ctexbook}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5]
+\setCJKsansfont{SimHei}
+
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usetikzlibrary{arrows,shapes,positioning,calc,automata,patterns}
+
+\usepackage{tabularx,booktabs,multirow,makecell,colortbl}
+\usepackage{listings,xcolor,enumitem,caption,float}
+
+% VHDL listings config
+\definecolor{vhdlcomment}{rgb}{0.0,0.5,0.0}
+\definecolor{vhdlkeyword}{rgb}{0.0,0.0,0.8}
+\definecolor{vhdlstring}{rgb}{0.6,0.1,0.1}
+\definecolor{vhdlnumber}{rgb}{0.5,0.5,0.5}
+\definecolor{vhdlbackground}{rgb}{0.97,0.97,0.97}
+
+\lstdefinelanguage{VHDL}{
+  morekeywords={library,use,all,entity,is,port,in,out,inout,end,
+    architecture,of,begin,process,signal,variable,constant,type,
+    subtype,array,range,to,downto,others,then,elsif,else,case,
+    when,for,loop,generate,not,and,or,xor,nand,nor,mod,component,
+    generic,map,wait,on,until,after,report,severity,assert,
+    std_logic,std_logic_vector,bit,bit_vector,integer,boolean,
+    unsigned,signed,ieee,std_logic_1164,std_logic_unsigned,
+    numeric_std,rising_edge,falling_edge,event,clk,rst},
+  emph={if},emphstyle=\color{vhdlkeyword}\bfseries,
+  sensitive=true,morecomment=[l]{--},morestring=[b]"
+}[keywords,comments,strings]
+
+\lstset{language=VHDL,basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{vhdlkeyword}\bfseries,
+  commentstyle=\color{vhdlcomment}\itshape,
+  numbers=left,numberstyle=\tiny\color{vhdlnumber},
+  backgroundcolor=\color{vhdlbackground},frame=single,tabsize=2,
+  breaklines=true,showstringspaces=false}
+
+\usepackage[colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+% Custom environments (simpler boxes, no TikZ nesting issues)
+\usepackage{environ}
+\NewEnviron{solution}[1][完整解答]{%
+  \begin{center}\begin{tikzpicture}
+  \node[draw=blue!60,fill=blue!3,rounded corners=5pt,
+        inner sep=8pt,text width=0.92\textwidth,align=left]
+  {\textbf{\large #1}\\[3pt]\BODY};
+  \end{tikzpicture}\end{center}}
+
+\NewEnviron{quickkill}[1][秒杀口诀]{%
+  \begin{center}\begin{tikzpicture}
+  \node[draw=red!70,fill=red!3,rounded corners=5pt,
+        inner sep=8pt,text width=0.92\textwidth,align=left]
+  {\textbf{\textcolor{red!70!black}{#1}}\\[3pt]\BODY};
+  \end{tikzpicture}\end{center}}
+
+\title{\Huge\textbf{FPGA与VHDL考试\\变式题解析册}}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+% =============================================================
+\part{计数器变式题解析（20题）}
+\input{solutions/ch01-counter.tex}
+
+% =============================================================
+\part{分频器变式题解析（15题）}
+\input{solutions/ch02-freq-div.tex}
+
+% =============================================================
+\part{移位寄存器变式题解析（15题）}
+\input{solutions/ch03-shift-reg.tex}
+
+% =============================================================
+\part{环形计数器变式题解析（15题）}
+\input{solutions/ch04-ring-counter.tex}
+
+% =============================================================
+\part{序列检测器变式题解析（20题）}
+\input{solutions/ch05-seq-detector.tex}
+
+\end{document}

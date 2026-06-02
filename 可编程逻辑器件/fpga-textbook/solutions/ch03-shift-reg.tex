@@ -1,0 +1,575 @@
+\chapter{移位寄存器变式题（15题完整解析）}
+
+\section{题1：串入并出（SIPO）}
+
+\textbf{题目}：设计4位串入并出移位寄存器。输入si，输出po(3:0)。4拍后并行输出完整4位。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}4个D触发器串联。每个时钟上升沿：新数据进入最左端，所有数据右移一位。
+
+\textbf{【逐拍分析(si=1,0,1,1)】}
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+拍 & si & [Q3 Q2 Q1 Q0] \\ \hline
+0 & - & [0 0 0 0] \\ \hline
+1 & 1 & [1 0 0 0] \\ \hline
+2 & 0 & [0 1 0 0] \\ \hline
+3 & 1 & [1 0 1 0] \\ \hline
+4 & 1 & [1 1 0 1] \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity sipo_4bit is
+  port (clk, rst_n, si : in std_logic;
+        po : out std_logic_vector(3 downto 0));
+end sipo_4bit;
+
+architecture behavioral of sipo_4bit is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= si & reg(3 downto 1);  -- 右移
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【Testbench】}
+\begin{lstlisting}
+stimulus: process begin
+  rst_n <= '0'; si <= '0'; wait for 30 ns;
+  rst_n <= '1'; wait for 5 ns;
+  si <= '1'; wait for T; si <= '0'; wait for T;
+  si <= '1'; wait for T; si <= '1'; wait for T;
+  -- 4拍后po="1101"（注意：右移顺序反转）
+  wait;
+end process;
+\end{lstlisting}
+
+\end{solution}
+
+
+\section{题2：并串转换（PISO）}
+
+\textbf{题目}：设计4位并入串出移位寄存器。先load数据，然后逐拍串行输出。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity piso_4bit is
+  port (clk, rst_n, load : in std_logic;
+        data_in : in std_logic_vector(3 downto 0);
+        so : out std_logic);
+end piso_4bit;
+
+architecture behavioral of piso_4bit is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if load = '1' then
+        reg <= data_in;  -- 并行装载
+      else
+        reg <= '0' & reg(3 downto 1);  -- 右移，高位补0
+      end if;
+    end if;
+  end process;
+  so <= reg(0);  -- 最低位串行输出
+end behavioral;
+\end{lstlisting}
+
+\textbf{【逐拍分析(装载data\_in=1011)】}
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+拍 & 操作 & [Q3 Q2 Q1 Q0] \\ \hline
+0 & load & [1 0 1 1] \\ \hline
+1 & 移位 & [0 1 0 1] so=1 \\ \hline
+2 & 移位 & [0 0 1 0] so=1 \\ \hline
+3 & 移位 & [0 0 0 1] so=0 \\ \hline
+4 & 移位 & [0 0 0 0] so=1 \\ \hline
+\end{tabular}
+\end{center}
+4拍输出序列：1,1,0,1（刚好是原数据的倒序，因为右移先出最低位）。
+
+\end{solution}
+
+
+\section{题3：双向移位寄存器}
+
+\textbf{题目}：设计4位双向移位寄存器。dir=1右移，dir=0左移。各有一个串行输入。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity bidir_shift is
+  port (clk, rst_n, dir : in std_logic;
+        si_r, si_l : in std_logic;  -- 右移/左移串行输入
+        po : out std_logic_vector(3 downto 0));
+end bidir_shift;
+
+architecture behavioral of bidir_shift is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if dir = '1' then
+        reg <= si_r & reg(3 downto 1);   -- 右移
+      else
+        reg <= reg(2 downto 0) & si_l;   -- 左移
+      end if;
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【右移】}数据从左边进入，向右移动 → 串行输入至少4拍后在reg(0)出现。
+\textbf{【左移】}数据从右边进入，向左移动 → 串行输入至少4拍后在reg(3)出现。
+
+\end{solution}
+
+
+\section{题4：74LS194风格通用移位寄存器}
+
+\textbf{题目}：设计类似74LS194的通用移位寄存器：保持、右移、左移、并行装载。
+
+\begin{solution}[完整解答]
+
+\textbf{【模式控制】}
+\begin{center}
+\begin{tabular}{|c|c|l|}\hline
+S1 & S0 & 功能 \\ \hline
+0 & 0 & 保持 \\ \hline
+0 & 1 & 右移 \\ \hline
+1 & 0 & 左移 \\ \hline
+1 & 1 & 并行装载 \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity shift_reg_194 is
+  port (clk, rst_n : in std_logic;
+        S : in std_logic_vector(1 downto 0);
+        si_r, si_l : in std_logic;
+        data_in : in std_logic_vector(3 downto 0);
+        po : out std_logic_vector(3 downto 0));
+end shift_reg_194;
+
+architecture behavioral of shift_reg_194 is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      case S is
+        when "00" => null;  -- 保持
+        when "01" => reg <= si_r & reg(3 downto 1);  -- 右移
+        when "10" => reg <= reg(2 downto 0) & si_l;  -- 左移
+        when "11" => reg <= data_in;  -- 装载
+      end case;
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\end{solution}
+
+
+\section{题5：8位移位寄存器}
+
+\textbf{题目}：设计8位串入并出移位寄存器。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}从4位扩展到8位，逻辑完全相同，仅位宽变化。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity sipo_8bit is
+  port (clk, rst_n, si : in std_logic; po : out std_logic_vector(7 downto 0));
+end sipo_8bit;
+
+architecture behavioral of sipo_8bit is
+  signal reg : std_logic_vector(7 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= si & reg(7 downto 1);  -- 8位右移
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【推广】}任意N位移位寄存器只需改变type宽度和移位拼接式的上界。
+
+\end{solution}
+
+
+\section{题6：循环移位寄存器}
+
+\textbf{题目}：设计循环右移寄存器。最低位移回最高位，数据不丢失。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity rotate_right is
+  port (clk, rst_n : in std_logic; po : out std_logic_vector(7 downto 0));
+end rotate_right;
+
+architecture behavioral of rotate_right is
+  signal reg : std_logic_vector(7 downto 0) := "10000000";
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "10000000";
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(7 downto 1);  -- 最低位移到最高位!
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【逐拍分析(初始10000000)】}
+$10000000\to01000000\to00100000\to\cdots\to00000001\to10000000$
+
+这其实就是环形计数器！循环移位=环形计数器的基础。
+
+\end{solution}
+
+
+\section{题7：算术右移寄存器}
+
+\textbf{题目}：设计算术右移寄存器（保持最高位符号位不变）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity arith_shift_right is
+  port (clk, rst_n : in std_logic; po : out std_logic_vector(7 downto 0));
+end arith_shift_right;
+
+architecture behavioral of arith_shift_right is
+  signal reg : std_logic_vector(7 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= reg(7) & reg(7 downto 1);  -- MSB保持！
+    end if;
+  end process;
+  po <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【逻辑右移 vs 算术右移】}
+\begin{itemize}
+  \item 逻辑右移：\texttt{reg <= '0' \& reg(7 downto 1)} — 高位补0
+  \item 算术右移：\texttt{reg <= reg(7) \& reg(7 downto 1)} — 高位补符号位
+\end{itemize}
+
+\textbf{【应用】}算术右移1位 = 有符号数÷2（保持符号）。
+
+\end{solution}
+
+
+\section{题8：移位寄存器实现×2和÷2}
+
+\textbf{题目}：用移位寄存器实现无符号数的×2和÷2。
+
+\begin{solution}[完整解答]
+
+\textbf{【左移1位 = ×2】}
+\begin{lstlisting}
+reg <= reg(6 downto 0) & '0';  -- 左移，低位补0
+\end{lstlisting}
+
+\textbf{【右移1位 = ÷2（截断）】}
+\begin{lstlisting}
+reg <= '0' & reg(7 downto 1);  -- 右移，高位补0
+\end{lstlisting}
+
+\textbf{【验证】}
+\begin{itemize}
+  \item 0011(3)左移1位=0110(6)=3×2 ✓
+  \item 0110(6)右移1位=0011(3)=6÷2 ✓
+  \item 0101(5)右移1位=0010(2)=5÷2=2（向下取整）✓
+\end{itemize}
+
+\end{solution}
+
+
+\section{题9：移位寄存器序列检测方案}
+
+\textbf{题目}：用移位寄存器+比较器替代状态机检测序列1011。
+
+\begin{solution}[完整解答]
+
+\textbf{【方案】}4位移位寄存器存储最近4位输入。当reg="1011"时，detected=1。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity shift_detector is
+  port (clk, rst_n, data_in : in std_logic; detected : out std_logic);
+end shift_detector;
+
+architecture rtl of shift_detector is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= data_in & reg(3 downto 1);  -- 最新输入进最高位
+    end if;
+  end process;
+  detected <= '1' when reg = "1011" else '0';
+end rtl;
+\end{lstlisting}
+
+\textbf{【与状态机方案比较】}
+\begin{itemize}
+  \item 移位寄存器方案：代码极简，自动实现重叠检测
+  \item 状态机方案：需要手动推导状态转移，但更灵活
+  \item 考试中两者都要会——但移位寄存器方案通常更简单
+\end{itemize}
+
+\end{solution}
+
+
+\section{题10：延迟线}
+
+\textbf{题目}：用移位寄存器实现N=5拍的信号延迟（输入信号延迟5个时钟周期后输出）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity delay_line is
+  port (clk, rst_n, din : in std_logic; dout : out std_logic);
+end delay_line;
+
+architecture behavioral of delay_line is
+  signal reg : std_logic_vector(4 downto 0);  -- 5级
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= din & reg(4 downto 1);  -- 数据逐拍传递
+    end if;
+  end process;
+  dout <= reg(0);  -- 输出=5拍前的输入
+end behavioral;
+\end{lstlisting}
+
+\textbf{【应用】}数字信号处理中的流水线对齐、滤波器的抽头延迟线。
+
+\end{solution}
+
+
+\section{题11：串行通信接收器}
+
+\textbf{题目}：设计8位串行数据接收器（1起始位+8数据位，类似UART简版）。检测起始位后采集8位数据。
+
+\begin{solution}[完整解答]
+
+\textbf{【简化分析】}8位移位寄存器连续采8拍，并行输出。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity serial_rx is
+  port (clk, rst_n, rx : in std_logic;
+        data : out std_logic_vector(7 downto 0);
+        ready : out std_logic);
+end serial_rx;
+
+architecture behavioral of serial_rx is
+  signal reg : std_logic_vector(7 downto 0);
+  signal bit_cnt : integer range 0 to 7;
+  signal done : std_logic;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (others => '0'); bit_cnt <= 0; done <= '0';
+    elsif rising_edge(clk) then
+      reg <= rx & reg(7 downto 1);  -- 移位采集
+      if bit_cnt = 7 then
+        bit_cnt <= 0; done <= '1';
+      else
+        bit_cnt <= bit_cnt + 1; done <= '0';
+      end if;
+    end if;
+  end process;
+  data <= reg; ready <= done;
+end behavioral;
+\end{lstlisting}
+
+\end{solution}
+
+
+\section{题12：给定初值和输入序列，推断寄存器状态}
+
+\textbf{题目}：4位右移寄存器初值0000，输入序列1011。求4拍后的reg内容。
+
+\begin{solution}[完整解答]
+
+\textbf{【逐拍推导】}
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+拍 & si & reg \\ \hline
+0 & - & [0 0 0 0] \\ \hline
+1 & 1 & [1 0 0 0] \\ \hline
+2 & 0 & [0 1 0 0] \\ \hline
+3 & 1 & [1 0 1 0] \\ \hline
+4 & 1 & [1 1 0 1] \\ \hline
+\end{tabular}
+\end{center}
+
+4拍后reg=[1101]。
+
+\textbf{【秒杀法】}每个时钟：新输入进入左边，整体右移一位。4拍后reg从高到低=最近4次输入（倒序）。
+
+\end{solution}
+
+
+\section{题13：4位LFSR（伪随机序列）}
+
+\textbf{题目}：设计4位LFSR，反馈多项式 $X^4+X^3+1$。反馈位=Q3 XOR Q2。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}反馈多项式$X^4+X^3+1$ → 反馈 = Q(4) XOR Q(3)（最高位和次高位异或）。
+状态数=$2^4-1=15$（全0状态非法）。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity lfsr_4bit is
+  port (clk, rst_n : in std_logic; lfsr_out : out std_logic_vector(3 downto 0));
+end lfsr_4bit;
+
+architecture behavioral of lfsr_4bit is
+  signal reg : std_logic_vector(3 downto 0);
+  signal feedback : std_logic;
+begin
+  feedback <= reg(3) xor reg(2);  -- X^4 + X^3 + 1
+
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "0001";  -- 非全0初值
+    elsif rising_edge(clk) then
+      reg <= feedback & reg(3 downto 1);
+    end if;
+  end process;
+  lfsr_out <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【最大长度LFSR状态序列(15个)】}
+$$0001\to1000\to1100\to1110\to1111\to0111\to1011\to0101$$
+$$\to1010\to1101\to0110\to0011\to1001\to0100\to0010\to0001$$
+
+\textbf{【应用】}伪随机数生成、CRC校验、扰码器。
+
+\end{solution}
+
+
+\section{题14：移位寄存器Testbench设计}
+
+\textbf{题目}：为8位移位寄存器设计完整Testbench，全面验证所有功能。
+
+\begin{solution}[完整解答]
+
+\textbf{【Testbench】}
+\begin{lstlisting}
+entity shift8_tb is end entity;
+architecture test of shift8_tb is
+  signal clk, rst_n, si : std_logic;
+  signal po : std_logic_vector(7 downto 0);
+  constant T : time := 20 ns;
+begin
+  uut: entity work.sipo_8bit port map(clk, rst_n, si, po);
+  clk <= not clk after T/2;
+
+  process begin
+    rst_n <= '0'; si <= '0'; wait for 30 ns;
+    rst_n <= '1'; wait for 5 ns;
+
+    -- 测试1: 输入10110010
+    si <= '1'; wait for T; si <= '0'; wait for T;
+    si <= '1'; wait for T; si <= '1'; wait for T;
+    si <= '0'; wait for T; si <= '0'; wait for T;
+    si <= '1'; wait for T; si <= '0'; wait for T;
+    -- 8拍后po应 = "10110010" (注意顺序可能反转)
+
+    -- 测试2: 持续0输入看能否清空
+    si <= '0'; wait for 9*T;
+
+    -- 测试3: 持续1输入
+    si <= '1'; wait for 9*T;  -- 8拍后po应全1
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\textbf{【验证清单】}
+\begin{enumerate}
+  \item 复位后reg全0 ✓
+  \item 输入特定序列后po值正确 ✓
+  \item 连续0输入能清空寄存器 ✓
+  \item 连续1输入能填满寄存器 ✓
+\end{enumerate}
+
+\end{solution}
+
+
+\section{题15：移位寄存器设计范式总结}
+
+\begin{solution}[完整解答]
+
+\textbf{【四种基本模式的VHDL范式】}
+
+\begin{center}
+\begin{tabular}{|l|l|}\hline
+\textbf{操作} & \textbf{VHDL} \\ \hline
+右移 & \texttt{reg <= si \& reg(N-1 downto 1)} \\ \hline
+左移 & \texttt{reg <= reg(N-2 downto 0) \& si} \\ \hline
+循环右移 & \texttt{reg <= reg(0) \& reg(N-1 downto 1)} \\ \hline
+循环左移 & \texttt{reg <= reg(N-2 downto 0) \& reg(N-1)} \\ \hline
+算术右移 & \texttt{reg <= reg(N-1) \& reg(N-1 downto 1)} \\ \hline
+并行装载 & \texttt{if load='1' then reg <= data\_in;} \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【关键考点】}
+\begin{itemize}
+  \item 串行输出 = reg(0)（右移）或 reg(N-1)（左移）
+  \item 并行输出 = 整个reg
+  \item N位移位寄存器 = N个D触发器串联
+  \item 数据从输入到输出延迟 = N个时钟周期
+\end{itemize}
+
+\end{solution}

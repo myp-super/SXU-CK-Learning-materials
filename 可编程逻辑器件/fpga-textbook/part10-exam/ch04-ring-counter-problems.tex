@@ -1,0 +1,188 @@
+\chapter{环形计数器考试变式题}
+
+\section*{题目1：4位环形计数器}
+
+\textbf{题目}：设计4位环形计数器。初始状态1000，经历4个状态循环：1000→0100→0010→0001→1000。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal reg : std_logic_vector(3 downto 0);
+process(clk, rst_n)
+begin
+  if rst_n = '0' then reg <= "1000";
+  elsif rising_edge(clk) then
+    reg <= reg(0) & reg(3 downto 1);
+  end if;
+end process;
+\end{lstlisting}
+
+\textbf{逐拍验证}：
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+拍 & [Q3 Q2 Q1 Q0] \\
+\hline
+0 & [1 0 0 0] \\
+1 & [0 1 0 0] \\
+2 & [0 0 1 0] \\
+3 & [0 0 0 1] \\
+4 & [1 0 0 0] ✓ 循环 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{题目2：8位环形计数器}
+
+\textbf{题目}：设计8位环形计数器。初始10000000。8个状态循环。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal reg : std_logic_vector(7 downto 0);
+reg <= reg(0) & reg(7 downto 1);  -- 8位环形右移
+\end{lstlisting}
+
+\section*{题目3：4位约翰逊计数器（扭环形）}
+
+\textbf{题目}：设计4位约翰逊计数器。初始0000。产生8个状态。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+reg <= (not reg(0)) & reg(3 downto 1);
+-- 状态序列：0000→1000→1100→1110→1111→0111→0011→0001→0000
+\end{lstlisting}
+
+\textbf{状态分析}：
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+拍 & [Q3 Q2 Q1 Q0] \\
+\hline
+0 & [0 0 0 0] \\
+1 & [1 0 0 0] \\
+2 & [1 1 0 0] \\
+3 & [1 1 1 0] \\
+4 & [1 1 1 1] \\
+5 & [0 1 1 1] \\
+6 & [0 0 1 1] \\
+7 & [0 0 0 1] \\
+8 & [0 0 0 0] ✓ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{关键规律}：约翰逊计数器（N个DFF）= 2N个状态。
+
+\section*{题目4：带自启动的环形计数器}
+
+\textbf{题目}：环形计数器可能因干扰进入非法状态（如两个1同时为1）。设计自启动逻辑。
+
+\textbf{分析}：检测非法状态并自动恢复到合法状态。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+ if reg = "0000" or (reg(3)='1' and reg(2)='1') or ... then
+  reg <= "1000";  -- 恢复到合法状态
+else
+  reg <= reg(0) & reg(3 downto 1);
+end if;
+\end{lstlisting}
+
+\section*{题目5：环形计数器vs二进制计数器比较}
+
+\textbf{题目}：比较8状态环形计数器和8状态二进制计数器。
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{环形计数器} & \textbf{二进制计数器} \\
+\hline
+DFF数量 & 8个 & 3个（$\lceil\log_2 8\rceil$）\\
+状态编码 & One-hot & Binary \\
+解码复杂度 & 0（直接读）& 需要译码器 \\
+最大速度 & 1级DFF延迟 & 进位链延迟 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{题目6：左移环形计数器}
+
+\textbf{题目}：设计左移环形计数器（1从右向左移动）。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+reg <= reg(2 downto 0) & reg(3);  -- 左移循环
+-- 序列：0001→0010→0100→1000→0001
+\end{lstlisting}
+
+\section*{题目7：自校正约翰逊计数器}
+
+\textbf{题目}：设计自校正的4位约翰逊计数器，能自动从非法状态恢复到合法状态。
+
+\section*{题目8：用环形计数器做序列发生器}
+
+\textbf{题目}：用4位环形计数器的Q输出作为序列输出。产生什么序列？
+
+\textbf{解}：
+Q3输出序列：1, 0, 0, 0, 1, 0, 0, 0, ...（周期4）
+各Q输出产生不同相位的同一序列。
+
+\section*{题目9：环形计数器的状态数推导}
+
+\textbf{题目}：N位移位寄存器可构成多少种不同状态的环形计数器？
+
+\textbf{解}：One-hot编码，N个状态。每个状态只有一个1。
+
+\section*{题目10：约翰逊计数器的状态数推导}
+
+\textbf{题目}：N位移位寄存器可构成多少种不同状态的约翰逊计数器？
+
+\textbf{解}：2N个状态。
+
+\section*{题目11：给定波形推断计数器类型}
+
+\textbf{题目}：4位寄存器输出波形为：1000→0100→0010→0001→1000...。判断类型和状态数。
+
+\textbf{解}：4位环形计数器，4个状态。
+
+\section*{题目12：给定初值和反馈逻辑推断状态序列}
+
+\textbf{题目}：5位移位寄存器初值11000，反馈=Q0 XOR Q1。推断前8个状态。
+
+\textbf{分析}：这是LFSR的行为，需要逐拍计算反馈值并移位。
+
+\section*{题目13：环形计数器的one-hot特性优势}
+
+\textbf{题目}：为什么One-hot编码的环形计数器适用于高速设计？
+
+\textbf{分析}：
+\begin{itemize}
+  \item 状态解码不需要任何组合逻辑（直接看哪个DFF=1）
+  \item 关键路径只有1级DFF延迟（没有加法器进位链）
+  \item 适合超高速状态机
+  \item 代价：状态数 = DFF数（资源效率低）
+\end{itemize}
+
+\section*{题目14：用环形计数器实现时序控制器}
+
+\textbf{题目}：用5位环形计数器实现一个5步时序控制器，每步对应一个控制信号。
+
+\textbf{解}：Q4-Q0分别作为步骤1-5的控制信号。每个时钟周期只有一个信号有效。
+
+\section*{题目15：扭环形计数器做分频器}
+
+\textbf{题目}：4位扭环形计数器（8状态）。各Q输出的频率是多少？
+
+\textbf{解}：每个Q完成一个完整周期需要8拍。
+$$f_Q = f_{clk} / 8$$
+
+\begin{examtip}[环形计数器类题目的统一解法]
+\begin{enumerate}
+  \item \textbf{结构：}移位寄存器 + Q输出反馈到输入
+  \item \textbf{普通环形：}反馈同相 → N状态（N个DFF）
+  \item \textbf{扭环形（约翰逊）：}反馈反相 → 2N状态
+  \item \textbf{核心VHDL：}\texttt{reg <= reg(0) \& reg(N-1 downto 1)}（环形右移）
+  \item \textbf{自启动：}检测非法状态，强制恢复到100...0
+  \item \textbf{优点：}超快（无进位链），输出直接可用（无需译码）
+  \item \textbf{缺点：}状态数=DFF数（资源效率低）
+\end{enumerate}
+\end{examtip}

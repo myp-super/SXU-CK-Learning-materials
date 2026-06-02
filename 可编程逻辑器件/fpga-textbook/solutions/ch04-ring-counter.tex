@@ -1,0 +1,483 @@
+\chapter{环形计数器变式题（15题完整解析）}
+
+% ============================================================
+\section{题1：4位环形计数器}
+
+\textbf{题目}：设计4位环形计数器。初始1000。状态：1000→0100→0010→0001→1000。
+
+\begin{solution}[完整解答]
+
+\textbf{【结构】}4位移位寄存器，Q0反馈回D3（右移+反馈）。
+
+\textbf{【逐拍分析】}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+拍 & Q3 & Q2 & Q1 & Q0 \\ \hline
+0(初) & 1 & 0 & 0 & 0 \\ \hline
+1 & 0 & 1 & 0 & 0 \\ \hline
+2 & 0 & 0 & 1 & 0 \\ \hline
+3 & 0 & 0 & 0 & 1 \\ \hline
+4 & 1 & 0 & 0 & 0（循环！）\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity ring4 is
+  port (clk, rst_n : in std_logic; q : out std_logic_vector(3 downto 0));
+end ring4;
+
+architecture behavioral of ring4 is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "1000";  -- One-hot初始
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(3 downto 1);  -- 右移+反馈
+    end if;
+  end process;
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【为什么是4个状态】}4个D触发器，只有1个1在循环移动。1在4个位置→4个状态。
+
+\textbf{【关键VHDL语句】}\texttt{reg <= reg(0) \& reg(3 downto 1)}
+\begin{itemize}
+  \item reg(0)→reg(3)：最低位反馈到最高位（闭环！）
+  \item reg(3)→reg(2)：原最高位右移一位
+  \item reg(2)→reg(1)：右移
+  \item reg(1)→reg(0)：右移
+\end{itemize}
+
+\end{solution}
+
+
+% ============================================================
+\section{题2：8位环形计数器}
+
+\textbf{题目}：设计8位环形计数器（8个状态）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity ring8 is
+  port (clk, rst_n : in std_logic; q : out std_logic_vector(7 downto 0));
+end ring8;
+
+architecture behavioral of ring8 is
+  signal reg : std_logic_vector(7 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "10000000";
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(7 downto 1);  -- 8位环形
+    end if;
+  end process;
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【状态循环】}$10000000\to01000000\to\cdots\to00000001\to10000000$
+
+共8个状态（8拍一个循环）。
+
+\end{solution}
+
+
+% ============================================================
+\section{题3：4位约翰逊计数器（扭环形）}
+
+\textbf{题目}：设计4位约翰逊计数器。初始0000。状态序列：0000→1000→1100→1110→1111→0111→0011→0001→0000。
+
+\begin{solution}[完整解答]
+
+\textbf{【反馈】}$\overline{Q_0}$→D3（反相最低位反馈回最高位）。
+
+\textbf{【逐拍分析】}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+拍 & Q3 & Q2 & Q1 & Q0 \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+2 & 1 & 1 & 0 & 0 \\ \hline
+3 & 1 & 1 & 1 & 0 \\ \hline
+4 & 1 & 1 & 1 & 1 \\ \hline
+5 & 0 & 1 & 1 & 1 \\ \hline
+6 & 0 & 0 & 1 & 1 \\ \hline
+7 & 0 & 0 & 0 & 1 \\ \hline
+8 & 0 & 0 & 0 & 0（循环！）\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity johnson4 is
+  port (clk, rst_n : in std_logic; q : out std_logic_vector(3 downto 0));
+end johnson4;
+
+architecture behavioral of johnson4 is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= (not reg(0)) & reg(3 downto 1);  -- 反相反馈!
+    end if;
+  end process;
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【关键VHDL】}\texttt{reg <= (not reg(0)) \& reg(3 downto 1)}
+
+注意 \texttt{not reg(0)} — 反相！这是约翰逊与普通环形计数器的唯一区别。
+
+\textbf{【状态数】}4个DFF→$2\times4=8$个状态。比普通环形计数器多一倍。
+
+\end{solution}
+
+
+% ============================================================
+\section{题4：环形计数器 vs 二进制计数器}
+
+\textbf{题目}：对比4状态环形计数器与2位二进制计数器。
+
+\begin{solution}[完整解答]
+
+\begin{center}
+\begin{tabular}{|l|c|c|}\hline
+\textbf{特性} & \textbf{4位环形(4状态)} & \textbf{2位二进制(4状态)} \\ \hline
+DFF数量 & 4 & 2 \\
+状态编码 & One-hot(1000,0100,...) & Binary(00,01,10,11) \\
+解码门数 & 0（读Qx即可）& 需要2-4译码器 \\
+关键路径延迟 & 1级DFF($t_{cko}$) & $t_{cko}$+进位链+$t_{setup}$ \\
+最大频率 & 最高(D触发器本身限制) & 较低(进位链限制) \\
+面积 & 4×DFF & 2×DFF + 加法器 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{【选择规则】}需要高速时选环形计数器；面积受限时选二进制计数器。
+
+\end{solution}
+
+
+% ============================================================
+\section{题5：自启动环形计数器}
+
+\textbf{题目}：4位环形计数器可能进入非法状态。设计自启动逻辑。
+
+\begin{solution}[完整解答]
+
+\textbf{【非法状态检测】}合法状态：one-hot（恰好一个1）。非法状态：全0、多个1。
+
+\textbf{【VHDL——自启动】}
+\begin{lstlisting}
+entity ring4_selfstart is
+  port (clk, rst_n : in std_logic; q : out std_logic_vector(3 downto 0));
+end ring4_selfstart;
+
+architecture behavioral of ring4_selfstart is
+  signal reg : std_logic_vector(3 downto 0);
+  function count_ones(v : std_logic_vector) return integer is
+    variable c : integer := 0;
+  begin
+    for i in v'range loop if v(i)='1' then c:=c+1; end if; end loop;
+    return c;
+  end function;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "1000";
+    elsif rising_edge(clk) then
+      if count_ones(reg) /= 1 then  -- 非法状态检测
+        reg <= "1000";              -- 强制恢复
+      else
+        reg <= reg(0) & reg(3 downto 1);
+      end if;
+    end if;
+  end process;
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\end{solution}
+
+
+% ============================================================
+\section{题6：自启动约翰逊计数器}
+
+\textbf{题目}：约翰逊计数器也可能进入非法状态。设计自启动逻辑。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}4位约翰逊计数器合法状态=8个。非法状态=8个（全16个状态的一半）。检测不在合法状态中→强制恢复。
+
+\textbf{【VHDL——预存合法状态ROM】}
+\begin{lstlisting}
+type rom_type is array (0 to 7) of std_logic_vector(3 downto 0);
+constant LEGAL : rom_type := (
+  "0000","1000","1100","1110","1111","0111","0011","0001"
+);
+signal is_legal : boolean;
+begin
+  is_legal <= false;
+  for i in 0 to 7 loop
+    if reg = LEGAL(i) then is_legal <= true; end if;
+  end loop;
+
+  if not is_legal then
+    reg <= "0000";  -- 强制恢复
+  else
+    reg <= (not reg(0)) & reg(3 downto 1);
+  end if;
+\end{lstlisting}
+
+\end{solution}
+
+
+% ============================================================
+\section{题7：用环形计数器做序列发生器}
+
+\textbf{题目}：用4位环形计数器输出Q3产生序列。Q3序列是什么？
+
+\begin{solution}[完整解答]
+
+\textbf{【逐拍分析Q3】}
+\begin{center}
+\begin{tabular}{|c|c|}\hline
+拍 & Q3 \\ \hline
+0 & 1 \\ \hline 1 & 0 \\ \hline 2 & 0 \\ \hline 3 & 0 \\ \hline
+4 & 1 \\ \hline 5 & 0 \\ \hline ... & ... \\ \hline
+\end{tabular}
+\end{center}
+
+Q3输出序列：\textbf{1, 0, 0, 0, 1, 0, 0, 0, ...} — 周期4。
+
+\textbf{【各Q输出对比】}
+\begin{itemize}
+  \item Q3: 1,0,0,0,1,0,0,0,...（相位0°）
+  \item Q2: 0,1,0,0,0,1,0,0,...（相位90°）
+  \item Q1: 0,0,1,0,0,0,1,0,...（相位180°）
+  \item Q0: 0,0,0,1,0,0,0,1,...（相位270°）
+\end{itemize}
+
+四个Q输出正好是相位差90°的4路信号——可用于多相时钟生成。
+
+\end{solution}
+
+
+% ============================================================
+\section{题8：左移环形计数器}
+
+\textbf{题目}：设计左移环形计数器（1从右向左移动）。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+reg <= reg(2 downto 0) & reg(3);  -- 左移循环
+\end{lstlisting}
+
+\textbf{【状态序列(初始0001)】}
+$0001\to0010\to0100\to1000\to0001$
+
+1从右向左循环移动。
+
+\end{solution}
+
+
+% ============================================================
+\section{题9：N位环形计数器状态数推导}
+
+\textbf{题目}：N位移位寄存器构建环形计数器，能产生多少个状态？
+
+\begin{solution}[完整解答]
+
+\textbf{【普通环形计数器】}
+One-hot编码。初始化后恰好一个1。N个位置→N个状态。
+
+\textbf{答案：N个状态。}
+
+\textbf{【约翰逊计数器】}
+反相反馈。N个DFF→2N个不同状态。
+
+\textbf{答案：2N个状态。}
+
+\textbf{【证明（约翰逊）】}
+每个DFF在循环中都经历0和1的完整变化。反相反馈使得1连续填入，0连续推出。每N拍状态翻转一次，共2N拍回到起点。
+
+\end{solution}
+
+
+% ============================================================
+\section{题10：5位环形计数器时序控制器}
+
+\textbf{题目}：用5位环形计数器实现5步时序控制器。Q4-Q0分别作为步骤1-5的使能信号。
+
+\begin{solution}[完整解答]
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity seq_controller is
+  port (clk, rst_n : in std_logic;
+        step : out std_logic_vector(4 downto 0));
+end seq_controller;
+
+architecture behavioral of seq_controller is
+  signal reg : std_logic_vector(4 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then reg <= "10000";  -- 步骤1激活
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(4 downto 1);
+    end if;
+  end process;
+  step <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【应用】}多周期操作的控制器（如乘法器的状态控制）。每拍恰好一个步骤激活。
+
+\end{solution}
+
+
+% ============================================================
+\section{题11：给定波形判断计数器类型}
+
+\textbf{题目}：4位输出波形：1000→1100→1110→1111→0111→0011→0001→0000→1000→...。判断类型和状态数。
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}
+\begin{itemize}
+  \item 状态数=8（不同模式有8种）
+  \item 观察规律：1从左向右填充，然后0从右向左清空
+  \item 这是典型的约翰逊计数器！
+\end{itemize}
+
+\textbf{【结论】}4位约翰逊计数器（8个状态）。
+
+\textbf{【判断方法】}
+\begin{itemize}
+  \item One-hot（只有一个1循环）= 普通环形
+  \item 111...→011...→001...模式 = 约翰逊（扭环形）
+  \item 连续递增的二进制值 = 二进制计数器
+\end{itemize}
+
+\end{solution}
+
+
+% ============================================================
+\section{题12：LFSR vs 环形计数器}
+
+\textbf{题目}：比较LFSR和环形计数器的异同。
+
+\begin{solution}[完整解答]
+
+\begin{center}
+\begin{tabular}{|l|c|c|}\hline
+ & LFSR & 环形计数器 \\ \hline
+结构 & 移位寄存器+XOR反馈 & 移位寄存器+直接反馈 \\
+反馈逻辑 & 多输入异或（抽头）& 单输入（reg(0)或~reg(0)）\\
+状态数(N个DFF) & 最多$2^N-1$ & 最多2N \\
+状态编码 & 伪随机 & One-hot \\
+应用 & 随机数、CRC & 时序控制、多相信号 \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{solution}
+
+
+% ============================================================
+\section{题13：约翰逊计数器做分频器}
+
+\textbf{题目}：4位约翰逊计数器（8状态）。Q3输出频率？
+
+\begin{solution}[完整解答]
+
+\textbf{【分析】}Q3在8拍中：0→1→1→1→1→0→0→0→0→...。周期=8拍。
+
+$$f_{Q3} = f_{clk} / 8$$
+
+\textbf{【各Q频率（4位约翰逊）】}
+所有Q输出的频率都是$f_{clk}/8$，但相位不同。
+
+\textbf{【与二进制计数器对比】}
+\begin{itemize}
+  \item 二进制Q0：每2拍翻转→$f_{clk}/2$
+  \item 二进制Q1：每4拍翻转→$f_{clk}/4$
+  \item 二进制Q2：每8拍翻转→$f_{clk}/8$
+  \item 约翰逊任意Q：每8拍翻转→$f_{clk}/8$（所有Q频率相同）
+\end{itemize}
+
+\end{solution}
+
+
+% ============================================================
+\section{题14：任意N位环形计数器模板}
+
+\textbf{题目}：写出N位环形计数器的通用VHDL模板。
+
+\begin{solution}[完整解答]
+
+\textbf{【通用模板】}
+\begin{lstlisting}
+entity ring_counter is
+  generic (N : integer := 4);
+  port (clk, rst_n : in std_logic; q : out std_logic_vector(N-1 downto 0));
+end ring_counter;
+
+architecture behavioral of ring_counter is
+  signal reg : std_logic_vector(N-1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (N-1 => '1', others => '0');  -- 只有MSB=1
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(N-1 downto 1);  -- 右移+反馈
+    end if;
+  end process;
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【参数化】}N可以是任意值。N=4→4个状态。N=8→8个状态。N个DFF→N个状态。
+
+\end{solution}
+
+
+% ============================================================
+\section{题15：环形计数器类统一秒杀}
+
+\begin{quickkill}[环形计数器秒杀总结]
+\textbf{普通环形计数器：}
+\begin{itemize}
+  \item VHDL: \texttt{reg <= reg(0) \& reg(N-1 downto 1)}
+  \item N个DFF → N个状态
+  \item 初始：恰好一个1（One-hot）
+  \item 每拍：1向右移一位（通过反馈形成循环）
+\end{itemize}
+
+\textbf{约翰逊（扭环形）计数器：}
+\begin{itemize}
+  \item VHDL: \texttt{reg <= (not reg(0)) \& reg(N-1 downto 1)}
+  \item N个DFF → 2N个状态
+  \item 初始：全0（0000）
+  \item 规律：1从左填满，0从右清空
+\end{itemize}
+
+\textbf{口诀：}
+\begin{itemize}
+  \item 环形 = 1在环里跑，跑N步回原点
+  \item 约翰逊 = 1填满再清空，跑2N步回原点
+\end{itemize}
+\end{quickkill}

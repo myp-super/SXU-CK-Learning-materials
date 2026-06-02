@@ -1,0 +1,116 @@
+\chapter{组合逻辑电路：统一设计套路}
+
+\section{什么是组合逻辑电路}
+
+回顾我们学过的7个电路，它们有一个共同特征：
+
+\begin{keypoint}[组合逻辑电路的定义]
+\textbf{输出仅由当前输入决定，与历史状态无关。}
+
+没有记忆、没有反馈、没有时钟。
+
+给定输入 → 直接得到输出（经过一定的门延迟）。
+\end{keypoint}
+
+\section{组合逻辑电路谱系}
+
+所有组合逻辑电路可以分为三类：
+
+\begin{enumerate}
+  \item \textbf{编码/译码类}
+
+  \begin{itemize}
+    \item 编码器（8-3）：$2^n \to n$ 压缩，OR逻辑
+    \item 译码器（3-8）：$n \to 2^n$ 展开，AND逻辑（最小项）
+    \item BCD译码器：4位BCD $\to$ 7段显示
+  \end{itemize}
+
+  编码器和译码器是\textbf{互为逆过程}。
+
+  \item \textbf{数据通路类}
+
+  \begin{itemize}
+    \item MUX（4选1）：选择数据来源
+    \item 级联MUX：从小MUX构建大MUX
+  \end{itemize}
+
+  MUX是组合逻辑的"万能积木"——任何组合逻辑函数都可以用MUX实现。
+
+  \item \textbf{运算类}
+
+  \begin{itemize}
+    \item 比较器：判断 $A>B, A=B, A<B$，从高位到低位优先级
+    \item 加法器：$A+B+C_{in}$，进位链串联
+  \end{itemize}
+\end{enumerate}
+
+\section{统一设计套路}
+
+当你面对一个需要设计组合逻辑电路的考试题时，按以下步骤：
+
+\begin{designflow}[组合逻辑电路统一设计流程]
+\begin{enumerate}
+  \item \textbf{明确输入输出}：几个输入？几位？几个输出？每位含义？
+  \item \textbf{列真值表}：穷举所有输入组合，写出对应输出
+  \item \textbf{推导逻辑表达式}：从真值表提取每个输出位的逻辑函数
+  \item \textbf{选择实现方式}：
+  \begin{itemize}
+    \item 门级实现：手写与或表达式
+    \item MUX实现：真值表输出列接到MUX数据输入端
+    \item 译码器+OR实现：最小项之和
+    \item VHDL实现：case / with-select / if-else（推荐！）
+  \end{itemize}
+  \item \textbf{写VHDL}：case覆盖所有情况，when others兜底
+  \item \textbf{验证}：检查边界条件
+\end{enumerate}
+\end{designflow}
+
+\section{考试中最高频的组合逻辑考点}
+
+\begin{enumerate}
+  \item \textbf{用MUX实现任意逻辑函数}（必考）
+
+  $2^n$选1 MUX实现$n$变量函数：选择线接变量，数据输入接函数值
+
+  \item \textbf{用译码器+OR门实现任意逻辑函数}（必考）
+
+  译码器产生所有最小项，OR门选择需要的项
+
+  \item \textbf{优先级编码器的VHDL实现}（常考）
+
+  if-else级联：优先级从高到低
+
+  \item \textbf{74LS138使能端级联扩展}（常考）
+
+  高位地址做片选，低位地址接输入
+
+  \item \textbf{加法器+寄存器=累加器}（承上启下）
+
+  这是从组合逻辑过渡到时序逻辑的关键桥梁
+\end{enumerate}
+
+\section{从组合逻辑到时序逻辑}
+
+到目前为止，所有电路都有一个根本限制：
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.85\textwidth}
+\textbf{组合逻辑不能存储信息。}
+
+电路的输出只取决于当前输入。当输入消失或改变，旧的结果就丢失了。
+
+\vspace{0.3cm}
+这不是设计缺陷——这是组合逻辑的本质。
+
+\vspace{0.3cm}
+如果我们需要"记住"一个值，需要存储"当前状态"，那就必须引入\textbf{时序逻辑}。
+\end{minipage}%
+}
+\end{center}
+
+而这个过渡的桥梁就是——\textbf{D触发器}。
+
+组合逻辑 + 存储单元（D触发器） = 时序逻辑 = 状态机
+
+\textbf{这将在第二部分详细展开。}

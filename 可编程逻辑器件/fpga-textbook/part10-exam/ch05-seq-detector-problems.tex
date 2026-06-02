@@ -1,0 +1,297 @@
+\chapter{序列检测器考试变式题}
+
+\section*{题目1：检测1011（重叠检测）}
+
+\textbf{题目}：设计Mealy型序列检测器，检测1011（重叠检测）。画出状态图，写VHDL。
+
+\textbf{状态定义}：
+\begin{itemize}
+  \item S0：未匹配
+  \item S1：已匹配"1"
+  \item S10：已匹配"10"
+  \item S101：已匹配"101"
+\end{itemize}
+
+\textbf{关键状态转移}：
+\begin{itemize}
+  \item S101 + 输入1 → 检测到（detected=1），去S1（最后1位作为新序列的第一个1——\textbf{重叠}）
+\end{itemize}
+
+\section*{题目2：检测1011（非重叠检测）}
+
+\textbf{题目}：设计Moore型序列检测器，检测1011（非重叠）。检测到后重新开始。
+
+\textbf{关键区别}：S101 + 输入1 → 检测到，去S0（重新开始——\textbf{非重叠}）。
+
+\section*{题目3：检测1101（重叠）}
+
+\textbf{题目}：设计序列检测器，检测1101（重叠）。画状态图。
+
+\textbf{状态定义}：
+\begin{itemize}
+  \item S0→S1→S11→S110（已匹配"110"）
+  \item S110 + 1 = 检测到，去S1（重叠：最后的"1"作为新序列的第一个"1"）
+  \item 注意：S11 + 输入1 = 仍留在S11（"111"中后两个"11"匹配了"11"前缀）
+\end{itemize}
+
+\section*{题目4：检测0101（重叠）}
+
+\textbf{题目}：设计序列检测器，检测0101。
+
+\textbf{状态}：S0→S01→S010→S0101→检测
+
+\section*{题目5：检测1111（4个连续1）}
+
+\textbf{题目}：设计检测连续4个1的序列检测器。
+
+\textbf{状态}：
+\begin{itemize}
+  \item S0→S1(1)→S11(2)→S111(3)→(第4个1→检测)
+  \item 任何时候输入0，回到S0
+  \item S111 + 1 → detected=1，去S111（重叠：最后3个1可以作为新序列的前3个1）
+\end{itemize}
+
+\section*{题目6：检测1001}
+
+\textbf{题目}：设计检测1001的序列检测器。
+
+\textbf{状态}：S0→S1→S10→S100→S1001(检测)
+
+\textbf{关键}：S10+0→S100。S100+1→检测。S100+0→S0（"1000"不匹配任何前缀）。
+
+\section*{题目7：检测序列长度可配置}
+
+\textbf{题目}：设计可检测任意4位序列的可编程序列检测器（目标序列TARGET可配置）。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal reg : std_logic_vector(3 downto 0);
+reg <= data_in & reg(3 downto 1);
+detected <= '1' when reg = TARGET else '0';
+\end{lstlisting}
+（这是用移位寄存器方案实现的可编程检测器）
+
+\section*{题目8：同时检测1011和1101}
+
+\textbf{题目}：设计电路同时检测1011和1101。
+
+\textbf{分析}：合并两个状态机（状态共享）。状态包括所有可能的前缀。
+
+\section*{题目9：010检测器（3位序列）}
+
+\textbf{题目}：设计检测010的序列检测器。画状态图，写VHDL。
+
+\textbf{状态}：S0→S01(已匹配01)→S010(检测到)
+
+\textbf{状态转移}：
+\begin{itemize}
+  \item S0 + 0 → S01（"0"已经匹配了01的第一个bit）
+  \item S01 + 1 → S010（检测到！）
+  \item S01 + 0 → S01（"00"——最后的0仍然是有效的第一个bit）
+  \item S010 + 0 → S01（检测后，最后的0作为新序列的第一个bit——重叠）
+\end{itemize}
+
+\section*{题目10：连续N个相同bit检测器}
+
+\textbf{题目}：设计检测连续N个0（或连续N个1）的检测器。
+
+\textbf{分析}：用一个计数器统计连续相同bit的个数。
+
+\section*{题目11：Moore vs Mealy检测器比较}
+
+\textbf{题目}：比较Moore型和Mealy型序列检测器检测1011的差异。
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{Moore型} & \textbf{Mealy型} \\
+\hline
+输出决定因素 & 仅当前状态 & 当前状态+输入 \\
+检测延迟 & 需进入检测状态（晚1拍）& 同一拍输出 \\
+状态数 & 多1个（需要"检测到"状态）& 少1个 \\
+输出稳定性 & 整个周期稳定 & 输入变化时可能变 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{题目12：序列检测器+计数器统计检测次数}
+
+\textbf{题目}：扩展1011检测器，增加计数功能：统计检测到多少次1011。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal detect_count : integer range 0 to 255;
+process(clk) begin
+  if rising_edge(clk) then
+    if detected = '1' then
+      detect_count <= detect_count + 1;
+    end if;
+  end if;
+end process;
+\end{lstlisting}
+
+\section*{题目13：带超时检测的序列检测器}
+
+\textbf{题目}：如果连续输入超过16个时钟周期未检测到序列，输出timeout信号。
+
+\textbf{分析}：增加一个超时计数器。每次状态变化时清零，超过阈值时timeout=1。
+
+\section*{题目14：双向序列检测器}
+
+\textbf{题目}：检测1011和1101中任意一个（两者共享前缀"1"）。
+
+\textbf{状态图合并}：
+S0 → S1(1) → 分支：S10(10) 或 S11(11)
+S10 → S101(101) →(1→检测1011)
+S11 → S110(110) →(1→检测1101)
+
+\section*{题目15：格雷码序列检测}
+
+\textbf{题目}：输入是并行3位格雷码，检测格雷码序列"000→001→011→010→110"的出现。
+
+\textbf{分析}：这是并行输入的序列检测。状态机根据并行输入值转移。
+
+\section*{题目16：含"无关项"的序列检测}
+
+\textbf{题目}：检测1x1x（第一位和第三位为1，其他任意）。例：1010匹配，1111也匹配。
+
+\textbf{分析}：用移位寄存器存储最近4位，只比较第3位和第1位是否为1。
+
+\section*{题目17：给定状态图，写VHDL}
+
+\textbf{题目}：给定状态转移图，写出对应的VHDL状态机代码。
+
+\textbf{秒杀方法}：
+\begin{enumerate}
+  \item type定义状态枚举（每个状态一个枚举值）
+  \item process敏感列表=clk, rst_n
+  \item case语句逐个处理每个状态的转移
+  \item 输出逻辑根据状态（Moore）或状态+输入（Mealy）赋值
+\end{enumerate}
+
+\section*{题目18：给定输入序列和状态机，求输出}
+
+\textbf{题目}：1011检测器（重叠），输入=1011011。问输出序列。
+
+\textbf{解（逐拍分析）}：
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+拍 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\hline
+输入 & 1 & 0 & 1 & 1 & 0 & 1 & 1 \\
+状态 & S1 & S10 & S101 & S1 & S10 & S101 & S1 \\
+输出 & 0 & 0 & 0 & \textbf{1} & 0 & 0 & \textbf{1} \\
+\hline
+\end{tabular}
+\end{center}
+
+输出序列：0 0 0 1 0 0 1（第4拍和第7拍检测到）
+
+\section*{题目19：状态编码优化}
+
+\textbf{题目}：1011检测器有4个状态。分别用二进制编码和One-hot编码实现。比较资源消耗。
+
+\textbf{分析}：
+\begin{itemize}
+  \item 二进制编码：2个DFF（$2^2=4$状态），需要组合逻辑解码
+  \item One-hot编码：4个DFF，无需解码逻辑
+  \item 速度vs面积的经典权衡
+\end{itemize}
+
+\section*{题目20：复杂序列检测——检测101后跟11}
+
+\textbf{题目}：检测序列"101"后紧跟"11"（即检测10111）。
+
+\textbf{状态}：S0→S1→S10→S101→S1011→S10111(检测)
+
+\begin{examtip}[序列检测器类题目的统一解法——核心步骤]
+\textbf{第一步：理解目标序列。}确定要检测的序列是什么。
+
+\textbf{第二步：确定状态。}每个状态 = 已匹配的序列前缀。
+\begin{itemize}
+  \item S0 = 匹配0位
+  \item S前缀名 = 匹配了前缀名的全部内容
+  \item 最后一个前缀 = 差1位就匹配完整序列
+\end{itemize}
+
+\textbf{第三步：画状态转移图。}对每个状态，考虑输入0和1分别去哪。
+
+\textbf{第四步：写状态转移表。}整理为表格形式。
+
+\textbf{第五步：写VHDL。}
+\begin{lstlisting}
+type state_type is (...);
+signal state : state_type;
+process(clk, rst_n) begin
+  if rst_n='0' then state <= S0;
+  elsif rising_edge(clk) then
+    case state is
+      when S0 => if din='1' then state <= S1; end if;
+      when S1 => if din='0' then state <= S10; end if;
+      ...
+    end case;
+  end if;
+end process;
+\end{lstlisting}
+
+\textbf{第六步：区分重叠/非重叠。}
+\begin{itemize}
+  \item \textbf{重叠检测：}检测到后，分析当前输入的后几位能否作为下一次匹配的前缀
+  \item \textbf{非重叠检测：}检测到后直接回S0
+\end{itemize}
+
+\textbf{常考序列状态数速查：}
+\begin{itemize}
+  \item 检测1011：4个状态（S0, S1, S10, S101）
+  \item 检测1101：4个状态（S0, S1, S11, S110）
+  \item 检测0101：4个状态（S0, S01, S010, S0101）
+  \item 检测1111：4个状态（S0, S1, S11, S111）
+  \item 检测010：3个状态（S0, S01, S010）
+  \item 检测101：3个状态（S0, S1, S10）
+\end{itemize}
+\end{examtip}
+
+\section{全书总结}
+
+恭喜你读到这里。
+
+现在回顾一下，你掌握了：
+
+\begin{enumerate}
+  \item \textbf{7个组合逻辑电路}：编码器、译码器、BCD译码器、MUX、比较器、加法器、级联MUX
+  \item \textbf{D触发器的底层模型}：1 bit存储，时钟沿驱动，$Q(n+1)=D(n)$
+  \item \textbf{计数器的统一框架}：所有模值计数器 = 同一个模板改N-1
+  \item \textbf{分频器的本质}：计数器的一个应用，Qn天然分频
+  \item \textbf{序列发生器的多种方案}：计数器+映射、状态机、移位寄存器
+  \item \textbf{移位寄存器的数据流动}：逐拍分析，数据如水流过管道
+  \item \textbf{环形计数器的循环}：反馈形成闭环，1在环中无限循环
+  \item \textbf{序列检测器的状态机}：状态=已匹配前缀，输入决定下一状态
+  \item \textbf{VHDL与硬件的对应}：每行代码对应什么硬件
+  \item \textbf{100+道变式题的解题能力}
+\end{enumerate}
+
+\textbf{核心信念}：
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.85\textwidth}
+\large
+
+不是背代码。
+
+是理解电路。
+
+理解它为什么存在。
+
+理解它怎么工作。
+
+理解状态如何在时钟推动下变化。
+
+然后——任何变式题，你都能自己设计出来。
+\end{minipage}%
+}
+\end{center}
+
+祝考试顺利。
+\end{chapter}

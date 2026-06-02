@@ -1,0 +1,294 @@
+\chapter{移位寄存器构建环形计数器}
+
+\section{从移位寄存器出发}
+
+回顾移位寄存器：数据从一端进入，经过N拍从另一端出来。
+
+现在思考一个问题：如果把串行输出\textbf{反馈}到串行输入呢？
+
+\begin{center}
+\begin{tikzpicture}
+  \node[draw, minimum width=1.2cm, minimum height=1.5cm] (dff0) at (0,0) {DFF0};
+  \node[draw, minimum width=1.2cm, minimum height=1.5cm] (dff1) at (2,0) {DFF1};
+  \node[draw, minimum width=1.2cm, minimum height=1.5cm] (dff2) at (4,0) {DFF2};
+  \node[draw, minimum width=1.2cm, minimum height=1.5cm] (dff3) at (6,0) {DFF3};
+
+  \draw[->] (dff0) -- (dff1);
+  \draw[->] (dff1) -- (dff2);
+  \draw[->] (dff2) -- (dff3);
+  % Feedback
+  \draw[->] (dff3.east) -- ++(0.5,0) |- ++(0,-1.5) -- ++(-6.5,0) |- (dff0.west);
+  \node at (3,-2.2) {反馈环：Q3 → D0};
+\end{tikzpicture}
+\end{center}
+
+\begin{keypoint}[环形计数器的形成]
+\textbf{环形计数器 = 移位寄存器 + Q输出反馈到串行输入}
+
+数据不再从外部输入，而是在D触发器链中\textbf{循环}流动。
+
+$$\text{数据在闭合的环中无限循环}$$
+\end{keypoint}
+
+\section{逐拍分析：环形计数器如何工作}
+
+假设4位环形计数器，初始状态通过复位设为 1000（即Q3=1, Q2=0, Q1=0, Q0=0）。
+
+注意：这里假设Q3是最高位（最左），Q0是最低位（最右）。
+
+反馈连接：Q0 → D3（最低位反馈回最高位的输入）。
+
+\subsection{时钟第0拍（初始/复位后）}
+
+寄存器内容：[Q3 Q2 Q1 Q0] = [1 0 0 0]
+
+\subsection{时钟第1拍上升沿}
+
+\begin{beatanalysis}[环形计数器——时钟第1拍]
+\begin{itemize}
+  \item D3 = Q0 = 0（反馈值）
+  \item D2 = Q3 = 1
+  \item D1 = Q2 = 0
+  \item D0 = Q1 = 0
+\end{itemize}
+
+\textbf{上升沿后}：
+\begin{itemize}
+  \item Q3 ← D3 = 0（从Q0反馈回来的0）
+  \item Q2 ← D2 = 1（Q3原来的1右移一位）
+  \item Q1 ← D1 = 0
+  \item Q0 ← D0 = 0
+\end{itemize}
+
+\textbf{寄存器内容：[0 1 0 0]}（1向右移动了一位！）
+\end{beatanalysis}
+
+\subsection{时钟第2拍上升沿}
+
+\begin{beatanalysis}[环形计数器——时钟第2拍]
+\begin{itemize}
+  \item D3 = Q0 = 0
+  \item D2 = Q3 = 0
+  \item D1 = Q2 = 1
+  \item D0 = Q1 = 0
+\end{itemize}
+
+\textbf{上升沿后：[0 0 1 0]}（1继续右移）
+\end{beatanalysis}
+
+\subsection{时钟第3拍上升沿}
+
+\begin{beatanalysis}[环形计数器——时钟第3拍]
+\begin{itemize}
+  \item D3 = Q0 = 0
+  \item D2 = Q3 = 0
+  \item D1 = Q2 = 0
+  \item D0 = Q1 = 1
+\end{itemize}
+
+\textbf{上升沿后：[0 0 0 1]}（1移到了最右边）
+\end{beatanalysis}
+
+\subsection{时钟第4拍上升沿}
+
+\begin{beatanalysis}[环形计数器——时钟第4拍：关键时刻！]
+\begin{itemize}
+  \item D3 = Q0 = \textbf{1}（反馈环起作用！Q0的1反馈回D3）
+  \item D2 = Q3 = 0
+  \item D1 = Q2 = 0
+  \item D0 = Q1 = 0
+\end{itemize}
+
+\textbf{上升沿后：[1 0 0 0]}（1回到最左边——完成一圈循环！）
+\end{beatanalysis}
+
+\subsection{完整的循环过程}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{时钟拍} & \textbf{Q3} & \textbf{Q2} & \textbf{Q1} & \textbf{Q0} \\
+\hline
+0（初始）& \textbf{1} & 0 & 0 & 0 \\
+1 & 0 & \textbf{1} & 0 & 0 \\
+2 & 0 & 0 & \textbf{1} & 0 \\
+3 & 0 & 0 & 0 & \textbf{1} \\
+4 & \textbf{1} & 0 & 0 & 0 \\
+5 & 0 & \textbf{1} & 0 & 0 \\
+... & ... & ... & ... & ... \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{这个"1在循环移动"的现象就是环形计数器的本质。}
+
+\section{环形计数器 vs 普通计数器}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{特性} & \textbf{二进制计数器} & \textbf{环形计数器} \\
+\hline
+硬件结构 & 加法器 + D触发器 & N个D触发器 + 反馈环 \\
+状态编码 & 二进制（000,001,...）& One-hot（1000,0100,...）\\
+N个状态需要 & $\lceil\log_2 N\rceil$个DFF & N个DFF \\
+状态解码 & 需要组合逻辑 & 直接看哪个DFF的Q=1 \\
+速度 & 受加法器进位链限制 & 最快（只有移位） \\
+最大状态数 & $2^k$ & k（k个DFF产生k个状态） \\
+\hline
+\end{tabular}
+\end{center}
+
+环形计数器用更多触发器换取更快的速度和更简单的解码。
+
+\section{为什么反馈后形成循环状态}
+
+反馈把串行输出接回串行输入，形成一个\textbf{闭合回路}。
+
+\begin{itemize}
+  \item 没有反馈：数据从一端进入，从另一端消失（一去不回）
+  \item 有反馈：数据从一端出来后，重新从另一端进入（无限循环）
+\end{itemize}
+
+这就像一条首尾相接的传送带——东西在上面无限循环移动。
+
+\section{约翰逊计数器（扭环形计数器）}
+
+约翰逊计数器是环形计数器的变体：将\textbf{反相的}Q输出反馈回输入。
+
+\begin{itemize}
+  \item 环形计数器：Q0 → D3（同相反馈）
+  \item 约翰逊计数器（扭环形）：$\overline{Q_0}$ → D3（反相反馈）
+\end{itemize}
+
+\textbf{效果：k个触发器可以产生2k个状态}（比普通环形计数器多一倍！）
+
+4位约翰逊计数器的状态序列：
+
+$$0000 \to 1000 \to 1100 \to 1110 \to 1111 \to 0111 \to 0011 \to 0001 \to 0000$$
+
+共8个状态（4个触发器产生8个状态）。
+
+\section{VHDL实现}
+
+\begin{lstlisting}[caption={4位环形计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ring_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end ring_counter;
+
+architecture behavioral of ring_counter is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= "1000";  -- 初始状态：只有最高位为1
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(3 downto 1);  -- 右移 + 最低位反馈到最高位
+    end if;
+  end process;
+
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{关键语句}：\texttt{reg <= reg(0) \& reg(3 downto 1)}
+
+这是右移 + 反馈的合并：
+\begin{itemize}
+  \item reg(0)（最低位）$\to$ reg(3)（反馈到最高位输入）
+  \item reg(3) $\to$ reg(2)（右移）
+  \item reg(2) $\to$ reg(1)（右移）
+  \item reg(1) $\to$ reg(0)（右移）
+\end{itemize}
+
+\subsection{约翰逊计数器VHDL}
+
+\begin{lstlisting}[caption={4位约翰逊计数器（扭环形）}]
+architecture behavioral of johnson_counter is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (others => '0');  -- 初始全0
+    elsif rising_edge(clk) then
+      reg <= (not reg(0)) & reg(3 downto 1);  -- 反相的最低位移入最高位
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\section{考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：设计N位环形计数器}
+
+  N位环形计数器产生N个状态，初始值100...0（one-hot编码）。
+
+  \item \textbf{变式2：设计2N位约翰逊计数器}
+
+  N个触发器产生2N个状态。反馈是反相的最低位移入最高位。
+
+  \item \textbf{变式3：自启动的环形计数器}
+
+  如果因干扰进入非法状态（如0101，两个1），需要自动回到合法状态。这需要额外的修正逻辑。
+
+  \item \textbf{变式4：比较环形计数器与二进制计数器}
+
+  常考：N状态各需多少触发器？各有哪些优缺点？
+\end{enumerate}
+
+\section{Testbench}
+
+\begin{lstlisting}[caption={环形计数器Testbench}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ring_counter_tb is
+end ring_counter_tb;
+
+architecture test of ring_counter_tb is
+  signal clk, rst_n : std_logic;
+  signal q : std_logic_vector(3 downto 0);
+  constant clk_period : time := 20 ns;
+
+  component ring_counter is
+    port (clk, rst_n : in std_logic; q : out std_logic_vector(3 downto 0));
+  end component;
+begin
+  uut: ring_counter port map (clk, rst_n, q);
+
+  clk_process: process
+  begin
+    clk <= '0'; wait for clk_period/2;
+    clk <= '1'; wait for clk_period/2;
+  end process;
+
+  stimulus: process
+  begin
+    rst_n <= '0'; wait for 30 ns;
+    rst_n <= '1';
+    -- 观察两个完整循环（8拍）
+    wait for clk_period * 9;
+    wait;
+  end process;
+end test;
+\end{lstlisting}
+
+\begin{examtip}[环形计数器秒杀法]
+\textbf{初始}：reg = "1000"（只有一个1）
+
+\textbf{每个时钟沿}：1向右移动一位（因为反馈环）
+
+\textbf{核心VHDL}：\texttt{reg <= reg(0) \& reg(N-1 downto 1)}
+
+\textbf{约翰逊计数器}：用反相：\texttt{reg <= (not reg(0)) \& reg(N-1 downto 1)}
+\end{examtip}

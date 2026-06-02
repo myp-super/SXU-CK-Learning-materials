@@ -1,0 +1,137 @@
+\chapter{模为任意值的二进制计数器}
+
+\section{通用设计公式}
+
+前面我们分别讨论了模12、模24、模60。现在给出\textbf{适用于任意模值N的通解}。
+
+\begin{designflow}[模N计数器通用设计]
+\textbf{步骤1：确定位宽}
+$$k = \lceil \log_2 N \rceil$$
+
+\textbf{步骤2：确定清零条件}
+$$\text{清零} \iff cnt = N-1$$
+
+\textbf{步骤3：编写VHDL}
+\begin{lstlisting}
+ if rising_edge(clk) then
+  if cnt = (N-1) then
+    cnt <= (others => '0');
+  else
+    cnt <= cnt + 1;
+  end if;
+end if;
+\end{lstlisting}
+\end{designflow}
+
+\section{为什么这个模板适用于任意N}
+
+计数器的行为是确定的：
+\begin{enumerate}
+  \item 状态序列：$0 \to 1 \to 2 \to \cdots \to N-1 \to 0 \to 1 \to \cdots$
+  \item 转移规则：$S_{next} = S_{current} + 1$（除了在$N-1$处）
+  \item 在$S = N-1$处：$S_{next} = 0$
+\end{enumerate}
+
+这个行为的硬件实现正好对应上述VHDL模板。
+
+\section{实例：模7计数器}
+
+\begin{enumerate}
+  \item $N = 7$
+  \item $k = \lceil \log_2 7 \rceil = 3$（3位，最多表示7）
+  \item 清零条件：cnt = 6(110)
+\end{enumerate}
+
+状态序列：000 $\to$ 001 $\to$ 010 $\to$ 011 $\to$ 100 $\to$ 101 $\to$ 110 $\to$ 000 $\to$ ...
+
+\begin{lstlisting}[caption={模7计数器}]
+signal cnt : std_logic_vector(2 downto 0);
+...
+ if rising_edge(clk) then
+  if cnt = "110" then    -- = 6
+    cnt <= "000";
+  else
+    cnt <= cnt + 1;
+  end if;
+end if;
+\end{lstlisting}
+
+\section{实例：模5计数器}
+
+\begin{enumerate}
+  \item $N = 5$
+  \item $k = \lceil \log_2 5 \rceil = 3$
+  \item 清零条件：cnt = 4(100)
+\end{enumerate}
+
+状态序列：000 $\to$ 001 $\to$ 010 $\to$ 011 $\to$ 100 $\to$ 000 $\to$ ...
+
+\section{实例：模100计数器}
+
+\begin{enumerate}
+  \item $N = 100$
+  \item $k = \lceil \log_2 100 \rceil = 7$（$2^6=64<100<2^7=128$）
+  \item 清零条件：cnt = 99(1100011)
+\end{enumerate}
+
+\section{边界情况分析}
+
+\subsection{$N = 2^k$ 的情况}
+
+当N恰好是2的幂（如模16：$N = 2^4$）：
+\begin{itemize}
+  \item 不需要显式清零逻辑——自然溢出即可
+  \item 但加上清零逻辑也能工作（只是多余）
+  \item \textbf{考试注意}：模$2^N$计数器不需要if cnt=N-1，自然溢出即可
+\end{itemize}
+
+\subsection{$N = 1$ 的情况}
+
+模1计数器：只有状态0。每个时钟周期都是0→0→0→...
+但实际中没人设计模1计数器——无意义。
+
+\section{考试常见变式}
+
+\begin{enumerate}
+  \item \textbf{变式1：给定模值N，写完整VHDL}
+
+  直接套用模板。唯一需要注意：位宽要正确（考$\lceil \log_2 N \rceil$）
+
+  \item \textbf{变式2：给定计数器电路图，判断模值}
+
+  看图识别清零逻辑：清零条件是cnt = X，则模值 = X + 1。
+
+  \item \textbf{变式3：带使能的模N计数器}
+
+  增加enable输入：enable=1时计数，enable=0时保持。
+
+  \item \textbf{变式4：带加载初值的模N计数器}
+
+  增加load输入和初值输入：load=1时cnt = 初值，load=0时正常计数。
+
+  \item \textbf{变式5：递减计数器（倒计时）}
+
+  Count $\leftarrow$ Count - 1，到0时加载N-1。
+
+  \item \textbf{变式6：模N计数器级联（如模60 = 模10×模6）}
+
+  详见后续BCD计数器章节。
+\end{enumerate}
+
+\section{统一思考题}
+
+\begin{enumerate}
+  \item 设计模13计数器（$N=13$），写出VHDL。
+  \item 设计模30计数器（$N=30$），写出VHDL。
+  \item 设计模9计数器（$N=9$），分析需要多少位寄存器，写出VHDL。
+\end{enumerate}
+
+\textbf{答案提示}：全部套用同一模板，只改N-1的值和位宽。
+
+\begin{examtip}[模N计数器秒杀法]
+1. $k = \lceil \log_2 N \rceil$ 确定位宽
+2. 清零条件 = N-1 的二进制
+3. 套用模板：\texttt{if cnt = N-1 then cnt <= 0; else cnt <= cnt+1;}
+
+这就是所有模N计数器的答案。
+\end{examtip}

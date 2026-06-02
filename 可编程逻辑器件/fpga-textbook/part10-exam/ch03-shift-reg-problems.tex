@@ -1,0 +1,176 @@
+\chapter{移位寄存器考试变式题}
+
+\section*{题目1：串并转换（SIPO）}
+
+\textbf{题目}：设计一个4位串入并出移位寄存器。串行输入数据，4个时钟周期后并行输出完整4位数据。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal reg : std_logic_vector(3 downto 0);
+process(clk) begin
+  if rising_edge(clk) then
+    reg <= si & reg(3 downto 1);  -- 串行右移
+  end if;
+end process;
+po <= reg;
+\end{lstlisting}
+
+\textbf{逐拍分析（输入1011）}：
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+拍 & 输入 & [Q3 Q2 Q1 Q0] \\
+\hline
+1 & 1 & [1 0 0 0] \\
+2 & 0 & [0 1 0 0] \\
+3 & 1 & [1 0 1 0] \\
+4 & 1 & [1 1 0 1] \\
+\hline
+\end{tabular}
+\end{center}
+
+4拍后po=1101（数据反转了，因为右移）。如想保持顺序，用左移。
+
+\section*{题目2：并串转换（PISO）}
+
+\textbf{题目}：设计4位并入串出移位寄存器。先load并行数据，然后移位输出。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+signal reg : std_logic_vector(3 downto 0);
+process(clk) begin
+  if rising_edge(clk) then
+    if load = '1' then
+      reg <= data_in;
+    else
+      reg <= '0' & reg(3 downto 1);  -- 右移，高位补0
+    end if;
+  end if;
+end process;
+so <= reg(0);
+\end{lstlisting}
+
+\section*{题目3：双向移位寄存器}
+
+\textbf{题目}：设计4位双向移位寄存器。dir=1右移，dir=0左移。
+
+\begin{lstlisting}
+ if dir = '1' then
+  reg <= si_right & reg(3 downto 1);
+else
+  reg <= reg(2 downto 0) & si_left;
+end if;
+\end{lstlisting}
+
+\section*{题目4：带并行装载的通用移位寄存器（74LS194风格）}
+
+\textbf{题目}：设计类似74LS194的4位通用移位寄存器。支持：保持、右移、左移、并行装载四种模式。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+case mode is
+  when "00" => null;                    -- 保持
+  when "01" => reg <= si_r & reg(3 downto 1);  -- 右移
+  when "10" => reg <= reg(2 downto 0) & si_l;  -- 左移
+  when "11" => reg <= data_in;          -- 装载
+end case;
+\end{lstlisting}
+
+\section*{题目5：桶形移位器}
+
+\textbf{题目}：设计8位桶形移位器，一次可移0-7位（移位量由3位输入控制）。
+
+\textbf{分析}：桶形移位器是纯组合逻辑（不需要时钟），本质上是多路选择器网络。
+
+\section*{题目6：移位寄存器的延迟线应用}
+
+\textbf{题目}：用移位寄存器实现4拍延迟线（输入信号延迟4个时钟周期后输出）。
+
+\textbf{解}：4位移位寄存器，so输出 = 4拍前的si输入。
+
+\section*{题目7：序列检测用移位寄存器方案}
+
+\textbf{题目}：用移位寄存器+比较器检测序列1011（替代状态机方案）。
+
+\textbf{分析}：4位移位寄存器存储最近4位输入。当reg="1011"时输出1。
+
+\begin{lstlisting}
+reg <= data_in & reg(3 downto 1);
+detected <= '1' when reg = "1011" else '0';
+\end{lstlisting}
+
+\section*{题目8：8位移位寄存器}
+
+\textbf{题目}：设计8位串入并出移位寄存器。
+
+\textbf{答案}：位宽从4扩展到8，其他逻辑完全相同。
+
+\section*{题目9：循环移位寄存器}
+
+\textbf{题目}：设计循环移位寄存器（最低位移入最高位，不丢失数据）。
+
+\textbf{VHDL}：
+\begin{lstlisting}
+reg <= reg(0) & reg(7 downto 1);  -- 循环右移
+\end{lstlisting}
+
+\section*{题目10：算术移位寄存器}
+
+\textbf{题目}：设计算术右移寄存器（保持符号位不变）。
+
+\begin{lstlisting}
+reg <= reg(7) & reg(7 downto 1);  -- 算术右移：符号位不变
+\end{lstlisting}
+
+\section*{题目11：逻辑移位vs算术移位}
+
+\textbf{题目}：比较逻辑左移和算术左移的区别。
+
+\textbf{分析}：左移时逻辑移位和算术移位等价（都补0）。右移时：逻辑右移补0，算术右移补符号位。
+
+\section*{题目12：移位寄存器实现乘除法}
+
+\textbf{题目}：用移位寄存器实现×2和÷2运算。
+
+\textbf{分析}：
+\begin{itemize}
+  \item 左移1位 = ×2（reg <= reg(6 downto 0) \& '0'）
+  \item 右移1位 = ÷2（reg <= '0' \& reg(7 downto 1)）
+\end{itemize}
+
+\section*{题目13：给定移位寄存器初值和输入序列，推断最终状态}
+
+\textbf{题目}：4位右移寄存器初值0000，输入序列1011。4拍后寄存器内容？
+
+\textbf{解（逐拍）}：
+\begin{itemize}
+  \item 初始：[0000]
+  \item 拍1(si=1)：[1000]
+  \item 拍2(si=0)：[0100]
+  \item 拍3(si=1)：[1010]
+  \item 拍4(si=1)：[1101]
+\end{itemize}
+
+4拍后：[1101]
+
+\section*{题目14：移位寄存器Testbench设计}
+
+\textbf{题目}：为8位移位寄存器设计完整的Testbench，验证串入并出功能。
+
+\section*{题目15：移位寄存器构建伪随机序列（LFSR）}
+
+\textbf{题目}：用4位移位寄存器+反馈构建最大长度LFSR。
+
+\textbf{分析}：反馈多项式$X^4 + X^3 + 1$。反馈=Q3 XOR Q2。
+产生序列长度=$2^4-1=15$（全0状态除外）。
+
+\begin{examtip}[移位寄存器类题目的统一解法]
+\begin{enumerate}
+  \item \textbf{右移：}\texttt{reg <= si \& reg(N-1 downto 1)}
+  \item \textbf{左移：}\texttt{reg <= reg(N-2 downto 0) \& si}
+  \item \textbf{循环：}\texttt{reg <= reg(0) \& reg(N-1 downto 1)}
+  \item \textbf{并行装载：}\texttt{if load='1' then reg <= data\_in;}
+  \item \textbf{串出：}reg(0)（右移）或 reg(N-1)（左移）
+  \item \textbf{并出：}整个reg
+\end{enumerate}
+\end{examtip}
