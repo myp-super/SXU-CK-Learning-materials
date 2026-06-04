@@ -1,0 +1,120 @@
+\chapter{VHDL综合——全部变式详解}
+
+\section{变式1：if-else的综合结果}
+
+\begin{detailbox}[完整教学]
+\textbf{【综合规则】}
+\begin{itemize}
+  \item if-else级联→\textbf{优先级MUX链}。上层if优先级最高。
+  \item 带clk的if→产生\textbf{寄存器}(D触发器)。
+  \item 不带clk的if→产生\textbf{组合逻辑}。
+  \item 不完整的if(缺少else)→可能产生\textbf{锁存器(Latch)}——通常应避免。
+\end{itemize}
+
+\textbf{【考试判断】}
+\begin{lstlisting}
+-- 组合逻辑MUX
+if sel='1' then y <= a; else y <= b; end if;
+
+-- 时序逻辑（寄存器）
+if rising_edge(clk) then
+  if en='1' then q <= d; end if;  -- 带使能的D触发器
+end if;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式2：case的综合结果}
+
+\begin{detailbox}[完整教学]
+\textbf{【综合规则】}
+\begin{itemize}
+  \item case→\textbf{并行MUX}或\textbf{译码器}。所有分支并行判断，无优先级。
+  \item case不完备且无when others→可能产生锁存器。
+  \item case完备(有when others)→纯组合逻辑或状态机。
+\end{itemize}
+
+\textbf{【if-else vs case硬件对比】}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline & if-else & case \\
+\hline
+综合结果 & 优先级编码器/级联MUX & 并行MUX/译码器 \\
+优先级 & 有(从上到下递减) & 无(并行) \\
+速度 & 慢(级联延迟) & 快(并行) \\
+面积 & 小(级联结构) & 大(并行结构) \\
+\hline
+\end{tabular}
+\end{center}
+\end{detailbox}
+
+
+\section{变式3：signal vs variable}
+
+\begin{detailbox}[完整教学]
+\textbf{【signal(<=)】}赋值在process\textbf{结束时}更新。适合跨进程通信和寄存器。
+\textbf{【variable(:=)】}赋值\textbf{立即}更新。适合process内部中间计算。
+
+\textbf{【综合结果】}
+\begin{itemize}
+  \item signal在时序process中→D触发器
+  \item signal在组合process中→连线
+  \item variable→通常不产生额外硬件（被综合器优化为连线）
+  \item 但variable在读取前先赋值→可能综合为寄存器
+\end{itemize}
+
+\textbf{【考试判断】}看赋值符号：<=（信号）vs :=（变量）。
+\end{detailbox}
+
+
+\section{变式4：process的综合结果}
+
+\begin{detailbox}[完整教学]
+\textbf{【process本身不产生硬件】}硬件由process\textbf{内部}代码决定。
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{process写法} & \textbf{综合结果} \\
+\hline
+process(clk)+rising\_edge & D触发器/寄存器 \\
+process(all\_inputs)+无clk & 组合逻辑 \\
+process(clk,rst)+异步rst & D触发器+异步复位 \\
+不完整敏感列表 & 可能锁存器(应避免) \\
+\hline
+\end{tabular}
+\end{center}
+\end{detailbox}
+
+
+\section{变式5：常见VHDL模式→硬件对照表}
+
+\begin{detailbox}[完整教学]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{VHDL模式} & \textbf{硬件} \\
+\hline
+\texttt{if rising\_edge(clk) then Q<=D;} & 1个D触发器 \\
+\texttt{y <= a when sel='1' else b;} & 2选1 MUX \\
+\texttt{with sel select y<=...} & 并行MUX \\
+\texttt{case state is when...} & 状态机+译码器 \\
+\texttt{reg <= si \& reg(N-1 downto 1);} & 移位寄存器 \\
+\texttt{cnt <= cnt + 1;} & 加法器+寄存器 \\
+\texttt{if cnt=N-1 then cnt<=0;} & 比较器(清零条件) \\
+\texttt{for i in 0 to 7 generate} & 8个相同的硬件副本 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{examfocus}
+\textbf{VHDL综合考点总结：}
+\begin{itemize}
+  \item 有时钟边沿=有触发器
+  \item if-else=优先级，case=并行
+  \item signal<=延迟更新，variable:=立即更新
+  \item process只是容器，内部代码决定硬件
+  \item for-generate=复制硬件N份
+\end{itemize}
+\end{examfocus}
+\end{detailbox}

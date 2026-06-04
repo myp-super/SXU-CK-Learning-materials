@@ -126,6 +126,7 @@
 \usepackage{float}
 \usepackage{placeins}
 \usepackage{environ}
+\usepackage{framed,color}
 
 % =============================================================
 %  自定义命令
@@ -171,6 +172,16 @@
   \end{tikzpicture}
   \end{center}}
 
+% 变式详解框
+\newenvironment{detailbox}[1][详解]
+  {\begin{oframed}\textbf{\large #1}\\[3pt]}
+  {\end{oframed}}
+
+% 考试聚焦框
+\newenvironment{examfocus}[1][考试聚焦]
+  {\begin{oframed}\textbf{\textcolor{red!70!black}{#1}}\\[3pt]}
+  {\end{oframed}}
+
 % 真值表命令
 \newcommand{\ttable}[1]{%
   \begin{center}
@@ -200,9 +211,9 @@
 % =============================================================
 %  文档信息
 % =============================================================
-\title{\Huge \textbf{FPGA与VHDL考试复习全书}\\[0.5cm]
+\title{\Huge \textbf{数字电路与VHDL设计教程}\\[0.5cm]
        \Large 围绕23个重点电路构建的完整知识体系}
-\author{}
+\author{myp}
 \date{\today}
 
 \begin{document}

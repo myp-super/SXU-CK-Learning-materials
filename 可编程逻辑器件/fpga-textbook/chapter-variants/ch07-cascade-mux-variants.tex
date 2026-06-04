@@ -1,0 +1,73 @@
+\chapter{级联MUX——4大变式详解}
+
+\section{变式1：用2选1 MUX构建8选1 MUX}
+
+\begin{detailbox}[完整教学]
+\textbf{【树形结构】}3层：第一层4个→第二层2个→第三层1个=7个2选1 MUX。
+
+\textbf{【选择位分配】}
+\begin{itemize}
+  \item S0→第一层(4个MUX)：每两组数据中选一个
+  \item S1→第二层(2个MUX)：第一层结果中两两选择
+  \item S2→第三层(1个MUX)：第二层两个结果中最终选择
+\end{itemize}
+
+\textbf{【通用公式】}$2^n$选1 MUX需要$2^n-1$个2选1 MUX，分$n$层。
+
+\textbf{【VHDL——generate结构级】}
+\begin{lstlisting}
+-- 递归描述流水线MUX树
+signal layer0 : std_logic_vector(3 downto 0);
+signal layer1 : std_logic_vector(1 downto 0);
+begin
+  gen0: for i in 0 to 3 generate
+    layer0(i) <= D(2*i) when S(0)='0' else D(2*i+1);
+  end generate;
+  gen1: for i in 0 to 1 generate
+    layer1(i) <= layer0(2*i) when S(1)='0' else layer0(2*i+1);
+  end generate;
+  Y <= layer1(0) when S(2)='0' else layer1(1);
+end behavioral;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式2：用4选1 MUX构建16选1 MUX}
+
+\begin{detailbox}[完整教学]
+\textbf{【结构】}第一层4片4选1 MUX，第二层1片4选1 MUX。共5片。
+
+S1S0→第一层(4片4选1 MUX)。S3S2→第二层(1片4选1 MUX选择第一层输出之一)。
+\end{detailbox}
+
+
+\section{变式3：不对称级联（构建6选1 MUX）}
+
+\begin{detailbox}[完整教学]
+\textbf{【问题】}需要6选1，但MUX只有$2^n$选1。用8选1实现6选1（两个输入悬空或接地）。
+
+\textbf{【VHDL——4选1+2选1】}
+\begin{lstlisting}
+-- 第一层：4选1处理D0-D3
+mux4: entity work.mux4to1 port map(D=>D(3 downto 0), S=>S(1 downto 0), Y=>mux4_out);
+-- 顶层：2选1在mux4_out和D4/D5间选择
+Y <= mux4_out when S(2)='0' else
+     D(4) when S(1 downto 0)="00" else D(5);
+-- 注意：S2=1时S1S0只需表示2种状态即可
+\end{lstlisting}
+
+\textbf{【简化方案】}直接用8选1 MUX，D6和D7接地(固定为0)。
+\end{detailbox}
+
+
+\section{变式4：MUX树实现逻辑函数}
+
+\begin{detailbox}[完整教学]
+\textbf{【本质】}MUX=通用逻辑实现器。MUX树=多层选择=分而治之。
+
+\textbf{【Shannon展开定理】}$F(x_1,x_2,\dots,x_n)= \overline{x_1}\cdot F(0,x_2,\dots,x_n) + x_1\cdot F(1,x_2,\dots,x_n)$
+
+这正是2选1 MUX的表达式！递归应用=构建MUX树。
+
+\textbf{【结论】}任何组合逻辑函数都可用2选1 MUX树实现——这其实就是FPGA中LUT的工作原理。
+\end{detailbox}

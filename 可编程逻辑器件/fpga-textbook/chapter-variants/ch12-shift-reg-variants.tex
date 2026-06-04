@@ -1,0 +1,50 @@
+\chapter{移位寄存器——全部变式详解}
+
+\section{变式1：串并转换（SIPO）}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}串行输入→4拍后并行读取。UART/SPI接收器的基础。
+\textbf{【VHDL】}\texttt{reg <= si \& reg(N-1 downto 1); po <= reg;}
+\end{detailbox}
+
+
+\section{变式2：并串转换（PISO）}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}load并行数据→逐拍串行输出。UART/SPI发送器的基础。
+\textbf{【VHDL】}
+\begin{lstlisting}
+if load='1' then reg <= data_in;
+else reg <= '0' & reg(N-1 downto 1); end if;
+so <= reg(0);
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式3：双向移位}
+
+\begin{detailbox}[完整教学]
+\textbf{【VHDL】}
+\begin{lstlisting}
+if dir='1' then reg <= si_r & reg(N-1 downto 1);
+else reg <= reg(N-2 downto 0) & si_l; end if;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式4：循环移位}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}数据不丢失——最低位移回最高位。
+\textbf{【VHDL】}\texttt{reg <= reg(0) \& reg(N-1 downto 1);}（右循环）
+\textbf{【本质】}这就是环形计数器的基础！
+\end{detailbox}
+
+
+\section{变式5：算术移位（保持符号位）}
+
+\begin{detailbox}[完整教学]
+\textbf{【逻辑右移】}高位补0 → \texttt{'0' \& reg(N-1 downto 1)}
+\textbf{【算术右移】}高位补符号位 → \texttt{reg(N-1) \& reg(N-1 downto 1)}
+\textbf{【应用】}有符号数÷2操作。
+\end{detailbox}

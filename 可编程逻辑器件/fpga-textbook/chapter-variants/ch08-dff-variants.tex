@@ -1,0 +1,123 @@
+\chapter{D触发器——核心变式详解}
+
+\section{变式1：带异步复位的D触发器 vs 带同步复位的D触发器}
+
+\begin{detailbox}[完整教学]
+\textbf{【异步复位】}复位不受时钟控制，rst=0立即清零（不等时钟沿）。
+\textbf{【同步复位】}复位只在时钟沿有效，rst=0后需等下一个时钟上升沿才清零。
+
+\textbf{【VHDL对比】}
+\begin{lstlisting}
+-- 异步复位（rst在敏感列表中，且在rising_edge之前判断）
+process(clk, rst_n)
+begin
+  if rst_n = '0' then Q <= '0';           -- 立即响应
+  elsif rising_edge(clk) then Q <= D;
+  end if;
+end process;
+
+-- 同步复位（rst不在敏感列表，在rising_edge内部判断）
+process(clk)
+begin
+  if rising_edge(clk) then
+    if rst_n = '0' then Q <= '0';         -- 等时钟沿
+    else Q <= D;
+    end if;
+  end if;
+end process;
+\end{lstlisting}
+
+\textbf{【区别】}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline & 异步复位 & 同步复位 \\
+\hline
+敏感列表 & clk, rst\_n & clk \\
+复位延迟 & 立即 & 等1个时钟周期 \\
+抗噪性 & 差(毛刺可触发复位) & 好(只在沿采样) \\
+综合结果 & DFF+异步CLR & DFF+同步CLR \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{examfocus}
+\textbf{必考判断}：看process敏感列表有没有rst\_n。
+\begin{itemize}
+  \item 有→异步复位
+  \item 没有→同步复位
+\end{itemize}
+\end{examfocus}
+\end{detailbox}
+
+
+\section{变式2：带时钟使能的D触发器}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}CE=1时正常采样D；CE=0时保持Q不变。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+process(clk)
+begin
+  if rising_edge(clk) then
+    if CE = '1' then Q <= D; end if;
+    -- CE='0'：不赋值=保持
+  end if;
+end process;
+\end{lstlisting}
+
+\textbf{【综合结果】}D触发器+时钟使能逻辑（MUX反馈Q或采样D）。
+
+\textbf{【应用】}所有带使能的寄存器/计数器都基于这个结构。
+\end{detailbox}
+
+
+\section{变式3：多位D触发器=寄存器}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}N个D触发器并行→N位寄存器。同一时钟沿采样N位输入。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+signal reg : std_logic_vector(7 downto 0);
+process(clk) begin
+  if rising_edge(clk) then reg <= data_in; end if;
+end process;
+\end{lstlisting}
+
+\textbf{【综合】}8个D触发器→8个FPGA寄存器。
+
+\textbf{【应用】}流水线寄存器、数据缓冲、状态寄存器。
+\end{detailbox}
+
+
+\section{变式4：D触发器构成2分频器}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}$\overline{Q}$接回$D$→$Q(n+1)=\overline{Q(n)}$→每拍翻转→2分频。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+process(clk) begin
+  if rising_edge(clk) then Q <= not Q; end if;
+end process;
+\end{lstlisting}
+
+\textbf{【这是分频器和计数器的原子单元。】}
+\end{detailbox}
+
+
+\section{变式5：建立/保持时间与最大工作频率}
+
+\begin{detailbox}[完整教学]
+\textbf{【建立时间$t_{su}$】}时钟沿到来前，D输入必须稳定多久。
+\textbf{【保持时间$t_h$】}时钟沿到来后，D输入必须保持多久。
+\textbf{【$t_{cko}$】}时钟沿到Q输出有效的延迟。
+
+\textbf{【最大频率】}$f_{max} = 1/(t_{cko} + t_{comb} + t_{su})$
+
+$t_{comb}$=触发器之间的组合逻辑延迟。
+
+\textbf{【考试计算】}给定$t_{cko}$=2ns, $t_{su}$=1ns, 组合逻辑延迟=5ns。
+$f_{max}=1/(2+5+1)=125$MHz。
+\end{detailbox}

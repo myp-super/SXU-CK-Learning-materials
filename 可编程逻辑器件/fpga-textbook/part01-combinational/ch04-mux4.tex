@@ -251,3 +251,107 @@ end test;
 \noindent 题：用8选1 MUX实现 $F(A,B,C) = \sum m(0, 3, 5, 6)$
 
 \noindent 解：$D_0=1, D_1=0, D_2=0, D_3=1, D_4=0, D_5=1, D_6=1, D_7=0$
+
+\section{变式详解}
+\chapter{4选1 MUX——4大变式详解}
+
+\section{变式1：用MUX实现任意逻辑函数（必考！）}
+
+\begin{detailbox}[完整教学]
+\textbf{【核心原理】}
+MUX的通用表达式：$Y=\overline{S_1}\cdot\overline{S_0}\cdot D_0+\overline{S_1}\cdot S_0\cdot D_1+S_1\cdot\overline{S_0}\cdot D_2+S_1\cdot S_0\cdot D_3$
+
+如果把$S_1,S_0$接函数变量，$D_k$接"该最小项是否参与=1"：$D_k$接1→该最小项参与函数。$D_k$接0→不参与。
+
+\textbf{【结论】任何n变量逻辑函数=一个$2^n$选1 MUX}
+
+\textbf{【例题1】}用8选1 MUX实现$F(A,B,C)=\sum m(0,3,5,6)$
+
+\textbf{解：}$D_0=1,D_1=0,D_2=0,D_3=1,D_4=0,D_5=1,D_6=1,D_7=0$
+
+将m0-m7对应的D分别接1或0。选择线S2,S1,S0接A,B,C。
+
+\textbf{【例题2：降维法】}用4选1 MUX实现3变量函数$F(A,B,C)=\sum m(0,1,4,6,7)$
+
+$2^{3-1}=4$选1 MUX, 变量A,B接S1,S0, C用于产生$D_k$。
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+AB & m(C=0) & m(C=1) & D输入 & 逻辑 \\
+\hline
+00 & m0=1 & m1=1 & D0 & 1(与C无关) \\
+01 & m2=0 & m3=0 & D1 & 0 \\
+10 & m4=1 & m5=0 & D2 & $\overline{C}$ \\
+11 & m6=1 & m7=1 & D3 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+D0=1, D1=0, D2=$\overline{C}$, D3=1.
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity mux_logic is
+  port (A, B, C : in std_logic; F : out std_logic);
+end mux_logic;
+architecture rtl of mux_logic is
+  signal D : std_logic_vector(3 downto 0);
+  signal S : std_logic_vector(1 downto 0);
+begin
+  S <= A & B;
+  D <= '1' & (not C) & '0' & '1';  -- D3,D2,D1,D0
+  with S select F <=
+    D(0) when "00", D(1) when "01",
+    D(2) when "10", D(3) when "11";
+end rtl;
+\end{lstlisting}
+
+\begin{examfocus}
+\textbf{这是组合逻辑的必考题！}两种考法：
+(1) $2^n$选1 MUX实现n变量函数 → Dk直接接0/1
+(2) $2^{n-1}$选1 MUX实现n变量函数 → 需要降维，剩余变量或其反接到D端
+\end{examfocus}
+\end{detailbox}
+
+
+\section{变式2：双4选1 MUX构建8选1 MUX}
+
+\begin{detailbox}[完整教学]
+\textbf{【结构】}两片4选1 MUX处理低2位地址。一片2选1 MUX用最高位地址S2选择输出。
+总MUX数：3片(2×4选1 + 1×2选1)。
+
+\textbf{【VHDL——结构级】}
+\begin{lstlisting}
+-- 片0：S1S0选D0-D3
+mux_low: entity work.mux4to1 port map(D=>D(3 downto 0), S=>S(1 downto 0), Y=>F_low);
+-- 片1：S1S0选D4-D7
+mux_high: entity work.mux4to1 port map(D=>D(7 downto 4), S=>S(1 downto 0), Y=>F_high);
+-- 顶层2选1
+F <= F_low when S(2)='0' else F_high;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式3：带使能端的MUX}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}E=1正常选择；E=0输出高阻态'Z'（三态输出）或固定'0'。
+
+\textbf{【VHDL——三态输出】}
+\begin{lstlisting}
+F <= D(to_integer(unsigned(S))) when E='1' else 'Z';
+\end{lstlisting}
+
+\textbf{【应用】}多个MUX输出可共用一根总线（总线仲裁）。
+\end{detailbox}
+
+
+\section{变式4：MUX扩展——16选1}
+
+\begin{detailbox}[完整教学]
+\textbf{【树形结构】}4片4选1 MUX(第一层)+1片4选1 MUX(第二层)=16选1。
+总MUX数：5片。
+
+\textbf{【选择位分配】}S1S0→第一层(4片)，S3S2→第二层(1片)。
+\end{detailbox}

@@ -210,3 +210,96 @@ end test;
   \item \textbf{常考}：比较器 + MUX 组合题（找最大/最小值）
 \end{enumerate}
 \end{examtip}
+
+\section{变式详解}
+\chapter{4位比较器——4大变式详解}
+
+\section{变式1：8位比较器（两片4位级联）}
+
+\begin{detailbox}[完整教学]
+\textbf{【级联方式】}
+高位4位→主比较器。低位4位→从比较器，输出接主比较器的级联输入端。
+
+\textbf{【级联逻辑】}
+\begin{itemize}
+  \item 主比较器比较A[7:4]和B[7:4]
+  \item 如果高位相等，则看级联输入（低位比较器的结果）
+  \item 低位比较器比较A[3:0]和B[3:0]，输出接到主比较器的I\_A>B, I\_A=B, I\_A<B
+\end{itemize}
+
+\textbf{【VHDL——结构级】}
+\begin{lstlisting}
+-- 低位比较器
+cmp_lo: entity work.comparator_4bit
+  port map(A=>A(3 downto 0), B=>B(3 downto 0),
+           I_gt=>'0', I_eq=>'1', I_lt=>'0',  -- 最低位：假设之前相等
+           A_gt=>gt_lo, A_eq=>eq_lo, A_lt=>lt_lo);
+-- 高位比较器
+cmp_hi: entity work.comparator_4bit
+  port map(A=>A(7 downto 4), B=>B(7 downto 4),
+           I_gt=>gt_lo, I_eq=>eq_lo, I_lt=>lt_lo,  -- 级联!
+           A_gt=>A_gt, A_eq=>A_eq, A_lt=>A_lt);
+\end{lstlisting}
+
+\textbf{【行为级——直接用运算符（更简洁）】}
+\begin{lstlisting}
+A_gt <= '1' when A > B else '0';
+A_eq <= '1' when A = B else '0';
+A_lt <= '1' when A < B else '0';
+\end{lstlisting}
+综合器自动处理任意位宽的比较！
+\end{detailbox}
+
+
+\section{变式2：只输出"相等"的比较器}
+
+\begin{detailbox}[完整教学]
+\textbf{【简化】}只需要$A=B$信号。每一位都相等→XNOR→全部AND。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+A_eq <= '1' when A = B else '0';
+-- 或门级：
+A_eq <= (A(3) xnor B(3)) and (A(2) xnor B(2)) and
+        (A(1) xnor B(1)) and (A(0) xnor B(0));
+\end{lstlisting}
+
+\textbf{【应用】}地址译码、标签匹配、Cache Tag比较。
+\end{detailbox}
+
+
+\section{变式3：比较器+MUX实现取最大值}
+
+\begin{detailbox}[完整教学]
+\textbf{【电路】}比较器判断A>B→输出作为MUX选择信号。A>B时MUX选A，否则选B。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+max_val <= A when A > B else B;
+min_val <= A when A < B else B;
+\end{lstlisting}
+
+\textbf{【综合结果】}比较器+MUX→单行代码综合成两者组合。
+\end{detailbox}
+
+
+\section{变式4：带使能的比较器}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}enable=1时比较器工作；enable=0时所有输出=0。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+process(A, B, en)
+begin
+  if en = '0' then
+    A_gt <= '0'; A_eq <= '0'; A_lt <= '0';
+  else
+    if A > B then A_gt <= '1'; A_eq <= '0'; A_lt <= '0';
+    elsif A = B then A_gt <= '0'; A_eq <= '1'; A_lt <= '0';
+    else A_gt <= '0'; A_eq <= '0'; A_lt <= '1';
+    end if;
+  end if;
+end process;
+\end{lstlisting}
+\end{detailbox}

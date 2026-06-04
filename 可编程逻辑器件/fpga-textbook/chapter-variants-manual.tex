@@ -1,0 +1,91 @@
+% =============================================================
+%  FPGA与VHDL考试——章节变式题详解
+%  覆盖主教材每个章节中所有"考试常见变式"的完整教学
+%  严格遵循：电路→原理→状态变化→设计思想→模板→VHDL→变式
+% =============================================================
+
+\documentclass[12pt,a4paper,openany]{ctexbook}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5]
+\setCJKsansfont{SimHei}
+
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz,circuitikz}
+\usetikzlibrary{arrows,shapes,positioning,calc,automata,patterns}
+
+\usepackage{tabularx,booktabs,multirow,makecell,colortbl}
+\usepackage{listings,xcolor,enumitem,caption,float,framed}
+
+% Simple VHDL listings (no custom language to avoid TeX conflicts)
+\definecolor{vhdlbg}{rgb}{0.97,0.97,0.97}
+\lstset{language={},basicstyle=\ttfamily\footnotesize,
+  numbers=left,numberstyle=\tiny\color{gray},
+  backgroundcolor=\color{vhdlbg},frame=single,tabsize=2,
+  breaklines=true,showstringspaces=false}
+
+\usepackage[colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+% Simple framed boxes
+\newenvironment{detailbox}[1][详解]
+  {\begin{oframed}\textbf{\large #1}\\[3pt]}
+  {\end{oframed}}
+
+\newenvironment{examfocus}[1][考试聚焦]
+  {\begin{oframed}\textbf{\textcolor{red!70!black}{#1}}\\[3pt]}
+  {\end{oframed}}
+
+\title{\Huge\textbf{FPGA与VHDL考试\\章节变式题详解}\\[0.5cm]
+       \Large 覆盖主教材全部23个电路的\\所有考试变式}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+% ============================================================
+\part{组合逻辑电路变式详解}
+\input{chapter-variants/ch01-encoder-variants.tex}
+\input{chapter-variants/ch02-decoder-variants.tex}
+\input{chapter-variants/ch03-bcd-decoder-variants.tex}
+\input{chapter-variants/ch04-mux-variants.tex}
+\input{chapter-variants/ch05-comparator-variants.tex}
+\input{chapter-variants/ch06-adder-variants.tex}
+\input{chapter-variants/ch07-cascade-mux-variants.tex}
+
+% ============================================================
+\part{D触发器变式详解}
+\input{chapter-variants/ch08-dff-variants.tex}
+
+% ============================================================
+\part{计数器变式详解}
+\input{chapter-variants/ch09-counter-variants.tex}
+
+% ============================================================
+\part{分频器变式详解}
+\input{chapter-variants/ch10-freq-div-variants.tex}
+
+% ============================================================
+\part{序列发生器变式详解}
+\input{chapter-variants/ch11-seq-gen-variants.tex}
+
+% ============================================================
+\part{移位寄存器变式详解}
+\input{chapter-variants/ch12-shift-reg-variants.tex}
+
+% ============================================================
+\part{环形计数器变式详解}
+\input{chapter-variants/ch13-ring-counter-variants.tex}
+
+% ============================================================
+\part{序列检测器变式详解}
+\input{chapter-variants/ch14-seq-detector-variants.tex}
+
+% ============================================================
+\part{VHDL综合变式详解}
+\input{chapter-variants/ch15-vhdl-variants.tex}
+
+\end{document}

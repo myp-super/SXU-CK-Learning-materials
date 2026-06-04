@@ -1,0 +1,109 @@
+\chapter{4位加法器——5大变式详解}
+
+\section{变式1：8位/16位加法器（级联）}
+
+\begin{detailbox}[完整教学]
+\textbf{【方案】}两片4位加法器级联。低位$C_{out}$→高位$C_{in}$。
+
+\textbf{【VHDL——结构级】}
+\begin{lstlisting}
+add_lo: entity work.adder_4bit port map(A=>A(3 downto 0), B=>B(3 downto 0),
+        Cin=>'0', Sum=>Sum(3 downto 0), Cout=>carry);
+add_hi: entity work.adder_4bit port map(A=>A(7 downto 4), B=>B(7 downto 4),
+        Cin=>carry, Sum=>Sum(7 downto 4), Cout=>Cout);
+\end{lstlisting}
+
+\textbf{【行为级——推荐】}
+\begin{lstlisting}
+signal result : std_logic_vector(8 downto 0);
+result <= ('0' & A) + ('0' & B);
+Sum <= result(7 downto 0); Cout <= result(8);
+\end{lstlisting}
+综合器自动优化任意位宽加法。
+\end{detailbox}
+
+
+\section{变式2：减法器（用加法器实现A-B）}
+
+\begin{detailbox}[完整教学]
+\textbf{【补码原理】}$A-B = A+(-B) = A+(\sim B+1) = A+\sim B+1$
+
+\textbf{【电路】}B取反→接加法器B输入。$C_{in}=1$（实现+1）。$C_{in}$就是补码中的"+1"。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+diff <= A + (not B) + '1';  -- A-B = A + (~B) + 1
+-- 或直接用减法运算符
+diff <= A - B;
+\end{lstlisting}
+
+\begin{examfocus}
+\textbf{常考}：为什么$C_{in}=1$能实现减法？
+答案：$A-B = A+(\sim B)+1$ → +1部分由$C_{in}=1$提供。
+\end{examfocus}
+\end{detailbox}
+
+
+\section{变式3：加法器+寄存器=累加器}
+
+\begin{detailbox}[完整教学]
+\textbf{【结构】}加法器计算$ACC+Input$。结果在时钟沿存入ACC。ACC输出反馈回加法器输入端。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+process(clk, rst_n)
+begin
+  if rst_n='0' then acc <= (others=>'0');
+  elsif rising_edge(clk) then
+    acc <= acc + input_data;  -- 每个时钟累加一次
+  end if;
+end process;
+\end{lstlisting}
+
+\textbf{【本质】}累加器=计数器的一种（不是每次+1，而是+任意值）。
+
+\textbf{【应用】}DSP中的乘累加(MAC)、积分器。
+\end{detailbox}
+
+
+\section{变式4：带溢出检测的加法器}
+
+\begin{detailbox}[完整教学]
+\textbf{【无符号数溢出】}$C_{out}=1$=溢出（结果超过最大值）。
+
+\textbf{【有符号数溢出】}$Overflow = C_n \oplus C_{n-1}$（最高位进位和次高位进位异或）。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+signal result : std_logic_vector(4 downto 0);  -- 5位
+result <= ('0' & A) + ('0' & B);
+Sum <= result(3 downto 0);
+Cout <= result(4);
+-- 有符号溢出
+Overflow <= result(4) xor result(3);  -- C4 xor C3
+\end{lstlisting}
+
+\textbf{【直观判断】}
+两个正数相加得负数 → 溢出 (正溢出)
+两个负数相加得正数 → 溢出 (负溢出)
+\end{detailbox}
+
+
+\section{变式5：BCD加法器}
+
+\begin{detailbox}[完整教学]
+\textbf{【问题】}二进制加法后，如果结果>9(1001)，需要+6(0110)修正为BCD格式。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+signal bin_sum : std_logic_vector(4 downto 0);
+signal bcd_sum : std_logic_vector(3 downto 0);
+begin
+  bin_sum <= ('0' & A) + ('0' & B);
+  bcd_sum <= bin_sum(3 downto 0) when bin_sum <= 9
+        else bin_sum(3 downto 0) + "0110";  -- >9时+6修正
+  Cout <= '1' when bin_sum > 9 else '0';
+\end{lstlisting}
+
+\textbf{【例子】}5+7=12(1100)。1100+0110=10010→BCD: 0001 0010(12)。
+\end{detailbox}

@@ -1,0 +1,51 @@
+\chapter{序列发生器——全部变式详解}
+
+\section{变式1：任意周期序列（计数器+映射表）}
+
+\begin{detailbox}[完整教学]
+\textbf{【通用方案】}模L计数器+状态→输出映射表。
+\textbf{【例题】}产生序列10110(长度5)。模5计数器+case映射：
+\begin{lstlisting}
+case cnt is
+  when "000" => seq <= '1';
+  when "001" => seq <= '0';
+  when "010" => seq <= '1';
+  when "011" => seq <= '1';
+  when "100" => seq <= '0';
+end case;
+\end{lstlisting}
+\textbf{【适用范围】}任意序列。长度L→模L计数器。
+\end{detailbox}
+
+
+\section{变式2：状态机型序列发生器}
+
+\begin{detailbox}[完整教学]
+\textbf{【方案】}每个状态输出一个序列值。状态转移=序列顺序。
+\textbf{【优点】}状态名有意义（如"S\_1","S\_0","S\_1","S\_1","S\_0"）。但状态多时代码冗长。
+\textbf{【比较】}推荐用计数器+case——代码更简洁。
+\end{detailbox}
+
+
+\section{变式3：移位寄存器+LFSR发生器}
+
+\begin{detailbox}[完整教学]
+\textbf{【LFSR】}线性反馈移位寄存器。反馈=选择位的XOR。
+\textbf{【应用】}伪随机序列(PRBS)、CRC、扰码。
+\textbf{【4位LFSR(X4+X3+1)】}反馈=Q3 xor Q2。产生15个伪随机状态。
+\textbf{【注意】}全0状态非法——LFSR会锁死在0000。必须初始化为非0值。
+\end{detailbox}
+
+
+\section{变式4：ROM/查找表型序列发生器}
+
+\begin{detailbox}[完整教学]
+\textbf{【方案】}预存整个序列在ROM中。计数器=地址。
+\textbf{【优点】}任意序列、可重配置。适合长序列。
+\textbf{【VHDL】}
+\begin{lstlisting}
+type rom_type is array (0 to 15) of std_logic_vector(3 downto 0);
+constant SEQ_ROM : rom_type := (x"1", x"0", x"1", x"1", x"0", ...);
+seq <= SEQ_ROM(to_integer(unsigned(cnt)));
+\end{lstlisting}
+\end{detailbox}

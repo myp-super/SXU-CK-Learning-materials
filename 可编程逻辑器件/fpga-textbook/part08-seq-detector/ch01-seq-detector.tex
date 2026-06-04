@@ -340,3 +340,58 @@ end test;
   \item 非重叠检测：直接回S0
 \end{itemize}
 \end{examtip}
+
+\section{变式详解}
+\chapter{序列检测器——全部变式详解}
+
+\section{变式1：检测1011（重叠 vs 非重叠）}
+
+\begin{detailbox}[完整教学]
+\textbf{【核心区别】}S101+输入1→检测到！
+\begin{itemize}
+  \item \textbf{非重叠}→回S0（重新开始）
+  \item \textbf{重叠}→去S1（最后的"1"作为新序列的第一个"1"）
+\end{itemize}
+\textbf{【考试判断】}看检测到后的转移目标。S0=非重叠，S1(或其他非S0状态)=重叠。
+\end{detailbox}
+
+
+\section{变式2：检测1101}
+
+\begin{detailbox}[完整教学]
+\textbf{【状态】}S0→S1→S11→S110→(输入1=检测到)
+\textbf{【重叠处理】}S110+1→检测到→去S11（"1101"中后两位"11"匹配"11"前缀）
+\textbf{【关键】}S11+1→S11（"111"中后两个"11"为有效前缀）。
+\end{detailbox}
+
+
+\section{变式3：检测1111（连续4个1）}
+
+\begin{detailbox}[完整教学]
+\textbf{【状态】}S0→S1(1个1)→S11(2)→S111(3)→(第4个1→检测)
+\textbf{【特点】}任意时刻输入0→回S0（连续中断）。
+\textbf{【重叠】}S111+1→S111（"1111"后3个"111"为有效前缀）。
+\end{detailbox}
+
+
+\section{变式4：检测0101}
+
+\begin{detailbox}[完整教学]
+\textbf{【状态】}S0→S01(0)→S010(01)→S0101(检测)
+\textbf{【注意】}S0101+0→S01（重叠：最后的"0"作为新序列的第一个"0"）。
+\end{detailbox}
+
+
+\section{变式5：用移位寄存器+比较器替代状态机}
+
+\begin{detailbox}[完整教学]
+\textbf{【方案】}移位寄存器存最近N位→与目标序列比较。
+\textbf{【VHDL——两行搞定】}
+\begin{lstlisting}
+reg <= din & reg(3 downto 1);
+detected <= '1' when reg = "1011" else '0';
+\end{lstlisting}
+\textbf{【优点】}代码极简。不需推导状态转移。
+\textbf{【注意】}自动实现重叠检测。
+\textbf{【考试适用】}除非题目明确要求"用状态机设计"，否则移位寄存器方案是最佳选择。
+\end{detailbox}

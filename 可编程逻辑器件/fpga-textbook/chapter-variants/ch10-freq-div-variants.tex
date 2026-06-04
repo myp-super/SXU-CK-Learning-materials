@@ -1,0 +1,61 @@
+\chapter{分频器——全部变式详解}
+
+\section{变式1：直接取Qn实现$2^n$分频}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}$Q_k$每$2^{k+1}$拍完成一次0→1→0循环。
+
+\textbf{【VHDL——一行搞定】}
+\begin{lstlisting}
+clk_div2 <= cnt(0);   -- 2分频
+clk_div4 <= cnt(1);   -- 4分频
+clk_div8 <= cnt(2);   -- 8分频
+\end{lstlisting}
+
+\textbf{【优点】}不需要任何额外逻辑。计数器本身就是分频器。
+\end{detailbox}
+
+
+\section{变式2：偶数分频（任意M）}
+
+\begin{detailbox}[完整教学]
+\textbf{【统一模板】}
+\begin{lstlisting}
+if cnt = M-1 then cnt <= 0; else cnt <= cnt + 1; end if;
+clk_out <= '1' when cnt >= M/2 else '0';  -- 50\%占空比
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式3：奇数分频（双沿法）}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}上升沿+下降沿各产生一个信号→OR组合。得到接近50\%占空比的奇数分频。
+\textbf{【详见解析册题6】}
+\end{detailbox}
+
+
+\section{变式4：占空比可调分频器}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}改变输出翻转的阈值。占空比=高拍数/M。
+\begin{lstlisting}
+clk_out <= '1' when cnt < DUTY else '0';
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式5：多级分频器（分频比相乘）}
+
+\begin{detailbox}[完整教学]
+\textbf{【原理】}M1分频→M2分频=总M1×M2分频。
+\textbf{【注意】}后级以前级输出为时钟→跨时钟域风险。FPGA中推荐用使能信号而非门控时钟。
+\end{detailbox}
+
+
+\section{变式6：秒脉冲发生器}
+
+\begin{detailbox}[完整教学]
+\textbf{【问题】}50MHz→1Hz。M=50,000,000。需26位计数器。
+\textbf{【VHDL】}同偶数分频模板，M=50000000。
+\end{detailbox}

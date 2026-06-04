@@ -1,0 +1,256 @@
+\chapter{3-8译码器——5大变式详解}
+
+\section{变式1：74LS138风格译码器（低有效输出+三使能端）——必考！}
+
+\begin{detailbox}[完整教学]
+
+\textbf{【电路】}
+74LS138是考试中最常出现的译码器芯片。特点：
+\begin{itemize}
+  \item 3位地址输入A2,A1,A0
+  \item 8个输出Y0-Y7，\textbf{全部低电平有效}（选中=0，未选中=1）
+  \item 3个使能端：G1(高有效), G2A(低有效), G2B(低有效)
+  \item 只有三个使能端同时有效（G1=1, G2A=0, G2B=0）时，译码器才工作
+\end{itemize}
+
+\textbf{【使能逻辑】}$enable = G1 \cdot \overline{G2A} \cdot \overline{G2B}$
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity decoder_74ls138 is
+  port (
+    A    : in  std_logic_vector(2 downto 0);
+    G1   : in  std_logic;
+    G2A_n: in  std_logic;  -- 低有效
+    G2B_n: in  std_logic;  -- 低有效
+    Y_n  : out std_logic_vector(7 downto 0)  -- 低有效
+  );
+end decoder_74ls138;
+
+architecture behavioral of decoder_74ls138 is
+  signal enable : std_logic;
+begin
+  enable <= G1 and (not G2A_n) and (not G2B_n);
+
+  process(A, enable)
+  begin
+    if enable = '0' then
+      Y_n <= "11111111";  -- 全高=全无效
+    else
+      case A is
+        when "000" => Y_n <= "11111110";  -- Y0=0
+        when "001" => Y_n <= "11111101";  -- Y1=0
+        when "010" => Y_n <= "11111011";
+        when "011" => Y_n <= "11110111";
+        when "100" => Y_n <= "11101111";
+        when "101" => Y_n <= "11011111";
+        when "110" => Y_n <= "10111111";
+        when "111" => Y_n <= "01111111";
+        when others => Y_n <= "11111111";
+      end case;
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【为什么用3个使能端】}
+多个使能端方便级联。G2A和G2B是低有效，G1是高有效——这种混合设计使得可以用不同信号控制，增加灵活性。
+
+\textbf{【常考陷阱】}
+\begin{itemize}
+  \item 看清输出是低有效还是高有效——74LS138输出0表示选中
+  \item 三个使能端必须\textbf{同时}满足条件译码器才工作
+  \item 使能无效时所有输出为1（全高=全无效）
+\end{itemize}
+
+\end{detailbox}
+
+
+\section{变式2：用译码器实现任意逻辑函数（必考！）}
+
+\begin{detailbox}[完整教学]
+
+\textbf{【核心原理】}
+译码器的每个输出=一个最小项。\textbf{任何组合逻辑函数}=若干最小项之和（OR）。
+
+\textbf{【通用公式】}$F(A,B,C) = \sum m(\dots)= Y_{i1}+Y_{i2}+Y_{i3}+\dots$
+
+\textbf{【例题】}用3-8译码器+一个OR门实现$F(A,B,C)=\sum m(1,3,5,7)$。
+
+\textbf{【解法】}
+\begin{enumerate}
+  \item 译码器产生8个最小项：Y0=m0, Y1=m1, ..., Y7=m7
+  \item $F = m1+m3+m5+m7 = Y1+Y3+Y5+Y7$
+  \item 用1个4输入OR门连接Y1,Y3,Y5,Y7
+\end{enumerate}
+
+\textbf{【电路结构】}
+\begin{center}
+\begin{tikzpicture}
+\node[draw,minimum width=2.5cm,minimum height=1.5cm] (dec) at (0,0) {3-8译码器};
+\node[american or port] (orgate) at (4,0) {};
+\draw[->] (dec.east|-orgate.in 1) -- (orgate.in 1);
+\draw[->] (dec.east|-orgate.in 2) -- (orgate.in 2);
+\draw[->] (orgate.out) -- ++(1,0) node[right]{$F$};
+\node at (0,-2) {A2A1A0 = 变量A,B,C};
+\node at (4,-2) {OR门输入=Y1,Y3,Y5,Y7};
+\end{tikzpicture}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+-- 例化译码器
+dec: decoder_3to8 port map(A=>ABC, Y=>Y);
+-- OR门
+F <= Y(1) or Y(3) or Y(5) or Y(7);
+\end{lstlisting}
+
+\textbf{【推广：实现任意3变量函数】}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{函数} & \textbf{连接} \\
+\hline
+$F=m0+m2+m4+m6$ & Y0+Y2+Y4+Y6 \\
+$F=m0+m1+m2+m3$ & Y0+Y1+Y2+Y3 \\
+$F=A$ (即m4+m5+m6+m7) & Y4+Y5+Y6+Y7 \\
+$F=\overline{A}$ & Y0+Y1+Y2+Y3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{【如果函数用NAND实现】}
+用NAND门替代OR门（德摩根定理）。此时输出是反相的，但功能等价。
+
+\begin{examfocus}
+\textbf{必考！用3-8译码器+门电路实现任意3变量逻辑函数。}
+步骤：(1)将函数写成最小项之和 (2)对应Y输出用OR门连接
+\end{examfocus}
+
+\end{detailbox}
+
+
+\section{变式3：用3-8译码器构建4-16译码器（片选级联）}
+
+\begin{detailbox}[完整教学]
+
+\textbf{【问题】}只有3-8译码器，如何得到4位地址→16个输出的4-16译码器？
+
+\textbf{【方案】}两片3-8译码器+最高位地址A3做片选。
+
+\textbf{【级联逻辑】}
+\begin{itemize}
+  \item \textbf{片0（低位）}：处理A3=0时，地址0000-0111（译码器输出Y0-Y7对应系统Y0-Y7）
+  \item \textbf{片1（高位）}：处理A3=1时，地址1000-1111（译码器输出Y0-Y7对应系统Y8-Y15）
+  \item A3=0→片0使能，片1禁止
+  \item A3=1→片1使能，片0禁止
+\end{itemize}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+entity decoder_4to16 is
+  port (A : in std_logic_vector(3 downto 0);
+        Y : out std_logic_vector(15 downto 0));
+end decoder_4to16;
+
+architecture structural of decoder_4to16 is
+  signal Y_low, Y_high : std_logic_vector(7 downto 0);
+  component decoder_3to8 is
+    port (A : in std_logic_vector(2 downto 0);
+          E : in std_logic; Y : out std_logic_vector(7 downto 0));
+  end component;
+begin
+  -- 片0：A3=0时使能
+  dec_low: decoder_3to8 port map(
+    A => A(2 downto 0), E => not A(3), Y => Y_low);
+
+  -- 片1：A3=1时使能
+  dec_high: decoder_3to8 port map(
+    A => A(2 downto 0), E => A(3), Y => Y_high);
+
+  Y <= Y_high & Y_low;  -- 拼接为16位输出
+end structural;
+\end{lstlisting}
+
+\textbf{【通用级联公式】}
+用$2^k$个$n$-$2^n$译码器构建$(n+k)$-$2^{n+k}$译码器。
+高k位地址→片选，低n位地址→各片输入。
+
+\textbf{【常见考题】}用两片74LS138构建4-16译码器。利用使能端做片选。
+
+\end{detailbox}
+
+
+\section{变式4：用译码器做地址译码}
+
+\begin{detailbox}[完整教学]
+
+\textbf{【应用场景】}
+CPU有16位地址总线，但连接了多个外设（RAM、ROM、IO端口等）。
+用译码器将地址空间划分为不同区域，产生各外设的片选信号。
+
+\textbf{【例题】}用3-8译码器产生8个外设的片选信号。地址A15-A13做译码输入。
+
+\textbf{【电路】}
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+A15A14A13 & 选中输出 & 外设 \\
+\hline
+000 & Y0 & RAM1(0x0000-0x1FFF) \\
+001 & Y1 & RAM2(0x2000-0x3FFF) \\
+010 & Y2 & ROM (0x4000-0x5FFF) \\
+011 & Y3 & IO1 (0x6000-0x7FFF) \\
+100 & Y4 & IO2 (0x8000-0x9FFF) \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{【核心思想】}高位地址→译码→片选。低位地址→片内寻址。
+
+\end{detailbox}
+
+
+\section{变式5：显示译码器（BCD→7段）}
+
+\begin{detailbox}[完整教学]
+
+\textbf{【问题】}3-8译码器每次只选中1个输出。但7段数码管需要同时点亮多个段（如数字"8"需要7段全亮）。
+
+\textbf{【区别】}
+\begin{itemize}
+  \item 3-8译码器：$n$输入→$2^n$输出，输出是\textbf{互斥}的（恰好一个为1）
+  \item BCD-7段译码器：4输入→7输出，输出\textbf{不互斥}（可以同时多个为1）
+\end{itemize}
+
+\textbf{【详见第三章BCD译码器】}BCD-7段译码器本质上是7个独立的组合逻辑函数，不是简单的"最小项展开"。
+
+\begin{examfocus}
+\textbf{关键区别}：
+\begin{itemize}
+  \item 3-8译码器：1-of-N选择（互斥输出）→ 用AND门
+  \item BCD-7段：任意多段同时亮（非互斥）→ 用ROM/查找表
+\end{itemize}
+不搞混这两种"译码器"是考试的基本要求。
+\end{examfocus}
+
+\end{detailbox}
+
+
+\section{译码器变式总结}
+
+\begin{examfocus}[译码器5大变式速查]
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{变式} & \textbf{核心考点} & \textbf{常考题型} \\
+\hline
+74LS138风格 & 低有效+3使能端 & 写VHDL, 判断使能条件 \\
+译码器+OR≈任意函数 & 最小项之和 & 给定函数→画电路 \\
+级联构建更大译码器 & 高位地址做片选 & 74LS138×2→4-16 \\
+地址译码 & 地址空间划分 & 存储器片选设计 \\
+vs BCD-7段 & 互斥vs非互斥输出 & 概念辨析 \\
+\hline
+\end{tabular}
+\end{center}
+\end{examfocus}

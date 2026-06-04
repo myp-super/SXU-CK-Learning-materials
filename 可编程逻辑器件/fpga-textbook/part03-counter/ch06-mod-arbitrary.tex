@@ -135,3 +135,77 @@ end if;
 
 这就是所有模N计数器的答案。
 \end{examtip}
+
+\section{变式详解}
+\chapter{计数器——统一框架变式详解}
+
+\section{变式1：带使能的模N计数器}
+
+\begin{detailbox}[完整教学]
+\textbf{【电路】}在标准计数器上增加en控制。
+\textbf{【VHDL】}
+\begin{lstlisting}
+if rising_edge(clk) then
+  if en = '1' then
+    if cnt = N-1 then cnt <= 0; else cnt <= cnt + 1; end if;
+  end if;
+end if;
+\end{lstlisting}
+\textbf{【考点】}en=0时不赋值→保持。这是所有可控计数器的基本范式。
+\end{detailbox}
+
+
+\section{变式2：带同步加载的模N计数器}
+
+\begin{detailbox}[完整教学]
+\textbf{【功能】}load=1时cnt=data\_in。load=0时正常计数。
+\textbf{【优先级】}load > 计数（if-else中load在前=优先级高）。
+\textbf{【VHDL】}
+\begin{lstlisting}
+if load = '1' then cnt <= data_in;
+elsif cnt = N-1 then cnt <= 0;
+else cnt <= cnt + 1; end if;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式3：递增/递减双向计数器}
+
+\begin{detailbox}[完整教学]
+\textbf{【VHDL】}
+\begin{lstlisting}
+if up = '1' then cnt <= cnt + 1; else cnt <= cnt - 1; end if;
+\end{lstlisting}
+\textbf{【递减自然溢出】}$0000-1=1111$（4位无符号），自动模16循环。
+\end{detailbox}
+
+
+\section{变式4：倒计时计数器（预置→0→预置）}
+
+\begin{detailbox}[完整教学]
+\textbf{【VHDL】}
+\begin{lstlisting}
+if cnt = 0 then cnt <= PRE;  -- 到0后重新加载
+else cnt <= cnt - 1; end if;
+\end{lstlisting}
+\end{detailbox}
+
+
+\section{变式5：级联计数器——总模值=乘积}
+
+\begin{detailbox}[完整教学]
+\textbf{【级联方式】}低位carry→高位en。总M=$M_1 \times M_2$。
+
+\textbf{【实例】}模8+模5级联→总模40。模60(6×10)BCD级联。
+
+\textbf{【VHDL关键】}高位以低位carry为时钟使能——确保高位只在低位满一轮时才+1。
+\end{detailbox}
+
+
+\section{变式6：格雷码计数器}
+
+\begin{detailbox}[完整教学]
+\textbf{【特点】}相邻状态仅1位不同。适合FIFO指针、跨时钟域。
+\textbf{【VHDL】}case枚举所有格雷码状态。
+\textbf{【3位格雷码序列】}000-001-011-010-110-111-101-100-000。
+\end{detailbox}
