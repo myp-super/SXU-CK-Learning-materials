@@ -352,6 +352,49 @@ end test;
   \item \textbf{非重叠}→回S0（重新开始）
   \item \textbf{重叠}→去S1（最后的"1"作为新序列的第一个"1"）
 \end{itemize}
+
+\textbf{【重叠检测版本——完整VHDL】}
+\begin{lstlisting}[caption={1011序列检测器——重叠检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_1011_overlap is
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    data_in  : in  std_logic;
+    detected : out std_logic
+  );
+end seq_detector_1011_overlap;
+
+architecture fsm of seq_detector_1011_overlap is
+  type state_type is (S0, S1, S10, S101);
+  signal state : state_type;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      state <= S0;
+    elsif rising_edge(clk) then
+      case state is
+        when S0 =>
+          if data_in = '1' then state <= S1; end if;
+        when S1 =>
+          if data_in = '0' then state <= S10; end if;
+        when S10 =>
+          if data_in = '1' then state <= S101;
+          else state <= S0; end if;
+        when S101 =>
+          if data_in = '1' then state <= S1;   -- 重叠！
+          else state <= S10; end if;
+      end case;
+    end if;
+  end process;
+
+  detected <= '1' when (state = S101 and data_in = '1') else '0';
+end fsm;
+\end{lstlisting}
+
 \textbf{【考试判断】}看检测到后的转移目标。S0=非重叠，S1(或其他非S0状态)=重叠。
 \end{detailbox}
 
@@ -362,6 +405,48 @@ end test;
 \textbf{【状态】}S0→S1→S11→S110→(输入1=检测到)
 \textbf{【重叠处理】}S110+1→检测到→去S11（"1101"中后两位"11"匹配"11"前缀）
 \textbf{【关键】}S11+1→S11（"111"中后两个"11"为有效前缀）。
+
+\begin{lstlisting}[caption={1101序列检测器——重叠检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_1101 is
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    data_in  : in  std_logic;
+    detected : out std_logic
+  );
+end seq_detector_1101;
+
+architecture fsm of seq_detector_1101 is
+  type state_type is (S0, S1, S11, S110);
+  signal state : state_type;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      state <= S0;
+    elsif rising_edge(clk) then
+      case state is
+        when S0 =>
+          if data_in = '1' then state <= S1; end if;
+        when S1 =>
+          if data_in = '0' then state <= S0;
+          else state <= S11; end if;
+        when S11 =>
+          if data_in = '0' then state <= S110; end if;
+          -- data_in='1'：保持S11（"111"的后两位"11"仍是有效前缀）
+        when S110 =>
+          if data_in = '1' then state <= S11;  -- 检测到，去S11（重叠）
+          else state <= S0; end if;
+      end case;
+    end if;
+  end process;
+
+  detected <= '1' when (state = S110 and data_in = '1') else '0';
+end fsm;
+\end{lstlisting}
 \end{detailbox}
 
 
@@ -371,6 +456,48 @@ end test;
 \textbf{【状态】}S0→S1(1个1)→S11(2)→S111(3)→(第4个1→检测)
 \textbf{【特点】}任意时刻输入0→回S0（连续中断）。
 \textbf{【重叠】}S111+1→S111（"1111"后3个"111"为有效前缀）。
+
+\begin{lstlisting}[caption={1111序列检测器——重叠检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_1111 is
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    data_in  : in  std_logic;
+    detected : out std_logic
+  );
+end seq_detector_1111;
+
+architecture fsm of seq_detector_1111 is
+  type state_type is (S0, S1, S11, S111);
+  signal state : state_type;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      state <= S0;
+    elsif rising_edge(clk) then
+      case state is
+        when S0 =>
+          if data_in = '1' then state <= S1; end if;
+        when S1 =>
+          if data_in = '1' then state <= S11;
+          else state <= S0; end if;
+        when S11 =>
+          if data_in = '1' then state <= S111;
+          else state <= S0; end if;
+        when S111 =>
+          if data_in = '1' then state <= S111;  -- 重叠！保持S111
+          else state <= S0; end if;
+      end case;
+    end if;
+  end process;
+
+  detected <= '1' when (state = S111 and data_in = '1') else '0';
+end fsm;
+\end{lstlisting}
 \end{detailbox}
 
 
@@ -379,6 +506,48 @@ end test;
 \begin{detailbox}[完整教学]
 \textbf{【状态】}S0→S01(0)→S010(01)→S0101(检测)
 \textbf{【注意】}S0101+0→S01（重叠：最后的"0"作为新序列的第一个"0"）。
+
+\begin{lstlisting}[caption={0101序列检测器——重叠检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_0101 is
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    data_in  : in  std_logic;
+    detected : out std_logic
+  );
+end seq_detector_0101;
+
+architecture fsm of seq_detector_0101 is
+  type state_type is (S0, S01, S010, S0101);
+  signal state : state_type;
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      state <= S0;
+    elsif rising_edge(clk) then
+      case state is
+        when S0 =>
+          if data_in = '0' then state <= S01; end if;
+        when S01 =>
+          if data_in = '1' then state <= S010;
+          else state <= S01; end if;
+        when S010 =>
+          if data_in = '1' then state <= S0101;
+          else state <= S01; end if;
+        when S0101 =>
+          if data_in = '0' then state <= S01;   -- 重叠！
+          else state <= S010; end if;
+      end case;
+    end if;
+  end process;
+
+  detected <= '1' when (state = S0101 and data_in = '1') else '0';
+end fsm;
+\end{lstlisting}
 \end{detailbox}
 
 
@@ -386,10 +555,34 @@ end test;
 
 \begin{detailbox}[完整教学]
 \textbf{【方案】}移位寄存器存最近N位→与目标序列比较。
-\textbf{【VHDL——两行搞定】}
-\begin{lstlisting}
-reg <= din & reg(3 downto 1);
-detected <= '1' when reg = "1011" else '0';
+\textbf{【完整VHDL】}
+\begin{lstlisting}[caption={移位寄存器+比较器实现1011序列检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq_detector_shift is
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    din      : in  std_logic;
+    detected : out std_logic
+  );
+end seq_detector_shift;
+
+architecture behavioral of seq_detector_shift is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= din & reg(3 downto 1);
+    end if;
+  end process;
+
+  detected <= '1' when reg = "1011" else '0';
+end behavioral;
 \end{lstlisting}
 \textbf{【优点】}代码极简。不需推导状态转移。
 \textbf{【注意】}自动实现重叠检测。

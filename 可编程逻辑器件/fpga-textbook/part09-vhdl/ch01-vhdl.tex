@@ -298,15 +298,58 @@ for-generate & 并行复制N个相同硬件 & 适合规则结构 \\
   \item 不完整的if(缺少else)→可能产生\textbf{锁存器(Latch)}——通常应避免。
 \end{itemize}
 
-\textbf{【考试判断】}
-\begin{lstlisting}
--- 组合逻辑MUX
-if sel='1' then y <= a; else y <= b; end if;
+\textbf{【组合逻辑MUX——完整VHDL】}
+\begin{lstlisting}[caption={if-else综合为组合逻辑MUX}]
+library ieee;
+use ieee.std_logic_1164.all;
 
--- 时序逻辑（寄存器）
-if rising_edge(clk) then
-  if en='1' then q <= d; end if;  -- 带使能的D触发器
-end if;
+entity mux_ifelse is
+  port (
+    a   : in  std_logic;
+    b   : in  std_logic;
+    sel : in  std_logic;
+    y   : out std_logic
+  );
+end mux_ifelse;
+
+architecture behavioral of mux_ifelse is
+begin
+  process(a, b, sel)
+  begin
+    if sel = '1' then
+      y <= a;
+    else
+      y <= b;
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【时序逻辑（带使能的D触发器）——完整VHDL】}
+\begin{lstlisting}[caption={if+clk综合为带使能的D触发器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity dff_en is
+  port (
+    clk : in  std_logic;
+    en  : in  std_logic;
+    d   : in  std_logic;
+    q   : out std_logic
+  );
+end dff_en;
+
+architecture behavioral of dff_en is
+begin
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      if en = '1' then
+        q <= d;
+      end if;
+    end if;
+  end process;
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
 
@@ -320,6 +363,37 @@ end if;
   \item case不完备且无when others→可能产生锁存器。
   \item case完备(有when others)→纯组合逻辑或状态机。
 \end{itemize}
+
+\textbf{【case综合示例——完整VHDL】}
+\begin{lstlisting}[caption={case综合为并行MUX}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux_case is
+  port (
+    d0  : in  std_logic;
+    d1  : in  std_logic;
+    d2  : in  std_logic;
+    d3  : in  std_logic;
+    sel : in  std_logic_vector(1 downto 0);
+    y   : out std_logic
+  );
+end mux_case;
+
+architecture behavioral of mux_case is
+begin
+  process(d0, d1, d2, d3, sel)
+  begin
+    case sel is
+      when "00"   => y <= d0;
+      when "01"   => y <= d1;
+      when "10"   => y <= d2;
+      when "11"   => y <= d3;
+      when others => y <= '0';
+    end case;
+  end process;
+end behavioral;
+\end{lstlisting}
 
 \textbf{【if-else vs case硬件对比】}
 \begin{center}
@@ -350,6 +424,40 @@ end if;
   \item 但variable在读取前先赋值→可能综合为寄存器
 \end{itemize}
 
+\textbf{【signal vs variable 对比示例——完整VHDL】}
+\begin{lstlisting}[caption={signal（<=）与variable（:=）对比}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity sig_var_demo is
+  port (
+    clk    : in  std_logic;
+    rst_n  : in  std_logic;
+    a      : in  unsigned(3 downto 0);
+    b      : in  unsigned(3 downto 0);
+    result : out unsigned(7 downto 0)
+  );
+end sig_var_demo;
+
+architecture behavioral of sig_var_demo is
+  signal sig_tmp : unsigned(7 downto 0);  -- signal：process结束后更新
+begin
+  process(clk, rst_n)
+    variable var_tmp : unsigned(7 downto 0);  -- variable：立即更新
+  begin
+    if rst_n = '0' then
+      sig_tmp <= (others => '0');
+      result  <= (others => '0');
+    elsif rising_edge(clk) then
+      var_tmp := a * b;       -- := 立即赋值
+      sig_tmp <= a * b;       -- <= 延迟到process结束
+      result  <= var_tmp;     -- 使用variable的立即值
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
+
 \textbf{【考试判断】}看赋值符号：<=（信号）vs :=（变量）。
 \end{detailbox}
 
@@ -358,6 +466,56 @@ end if;
 
 \begin{detailbox}[完整教学]
 \textbf{【process本身不产生硬件】}硬件由process\textbf{内部}代码决定。
+
+\begin{lstlisting}[caption={三种典型process及其综合结果}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity process_demo is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    d     : in  std_logic;
+    a     : in  std_logic;
+    b     : in  std_logic;
+    sel   : in  std_logic;
+    q     : out std_logic;
+    y     : out std_logic
+  );
+end process_demo;
+
+architecture behavioral of process_demo is
+  signal q_reg : std_logic;
+begin
+  -- (1) 时序process：process(clk)+rising_edge → D触发器
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      q_reg <= d;
+    end if;
+  end process;
+
+  -- (2) 时序process带异步复位：process(clk,rst) → D触发器+异步复位
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      q <= '0';
+    elsif rising_edge(clk) then
+      q <= d;
+    end if;
+  end process;
+
+  -- (3) 组合process：process(all inputs)+无clk → 组合逻辑
+  process(a, b, sel)
+  begin
+    if sel = '1' then
+      y <= a;
+    else
+      y <= b;
+    end if;
+  end process;
+end behavioral;
+\end{lstlisting}
 
 \begin{center}
 \begin{tabular}{|l|l|}

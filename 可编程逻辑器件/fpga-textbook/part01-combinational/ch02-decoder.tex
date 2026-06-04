@@ -227,6 +227,7 @@ end behavioral;
 \begin{lstlisting}[caption={3-8译码器Testbench}]
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity decoder_3to8_tb is
 end decoder_3to8_tb;
@@ -293,6 +294,9 @@ end test;
 
 \textbf{【VHDL】}
 \begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity decoder_74ls138 is
   port (
     A    : in  std_logic_vector(2 downto 0);
@@ -375,10 +379,29 @@ end behavioral;
 
 \textbf{【VHDL】}
 \begin{lstlisting}
--- 例化译码器
-dec: decoder_3to8 port map(A=>ABC, Y=>Y);
--- OR门
-F <= Y(1) or Y(3) or Y(5) or Y(7);
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity func_from_decoder is
+  port (
+    ABC : in  std_logic_vector(2 downto 0);
+    F   : out std_logic
+  );
+end func_from_decoder;
+
+architecture structural of func_from_decoder is
+  signal Y : std_logic_vector(7 downto 0);
+
+  component decoder_3to8 is
+    port (
+      A : in  std_logic_vector(2 downto 0);
+      Y : out std_logic_vector(7 downto 0)
+    );
+  end component;
+begin
+  dec: decoder_3to8 port map(A => ABC, Y => Y);
+  F <= Y(1) or Y(3) or Y(5) or Y(7);
+end structural;
 \end{lstlisting}
 
 \textbf{【推广：实现任意3变量函数】}
@@ -424,6 +447,9 @@ $F=\overline{A}$ & Y0+Y1+Y2+Y3 \\
 
 \textbf{【VHDL】}
 \begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity decoder_4to16 is
   port (A : in std_logic_vector(3 downto 0);
         Y : out std_logic_vector(15 downto 0));

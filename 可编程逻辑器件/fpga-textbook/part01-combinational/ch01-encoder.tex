@@ -323,11 +323,16 @@ Y_0 &= I_1+I_3+I_5+I_7+I_9+I_{11}+I_{13}+I_{15}
 \textbf{【通用公式】}对于$2^n$-$n$编码器：
 $$Y_k = \sum_{i=0}^{2^n-1} I_i \quad\text{当} i \text{的第}k\text{位为1时}$$
 
-\textbf{【VHDL】}
-\begin{lstlisting}
+\textbf{【VHDL——完整case版本】}
+\begin{lstlisting}[caption={16-4编码器VHDL实现（case版本）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity encoder_16to4 is
-  port (I : in std_logic_vector(15 downto 0);
-        Y : out std_logic_vector(3 downto 0));
+  port (
+    I : in  std_logic_vector(15 downto 0);
+    Y : out std_logic_vector(3 downto 0)
+  );
 end encoder_16to4;
 
 architecture behavioral of encoder_16to4 is
@@ -337,25 +342,51 @@ begin
     case I is
       when "0000000000000001" => Y <= "0000";
       when "0000000000000010" => Y <= "0001";
-      -- ... 中间省略 ...
+      when "0000000000000100" => Y <= "0010";
+      when "0000000000001000" => Y <= "0011";
+      when "0000000000010000" => Y <= "0100";
+      when "0000000000100000" => Y <= "0101";
+      when "0000000001000000" => Y <= "0110";
+      when "0000000010000000" => Y <= "0111";
+      when "0000000100000000" => Y <= "1000";
+      when "0000001000000000" => Y <= "1001";
+      when "0000010000000000" => Y <= "1010";
+      when "0000100000000000" => Y <= "1011";
+      when "0001000000000000" => Y <= "1100";
+      when "0010000000000000" => Y <= "1101";
+      when "0100000000000000" => Y <= "1110";
       when "1000000000000000" => Y <= "1111";
-      when others => Y <= "0000";
+      when others             => Y <= "0000";
     end case;
   end process;
 end behavioral;
 \end{lstlisting}
 
-\textbf{【更好的写法——用for循环查找】}
-\begin{lstlisting}
-process(I)
+\textbf{【更好的写法——用for循环查找（完整VHDL）】}
+\begin{lstlisting}[caption={16-4编码器VHDL实现（for循环版本）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity encoder_16to4_loop is
+  port (
+    I : in  std_logic_vector(15 downto 0);
+    Y : out std_logic_vector(3 downto 0)
+  );
+end encoder_16to4_loop;
+
+architecture behavioral of encoder_16to4_loop is
 begin
-  Y <= "0000";
-  for i in 0 to 15 loop
-    if I(i) = '1' then
-      Y <= std_logic_vector(to_unsigned(i, 4));
-    end if;
-  end loop;
-end process;
+  process(I)
+  begin
+    Y <= "0000";
+    for i in 0 to 15 loop
+      if I(i) = '1' then
+        Y <= std_logic_vector(to_unsigned(i, 4));
+      end if;
+    end loop;
+  end process;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【考试聚焦】}$2^n$-$n$编码器的通用公式。16-4编码器需要16个case分支。
@@ -393,11 +424,16 @@ I7 & I6 & I5 & I4 & I3 & I2 & I1 & I0 & Y2 & Y1 & Y0 \\
 （x=任意值，不管它是0还是1）
 
 \textbf{【VHDL——if-else级联】}
-\begin{lstlisting}
+\begin{lstlisting}[caption={8-3优先级编码器VHDL实现（if-else级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity priority_encoder is
-  port (I : in std_logic_vector(7 downto 0);
-        Y : out std_logic_vector(2 downto 0);
-        GS : out std_logic);  -- Group Select: 有输入=1
+  port (
+    I  : in  std_logic_vector(7 downto 0);
+    Y  : out std_logic_vector(2 downto 0);
+    GS : out std_logic   -- Group Select: 有输入=1
+  );
 end priority_encoder;
 
 architecture behavioral of priority_encoder is
@@ -464,12 +500,17 @@ I <= "10000001"; wait for 10 ns;
 \textbf{【电路】}
 在标准编码器基础上增加Enable(E)输入。E=1时编码器正常工作；E=0时所有输出为0（或高阻态）。
 
-\textbf{【VHDL】}
-\begin{lstlisting}
+\textbf{【VHDL——完整实现】}
+\begin{lstlisting}[caption={带使能端的8-3编码器VHDL实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity encoder_with_enable is
-  port (I : in std_logic_vector(7 downto 0);
-        E : in std_logic;
-        Y : out std_logic_vector(2 downto 0));
+  port (
+    I : in  std_logic_vector(7 downto 0);
+    E : in  std_logic;
+    Y : out std_logic_vector(2 downto 0)
+  );
 end encoder_with_enable;
 
 architecture behavioral of encoder_with_enable is
@@ -483,8 +524,13 @@ begin
       case I is
         when "00000001" => Y <= "000";
         when "00000010" => Y <= "001";
-        -- ...
-        when others => Y <= "000";
+        when "00000100" => Y <= "010";
+        when "00001000" => Y <= "011";
+        when "00010000" => Y <= "100";
+        when "00100000" => Y <= "101";
+        when "01000000" => Y <= "110";
+        when "10000000" => Y <= "111";
+        when others      => Y <= "000";
       end case;
     end if;
   end process;
@@ -510,11 +556,44 @@ end behavioral;
   \item 所有输入=0 → GS=0（表示输出无效/无输入选中）
 \end{itemize}
 
-\textbf{【VHDL】}
-\begin{lstlisting}
-GS <= '0' when I = "00000000" else '1';
--- 或
-GS <= I(0) or I(1) or I(2) or I(3) or I(4) or I(5) or I(6) or I(7);
+\textbf{【VHDL——完整实现】}
+\begin{lstlisting}[caption={带GS输出的8-3编码器VHDL实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity encoder_with_gs is
+  port (
+    I  : in  std_logic_vector(7 downto 0);
+    Y  : out std_logic_vector(2 downto 0);
+    GS : out std_logic
+  );
+end encoder_with_gs;
+
+architecture behavioral of encoder_with_gs is
+begin
+  process(I)
+  begin
+    -- GS: 任意输入为1时置1，否则置0
+    if I = "00000000" then
+      GS <= '0';
+    else
+      GS <= '1';
+    end if;
+
+    -- 编码逻辑
+    case I is
+      when "00000001" => Y <= "000";
+      when "00000010" => Y <= "001";
+      when "00000100" => Y <= "010";
+      when "00001000" => Y <= "011";
+      when "00010000" => Y <= "100";
+      when "00100000" => Y <= "101";
+      when "01000000" => Y <= "110";
+      when "10000000" => Y <= "111";
+      when others      => Y <= "000";
+    end case;
+  end process;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【GS硬件】}一个8输入OR门——需要8个输入引脚。
@@ -540,13 +619,16 @@ GS <= I(0) or I(1) or I(2) or I(3) or I(4) or I(5) or I(6) or I(7);
   \item 用NAND门替代OR门来实现（因为低有效的或=高有效的与非）
 \end{itemize}
 
-\textbf{【VHDL】}
-\begin{lstlisting}
+\textbf{【VHDL——完整实现】}
+\begin{lstlisting}[caption={低电平有效8-3优先级编码器VHDL实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity encoder_active_low is
   port (
     I_n : in  std_logic_vector(7 downto 0);  -- 低有效
     Y_n : out std_logic_vector(2 downto 0);  -- 低有效
-    GS_n: out std_logic  -- 低有效：0=有输入, 1=无输入
+    GS_n: out std_logic                     -- 低有效：0=有输入, 1=无输入
   );
 end encoder_active_low;
 

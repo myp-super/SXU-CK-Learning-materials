@@ -12,16 +12,37 @@
 \end{itemize}
 
 \textbf{VHDL}：
-\begin{lstlisting}
-signal cnt : std_logic_vector(2 downto 0);
-process(clk, rst_n)
+\begin{lstlisting}[caption={模7计数器（0-6循环）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod7_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(2 downto 0)
+  );
+end mod7_counter;
+
+architecture behavioral of mod7_counter is
+  signal cnt : unsigned(2 downto 0);
 begin
-  if rst_n = '0' then cnt <= "000";
-  elsif rising_edge(clk) then
-    if cnt = "110" then cnt <= "000";
-    else cnt <= cnt + 1; end if;
-  end if;
-end process;
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "000";
+    elsif rising_edge(clk) then
+      if cnt = 6 then
+        cnt <= "000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目2：模13计数器}
@@ -35,10 +56,37 @@ end process;
 \end{itemize}
 
 \textbf{VHDL}：
-\begin{lstlisting}
-signal cnt : std_logic_vector(3 downto 0);  -- 4位
- if cnt = "1100" then cnt <= "0000";  -- =12清零
-else cnt <= cnt + 1;
+\begin{lstlisting}[caption={模13计数器（0-12循环）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod13_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end mod13_counter;
+
+architecture behavioral of mod13_counter is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = 12 then
+        cnt <= "0000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目3：模3计数器}
@@ -64,17 +112,75 @@ else cnt <= cnt + 1;
 \end{tikzpicture}
 \end{center}
 
+\textbf{VHDL}：
+\begin{lstlisting}[caption={模3计数器（0-2循环）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod3_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(1 downto 0)
+  );
+end mod3_counter;
+
+architecture behavioral of mod3_counter is
+  signal cnt : unsigned(1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "00";
+    elsif rising_edge(clk) then
+      if cnt = 2 then
+        cnt <= "00";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
+\end{lstlisting}
+
 \section*{题目4：带使能的模8计数器}
 
 \textbf{题目}：设计带使能信号en的模8计数器。en=1时计数，en=0时保持。
 
 \textbf{VHDL}：
-\begin{lstlisting}
- if rising_edge(clk) then
-  if en = '1' then
-    cnt <= cnt + 1;  -- 3位自然溢出=模8
-  end if;
-end if;
+\begin{lstlisting}[caption={带使能的模8计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod8_counter_en is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    en    : in  std_logic;
+    q     : out std_logic_vector(2 downto 0)
+  );
+end mod8_counter_en;
+
+architecture behavioral of mod8_counter_en is
+  signal cnt : unsigned(2 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "000";
+    elsif rising_edge(clk) then
+      if en = '1' then
+        cnt <= cnt + 1;  -- 3位自然溢出=模8
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目5：带同步加载的模10计数器}
@@ -82,16 +188,41 @@ end if;
 \textbf{题目}：设计带同步加载（load）的模10计数器。load=1时cnt = data\_in；load=0时正常计数（0-9）。
 
 \textbf{VHDL}：
-\begin{lstlisting}
- if rising_edge(clk) then
-  if load = '1' then
-    cnt <= data_in;
-  elsif cnt = "1001" then
-    cnt <= "0000";
-  else
-    cnt <= cnt + 1;
-  end if;
-end if;
+\begin{lstlisting}[caption={带同步加载的模10计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod10_counter_load is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    load    : in  std_logic;
+    data_in : in  std_logic_vector(3 downto 0);
+    q       : out std_logic_vector(3 downto 0)
+  );
+end mod10_counter_load;
+
+architecture behavioral of mod10_counter_load is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if load = '1' then
+        cnt <= unsigned(data_in);
+      elsif cnt = 9 then
+        cnt <= "0000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目6：递增/递减双向计数器}
@@ -99,25 +230,141 @@ end if;
 \textbf{题目}：设计模16双向计数器。up=1递增，up=0递减。
 
 \textbf{VHDL}：
-\begin{lstlisting}
- if rising_edge(clk) then
-  if up = '1' then
-    cnt <= cnt + 1;
-  else
-    cnt <= cnt - 1;
-  end if;
-end if;
+\begin{lstlisting}[caption={模16双向计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod16_ud_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    up    : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end mod16_ud_counter;
+
+architecture behavioral of mod16_ud_counter is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if up = '1' then
+        cnt <= cnt + 1;
+      else
+        cnt <= cnt - 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目7：模10 BCD计数器带7段显示}
 
 \textbf{题目}：设计模10 BCD计数器 + BCD-7段译码器。输出驱动7段数码管显示0-9。
 
+\textbf{解}：
+\begin{lstlisting}[caption={模10 BCD计数器+7段译码器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity bcd_counter_7seg is
+  port (
+    clk    : in  std_logic;
+    rst_n  : in  std_logic;
+    seg    : out std_logic_vector(6 downto 0)  -- a~g，低有效
+  );
+end bcd_counter_7seg;
+
+architecture behavioral of bcd_counter_7seg is
+  signal cnt : unsigned(3 downto 0);
+begin
+  -- 模10 BCD计数器
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = 9 then
+        cnt <= "0000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  -- BCD-7段译码器（共阳极：0亮1灭）
+  process(cnt)
+  begin
+    case cnt is
+      when "0000" => seg <= "1000000";  -- 0
+      when "0001" => seg <= "1111001";  -- 1
+      when "0010" => seg <= "0100100";  -- 2
+      when "0011" => seg <= "0110000";  -- 3
+      when "0100" => seg <= "0011001";  -- 4
+      when "0101" => seg <= "0010010";  -- 5
+      when "0110" => seg <= "0000010";  -- 6
+      when "0111" => seg <= "1111000";  -- 7
+      when "1000" => seg <= "0000000";  -- 8
+      when "1001" => seg <= "0010000";  -- 9
+      when others => seg <= "1111111";  -- 非法：全灭
+    end case;
+  end process;
+end behavioral;
+\end{lstlisting}
+
 \section*{题目8：模60计数器（秒/分计数器）}
 
 \textbf{题目}：设计模60计数器用于时钟应用。输出秒/分的十位和个位。
 
-\textbf{分析}：见第三部分第八章BCD模60计数器。
+\textbf{解}：使用两个BCD计数器级联——个位模10（0-9），十位模6（0-5）。个位计到9时向下一个周期产生进位，十位加1。当十位=5且个位=9时，整体回0。
+
+\begin{lstlisting}[caption={模60 BCD计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod60_counter is
+  port (
+    clk    : in  std_logic;
+    rst_n  : in  std_logic;
+    sec_lo : out std_logic_vector(3 downto 0);  -- 个位(0-9)
+    sec_hi : out std_logic_vector(3 downto 0)   -- 十位(0-5)
+  );
+end mod60_counter;
+
+architecture behavioral of mod60_counter is
+  signal cnt_lo : unsigned(3 downto 0);  -- 个位
+  signal cnt_hi : unsigned(3 downto 0);  -- 十位
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_lo <= "0000";
+      cnt_hi <= "0000";
+    elsif rising_edge(clk) then
+      if cnt_hi = 5 and cnt_lo = 9 then
+        cnt_lo <= "0000";
+        cnt_hi <= "0000";
+      elsif cnt_lo = 9 then
+        cnt_lo <= "0000";
+        cnt_hi <= cnt_hi + 1;
+      else
+        cnt_lo <= cnt_lo + 1;
+      end if;
+    end if;
+  end process;
+
+  sec_lo <= std_logic_vector(cnt_lo);
+  sec_hi <= std_logic_vector(cnt_hi);
+end behavioral;
+\end{lstlisting}
 
 \section*{题目9：模24 BCD计数器}
 
@@ -125,11 +372,95 @@ end if;
 
 \textbf{分析}：十位模3（0-2），个位模10（0-9）。清零条件：23。
 
+\textbf{解}：
+\begin{lstlisting}[caption={模24 BCD计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod24_counter is
+  port (
+    clk    : in  std_logic;
+    rst_n  : in  std_logic;
+    hour_lo : out std_logic_vector(3 downto 0);  -- 个位(0-9)
+    hour_hi : out std_logic_vector(3 downto 0)   -- 十位(0-2)
+  );
+end mod24_counter;
+
+architecture behavioral of mod24_counter is
+  signal cnt_lo : unsigned(3 downto 0);  -- 个位
+  signal cnt_hi : unsigned(3 downto 0);  -- 十位
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_lo <= "0000";
+      cnt_hi <= "0000";
+    elsif rising_edge(clk) then
+      if cnt_hi = 2 and cnt_lo = 3 then  -- 23→00
+        cnt_lo <= "0000";
+        cnt_hi <= "0000";
+      elsif cnt_lo = 9 then
+        cnt_lo <= "0000";
+        cnt_hi <= cnt_hi + 1;
+      else
+        cnt_lo <= cnt_lo + 1;
+      end if;
+    end if;
+  end process;
+
+  hour_lo <= std_logic_vector(cnt_lo);
+  hour_hi <= std_logic_vector(cnt_hi);
+end behavioral;
+\end{lstlisting}
+
 \section*{题目10：模100 BCD计数器}
 
 \textbf{题目}：设计两位BCD模100计数器（00-99循环）。
 
 \textbf{分析}：个位每满10向十位进位。十位满9+个位满9（即99）时清零。
+
+\textbf{解}：
+\begin{lstlisting}[caption={模100 BCD计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mod100_counter is
+  port (
+    clk    : in  std_logic;
+    rst_n  : in  std_logic;
+    cnt_lo : out std_logic_vector(3 downto 0);  -- 个位(0-9)
+    cnt_hi : out std_logic_vector(3 downto 0)   -- 十位(0-9)
+  );
+end mod100_counter;
+
+architecture behavioral of mod100_counter is
+  signal lo : unsigned(3 downto 0);
+  signal hi : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      lo <= "0000";
+      hi <= "0000";
+    elsif rising_edge(clk) then
+      if hi = 9 and lo = 9 then  -- 99→00
+        lo <= "0000";
+        hi <= "0000";
+      elsif lo = 9 then
+        lo <= "0000";
+        hi <= hi + 1;
+      else
+        lo <= lo + 1;
+      end if;
+    end if;
+  end process;
+
+  cnt_lo <= std_logic_vector(lo);
+  cnt_hi <= std_logic_vector(hi);
+end behavioral;
+\end{lstlisting}
 
 \section*{题目11：给定计数器时序图，推断模值}
 
@@ -139,10 +470,38 @@ end if;
 
 \section*{题目12：给定VHDL推断模值}
 
-\textbf{题目}：
-\begin{lstlisting}
- if cnt = "1010" then cnt <= "0000";
-else cnt <= cnt + 1;
+\textbf{题目}：分析以下VHDL代码所描述的计数器模值。
+\begin{lstlisting}[caption={推断模值——完整代码}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mystery_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end mystery_counter;
+
+architecture behavioral of mystery_counter is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt = "1010" then
+        cnt <= "0000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 求模值N。
 
@@ -174,14 +533,39 @@ $f_{max} = 1/10\text{ns} = 100\text{MHz}$
 \textbf{题目}：模10 BCD计数器可能因干扰进入非法状态(1010-1111)。设计自恢复逻辑。
 
 \textbf{解}：
-\begin{lstlisting}
- if cnt >= "1010" then  -- 非法状态
-  cnt <= "0000";
-elsif cnt = "1001" then
-  cnt <= "0000";
-else
-  cnt <= cnt + 1;
-end if;
+\begin{lstlisting}[caption={自恢复BCD计数器（非法状态检测）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity bcd_counter_safe is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end bcd_counter_safe;
+
+architecture behavioral of bcd_counter_safe is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if cnt >= 10 then     -- 非法状态(1010-1111)
+        cnt <= "0000";
+      elsif cnt = 9 then
+        cnt <= "0000";
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
 \end{lstlisting}
 
 \section*{题目16-20：综合应用题}
@@ -189,17 +573,261 @@ end if;
 \subsection*{题目16：数字钟核心}
 设计时分秒计数器（模60秒+模60分+模24时）。
 
+\textbf{解}：三个计数器级联——秒(模60)→分(模60)→时(模24)。
+\begin{lstlisting}[caption={数字钟核心——时分秒计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity digital_clock is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    sec_lo  : out std_logic_vector(3 downto 0);
+    sec_hi  : out std_logic_vector(3 downto 0);
+    min_lo  : out std_logic_vector(3 downto 0);
+    min_hi  : out std_logic_vector(3 downto 0);
+    hour_lo : out std_logic_vector(3 downto 0);
+    hour_hi : out std_logic_vector(3 downto 0)
+  );
+end digital_clock;
+
+architecture behavioral of digital_clock is
+  signal s_lo, s_hi : unsigned(3 downto 0);  -- 秒
+  signal m_lo, m_hi : unsigned(3 downto 0);  -- 分
+  signal h_lo, h_hi : unsigned(3 downto 0);  -- 时
+  signal s_carry : std_logic;  -- 秒→分进位
+  signal m_carry : std_logic;  -- 分→时进位
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      s_lo <= "0000"; s_hi <= "0000";
+      m_lo <= "0000"; m_hi <= "0000";
+      h_lo <= "0000"; h_hi <= "0000";
+      s_carry <= '0'; m_carry <= '0';
+    elsif rising_edge(clk) then
+      -- 秒计数器（模60）
+      if s_hi = 5 and s_lo = 9 then
+        s_lo <= "0000"; s_hi <= "0000";
+        s_carry <= '1';
+      elsif s_lo = 9 then
+        s_lo <= "0000"; s_hi <= s_hi + 1;
+        s_carry <= '0';
+      else
+        s_lo <= s_lo + 1;
+        s_carry <= '0';
+      end if;
+      -- 分计数器（模60，秒进位触发）
+      if s_carry = '1' then
+        if m_hi = 5 and m_lo = 9 then
+          m_lo <= "0000"; m_hi <= "0000";
+          m_carry <= '1';
+        elsif m_lo = 9 then
+          m_lo <= "0000"; m_hi <= m_hi + 1;
+          m_carry <= '0';
+        else
+          m_lo <= m_lo + 1;
+          m_carry <= '0';
+        end if;
+      else
+        m_carry <= '0';
+      end if;
+      -- 时计数器（模24，分进位触发）
+      if m_carry = '1' then
+        if h_hi = 2 and h_lo = 3 then
+          h_lo <= "0000"; h_hi <= "0000";
+        elsif h_lo = 9 then
+          h_lo <= "0000"; h_hi <= h_hi + 1;
+        else
+          h_lo <= h_lo + 1;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  sec_lo  <= std_logic_vector(s_lo);
+  sec_hi  <= std_logic_vector(s_hi);
+  min_lo  <= std_logic_vector(m_lo);
+  min_hi  <= std_logic_vector(m_hi);
+  hour_lo <= std_logic_vector(h_lo);
+  hour_hi <= std_logic_vector(h_hi);
+end behavioral;
+\end{lstlisting}
+
 \subsection*{题目17：带暂停的计数器}
 Pause=1时暂停计数，pause=0时恢复。
+
+\textbf{解}：
+\begin{lstlisting}[caption={带暂停的模16计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity counter_pause is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    pause : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end counter_pause;
+
+architecture behavioral of counter_pause is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= "0000";
+    elsif rising_edge(clk) then
+      if pause = '0' then
+        cnt <= cnt + 1;  -- 4位自然溢出=模16
+      end if;
+    end if;
+  end process;
+
+  q <= std_logic_vector(cnt);
+end behavioral;
+\end{lstlisting}
 
 \subsection*{题目18：带预置位的倒计时计数器}
 从预置值倒计时到0，到0后重新加载预置值。
 
+\textbf{解}：
+\begin{lstlisting}[caption={带预置位的倒计时计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity countdown_preset is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    preset  : in  std_logic_vector(3 downto 0);
+    q       : out std_logic_vector(3 downto 0);
+    zero    : out std_logic  -- 倒计时到0标志
+  );
+end countdown_preset;
+
+architecture behavioral of countdown_preset is
+  signal cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= unsigned(preset);
+    elsif rising_edge(clk) then
+      if cnt = 0 then
+        cnt <= unsigned(preset);  -- 到0后重新加载
+      else
+        cnt <= cnt - 1;
+      end if;
+    end if;
+  end process;
+
+  q    <= std_logic_vector(cnt);
+  zero <= '1' when cnt = 0 else '0';
+end behavioral;
+\end{lstlisting}
+
 \subsection*{题目19：两相正交计数器}
 输出两个相位差90度的方波（格雷码计数器的一种应用）。
 
+\textbf{解}：使用2位格雷码计数器产生正交输出。序列：00→01→11→10→00。
+\begin{lstlisting}[caption={两相正交计数器（格雷码）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity quadrature_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    phase_a : out std_logic;  -- 相位A
+    phase_b : out std_logic   -- 相位B（滞后90度）
+  );
+end quadrature_counter;
+
+architecture behavioral of quadrature_counter is
+  signal gray : std_logic_vector(1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      gray <= "00";
+    elsif rising_edge(clk) then
+      case gray is
+        when "00"   => gray <= "01";
+        when "01"   => gray <= "11";
+        when "11"   => gray <= "10";
+        when "10"   => gray <= "00";
+        when others => gray <= "00";
+      end case;
+    end if;
+  end process;
+
+  phase_a <= gray(0);
+  phase_b <= gray(1);
+end behavioral;
+\end{lstlisting}
+
 \subsection*{题目20：用计数器实现序列检测}
 计数器状态作为地址，ROM存放序列，输出+检测逻辑。
+
+\textbf{解}：计数器遍历状态作为ROM地址，ROM预先存放待检测序列的各bit，逐拍与输入比较。
+\begin{lstlisting}[caption={计数器+ROM实现序列检测}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity counter_seq_detector is
+  port (
+    clk       : in  std_logic;
+    rst_n     : in  std_logic;
+    data_in   : in  std_logic;
+    detected  : out std_logic
+  );
+end counter_seq_detector;
+
+architecture behavioral of counter_seq_detector is
+  signal addr : unsigned(1 downto 0);  -- 0-3，遍历4个序列位
+  type rom_type is array (0 to 3) of std_logic;
+  -- ROM存放目标序列"1011"（地址0→bit3, 1→bit2, 2→bit1, 3→bit0）
+  constant pattern : rom_type := ('1', '0', '1', '1');
+  signal match : std_logic_vector(3 downto 0);  -- 逐位匹配标志
+begin
+  -- 地址计数器：0→1→2→3→0循环
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      addr <= "00";
+    elsif rising_edge(clk) then
+      if addr = 3 then
+        addr <= "00";
+      else
+        addr <= addr + 1;
+      end if;
+    end if;
+  end process;
+
+  -- 比对逻辑
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      match <= (others => '0');
+    elsif rising_edge(clk) then
+      if data_in = pattern(to_integer(addr)) then
+        match(to_integer(addr)) <= '1';
+      else
+        match(to_integer(addr)) <= '0';
+      end if;
+    end if;
+  end process;
+
+  -- 全部4位匹配→检测到
+  detected <= '1' when match = "1111" else '0';
+end behavioral;
+\end{lstlisting}
 
 \begin{examtip}[计数器类题目的统一解法]
 \textbf{第一步：}确定模值N

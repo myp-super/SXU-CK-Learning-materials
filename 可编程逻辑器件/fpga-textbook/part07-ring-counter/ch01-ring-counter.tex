@@ -212,6 +212,17 @@ end behavioral;
 \subsection{约翰逊计数器VHDL}
 
 \begin{lstlisting}[caption={4位约翰逊计数器（扭环形）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity johnson_counter is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end johnson_counter;
+
 architecture behavioral of johnson_counter is
   signal reg : std_logic_vector(3 downto 0);
 begin
@@ -223,6 +234,8 @@ begin
       reg <= (not reg(0)) & reg(3 downto 1);  -- 反相的最低位移入最高位
     end if;
   end process;
+
+  q <= reg;
 end behavioral;
 \end{lstlisting}
 
@@ -300,14 +313,33 @@ end test;
 
 \begin{detailbox}[完整教学]
 \textbf{【通用模板】}
-\begin{lstlisting}
-process(clk, rst_n)
+\begin{lstlisting}[caption={N位环形计数器（Generic实现）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ring_counter_n is
+  generic (N : integer := 4);
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(N-1 downto 0)
+  );
+end ring_counter_n;
+
+architecture behavioral of ring_counter_n is
+  signal reg : std_logic_vector(N-1 downto 0);
 begin
-  if rst_n='0' then reg <= (N-1=>'1', others=>'0');  -- One-hot初值
-  elsif rising_edge(clk) then
-    reg <= reg(0) & reg(N-1 downto 1);  -- 右移+反馈
-  end if;
-end process;
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (N-1 => '1', others => '0');  -- One-hot初值
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(N-1 downto 1);  -- 右移+反馈
+    end if;
+  end process;
+
+  q <= reg;
+end behavioral;
 \end{lstlisting}
 \textbf{【结论】}N个DFF→N个状态。所有状态中恰好一个1（One-hot编码）。
 \end{detailbox}
@@ -317,6 +349,36 @@ end process;
 
 \begin{detailbox}[完整教学]
 \textbf{【反馈】}\texttt{reg <= (not reg(0)) \& reg(N-1 downto 1);}
+
+\begin{lstlisting}[caption={N位约翰逊计数器（Generic实现）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity johnson_counter_n is
+  generic (N : integer := 4);
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(N-1 downto 0)
+  );
+end johnson_counter_n;
+
+architecture behavioral of johnson_counter_n is
+  signal reg : std_logic_vector(N-1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= (others => '0');
+    elsif rising_edge(clk) then
+      reg <= (not reg(0)) & reg(N-1 downto 1);
+    end if;
+  end process;
+
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
 \textbf{【4位约翰逊状态序列】}$0000\to1000\to1100\to1110\to1111\to0111\to0011\to0001\to0000$
 \textbf{【结论】}N个DFF→2N个状态（比环形计数器多一倍）。
 \end{detailbox}
@@ -327,7 +389,50 @@ end process;
 \begin{detailbox}[完整教学]
 \textbf{【问题】}干扰可能使环形计数器进入非法状态。
 \textbf{【方案】}检测非法状态（如全0或多个1），强制恢复到合法状态(1000)。
-\textbf{【VHDL】}在移位前检查：\texttt{if count\_ones(reg) /= 1 then reg <= "1000";}
+
+\begin{lstlisting}[caption={自启动4位环形计数器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ring_counter_safe is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    q     : out std_logic_vector(3 downto 0)
+  );
+end ring_counter_safe;
+
+architecture behavioral of ring_counter_safe is
+  signal reg : std_logic_vector(3 downto 0);
+
+  function count_ones(v : std_logic_vector) return integer is
+    variable cnt : integer := 0;
+  begin
+    for i in v'range loop
+      if v(i) = '1' then cnt := cnt + 1; end if;
+    end loop;
+    return cnt;
+  end function;
+
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= "1000";
+    elsif rising_edge(clk) then
+      if count_ones(reg) /= 1 then
+        reg <= "1000";  -- 非法状态，恢复
+      else
+        reg <= reg(0) & reg(3 downto 1);
+      end if;
+    end if;
+  end process;
+
+  q <= reg;
+end behavioral;
+\end{lstlisting}
+
+\textbf{【关键】}在移位前检查：\texttt{if count\_ones(reg) /= 1 then reg <= "1000";}
 \end{detailbox}
 
 
@@ -336,5 +441,34 @@ end process;
 \begin{detailbox}[完整教学]
 \textbf{【应用】}多周期操作器的步骤控制。
 \textbf{【5步控制器】}5位环形计数器→每拍恰好一个步骤信号为1→控制对应步骤。
+
+\begin{lstlisting}[caption={5步时序控制器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity timing_controller is
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    step  : out std_logic_vector(4 downto 0)
+  );
+end timing_controller;
+
+architecture behavioral of timing_controller is
+  signal reg : std_logic_vector(4 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      reg <= "10000";
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(4 downto 1);
+    end if;
+  end process;
+
+  step <= reg;
+end behavioral;
+\end{lstlisting}
+
 \textbf{【优点】}无需额外的译码逻辑——直接读Q值。
 \end{detailbox}

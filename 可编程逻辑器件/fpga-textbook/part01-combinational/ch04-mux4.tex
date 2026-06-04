@@ -149,6 +149,17 @@ $S_1$ & $S_0$ & $Y$ \\
 \section{第八步：VHDL实现}
 
 \begin{lstlisting}[caption={4选1 MUX（多种实现方式）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4to1 is
+  port (
+    D : in  std_logic_vector(3 downto 0);
+    S : in  std_logic_vector(1 downto 0);
+    Y : out std_logic
+  );
+end mux4to1;
+
 -- 方式1: with-select (最简洁)
 architecture with_select of mux4to1 is
 begin
@@ -197,6 +208,16 @@ entity mux4to1 is
     Y : out std_logic
   );
 end mux4to1;
+
+architecture behavioral of mux4to1 is
+begin
+  with S select
+    Y <= D(0) when "00",
+         D(1) when "01",
+         D(2) when "10",
+         D(3) when "11",
+         '0'   when others;
+end behavioral;
 \end{lstlisting}
 
 \section{第九步：Testbench验证}
@@ -292,6 +313,9 @@ D0=1, D1=0, D2=$\overline{C}$, D3=1.
 
 \textbf{【VHDL】}
 \begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity mux_logic is
   port (A, B, C : in std_logic; F : out std_logic);
 end mux_logic;
@@ -303,7 +327,8 @@ begin
   D <= '1' & (not C) & '0' & '1';  -- D3,D2,D1,D0
   with S select F <=
     D(0) when "00", D(1) when "01",
-    D(2) when "10", D(3) when "11";
+    D(2) when "10", D(3) when "11",
+    '0'   when others;
 end rtl;
 \end{lstlisting}
 
@@ -323,12 +348,37 @@ end rtl;
 
 \textbf{【VHDL——结构级】}
 \begin{lstlisting}
--- 片0：S1S0选D0-D3
-mux_low: entity work.mux4to1 port map(D=>D(3 downto 0), S=>S(1 downto 0), Y=>F_low);
--- 片1：S1S0选D4-D7
-mux_high: entity work.mux4to1 port map(D=>D(7 downto 4), S=>S(1 downto 0), Y=>F_high);
--- 顶层2选1
-F <= F_low when S(2)='0' else F_high;
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux8to1 is
+  port (
+    D : in  std_logic_vector(7 downto 0);
+    S : in  std_logic_vector(2 downto 0);
+    F : out std_logic
+  );
+end mux8to1;
+
+architecture structural of mux8to1 is
+  signal F_low, F_high : std_logic;
+
+  component mux4to1 is
+    port (
+      D : in  std_logic_vector(3 downto 0);
+      S : in  std_logic_vector(1 downto 0);
+      Y : out std_logic
+    );
+  end component;
+begin
+  -- 片0：S1S0选D0-D3
+  mux_low: mux4to1 port map(
+    D => D(3 downto 0), S => S(1 downto 0), Y => F_low);
+  -- 片1：S1S0选D4-D7
+  mux_high: mux4to1 port map(
+    D => D(7 downto 4), S => S(1 downto 0), Y => F_high);
+  -- 顶层2选1
+  F <= F_low when S(2) = '0' else F_high;
+end structural;
 \end{lstlisting}
 \end{detailbox}
 
@@ -340,7 +390,23 @@ F <= F_low when S(2)='0' else F_high;
 
 \textbf{【VHDL——三态输出】}
 \begin{lstlisting}
-F <= D(to_integer(unsigned(S))) when E='1' else 'Z';
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity mux4to1_tristate is
+  port (
+    D : in  std_logic_vector(3 downto 0);
+    S : in  std_logic_vector(1 downto 0);
+    E : in  std_logic;
+    F : out std_logic
+  );
+end mux4to1_tristate;
+
+architecture rtl of mux4to1_tristate is
+begin
+  F <= D(to_integer(unsigned(S))) when E = '1' else 'Z';
+end rtl;
 \end{lstlisting}
 
 \textbf{【应用】}多个MUX输出可共用一根总线（总线仲裁）。

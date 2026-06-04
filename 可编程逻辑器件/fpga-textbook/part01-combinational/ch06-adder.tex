@@ -266,18 +266,61 @@ end test;
 \textbf{【方案】}两片4位加法器级联。低位$C_{out}$→高位$C_{in}$。
 
 \textbf{【VHDL——结构级】}
-\begin{lstlisting}
-add_lo: entity work.adder_4bit port map(A=>A(3 downto 0), B=>B(3 downto 0),
-        Cin=>'0', Sum=>Sum(3 downto 0), Cout=>carry);
-add_hi: entity work.adder_4bit port map(A=>A(7 downto 4), B=>B(7 downto 4),
-        Cin=>carry, Sum=>Sum(7 downto 4), Cout=>Cout);
+\begin{lstlisting}[caption={8位加法器结构级实现（两片4位级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity adder_8bit is
+  port (
+    A    : in  std_logic_vector(7 downto 0);
+    B    : in  std_logic_vector(7 downto 0);
+    Cin  : in  std_logic;
+    Sum  : out std_logic_vector(7 downto 0);
+    Cout : out std_logic
+  );
+end adder_8bit;
+
+architecture structural of adder_8bit is
+  signal carry : std_logic;
+
+  component adder_4bit is
+    port (
+      A    : in  std_logic_vector(3 downto 0);
+      B    : in  std_logic_vector(3 downto 0);
+      Cin  : in  std_logic;
+      Sum  : out std_logic_vector(3 downto 0);
+      Cout : out std_logic
+    );
+  end component;
+begin
+  add_lo: adder_4bit port map(A=>A(3 downto 0), B=>B(3 downto 0),
+          Cin=>Cin, Sum=>Sum(3 downto 0), Cout=>carry);
+  add_hi: adder_4bit port map(A=>A(7 downto 4), B=>B(7 downto 4),
+          Cin=>carry, Sum=>Sum(7 downto 4), Cout=>Cout);
+end structural;
 \end{lstlisting}
 
 \textbf{【行为级——推荐】}
-\begin{lstlisting}
-signal result : std_logic_vector(8 downto 0);
-result <= ('0' & A) + ('0' & B);
-Sum <= result(7 downto 0); Cout <= result(8);
+\begin{lstlisting}[caption={8位加法器行为级实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity adder_8bit is
+  port (
+    A    : in  std_logic_vector(7 downto 0);
+    B    : in  std_logic_vector(7 downto 0);
+    Sum  : out std_logic_vector(7 downto 0);
+    Cout : out std_logic
+  );
+end adder_8bit;
+
+architecture behavioral of adder_8bit is
+  signal result : std_logic_vector(8 downto 0);
+begin
+  result <= ('0' & A) + ('0' & B);
+  Sum <= result(7 downto 0); Cout <= result(8);
+end behavioral;
 \end{lstlisting}
 综合器自动优化任意位宽加法。
 \end{detailbox}
@@ -291,10 +334,25 @@ Sum <= result(7 downto 0); Cout <= result(8);
 \textbf{【电路】}B取反→接加法器B输入。$C_{in}=1$（实现+1）。$C_{in}$就是补码中的"+1"。
 
 \textbf{【VHDL】}
-\begin{lstlisting}
-diff <= A + (not B) + '1';  -- A-B = A + (~B) + 1
--- 或直接用减法运算符
-diff <= A - B;
+\begin{lstlisting}[caption={减法器（用加法器实现A-B）}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity subtractor_4bit is
+  port (
+    A    : in  std_logic_vector(3 downto 0);
+    B    : in  std_logic_vector(3 downto 0);
+    diff : out std_logic_vector(4 downto 0)
+  );
+end subtractor_4bit;
+
+architecture behavioral of subtractor_4bit is
+begin
+  diff <= ('0' & A) + ('0' & (not B)) + "00001";  -- A-B = A + (~B) + 1
+  -- 或直接用减法运算符
+  -- diff <= ('0' & A) - ('0' & B);
+end behavioral;
 \end{lstlisting}
 
 \begin{examfocus}
@@ -310,14 +368,33 @@ diff <= A - B;
 \textbf{【结构】}加法器计算$ACC+Input$。结果在时钟沿存入ACC。ACC输出反馈回加法器输入端。
 
 \textbf{【VHDL】}
-\begin{lstlisting}
-process(clk, rst_n)
+\begin{lstlisting}[caption={累加器完整实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity accumulator is
+  port (
+    clk        : in  std_logic;
+    rst_n      : in  std_logic;
+    input_data : in  std_logic_vector(7 downto 0);
+    acc        : out std_logic_vector(7 downto 0)
+  );
+end accumulator;
+
+architecture behavioral of accumulator is
+  signal acc_reg : std_logic_vector(7 downto 0);
 begin
-  if rst_n='0' then acc <= (others=>'0');
-  elsif rising_edge(clk) then
-    acc <= acc + input_data;  -- 每个时钟累加一次
-  end if;
-end process;
+  process(clk, rst_n)
+  begin
+    if rst_n='0' then
+      acc_reg <= (others=>'0');
+    elsif rising_edge(clk) then
+      acc_reg <= acc_reg + input_data;  -- 每个时钟累加一次
+    end if;
+  end process;
+  acc <= acc_reg;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【本质】}累加器=计数器的一种（不是每次+1，而是+任意值）。
@@ -334,13 +411,30 @@ end process;
 \textbf{【有符号数溢出】}$Overflow = C_n \oplus C_{n-1}$（最高位进位和次高位进位异或）。
 
 \textbf{【VHDL】}
-\begin{lstlisting}
-signal result : std_logic_vector(4 downto 0);  -- 5位
-result <= ('0' & A) + ('0' & B);
-Sum <= result(3 downto 0);
-Cout <= result(4);
--- 有符号溢出
-Overflow <= result(4) xor result(3);  -- C4 xor C3
+\begin{lstlisting}[caption={带溢出检测的加法器}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity adder_overflow is
+  port (
+    A        : in  std_logic_vector(3 downto 0);
+    B        : in  std_logic_vector(3 downto 0);
+    Sum      : out std_logic_vector(3 downto 0);
+    Cout     : out std_logic;
+    Overflow : out std_logic
+  );
+end adder_overflow;
+
+architecture behavioral of adder_overflow is
+  signal result : std_logic_vector(4 downto 0);  -- 5位
+begin
+  result <= ('0' & A) + ('0' & B);
+  Sum <= result(3 downto 0);
+  Cout <= result(4);
+  -- 有符号溢出
+  Overflow <= result(4) xor result(3);  -- C4 xor C3
+end behavioral;
 \end{lstlisting}
 
 \textbf{【直观判断】}
@@ -355,14 +449,30 @@ Overflow <= result(4) xor result(3);  -- C4 xor C3
 \textbf{【问题】}二进制加法后，如果结果>9(1001)，需要+6(0110)修正为BCD格式。
 
 \textbf{【VHDL】}
-\begin{lstlisting}
-signal bin_sum : std_logic_vector(4 downto 0);
-signal bcd_sum : std_logic_vector(3 downto 0);
+\begin{lstlisting}[caption={BCD加法器完整实现}]
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity bcd_adder is
+  port (
+    A    : in  std_logic_vector(3 downto 0);
+    B    : in  std_logic_vector(3 downto 0);
+    Sum  : out std_logic_vector(3 downto 0);
+    Cout : out std_logic
+  );
+end bcd_adder;
+
+architecture behavioral of bcd_adder is
+  signal bin_sum : std_logic_vector(4 downto 0);
+  signal bcd_sum : std_logic_vector(3 downto 0);
 begin
   bin_sum <= ('0' & A) + ('0' & B);
   bcd_sum <= bin_sum(3 downto 0) when bin_sum <= 9
         else bin_sum(3 downto 0) + "0110";  -- >9时+6修正
   Cout <= '1' when bin_sum > 9 else '0';
+  Sum <= bcd_sum;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【例子】}5+7=12(1100)。1100+0110=10010→BCD: 0001 0010(12)。

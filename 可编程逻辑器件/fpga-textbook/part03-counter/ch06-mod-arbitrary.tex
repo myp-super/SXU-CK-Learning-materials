@@ -145,11 +145,39 @@ end if;
 \textbf{【电路】}在标准计数器上增加en控制。
 \textbf{【VHDL】}
 \begin{lstlisting}
-if rising_edge(clk) then
-  if en = '1' then
-    if cnt = N-1 then cnt <= 0; else cnt <= cnt + 1; end if;
-  end if;
-end if;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity modn_en_counter is
+  generic (N : integer := 10);
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    en    : in  std_logic;
+    cnt   : out std_logic_vector(3 downto 0)
+  );
+end modn_en_counter;
+
+architecture behavioral of modn_en_counter is
+  signal cnt_reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if en = '1' then
+        if cnt_reg = N-1 then
+          cnt_reg <= (others => '0');
+        else
+          cnt_reg <= cnt_reg + 1;
+        end if;
+      end if;
+    end if;
+  end process;
+  cnt <= cnt_reg;
+end behavioral;
 \end{lstlisting}
 \textbf{【考点】}en=0时不赋值→保持。这是所有可控计数器的基本范式。
 \end{detailbox}
@@ -162,9 +190,40 @@ end if;
 \textbf{【优先级】}load > 计数（if-else中load在前=优先级高）。
 \textbf{【VHDL】}
 \begin{lstlisting}
-if load = '1' then cnt <= data_in;
-elsif cnt = N-1 then cnt <= 0;
-else cnt <= cnt + 1; end if;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity modn_load_counter is
+  generic (N : integer := 10);
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    load    : in  std_logic;
+    data_in : in  std_logic_vector(3 downto 0);
+    cnt     : out std_logic_vector(3 downto 0)
+  );
+end modn_load_counter;
+
+architecture behavioral of modn_load_counter is
+  signal cnt_reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if load = '1' then
+        cnt_reg <= data_in;
+      elsif cnt_reg = N-1 then
+        cnt_reg <= (others => '0');
+      else
+        cnt_reg <= cnt_reg + 1;
+      end if;
+    end if;
+  end process;
+  cnt <= cnt_reg;
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
 
@@ -174,7 +233,37 @@ else cnt <= cnt + 1; end if;
 \begin{detailbox}[完整教学]
 \textbf{【VHDL】}
 \begin{lstlisting}
-if up = '1' then cnt <= cnt + 1; else cnt <= cnt - 1; end if;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity updown_counter is
+  generic (WIDTH : integer := 4);
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    up    : in  std_logic;
+    cnt   : out std_logic_vector(WIDTH-1 downto 0)
+  );
+end updown_counter;
+
+architecture behavioral of updown_counter is
+  signal cnt_reg : std_logic_vector(WIDTH-1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if up = '1' then
+        cnt_reg <= cnt_reg + 1;
+      else
+        cnt_reg <= cnt_reg - 1;
+      end if;
+    end if;
+  end process;
+  cnt <= cnt_reg;
+end behavioral;
 \end{lstlisting}
 \textbf{【递减自然溢出】}$0000-1=1111$（4位无符号），自动模16循环。
 \end{detailbox}
@@ -185,8 +274,36 @@ if up = '1' then cnt <= cnt + 1; else cnt <= cnt - 1; end if;
 \begin{detailbox}[完整教学]
 \textbf{【VHDL】}
 \begin{lstlisting}
-if cnt = 0 then cnt <= PRE;  -- 到0后重新加载
-else cnt <= cnt - 1; end if;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity countdown_counter is
+  generic (PRE : integer := 9);
+  port (
+    clk   : in  std_logic;
+    rst_n : in  std_logic;
+    cnt   : out std_logic_vector(3 downto 0)
+  );
+end countdown_counter;
+
+architecture behavioral of countdown_counter is
+  signal cnt_reg : unsigned(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt_reg <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt_reg = 0 then
+        cnt_reg <= to_unsigned(PRE, cnt_reg'length);
+      else
+        cnt_reg <= cnt_reg - 1;
+      end if;
+    end if;
+  end process;
+  cnt <= std_logic_vector(cnt_reg);
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
 

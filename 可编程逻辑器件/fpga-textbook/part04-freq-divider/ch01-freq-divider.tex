@@ -339,9 +339,36 @@ $$cnt: 0 \to 1 \to 2 \to \cdots \to M-1 \to 0$$
 
 \textbf{【VHDL——一行搞定】}
 \begin{lstlisting}
-clk_div2 <= cnt(0);   -- 2分频
-clk_div4 <= cnt(1);   -- 4分频
-clk_div8 <= cnt(2);   -- 8分频
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity div_power2 is
+  generic (WIDTH : integer := 4);
+  port (
+    clk      : in  std_logic;
+    rst_n    : in  std_logic;
+    clk_div2 : out std_logic;
+    clk_div4 : out std_logic;
+    clk_div8 : out std_logic
+  );
+end div_power2;
+
+architecture behavioral of div_power2 is
+  signal cnt : std_logic_vector(WIDTH-1 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      cnt <= cnt + 1;
+    end if;
+  end process;
+  clk_div2 <= cnt(0);   -- 2分频
+  clk_div4 <= cnt(1);   -- 4分频
+  clk_div8 <= cnt(2);   -- 8分频
+end behavioral;
 \end{lstlisting}
 
 \textbf{【优点】}不需要任何额外逻辑。计数器本身就是分频器。
@@ -353,8 +380,36 @@ clk_div8 <= cnt(2);   -- 8分频
 \begin{detailbox}[完整教学]
 \textbf{【统一模板】}
 \begin{lstlisting}
-if cnt = M-1 then cnt <= 0; else cnt <= cnt + 1; end if;
-clk_out <= '1' when cnt >= M/2 else '0';  -- 50\%占空比
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity even_divider is
+  generic (M : integer := 6);
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    clk_out : out std_logic
+  );
+end even_divider;
+
+architecture behavioral of even_divider is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = M-1 then
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt >= M/2 else '0';  -- 50\%占空比
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
 
@@ -372,7 +427,36 @@ clk_out <= '1' when cnt >= M/2 else '0';  -- 50\%占空比
 \begin{detailbox}[完整教学]
 \textbf{【原理】}改变输出翻转的阈值。占空比=高拍数/M。
 \begin{lstlisting}
-clk_out <= '1' when cnt < DUTY else '0';
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity duty_divider is
+  generic (M : integer := 10; DUTY : integer := 3);
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    clk_out : out std_logic
+  );
+end duty_divider;
+
+architecture behavioral of duty_divider is
+  signal cnt : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = M-1 then
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt < DUTY else '0';
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
 

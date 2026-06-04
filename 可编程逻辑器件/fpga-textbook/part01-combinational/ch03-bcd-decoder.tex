@@ -192,6 +192,7 @@ end behavioral;
 \begin{lstlisting}[caption={BCD-7段译码器Testbench}]
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity bcd_7seg_tb is
 end bcd_7seg_tb;
@@ -246,18 +247,38 @@ end test;
 
 \textbf{【VHDL核心逻辑】}
 \begin{lstlisting}
-process(clk)  -- 扫描时钟(通常>200Hz)
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity dynamic_scan is
+  port (
+    clk       : in  std_logic;
+    digit0    : in  std_logic_vector(6 downto 0);
+    digit1    : in  std_logic_vector(6 downto 0);
+    digit2    : in  std_logic_vector(6 downto 0);
+    digit3    : in  std_logic_vector(6 downto 0);
+    digit_sel : out std_logic_vector(3 downto 0);
+    seg_data  : out std_logic_vector(6 downto 0)
+  );
+end dynamic_scan;
+
+architecture rtl of dynamic_scan is
+  signal scan_cnt : unsigned(1 downto 0) := "00";
 begin
-  if rising_edge(clk) then
-    scan_cnt <= scan_cnt + 1;
-    case scan_cnt is
-      when "00" => digit_sel <= "0001"; seg_data <= digit0;
-      when "01" => digit_sel <= "0010"; seg_data <= digit1;
-      when "10" => digit_sel <= "0100"; seg_data <= digit2;
-      when "11" => digit_sel <= "1000"; seg_data <= digit3;
-    end case;
-  end if;
-end process;
+  process(clk)  -- 扫描时钟(通常>200Hz)
+  begin
+    if rising_edge(clk) then
+      scan_cnt <= scan_cnt + 1;
+      case scan_cnt is
+        when "00" => digit_sel <= "0001"; seg_data <= digit0;
+        when "01" => digit_sel <= "0010"; seg_data <= digit1;
+        when "10" => digit_sel <= "0100"; seg_data <= digit2;
+        when "11" => digit_sel <= "1000"; seg_data <= digit3;
+      end case;
+    end if;
+  end process;
+end rtl;
 \end{lstlisting}
 
 \textbf{【常见考题】}设计4位动态扫描显示电路。
@@ -273,15 +294,49 @@ end process;
 
 \textbf{【VHDL】}
 \begin{lstlisting}
-process(clk)
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity latched_bcd_decoder is
+  port (
+    clk       : in  std_logic;
+    LE        : in  std_logic;
+    bcd_input : in  std_logic_vector(3 downto 0);
+    seg       : out std_logic_vector(6 downto 0)
+  );
+end latched_bcd_decoder;
+
+architecture rtl of latched_bcd_decoder is
+  signal latched_bcd : std_logic_vector(3 downto 0);
+
+  function bcd_to_7seg(bcd : std_logic_vector(3 downto 0))
+    return std_logic_vector is
+  begin
+    case bcd is
+      when "0000" => return "1111110";
+      when "0001" => return "0110000";
+      when "0010" => return "1101101";
+      when "0011" => return "1111001";
+      when "0100" => return "0110011";
+      when "0101" => return "1011011";
+      when "0110" => return "1011111";
+      when "0111" => return "1110000";
+      when "1000" => return "1111111";
+      when "1001" => return "1111011";
+      when others => return "0000000";
+    end case;
+  end function;
 begin
-  if rising_edge(clk) then
-    if LE = '1' then
-      latched_bcd <= bcd_input;  -- 锁存
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      if LE = '1' then
+        latched_bcd <= bcd_input;  -- 锁存
+      end if;
     end if;
-  end if;
-end process;
-seg <= bcd_to_7seg(latched_bcd);  -- 译码锁存后的值
+  end process;
+  seg <= bcd_to_7seg(latched_bcd);  -- 译码锁存后的值
+end rtl;
 \end{lstlisting}
 
 \textbf{【设计思想】}锁存=寄存器=1个时钟沿保存数据。本质=在数据通路上插入一级寄存器。
@@ -298,10 +353,37 @@ seg <= bcd_to_7seg(latched_bcd);  -- 译码锁存后的值
 
 \textbf{【VHDL适配】}
 \begin{lstlisting}
--- 共阴极(1亮)
-when "0000" => seg <= "1111110";  -- 0
--- 共阳极(0亮)
-when "0000" => seg <= "0000001";  -- 0(反码)
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity bcd_7seg_dual is
+  port (
+    bcd      : in  std_logic_vector(3 downto 0);
+    seg_cath : out std_logic_vector(6 downto 0);  -- 共阴极(1亮)
+    seg_anod : out std_logic_vector(6 downto 0)   -- 共阳极(0亮)
+  );
+end bcd_7seg_dual;
+
+architecture behavioral of bcd_7seg_dual is
+begin
+  process(bcd)
+  begin
+    case bcd is
+      -- 共阴极(1亮)           -- 共阳极(0亮)
+      when "0000" => seg_cath <= "1111110"; seg_anod <= "0000001";  -- 0
+      when "0001" => seg_cath <= "0110000"; seg_anod <= "1001111";  -- 1
+      when "0010" => seg_cath <= "1101101"; seg_anod <= "0010010";  -- 2
+      when "0011" => seg_cath <= "1111001"; seg_anod <= "0000110";  -- 3
+      when "0100" => seg_cath <= "0110011"; seg_anod <= "1001100";  -- 4
+      when "0101" => seg_cath <= "1011011"; seg_anod <= "0100100";  -- 5
+      when "0110" => seg_cath <= "1011111"; seg_anod <= "0100000";  -- 6
+      when "0111" => seg_cath <= "1110000"; seg_anod <= "0001111";  -- 7
+      when "1000" => seg_cath <= "1111111"; seg_anod <= "0000000";  -- 8
+      when "1001" => seg_cath <= "1111011"; seg_anod <= "0000100";  -- 9
+      when others => seg_cath <= "0000000"; seg_anod <= "1111111";
+    end case;
+  end process;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【考试陷阱】}题目未明确说明共阴/共阳时，看段码值判断：1111110(共阴0) vs 0000001(共阳0)。
@@ -315,6 +397,10 @@ when "0000" => seg <= "0000001";  -- 0(反码)
 
 \textbf{【完整VHDL】}
 \begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
 entity counter_display is
   port (clk, rst_n : in std_logic;
         seg : out std_logic_vector(6 downto 0));
@@ -365,13 +451,42 @@ end rtl;
 \textbf{【方案】}扩展case覆盖1010-1111，定义A-F的段码。
 
 \begin{lstlisting}
--- 扩展BCD译码器支持0-F
-when "1010" => return "1110111";  -- A
-when "1011" => return "0011111";  -- b
-when "1100" => return "1001110";  -- C
-when "1101" => return "0111101";  -- d
-when "1110" => return "1001111";  -- E
-when "1111" => return "1000111";  -- F
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity hex_7seg is
+  port (
+    hex : in  std_logic_vector(3 downto 0);
+    seg : out std_logic_vector(6 downto 0)
+  );
+end hex_7seg;
+
+architecture behavioral of hex_7seg is
+begin
+  process(hex)
+  begin
+    case hex is
+      when "0000" => seg <= "1111110";  -- 0
+      when "0001" => seg <= "0110000";  -- 1
+      when "0010" => seg <= "1101101";  -- 2
+      when "0011" => seg <= "1111001";  -- 3
+      when "0100" => seg <= "0110011";  -- 4
+      when "0101" => seg <= "1011011";  -- 5
+      when "0110" => seg <= "1011111";  -- 6
+      when "0111" => seg <= "1110000";  -- 7
+      when "1000" => seg <= "1111111";  -- 8
+      when "1001" => seg <= "1111011";  -- 9
+      -- 扩展支持A-F
+      when "1010" => seg <= "1110111";  -- A
+      when "1011" => seg <= "0011111";  -- b
+      when "1100" => seg <= "1001110";  -- C
+      when "1101" => seg <= "0111101";  -- d
+      when "1110" => seg <= "1001111";  -- E
+      when "1111" => seg <= "1000111";  -- F
+      when others => seg <= "0000000";
+    end case;
+  end process;
+end behavioral;
 \end{lstlisting}
 
 \textbf{【考试】}有时问A-F的段码值，需要记住典型表示法。

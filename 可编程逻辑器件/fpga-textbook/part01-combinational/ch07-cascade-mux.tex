@@ -267,10 +267,22 @@ $2^n$选1 MUX 需要 $(2^n - 1)$ 个2选1 MUX，分 $n$ 层。第 $k$ 层（从1
 \textbf{【通用公式】}$2^n$选1 MUX需要$2^n-1$个2选1 MUX，分$n$层。
 
 \textbf{【VHDL——generate结构级】}
-\begin{lstlisting}
--- 递归描述流水线MUX树
-signal layer0 : std_logic_vector(3 downto 0);
-signal layer1 : std_logic_vector(1 downto 0);
+\begin{lstlisting}[caption={8选1 MUX（2选1树形级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux8to1_cascade is
+  port (
+    D : in  std_logic_vector(7 downto 0);
+    S : in  std_logic_vector(2 downto 0);
+    Y : out std_logic
+  );
+end mux8to1_cascade;
+
+architecture behavioral of mux8to1_cascade is
+  -- 递归描述流水线MUX树
+  signal layer0 : std_logic_vector(3 downto 0);
+  signal layer1 : std_logic_vector(1 downto 0);
 begin
   gen0: for i in 0 to 3 generate
     layer0(i) <= D(2*i) when S(0)='0' else D(2*i+1);
@@ -299,13 +311,36 @@ S1S0→第一层(4片4选1 MUX)。S3S2→第二层(1片4选1 MUX选择第一层�
 \textbf{【问题】}需要6选1，但MUX只有$2^n$选1。用8选1实现6选1（两个输入悬空或接地）。
 
 \textbf{【VHDL——4选1+2选1】}
-\begin{lstlisting}
--- 第一层：4选1处理D0-D3
-mux4: entity work.mux4to1 port map(D=>D(3 downto 0), S=>S(1 downto 0), Y=>mux4_out);
--- 顶层：2选1在mux4_out和D4/D5间选择
-Y <= mux4_out when S(2)='0' else
-     D(4) when S(1 downto 0)="00" else D(5);
--- 注意：S2=1时S1S0只需表示2种状态即可
+\begin{lstlisting}[caption={6选1 MUX（4选1+2选1级联）}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux6to1_asymmetric is
+  port (
+    D : in  std_logic_vector(5 downto 0);
+    S : in  std_logic_vector(2 downto 0);
+    Y : out std_logic
+  );
+end mux6to1_asymmetric;
+
+architecture structural of mux6to1_asymmetric is
+  signal mux4_out : std_logic;
+
+  component mux4to1 is
+    port (
+      D : in  std_logic_vector(3 downto 0);
+      S : in  std_logic_vector(1 downto 0);
+      Y : out std_logic
+    );
+  end component;
+begin
+  -- 第一层：4选1处理D0-D3
+  mux4: mux4to1 port map(D=>D(3 downto 0), S=>S(1 downto 0), Y=>mux4_out);
+  -- 顶层：2选1在mux4_out和D4/D5间选择
+  Y <= mux4_out when S(2)='0' else
+       D(4) when S(1 downto 0)="00" else D(5);
+  -- 注意：S2=1时S1S0只需表示2种状态即可
+end structural;
 \end{lstlisting}
 
 \textbf{【简化方案】}直接用8选1 MUX，D6和D7接地(固定为0)。

@@ -208,13 +208,46 @@ ROM/查找表 & 长序列 & 通用 & 资源多（需要ROM） \\
 \textbf{【通用方案】}模L计数器+状态→输出映射表。
 \textbf{【例题】}产生序列10110(长度5)。模5计数器+case映射：
 \begin{lstlisting}
-case cnt is
-  when "000" => seq <= '1';
-  when "001" => seq <= '0';
-  when "010" => seq <= '1';
-  when "011" => seq <= '1';
-  when "100" => seq <= '0';
-end case;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity seq_gen_10110 is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    seq_out : out std_logic
+  );
+end seq_gen_10110;
+
+architecture behavioral of seq_gen_10110 is
+  signal cnt : std_logic_vector(2 downto 0);
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      if cnt = "100" then
+        cnt <= (others => '0');
+      else
+        cnt <= cnt + 1;
+      end if;
+    end if;
+  end process;
+
+  process(cnt)
+  begin
+    case cnt is
+      when "000" => seq_out <= '1';
+      when "001" => seq_out <= '0';
+      when "010" => seq_out <= '1';
+      when "011" => seq_out <= '1';
+      when "100" => seq_out <= '0';
+      when others => seq_out <= '0';
+    end case;
+  end process;
+end behavioral;
 \end{lstlisting}
 \textbf{【适用范围】}任意序列。长度L→模L计数器。
 \end{detailbox}
@@ -246,8 +279,37 @@ end case;
 \textbf{【优点】}任意序列、可重配置。适合长序列。
 \textbf{【VHDL】}
 \begin{lstlisting}
-type rom_type is array (0 to 15) of std_logic_vector(3 downto 0);
-constant SEQ_ROM : rom_type := (x"1", x"0", x"1", x"1", x"0", ...);
-seq <= SEQ_ROM(to_integer(unsigned(cnt)));
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
+
+entity rom_seq_gen is
+  port (
+    clk     : in  std_logic;
+    rst_n   : in  std_logic;
+    seq_out : out std_logic_vector(3 downto 0)
+  );
+end rom_seq_gen;
+
+architecture behavioral of rom_seq_gen is
+  signal cnt : std_logic_vector(3 downto 0);
+  type rom_type is array (0 to 15) of std_logic_vector(3 downto 0);
+  constant SEQ_ROM : rom_type := (
+    x"1", x"0", x"1", x"1", x"0",
+    x"0", x"0", x"0", x"0", x"0",
+    x"0", x"0", x"0", x"0", x"0", x"0"
+  );
+begin
+  process(clk, rst_n)
+  begin
+    if rst_n = '0' then
+      cnt <= (others => '0');
+    elsif rising_edge(clk) then
+      cnt <= cnt + 1;
+    end if;
+  end process;
+  seq_out <= SEQ_ROM(to_integer(unsigned(cnt)));
+end behavioral;
 \end{lstlisting}
 \end{detailbox}
