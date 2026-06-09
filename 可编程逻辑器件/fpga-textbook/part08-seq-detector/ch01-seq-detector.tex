@@ -38,186 +38,172 @@
 \end{itemize}
 \end{keypoint}
 
-\section{1011序列检测器——非重叠检测}
+\section{1011序列检测器——Moore型（可重叠检测）}
 
-\subsection{状态定义}
+\subsection{状态定义（5状态严格Moore）}
 
-检测目标：1011
-
-状态含义（非重叠——检测到后重新开始）：
+检测目标：1011。Moore型使用\textbf{5个状态}，S4为专用输出状态。
 
 \begin{center}
-\begin{tabular}{|c|l|}
+\begin{tabular}{|c|l|c|}
 \hline
-\textbf{状态} & \textbf{含义（已匹配的前缀）} \\
+\textbf{状态} & \textbf{含义（已匹配的前缀）} & \textbf{输出 y} \\
 \hline
-S0 & 尚未匹配任何有效前缀（初始/复位后） \\
-S1 & 已匹配"1"（序列的第一个bit） \\
-S10 & 已匹配"10" \\
-S101 & 已匹配"101" \\
+S0 & 初始状态，未匹配任何位 & 0 \\
+S1 & 匹配第1位 "1" & 0 \\
+S2 & 匹配前2位 "10" & 0 \\
+S3 & 匹配前3位 "101" & 0 \\
+S4 & 匹配完整序列 "1011" & \textbf{1} \\
 \hline
 \end{tabular}
 \end{center}
-
-注意：状态名S10不是"状态编号为10"，而是"已匹配的前缀=10"（为了便于理解）。
 
 \subsection{状态转移图}
 
 \begin{center}
 \begin{tikzpicture}[->, >=stealth, node distance=3cm, auto, scale=0.85]
-  \node[draw, circle] (S0) at (0,0) {S0};
-  \node[draw, circle] (S1) at (3,0) {S1};
-  \node[draw, circle] (S10) at (6,0) {S10};
-  \node[draw, circle] (S101) at (9,0) {S101};
+  \node[draw, circle] (S0) at (0,0) {S0/0};
+  \node[draw, circle] (S1) at (2.5,0) {S1/0};
+  \node[draw, circle] (S2) at (5,0) {S2/0};
+  \node[draw, circle] (S3) at (7.5,0) {S3/0};
+  \node[draw, circle] (S4) at (10,0) {S4/1};
 
-  \draw (S0) edge[loop above] node{0/0} (S0);
-  \draw (S0) edge[bend left] node{1/0} (S1);
-  \draw (S1) edge[bend left] node{1/0} (S1);
-  \draw (S1) edge[bend left] node{0/0} (S10);
-  \draw (S10) edge[bend left] node{0/0} (S0);
-  \draw (S10) edge[bend left] node{1/0} (S101);
-  \draw (S101) edge[bend left=30] node{0/0} (S10);
-  \draw (S101) edge[bend left=40] node[above]{1/1} (S1);
+  \draw (S0) edge[loop above] node{0} (S0);
+  \draw (S0) edge[bend left] node{1} (S1);
+  \draw (S1) edge[loop above] node{1} (S1);
+  \draw (S1) edge[bend left] node{0} (S2);
+  \draw (S2) edge[bend left] node{0} (S0);
+  \draw (S2) edge[bend left] node{1} (S3);
+  \draw (S3) edge[bend left] node{0} (S2);
+  \draw (S3) edge[bend left] node{1} (S4);
+  \draw (S4) edge[bend left=40] node{0} (S2);
+  \draw (S4) edge[bend left=50] node[above]{1} (S1);
 \end{tikzpicture}
 \end{center}
 
-\textbf{箭头标注：}输入/输出。例如"1/0"表示输入=1且输出=0，"1/1"表示输入=1且输出=1（检测到序列）。
+\textbf{Moore型标注规则：}输出标在状态圈内（状态名/输出值），转移弧上只标输入值。S0-S3输出为0，S4输出为1。
 
 \subsection{状态转移分析}
 
-逐状态分析：
-
-\textbf{S0（初始）}：
 \begin{itemize}
-  \item 输入0：仍在S0（等第一个1）→ 输出0
-  \item 输入1：进入S1（匹配了1）→ 输出0
-\end{itemize}
-
-\textbf{S1（已匹配"1"）}：
-\begin{itemize}
-  \item 输入0：进入S10（匹配了"10"）→ 输出0
-  \item 输入1：停留在S1（输入1重新开始——"11"中第二个1可以是新序列的第一个1）→ 输出0
-\end{itemize}
-
-\textbf{S10（已匹配"10"）}：
-\begin{itemize}
-  \item 输入0：回到S0（"100"不匹配任何前缀，序列需要从1开始）
-  \item 输入1：进入S101（匹配了"101"）→ 输出0
-\end{itemize}
-
-\textbf{S101（已匹配"101"，还差最后一个1）}：
-\begin{itemize}
-  \item 输入0：回到S10（"1010"——后两位"10"可以是新序列的前缀）→ 输出0
-  \item 输入1：\textbf{检测到完整序列"1011"！} → 输出\textbf{1}，然后去S1（检测到后的1可以作为新序列的第一个1，因为是非重叠检测）
+  \item \textbf{S0}：din=0→S0；din=1→S1
+  \item \textbf{S1}：din=0→S2；din=1→S1（"11"的后一个1仍是有效前缀）
+  \item \textbf{S2}：din=0→S0；din=1→S3
+  \item \textbf{S3}：din=0→S2（"1010"的后缀"10"匹配前缀）；din=1→S4
+  \item \textbf{S4}：din=0→S2；din=1→S1（\textbf{可重叠}：末尾1可作为下一组序列起始）
 \end{itemize}
 
 \subsection{状态转移表}
 
 \begin{center}
-\begin{tabular}{|c|c|c||c|c|}
+\begin{tabular}{|c|c|c||c|}
 \hline
-\textbf{当前状态} & \textbf{输入} & \textbf{下一状态} & \textbf{输出} \\
+\textbf{当前状态} & \textbf{输入 din} & \textbf{下一状态} & \textbf{输出 y} \\
 \hline
 S0 & 0 & S0 & 0 \\
 S0 & 1 & S1 & 0 \\
-S1 & 0 & S10 & 0 \\
+S1 & 0 & S2 & 0 \\
 S1 & 1 & S1 & 0 \\
-S10 & 0 & S0 & 0 \\
-S10 & 1 & S101 & 0 \\
-S101 & 0 & S10 & 0 \\
-S101 & 1 & S1 & \textbf{1}（检测到！）\\
+S2 & 0 & S0 & 0 \\
+S2 & 1 & S3 & 0 \\
+S3 & 0 & S2 & 0 \\
+S3 & 1 & S4 & 0 \\
+S4 & 0 & S2 & 1 \\
+S4 & 1 & S1 & 1 \\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection{VHDL实现}
+\subsection{VHDL实现（两段式，异步高电平复位）}
 
-\begin{lstlisting}[caption={1011序列检测器（非重叠）}]
+\begin{lstlisting}[caption={Moore型1011序列检测器（5状态，可重叠）}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_1011 is
-  port (
-    clk     : in  std_logic;
-    rst_n   : in  std_logic;
-    data_in : in  std_logic;
-    detected: out std_logic
+entity seq1011_moore is
+  port(
+    clk : in  std_logic;   -- 系统时钟，上升沿有效
+    rst : in  std_logic;   -- 异步高电平复位
+    din : in  std_logic;   -- 串行数据输入
+    y   : out std_logic    -- 检测输出，高电平表示检测到1011
   );
-end seq_detector_1011;
+end entity seq1011_moore;
 
-architecture fsm of seq_detector_1011 is
-  type state_type is (S0, S1, S10, S101);
-  signal state : state_type;
+architecture behav of seq1011_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
 begin
-  process(clk, rst_n)
+  -- 第一段：时序逻辑（状态寄存器，时钟+异步复位）
+  reg_proc: process(clk, rst)
   begin
-    if rst_n = '0' then
-      state <= S0;
+    if rst = '1' then
+      curr_state <= S0;
     elsif rising_edge(clk) then
-      case state is
-        when S0 =>
-          if data_in = '1' then state <= S1; end if;
-          -- data_in='0'时默认保持S0（if不满足则不变）
-
-        when S1 =>
-          if data_in = '0' then
-            state <= S10;
-          end if;
-          -- data_in='1'时保持S1（不变）
-
-        when S10 =>
-          if data_in = '1' then
-            state <= S101;
-          else
-            state <= S0;
-          end if;
-
-        when S101 =>
-          if data_in = '1' then
-            state <= S1;  -- 检测到，重新开始
-          else
-            state <= S10;
-          end if;
-      end case;
+      curr_state <= next_state;
     end if;
-  end process;
+  end process reg_proc;
 
-  -- 输出逻辑（Moore型：输出仅取决于状态）
-  detected <= '1' when (state = S101 and data_in = '1') else '0';
-end fsm;
+  -- 第二段：组合逻辑（状态转移判断）
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '0' then next_state <= S2;
+        else next_state <= S1; end if;
+      when S2 =>
+        if din = '1' then next_state <= S3;
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then next_state <= S4;
+        else next_state <= S2; end if;
+      when S4 =>
+        if din = '1' then next_state <= S1;   -- 重叠
+        else next_state <= S2; end if;
+      when others =>
+        next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  -- Moore型输出：仅由当前状态决定
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
 \end{lstlisting}
 
-\section{1101序列检测器}
+\section{1101序列检测器（Moore型）}
 
-检测目标：1101
+检测目标：1101。5状态严格Moore，S4为专用输出状态。
 
 状态定义：
 \begin{itemize}
-  \item S0：初始（匹配0位）
-  \item S1：已匹配"1"
-  \item S11：已匹配"11"
-  \item S110：已匹配"110"
+  \item S0：初始（匹配0位）\quad S1：已匹配"1"\quad S2：已匹配"11"
+  \item S3：已匹配"110"\quad S4：匹配完整序列"1101"，输出y=1
 \end{itemize}
 
-当状态=S110且输入=1时：检测到"1101"！
-
 \begin{center}
-\begin{tikzpicture}[->, >=stealth, node distance=3cm, auto]
-  \node[draw, circle] (S0) at (0,0) {S0};
-  \node[draw, circle] (S1) at (3,0) {S1};
-  \node[draw, circle] (S11) at (6,0) {S11};
-  \node[draw, circle] (S110) at (9,0) {S110};
+\begin{tikzpicture}[->, >=stealth, node distance=2.8cm, auto]
+  \node[draw, circle] (S0) at (0,0) {S0/0};
+  \node[draw, circle] (S1) at (2.8,0) {S1/0};
+  \node[draw, circle] (S2) at (5.6,0) {S2/0};
+  \node[draw, circle] (S3) at (8.4,0) {S3/0};
+  \node[draw, circle] (S4) at (11.2,0) {S4/1};
 
-  \draw (S0) edge[loop above] node{0/0} (S0);
-  \draw (S0) edge[bend left] node{1/0} (S1);
-  \draw (S1) edge[bend left] node{0/0} (S0);
-  \draw (S1) edge[bend left] node{1/0} (S11);
-  \draw (S11) edge[bend left] node{1/0} (S11);
-  \draw (S11) edge[bend left] node{0/0} (S110);
-  \draw (S110) edge[bend left=30] node{0/0} (S0);
-  \draw (S110) edge[bend left=40] node{1/1} (S11);  % 检测到1101!
+  \draw (S0) edge[loop above] node{0} (S0);
+  \draw (S0) edge[bend left] node{1} (S1);
+  \draw (S1) edge[bend left] node{0} (S0);
+  \draw (S1) edge[bend left] node{1} (S2);
+  \draw (S2) edge[loop above] node{1} (S2);
+  \draw (S2) edge[bend left] node{0} (S3);
+  \draw (S3) edge[bend left] node{0} (S0);
+  \draw (S3) edge[bend left] node{1} (S4);
+  \draw (S4) edge[bend left=30] node{0} (S0);
+  \draw (S4) edge[bend left=50] node[above]{1} (S2);
 \end{tikzpicture}
 \end{center}
+
+状态转移：S0+1→S1, S1+1→S2, S2+0→S3, S3+1→S4（检测到！）。S4+0→S0, S4+1→S2（重叠：末尾的"1"可开始新序列）。
 
 \section{重叠检测 vs 非重叠检测}
 
@@ -246,20 +232,305 @@ end fsm;
 重叠检测：在检测到状态，根据输入决定返回哪个状态（可能有重叠前缀）
 非重叠检测：检测到后，直接回到S0/S1（看具体情况）
 
+\section{Moore型 vs Mealy型——考试必考核心对比}
+
+\subsection{两种状态机模型的根本区别}
+
+\begin{keypoint}[Moore vs Mealy的本质]
+\textbf{Moore型状态机}：输出\textbf{仅取决于当前状态}。
+
+\textbf{Mealy型状态机}：输出取决于\textbf{当前状态 + 当前输入}。
+
+这个区别看似微小，但导致了两者在\textbf{状态数}、\textbf{输出时序}和\textbf{硬件结构}上的显著差异。
+\end{keypoint}
+
+\subsection{Moore型1011序列检测器（5状态）}
+
+\textbf{【状态定义】}严格Moore型使用5个状态，S4为专用输出状态。
+
+\begin{center}
+\begin{tabular}{|c|l|c|}\hline
+状态 & 含义 & 输出 y \\ \hline
+S0 & 未匹配任何有效前缀（初始/复位）& 0 \\
+S1 & 已匹配第1位："1" & 0 \\
+S2 & 已匹配前2位："10" & 0 \\
+S3 & 已匹配前3位："101" & 0 \\
+S4 & 匹配完整序列"1011" & \textbf{1} \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【状态转移图】}输出标在状态圈内（Moore型标志）。
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=2.5cm,auto]
+\node[draw,circle] (S0) at (0,0) {S0/0};
+\node[draw,circle] (S1) at (2.5,0) {S1/0};
+\node[draw,circle] (S2) at (5,0) {S2/0};
+\node[draw,circle] (S3) at (7.5,0) {S3/0};
+\node[draw,circle] (S4) at (10,0) {S4/1};
+\draw (S0) edge[loop above] node{0} (S0);
+\draw (S0) edge[bend left] node{1} (S1);
+\draw (S1) edge[loop above] node{1} (S1);
+\draw (S1) edge[bend left] node{0} (S2);
+\draw (S2) edge[bend left] node{0} (S0);
+\draw (S2) edge[bend left] node{1} (S3);
+\draw (S3) edge[bend left] node{0} (S2);
+\draw (S3) edge[bend left] node{1} (S4);
+\draw (S4) edge[bend left=40] node{0} (S2);
+\draw (S4) edge[bend left=50] node[above]{1} (S1);
+\end{tikzpicture}
+\end{center}
+
+\textbf{【输出逻辑】}严格Moore型，$y=1$ 当且仅当 $curr\_state=S4$，与当前输入din无关。进入S4后输出持续整个状态周期（稳定无毛刺）。
+
+\subsection{Mealy型1011序列检测器（4状态）}
+
+\textbf{【状态定义】}Mealy型用4个状态，无专用输出状态，输出在转移弧上。
+
+\begin{center}
+\begin{tabular}{|c|l|}\hline
+状态 & 含义 \\ \hline
+S0 & 未匹配任何有效前缀 \\
+S1 & 已匹配第1位："1" \\
+S2 & 已匹配前2位："10" \\
+S3 & 已匹配前3位："101" \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{【状态转移图（标注格式：输入/输出）】}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=3cm,auto]
+\node[draw,circle] (S0) at (0,0) {S0};
+\node[draw,circle] (S1) at (3,0) {S1};
+\node[draw,circle] (S2) at (6,0) {S2};
+\node[draw,circle] (S3) at (9,0) {S3};
+\draw (S0) edge[loop above] node{0/0} (S0);
+\draw (S0) edge[bend left] node{1/0} (S1);
+\draw (S1) edge[bend left] node{1/0} (S1);
+\draw (S1) edge[bend left] node{0/0} (S2);
+\draw (S2) edge[bend left] node{0/0} (S0);
+\draw (S2) edge[bend left] node{1/0} (S3);
+\draw (S3) edge[bend left=30] node{0/0} (S2);
+\draw (S3) edge[bend left=50] node[above]{1/\textbf{1}} (S1);
+\end{tikzpicture}
+\end{center}
+
+$S3 \xrightarrow{1/1} S1$：输入=1时y=1（检测到1011），去S1（可重叠——末尾1作新序列起始）。
+
+\textbf{【关键对比】}
+\begin{itemize}
+  \item \textbf{Moore：5状态(S0-S4)}，输出仅取决于当前状态，$y=1$ when $curr\_state=S4$
+  \item \textbf{Mealy：4状态(S0-S3)}，无S4，输出在S3+din=1的转移弧上直接产生
+  \item Moore输出晚1拍（等状态稳定），Mealy输出与输入同步
+\end{itemize}
+
+\subsection{完整对比表}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}\hline
+\textbf{对比维度} & \textbf{Moore型} & \textbf{Mealy型} \\ \hline
+输出决定因素 & 仅当前状态 & 状态 + 输入 \\ \hline
+状态数(检测1011) & 5个(S0-S4) & 4个(S0-S3) \\ \hline
+输出时序 & 进入S4后输出（晚1拍）& 转移同时输出（同步）\\ \hline
+输出持续时间 & 整个S4周期（稳定）& 仅在条件满足时 \\ \hline
+对输入毛刺敏感 & 不敏感（只看状态）& 敏感（输入参与输出）\\ \hline
+状态图标注 & 状态圈内"状态/输出"& 转移弧上"输入/输出"\\ \hline
+综合结果 & 3FF+输出逻辑 & 2FF+次态/输出组合逻辑 \\ \hline
+考试推荐 & 更安全稳定，优先使用 & 更紧凑，按题目要求 \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{VHDL实现对比（两段式，异步高电平复位）}
+
+\textbf{【Moore型——5状态，可重叠】}
+
+\begin{lstlisting}[caption={Moore型1011序列检测器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq1011_moore is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;   -- 异步高电平复位
+    din : in  std_logic;
+    y   : out std_logic
+  );
+end entity seq1011_moore;
+
+architecture behav of seq1011_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
+begin
+  -- 第一段：时序逻辑（状态寄存器）
+  reg_proc: process(clk, rst)
+  begin
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
+    end if;
+  end process reg_proc;
+
+  -- 第二段：组合逻辑（状态转移）
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '0' then next_state <= S2;
+        else next_state <= S1; end if;
+      when S2 =>
+        if din = '1' then next_state <= S3;
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then next_state <= S4;
+        else next_state <= S2; end if;
+      when S4 =>
+        if din = '1' then next_state <= S1;   -- 重叠
+        else next_state <= S2; end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  -- Moore输出：仅由当前状态决定
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
+\end{lstlisting}
+
+\textbf{【Mealy型——4状态，可重叠，默认赋值】}
+
+\begin{lstlisting}[caption={Mealy型1011序列检测器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity seq1011_mealy is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;   -- 异步高电平复位
+    din : in  std_logic;
+    y   : out std_logic
+  );
+end entity seq1011_mealy;
+
+architecture behav of seq1011_mealy is
+  type state_type is (S0, S1, S2, S3);
+  signal curr_state, next_state : state_type;
+begin
+  -- 第一段：时序逻辑（状态寄存器）
+  reg_proc: process(clk, rst)
+  begin
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
+    end if;
+  end process reg_proc;
+
+  -- 第二段：组合逻辑（状态转移 + Mealy输出）
+  comb_proc: process(curr_state, din)
+  begin
+    -- 默认赋值，避免组合逻辑锁存
+    next_state <= S0;
+    y <= '0';
+
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '0' then next_state <= S2;
+        else next_state <= S1; end if;
+      when S2 =>
+        if din = '1' then next_state <= S3;
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then
+          next_state <= S1;
+          y <= '1';  -- 检测到1011，输出有效（重叠）
+        else
+          next_state <= S2;
+        end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+end architecture behav;
+\end{lstlisting}
+
+\textbf{【关键代码差异】}
+\begin{itemize}
+  \item \textbf{Moore}：5状态，输出在进程外：\texttt{y <= '1' when curr\_state = S4 else '0';}
+  \item \textbf{Mealy}：4状态，输出在comb\_proc内：\texttt{y <= '1';}（默认为0，检测到时置1）
+  \item \textbf{默认赋值}（Mealy必须）：\texttt{next\_state <= S0; y <= '0';} 写在case之前，避免锁存
+  \item \textbf{可重叠/非重叠切换}：改S4/S3的din=1跳转——回S0=非重叠，回S1=重叠
+\end{itemize}
+
+\subsection{输出时序对比}
+
+\textbf{【Moore型输出晚1拍】}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c||c|c|}\hline
+时钟拍 & 1 & 2 & 3 & 4 & 5 \\ \hline
+输入din & 1 & 0 & 1 & 1 & 0 \\ \hline
+Moore curr\_state & S1 & S2 & S3 & S4 & S1 \\ \hline
+Moore输出y & 0 & 0 & 0 & \textbf{1}（第4拍！）& 0 \\ \hline
+\hline
+Mealy curr\_state & S1 & S2 & S3 & S1 & S2 \\ \hline
+Mealy输出y & 0 & 0 & 0 & \textbf{1}（第4拍！）& 0 \\ \hline
+\end{tabular}
+\end{center}
+
+注：严格5状态Moore进入S4即输出$y=1$，在第4拍（与Mealy同拍）输出。Moore输出仅取决于当前状态是否为S4，与输入din无关，这是Moore型与Mealy型的根本区别。
+
+\subsection{考试如何选择}
+
+\begin{examtip}[Moore vs Mealy考试策略]
+\begin{enumerate}
+  \item \textbf{默认选Moore型（5状态）}：状态图更清晰，输出稳定，符合教材规范
+  \item \textbf{题目明确要求Mealy型时才用Mealy（4状态）}
+  \item \textbf{状态图标注规范}：
+  \begin{itemize}
+    \item Moore：状态圈内写"状态名/输出值"（如S0/0, S4/1）
+    \item Mealy：转移弧上写"输入值/输出值"（如1/1）
+  \end{itemize}
+  \item \textbf{VHDL必须用两段式}：时序reg\_proc + 组合comb\_proc
+  \item \textbf{Mealy必须有默认赋值}：避免组合逻辑锁存
+\end{enumerate}
+\end{examtip}
+
+\subsection{硬件综合结果对比}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{硬件模块} & \textbf{Moore型} & \textbf{Mealy型} \\
+\hline
+状态寄存器 & 3个D触发器（编码5状态）& 2个D触发器（编码4状态）\\
+次态逻辑 & 组合电路（当前状态+din → 下一状态）& 组合电路（当前状态+din → 下一状态）\\
+输出逻辑 & 独立组合电路（仅读当前状态）& 合并于次态逻辑中（读当前状态+din）\\
+输出信号y & S4时y=1，与din无关 & S3且din=1时y=1，随转移产生\\
+\hline
+关键路径延迟 & 寄存器延迟 + 次态逻辑延迟 & 寄存器延迟 + 次态/输出组合延迟 \\
+输出毛刺风险 & 低（仅状态变化时输出才变）& 较高（din直接参与输出）\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{结论}：Moore型输出稳定、无毛刺，适合对时序要求严格的场合。Mealy型状态少、响应快，但输出可能受输入毛刺影响。考试中优先使用Moore型。
+
 \section{考试常见变式}
 
 \begin{enumerate}
   \item \textbf{变式1：检测1011（重叠）}
 
-  检测后在S101状态，输入1→检测到，同时此1可作为新序列的第一个1，因此去S1（不是S0）。
+  检测后在S3状态，输入1→检测到，同时此1可作为新序列的第一个1，因此去S1（不是S0）。
 
   \item \textbf{变式2：检测0101}
 
-  类似分析，状态名改为S0→S01→S010→S0101。
+  状态：S0（初始）→S1（匹配"0"）→S2（匹配"01"）→S3（匹配"010"）。S3+输入1=检测到。
 
   \item \textbf{变式3：检测1111}
 
-  4个连续的1。状态：S0→S1→S11→S111→（输入1时检测到）。
+  4个连续的1。状态：S0→S1（1个1）→S2（2个1）→S3（3个1）。S3+输入1=检测到（重叠：保持S3）。
 
   \item \textbf{变式4：同时检测多个序列}
 
@@ -275,44 +546,40 @@ end fsm;
 
 \section{Testbench}
 
-\begin{lstlisting}[caption={1011序列检测器Testbench}]
+\begin{lstlisting}[caption={Moore型1011序列检测器Testbench（异步高电平复位）}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_tb is
-end seq_detector_tb;
+entity seq1011_moore_tb is
+end seq1011_moore_tb;
 
-architecture test of seq_detector_tb is
-  signal clk, rst_n, data_in, detected : std_logic;
-  constant clk_period : time := 20 ns;
+architecture test of seq1011_moore_tb is
+  signal clk, rst, din, y : std_logic;
+  constant T : time := 20 ns;
 
-  component seq_detector_1011 is
-    port (clk, rst_n, data_in : in std_logic; detected : out std_logic);
+  component seq1011_moore is
+    port(clk, rst, din : in std_logic; y : out std_logic);
   end component;
 begin
-  uut: seq_detector_1011 port map (clk, rst_n, data_in, detected);
+  uut: seq1011_moore port map(clk, rst, din, y);
 
-  clk_process: process
-  begin
-    clk <= '0'; wait for clk_period/2;
-    clk <= '1'; wait for clk_period/2;
-  end process;
+  clk <= not clk after T/2;
 
   stimulus: process
   begin
-    rst_n <= '0'; wait for 30 ns;
-    rst_n <= '1'; wait for 5 ns;
+    rst <= '1'; wait for 30 ns;  -- 异步高电平复位
+    rst <= '0'; wait for 5 ns;
 
-    -- 输入序列：1 0 1 1 0 1 0 1 1
-    data_in <= '1'; wait for clk_period;  -- S0→S1
-    data_in <= '0'; wait for clk_period;  -- S1→S10
-    data_in <= '1'; wait for clk_period;  -- S10→S101
-    data_in <= '1'; wait for clk_period;  -- S101→S1, detected=1!
-    data_in <= '0'; wait for clk_period;
-    data_in <= '1'; wait for clk_period;
-    data_in <= '0'; wait for clk_period;
-    data_in <= '1'; wait for clk_period;
-    data_in <= '1'; wait for clk_period;  -- 再次检测到!
+    -- 输入序列：1 0 1 1 0 1 0 1 1（可重叠验证）
+    din <= '1'; wait for T;  -- S0→S1
+    din <= '0'; wait for T;  -- S1→S2
+    din <= '1'; wait for T;  -- S2→S3
+    din <= '1'; wait for T;  -- S3→S4, y=1（检测到！）
+    din <= '0'; wait for T;
+    din <= '1'; wait for T;
+    din <= '0'; wait for T;
+    din <= '1'; wait for T;
+    din <= '1'; wait for T;  -- 第9拍再次检测到！
     wait;
   end process;
 end test;
@@ -334,7 +601,7 @@ end test;
   \item 检测到条件：在倒数第二个状态 + 最后一个匹配位
 \end{itemize}
 
-\textbf{关键技巧}：状态S101下输入1→检测到。但去哪？
+\textbf{关键技巧}：状态S3下输入1→检测到。但去哪？
 \begin{itemize}
   \item 重叠检测：分析后几位能否作为新前缀→S1（"1011"最后的"1"可以是新序列的第一个"1"）
   \item 非重叠检测：直接回S0
@@ -347,105 +614,123 @@ end test;
 \section{变式1：检测1011（重叠 vs 非重叠）}
 
 \begin{detailbox}[完整教学]
-\textbf{【核心区别】}S101+输入1→检测到！
+\textbf{【核心区别】}S3+输入1→检测到！
 \begin{itemize}
   \item \textbf{非重叠}→回S0（重新开始）
   \item \textbf{重叠}→去S1（最后的"1"作为新序列的第一个"1"）
 \end{itemize}
 
-\textbf{【重叠检测版本——完整VHDL】}
-\begin{lstlisting}[caption={1011序列检测器——重叠检测}]
+\textbf{【重叠检测版本——完整VHDL（Moore型，5状态）】}
+\begin{lstlisting}[caption={1011序列检测器——Moore型可重叠}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_1011_overlap is
-  port (
-    clk      : in  std_logic;
-    rst_n    : in  std_logic;
-    data_in  : in  std_logic;
-    detected : out std_logic
+entity seq1011_moore is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;   -- 异步高电平复位
+    din : in  std_logic;
+    y   : out std_logic
   );
-end seq_detector_1011_overlap;
+end entity seq1011_moore;
 
-architecture fsm of seq_detector_1011_overlap is
-  type state_type is (S0, S1, S10, S101);
-  signal state : state_type;
+architecture behav of seq1011_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
 begin
-  process(clk, rst_n)
+  reg_proc: process(clk, rst)
   begin
-    if rst_n = '0' then
-      state <= S0;
-    elsif rising_edge(clk) then
-      case state is
-        when S0 =>
-          if data_in = '1' then state <= S1; end if;
-        when S1 =>
-          if data_in = '0' then state <= S10; end if;
-        when S10 =>
-          if data_in = '1' then state <= S101;
-          else state <= S0; end if;
-        when S101 =>
-          if data_in = '1' then state <= S1;   -- 重叠！
-          else state <= S10; end if;
-      end case;
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
     end if;
-  end process;
+  end process reg_proc;
 
-  detected <= '1' when (state = S101 and data_in = '1') else '0';
-end fsm;
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '0' then next_state <= S2;
+        else next_state <= S1; end if;
+      when S2 =>
+        if din = '1' then next_state <= S3;
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then next_state <= S4;
+        else next_state <= S2; end if;
+      when S4 =>
+        if din = '1' then next_state <= S1;   -- 重叠！末尾1→新序列起始
+        else next_state <= S2; end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
 \end{lstlisting}
 
-\textbf{【考试判断】}看检测到后的转移目标。S0=非重叠，S1(或其他非S0状态)=重叠。
+\textbf{【考试判断】}看S4状态的din=1跳转目标。S4+1→S0=非重叠，S4+1→S1=可重叠。
 \end{detailbox}
 
 
 \section{变式2：检测1101}
 
 \begin{detailbox}[完整教学]
-\textbf{【状态】}S0→S1→S11→S110→(输入1=检测到)
-\textbf{【重叠处理】}S110+1→检测到→去S11（"1101"中后两位"11"匹配"11"前缀）
-\textbf{【关键】}S11+1→S11（"111"中后两个"11"为有效前缀）。
+\textbf{【状态】}S0→S1→S2→S3→(输入1=检测到)
+\textbf{【重叠处理】}S3+1→检测到→去S2（"1101"中后两位"11"匹配"11"前缀）
+\textbf{【关键】}S2+1→S2（"111"中后两个"11"为有效前缀）。
 
-\begin{lstlisting}[caption={1101序列检测器——重叠检测}]
+\begin{lstlisting}[caption={1101序列检测器——Moore型可重叠（5状态）}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_1101 is
-  port (
-    clk      : in  std_logic;
-    rst_n    : in  std_logic;
-    data_in  : in  std_logic;
-    detected : out std_logic
+entity seq1101_moore is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;
+    din : in  std_logic;
+    y   : out std_logic
   );
-end seq_detector_1101;
+end entity seq1101_moore;
 
-architecture fsm of seq_detector_1101 is
-  type state_type is (S0, S1, S11, S110);
-  signal state : state_type;
+architecture behav of seq1101_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
 begin
-  process(clk, rst_n)
+  reg_proc: process(clk, rst)
   begin
-    if rst_n = '0' then
-      state <= S0;
-    elsif rising_edge(clk) then
-      case state is
-        when S0 =>
-          if data_in = '1' then state <= S1; end if;
-        when S1 =>
-          if data_in = '0' then state <= S0;
-          else state <= S11; end if;
-        when S11 =>
-          if data_in = '0' then state <= S110; end if;
-          -- data_in='1'：保持S11（"111"的后两位"11"仍是有效前缀）
-        when S110 =>
-          if data_in = '1' then state <= S11;  -- 检测到，去S11（重叠）
-          else state <= S0; end if;
-      end case;
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
     end if;
-  end process;
+  end process reg_proc;
 
-  detected <= '1' when (state = S110 and data_in = '1') else '0';
-end fsm;
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '0' then next_state <= S0;
+        else next_state <= S2; end if;
+      when S2 =>
+        if din = '0' then next_state <= S3;
+        else next_state <= S2; end if;   -- din=1保持S2
+      when S3 =>
+        if din = '1' then next_state <= S4;
+        else next_state <= S0; end if;
+      when S4 =>
+        if din = '1' then next_state <= S2;   -- 重叠
+        else next_state <= S0; end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  -- Moore输出：仅取决于状态
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
 \end{lstlisting}
 \end{detailbox}
 
@@ -453,50 +738,58 @@ end fsm;
 \section{变式3：检测1111（连续4个1）}
 
 \begin{detailbox}[完整教学]
-\textbf{【状态】}S0→S1(1个1)→S11(2)→S111(3)→(第4个1→检测)
+\textbf{【状态】}S0→S1(1个1)→S2(2个1)→S3(3个1)→(第4个1→检测)
 \textbf{【特点】}任意时刻输入0→回S0（连续中断）。
-\textbf{【重叠】}S111+1→S111（"1111"后3个"111"为有效前缀）。
+\textbf{【重叠】}S3+1→S3（"1111"后3个"111"为有效前缀）。
 
-\begin{lstlisting}[caption={1111序列检测器——重叠检测}]
+\begin{lstlisting}[caption={1111序列检测器——Moore型可重叠（5状态）}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_1111 is
-  port (
-    clk      : in  std_logic;
-    rst_n    : in  std_logic;
-    data_in  : in  std_logic;
-    detected : out std_logic
+entity seq1111_moore is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;
+    din : in  std_logic;
+    y   : out std_logic
   );
-end seq_detector_1111;
+end entity seq1111_moore;
 
-architecture fsm of seq_detector_1111 is
-  type state_type is (S0, S1, S11, S111);
-  signal state : state_type;
+architecture behav of seq1111_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
 begin
-  process(clk, rst_n)
+  reg_proc: process(clk, rst)
   begin
-    if rst_n = '0' then
-      state <= S0;
-    elsif rising_edge(clk) then
-      case state is
-        when S0 =>
-          if data_in = '1' then state <= S1; end if;
-        when S1 =>
-          if data_in = '1' then state <= S11;
-          else state <= S0; end if;
-        when S11 =>
-          if data_in = '1' then state <= S111;
-          else state <= S0; end if;
-        when S111 =>
-          if data_in = '1' then state <= S111;  -- 重叠！保持S111
-          else state <= S0; end if;
-      end case;
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
     end if;
-  end process;
+  end process reg_proc;
 
-  detected <= '1' when (state = S111 and data_in = '1') else '0';
-end fsm;
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '1' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '1' then next_state <= S2;
+        else next_state <= S0; end if;
+      when S2 =>
+        if din = '1' then next_state <= S3;
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then next_state <= S4;
+        else next_state <= S0; end if;
+      when S4 =>
+        if din = '1' then next_state <= S4;   -- 重叠！保持S4
+        else next_state <= S0; end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
 \end{lstlisting}
 \end{detailbox}
 
@@ -504,49 +797,63 @@ end fsm;
 \section{变式4：检测0101}
 
 \begin{detailbox}[完整教学]
-\textbf{【状态】}S0→S01(0)→S010(01)→S0101(检测)
-\textbf{【注意】}S0101+0→S01（重叠：最后的"0"作为新序列的第一个"0"）。
+\textbf{【状态】}检测0101（4位序列），状态按S0-S3顺序命名，每个状态含义取决于目标序列：
+\begin{itemize}
+  \item S0：初始（匹配0位）
+  \item S1：已匹配"0"（序列第一位）
+  \item S2：已匹配"01"（序列前两位）
+  \item S3：已匹配"010"（序列前三位，等待最后一位1）
+\end{itemize}
+\textbf{【注意】}S3+1→检测到；S3+0→S1（重叠："0100"最后的"0"可作为新序列第一个"0"）。
 
-\begin{lstlisting}[caption={0101序列检测器——重叠检测}]
+\begin{lstlisting}[caption={0101序列检测器——Moore型可重叠（5状态）}]
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity seq_detector_0101 is
-  port (
-    clk      : in  std_logic;
-    rst_n    : in  std_logic;
-    data_in  : in  std_logic;
-    detected : out std_logic
+entity seq0101_moore is
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;
+    din : in  std_logic;
+    y   : out std_logic
   );
-end seq_detector_0101;
+end entity seq0101_moore;
 
-architecture fsm of seq_detector_0101 is
-  type state_type is (S0, S01, S010, S0101);
-  signal state : state_type;
+architecture behav of seq0101_moore is
+  type state_type is (S0, S1, S2, S3, S4);
+  signal curr_state, next_state : state_type;
 begin
-  process(clk, rst_n)
+  reg_proc: process(clk, rst)
   begin
-    if rst_n = '0' then
-      state <= S0;
-    elsif rising_edge(clk) then
-      case state is
-        when S0 =>
-          if data_in = '0' then state <= S01; end if;
-        when S01 =>
-          if data_in = '1' then state <= S010;
-          else state <= S01; end if;
-        when S010 =>
-          if data_in = '1' then state <= S0101;
-          else state <= S01; end if;
-        when S0101 =>
-          if data_in = '0' then state <= S01;   -- 重叠！
-          else state <= S010; end if;
-      end case;
+    if rst = '1' then curr_state <= S0;
+    elsif rising_edge(clk) then curr_state <= next_state;
     end if;
-  end process;
+  end process reg_proc;
 
-  detected <= '1' when (state = S0101 and data_in = '1') else '0';
-end fsm;
+  comb_proc: process(curr_state, din)
+  begin
+    case curr_state is
+      when S0 =>
+        if din = '0' then next_state <= S1;
+        else next_state <= S0; end if;
+      when S1 =>
+        if din = '1' then next_state <= S2;   -- "01"
+        else next_state <= S1; end if;         -- "00"保持
+      when S2 =>
+        if din = '0' then next_state <= S3;   -- "010"
+        else next_state <= S0; end if;
+      when S3 =>
+        if din = '1' then next_state <= S4;   -- "0101"
+        else next_state <= S1; end if;         -- "0100"→S1
+      when S4 =>
+        if din = '0' then next_state <= S1;   -- 重叠
+        else next_state <= S0; end if;
+      when others => next_state <= S0;
+    end case;
+  end process comb_proc;
+
+  y <= '1' when curr_state = S4 else '0';
+end architecture behav;
 \end{lstlisting}
 \end{detailbox}
 
@@ -561,27 +868,27 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity seq_detector_shift is
-  port (
-    clk      : in  std_logic;
-    rst_n    : in  std_logic;
-    din      : in  std_logic;
-    detected : out std_logic
+  port(
+    clk : in  std_logic;
+    rst : in  std_logic;
+    din : in  std_logic;
+    y   : out std_logic
   );
 end seq_detector_shift;
 
 architecture behavioral of seq_detector_shift is
   signal reg : std_logic_vector(3 downto 0);
 begin
-  process(clk, rst_n)
+  process(clk, rst)
   begin
-    if rst_n = '0' then
+    if rst = '1' then
       reg <= (others => '0');
     elsif rising_edge(clk) then
       reg <= din & reg(3 downto 1);
     end if;
   end process;
 
-  detected <= '1' when reg = "1011" else '0';
+  y <= '1' when reg = "1011" else '0';
 end behavioral;
 \end{lstlisting}
 \textbf{【优点】}代码极简。不需推导状态转移。

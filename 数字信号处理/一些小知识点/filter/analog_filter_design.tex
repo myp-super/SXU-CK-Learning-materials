@@ -1,0 +1,1072 @@
+% !TEX program = xelatex
+% =============================================================================
+%  《模拟滤波器设计：透过现象看本质（巴特沃斯与切比雪夫）》
+%  深度学习笔记与刷题指南
+%  作者：资深 DSP 架构师
+% =============================================================================
+
+\documentclass[12pt,a4paper]{ctexart}
+
+% ------------------ 页面布局 ------------------
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ------------------ 数学与排版 ------------------
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{upgreek}
+\usepackage{mathrsfs}
+
+% ------------------ 图形与颜色 ------------------
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{calc, patterns, decorations.pathmorphing, decorations.markings,
+                arrows.meta, shapes.geometric, positioning, backgrounds,
+                intersections, fit}
+
+% ------------------ 高亮框 ------------------
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, most}
+
+% ------------------ 表格 ------------------
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{longtable}
+
+% ------------------ 列表 ------------------
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=*}
+
+% ------------------ 超链接与引用 ------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% ------------------ 其他 ------------------
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{ifthen}
+
+% ==================== 颜色定义 ====================
+\definecolor{butterworth}{RGB}{0, 102, 204}
+\definecolor{chebyshev}{RGB}{204, 51, 0}
+\definecolor{alertred}{RGB}{180, 0, 0}
+\definecolor{deepgreen}{RGB}{0, 110, 60}
+\definecolor{boxbg}{RGB}{248, 248, 252}
+\definecolor{notebg}{RGB}{255, 252, 240}
+
+% ==================== 自定义框环境 ====================
+
+% ---- 4步设计法主框架 ----
+\newtcolorbox[auto counter, number within=section]{
+    designflow
+}[1][]{
+    enhanced,
+    colback=boxbg,
+    colframe=black!60,
+    coltitle=white,
+    fonttitle=\bfseries\Large,
+    title={\hspace{0.5em} 终极工程模板：模拟滤波器 4 步傻瓜设计法},
+    attach boxed title to top left={xshift=5mm, yshift=-3mm},
+    boxed title style={
+        size=small, colback=black!70, sharp corners, boxrule=0pt
+    },
+    sharp corners,
+    before skip=15pt,
+    after skip=15pt,
+    left=8pt, right=8pt, top=10pt, bottom=8pt,
+    #1
+}
+
+% ---- 步骤块 ----
+\newtcolorbox{stepbox}[1]{
+    enhanced,
+    colback=white,
+    colframe=#1,
+    coltitle=white,
+    fonttitle=\bfseries\large,
+    title={},
+    attach boxed title to top left={xshift=3mm, yshift=-2.5mm},
+    boxed title style={
+        size=small, colback=#1, sharp corners, boxrule=0pt
+    },
+    sharp corners,
+    left=4pt, right=4pt, top=6pt, bottom=4pt,
+    before skip=6pt, after skip=6pt,
+}
+
+% ---- 避坑提示 ----
+\newtcolorbox{pitfall}{
+    enhanced,
+    colback=notebg,
+    colframe=alertred!70,
+    fontupper=\small\kaishu,
+    title={\textbf{!! 避坑提示}},
+    attach boxed title to top left={xshift=3mm, yshift=-2.5mm},
+    boxed title style={
+        size=small, colback=alertred!80, coltitle=white,
+        fontupper=\bfseries\small
+    },
+    sharp corners,
+    left=6pt, right=6pt, top=8pt, bottom=5pt,
+}
+
+% ---- 关键洞察框 ----
+\newtcolorbox{insight}{
+    enhanced,
+    colback=deepgreen!5,
+    colframe=deepgreen!70,
+    fontupper=\kaishu,
+    title={\textbf{>> 本质洞察}},
+    attach boxed title to top left={xshift=3mm, yshift=-2.5mm},
+    boxed title style={
+        size=small, colback=deepgreen!80, coltitle=white,
+        fontupper=\bfseries\small
+    },
+    sharp corners,
+    breakable,
+    left=6pt, right=6pt, top=8pt, bottom=5pt,
+}
+
+% ---- 刷题答案框 ----
+\newtcolorbox{answerbox}{
+    enhanced,
+    colback=black!3,
+    colframe=black!30,
+    fontupper=\small,
+    title={\textbf{参考答案}},
+    attach boxed title to top left={xshift=3mm, yshift=-2.5mm},
+    boxed title style={
+        size=small, colback=black!70, coltitle=white,
+        fontupper=\bfseries\small
+    },
+    sharp corners,
+    breakable,
+    left=8pt, right=8pt, top=8pt, bottom=5pt,
+}
+
+% ==================== 页眉页脚 ====================
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancyhf{}
+\fancyhead[L]{\small\color{gray}模拟滤波器设计：透过现象看本质}
+\fancyhead[R]{\small\color{gray}巴特沃斯 \& 切比雪夫}
+\fancyfoot[C]{\small\color{gray}---\ \thepage\ ---}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ==================== 常用数学快捷命令 ====================
+\newcommand{\Omegac}{\Omega_c}
+\newcommand{\Omegap}{\Omega_p}
+\newcommand{\Omegas}{\Omega_s}
+\newcommand{\db}{\ \mathrm{dB}}
+\newcommand{\Hz}{\ \mathrm{Hz}}
+\newcommand{\rads}{\ \mathrm{rad/s}}
+\newcommand{\splane}{s\text{-plane}}
+\newcommand{\Han}{H_{\!a}(s)}
+\newcommand{\HanNorm}{H_{\!an}(s)}
+\newcommand{\absSq}[1]{\bigl|#1\bigr|^2}
+\newcommand{\ch}{\operatorname{ch}}
+\newcommand{\arch}{\operatorname{arch}}
+\newcommand{\ceil}[1]{\bigl\lceil #1 \bigr\rceil}
+\newcommand{\floor}[1]{\bigl\lfloor #1 \bigr\rfloor}
+\DeclareMathOperator{\arctanh}{arctanh}
+\DeclareMathOperator{\sh}{sh}
+\DeclareMathOperator{\arsh}{arsh}
+
+% =============================================================================
+\begin{document}
+
+% =========================== 标题页 ===========================
+\begin{center}
+    {\Huge\bfseries 模拟滤波器设计\\[6pt]}
+    {\huge\bfseries 透过现象看本质\\[8pt]}
+    {\Large —— 巴特沃斯与切比雪夫 ——\\[15pt]}
+    \rule{0.7\textwidth}{1.5pt}\\[10pt]
+    {\large\kaishu
+    深度学习笔记 \& 刷题指南\\[5pt]
+    「公式不是用来背的，是用来理解的」\\[20pt]
+    \normalsize\songti 版本 1.0 \quad \textbullet\quad \today
+    }
+\end{center}
+
+\thispagestyle{empty}
+\newpage
+
+% =========================== 目录 ===========================
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+% =============================================================================
+%  PART I: 核心理论
+% =============================================================================
+\section{核心理论：两种滤波器的物理本质}
+
+\subsection{从「甲方需求」说起——滤波器到底在解决什么问题？}
+
+想象你坐在工位上，桌面上摊着一份来自甲方（射频前端组）的规格书：
+
+\begin{center}
+\begin{tcolorbox}[width=0.85\textwidth, enhanced, colback=white, colframe=black!50,
+    sharp corners, halign=center]
+    \textbf{低通滤波器技术规格}\\[6pt]
+    \begin{tabular}{c|c}
+        \toprule
+        通带截止频率 $f_p$ & 通带最大衰减 $\alpha_p$ \\
+        \midrule
+        阻带截止频率 $f_s$ & 阻带最小衰减 $\alpha_s$ \\
+        \bottomrule
+    \end{tabular}\\[6pt]
+    \small\kaishu “我不管你怎么设计，通带里衰减不许超过 $\alpha_p$，阻带里衰减必须大于 $\alpha_s$。超了就别来见我。”
+\end{tcolorbox}
+\end{center}
+
+这幅图景就是所有滤波器设计的逻辑起点。甲方划出的两条线——通带衰减上限 $\alpha_p$ 和阻带衰减下限 $\alpha_s$——就是\textbf{违约禁区}。你的任务，就是找到刚好满足这些约束的传递函数 $H(s)$，并且用最少的运放来实现它。
+
+\begin{insight}
+\textbf{工程经济学的第一性原理：}
+\begin{itemize}
+    \item \textbf{阶数 $N$ = 成本。} 每一个 $N$ 的实现都对应一个运放、一组 $RC$、一片 PCB 面积和 $N$ 倍功耗。
+    \item \textbf{指标余量 = 浪费。} 如果 $\alpha_s$ 只要 $40\db$ 你却做了 $60\db$，你多花的运放并没有人买单。
+    \item \textbf{滤波器设计 = 刚好不违约的前提下，阶数最小化。}
+\end{itemize}
+这就是为什么我们要用巴特沃斯和切比雪夫两种策略——它们代表了「用不同的方式花钱（阶数），买到不同品质的过渡带」。
+\end{insight}
+
+% ---------------------------------------------------------------------------
+\subsection{幅度平方函数：看清公式背后的逻辑}
+
+模拟滤波器的设计不从传递函数 $H(s)$ 直接下手，因为 $H(s)$ 同时涉及幅度和相位。工程上我们先闭上一只眼——只关心幅度，用\textbf{幅度平方函数} $|H(j\Omega)|^2$ 来干活。
+
+为什么要搞「平方」？因为 $|H(j\Omega)|^2 = H(j\Omega)H(-j\Omega)$，这个函数只含 $\Omega$ 的偶次幂，数学上极其干净。而当我们算出 $|H(j\Omega)|^2$ 之后，再把它「开方」——也就是做谱分解——就能恢复出稳定的 $H(s)$。
+
+% --- 巴特沃斯 ---
+\subsubsection{巴特沃斯幅度平方函数：最大平坦的代价}
+
+$$
+\boxed{\absSq{H(j\Omega)} = \frac{1}{1 + \left(\dfrac{\Omega}{\Omegac}\right)^{2N}}}
+\qquad (N = 1,2,3,\dots)
+$$
+
+\textbf{为什么长这样？逐项拆解：}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{分母的 $1 + (\cdots)$ 结构：}
+    当 $\Omega = 0$（直流），$|H(j0)|^2 = 1/(1+0) = 1 = 0\db$。这个「$1$」就是用来\textbf{锁死直流增益为 $0\db$} 的。没有它，信号一进来就先被砍一刀，谁也受不了。
+
+    \item \textbf{$2N$ 次方（为什么是偶数次？）：}
+    物理上，我们需要 $|H(j\Omega)|^2$ 是 $\Omega$ 的偶函数（幅度响应关于 $\Omega=0$ 对称）。数学上取 $2N$ 保证分母永远 $\ge 1$，函数值不会爆炸。$N$ 每增加 $1$，过渡带额外贡献 $-20\db/\text{dec}$ 的滚降。
+
+    \item \textbf{$\Omegac$ 的角色：}
+    当 $\Omega = \Omegac$，$|H|^2 = 1/2$，幅度衰减 $3\db$。$\Omegac$ 就是\textbf{半功率点}。注意 $\Omegac$ 不一定等于通带截止频率 $\Omegap$——后面我们有得算。
+
+    \item \textbf{「最大平坦」的数学含义：}
+    在 $\Omega = 0$ 处，$|H(j\Omega)|^2$ 的前 $2N-1$ 阶导数全是 0。换句话说，它在直流附近「粘」在 $1$ 上，能粘多紧粘多紧。代价是\textbf{过渡带滚降不够快}——平坦的代价是慢。
+\end{enumerate}
+
+% --- 切比雪夫 ---
+\subsubsection{切比雪夫幅度平方函数：用波纹换陡峭}
+
+$$
+\boxed{\absSq{H(j\Omega)} = \frac{1}{1 + \varepsilon^2\, C_N^2\!\left(\dfrac{\Omega}{\Omegap}\right)}}
+$$
+
+其中 $C_N(x) = \cos(N\arccos x)$（$|x|\le 1$）或 $\ch(N\arch x)$（$|x|>1$）。
+
+\textbf{为什么长这样？算力经济学的博弈：}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{$\varepsilon$（波纹因子）：} 决定通带内允许的波动幅度。$\varepsilon$ 越小，波纹越浅，滤波器越像巴特沃斯；$\varepsilon$ 越大，通带越「浪」，但过渡带也更陡。$0<\varepsilon<1$ 是典型取值。
+
+    \item \textbf{切比雪夫多项式 $C_N(x)$ 的魔术：}
+    在通带内（$|x|\le 1$），$C_N(x)$ 在 $[-1, 1]$ 之间等幅振荡 $N+1$ 次。这意味着 $|H|^2$ 在 $1$ 和 $1/(1+\varepsilon^2)$ 之间\textbf{等波纹地波动}。这不是缺点，而是刻意设计的——把通带误差均匀摊开，把宝贵的「容许误差」用到极致。
+
+    \item \textbf{「等波纹逼近」的数学哲学：}
+    切比雪夫证明了：在所有 $N$ 阶多项式中，$C_N(x)$ 在 $[-1,1]$ 上与零的最大偏差最小。翻译成工程语言：\textbf{给定通带容差，切比雪夫用相同的阶数在过渡带跑得最快}。用通带里的「可控波纹」为代价，换取更陡的过渡带——这就是滤波器设计中的「算力经济学」。
+
+    \item \textbf{阻带的起飞：}
+    一旦进入阻带（$|x|>1$），$C_N(x)$ 从 $\ch$ 函数接管，指数级增长。$|H|^2$ 被 $C_N^2$ 急速压向零，过渡带斜率远超同阶巴特沃斯。
+\end{enumerate}
+
+\begin{insight}
+\textbf{一句话对比：}
+\begin{itemize}
+    \item 巴特沃斯 = 「我老老实实地平坦，别嫌我慢。」
+    \item 切比雪夫 = 「我在通带里故意晃几下，但保证不晃出圈子，过渡带跑得飞快。」
+\end{itemize}
+选定哪个，取决于甲方更在乎通带平坦度还是过渡带陡峭度。
+\end{insight}
+
+% ---------------------------------------------------------------------------
+\subsection{极点分布的几何图景：圆与椭圆的宿命}
+
+现在进入最具美感的环节。幅度平方函数决定之后，我们通过
+\[
+|H(j\Omega)|^2 = H(s)H(-s)\big|_{s=j\Omega}
+\]
+把 $s$ 请回来。解 $1 + (\text{分母}) = 0$ 得到的根，画在 $s$ 平面上，就是极点。
+
+% --- 巴特沃斯极点 ---
+\subsubsection*{巴特沃斯：完美圆周上的等分点}
+
+令 $s = j\Omega$，有 $|H(s)|^2 = H(s)H(-s) = \dfrac{1}{1 + \bigl(-s^2/\Omegac^2\bigr)^{N}}$。
+
+极点是 $1 + \bigl(-s^2/\Omegac^2\bigr)^{N}=0$ 的解，即：
+
+$$
+\bigl(-s^2/\Omegac^2\bigr)^{N} = -1 = e^{j\pi(2k-1)}
+$$
+
+整理得（设 $N$ 为奇数或偶数，统一下标）：
+
+\vspace{4pt}
+\begin{center}
+\fbox{%
+\begin{minipage}{0.55\textwidth}
+\centering\large
+$\displaystyle s_k = \Omegac \cdot \exp\!\left[j\frac{\pi}{2}\left(1 + \frac{2k-1}{N}\right)\right]$\vspace{6pt}
+
+$k = 1, 2, \dots, N$ （仅取左半平面极点）
+\end{minipage}%
+}
+\end{center}
+\vspace{4pt}
+
+\begin{insight}
+\textbf{关键发现：}
+\begin{itemize}
+    \item 所有极点均匀分布在以 $\Omegac$ 为半径的\textbf{圆周}上。
+    \item 相邻极点之间的角度间隔为 $\pi/N$。
+    \item 极点永远不会落在 $j\Omega$ 轴上（那会造成无穷大增益，滤波器不稳定）。
+    \item 左半平面的 $N$ 个极点构成了因果稳定滤波器的 $H(s)$。
+    \item 巴特沃斯极点 = 完全对称 = 无波纹 = 「秩序之美」。
+\end{itemize}
+\end{insight}
+
+% --- 切比雪夫极点 ---
+\subsubsection*{切比雪夫 I 型：椭圆上的分布}
+
+切比雪夫滤波器的极点不在圆上，而是落在 $s$ 平面长轴在 $j\Omega$ 轴上、短轴在实轴上的\textbf{椭圆}上：
+
+$$
+s_k = -\Omegap \cdot \sh(\alpha)\,\sin\theta_k \;+\; j\,\Omegap \cdot \ch(\alpha)\,\cos\theta_k
+$$
+
+其中 $\alpha = \dfrac{1}{N}\,\arsh\!\left(\dfrac{1}{\varepsilon}\right)$，$\theta_k = \dfrac{\pi}{2}\cdot\dfrac{2k-1}{N}$。
+
+\begin{insight}
+\textbf{椭圆解读：}
+\begin{itemize}
+    \item 椭圆的短半轴 = $\Omegap \cdot \sh(\alpha)$（实轴方向，决定极点「阻尼」）
+    \item 椭圆的长半轴 = $\Omegap \cdot \ch(\alpha)$（虚轴方向，决定极点「频率」）
+    \item $\varepsilon \to 0$ 时，$\alpha \to \infty$，$\sh\alpha \approx \ch\alpha \approx e^\alpha/2$，椭圆退化为圆——切比雪夫退化为巴特沃斯。
+    \item $\varepsilon$ 越大，椭圆越扁，极点越靠近 $j\Omega$ 轴，通带波纹越大，但过渡带越陡。
+\end{itemize}
+\end{insight}
+
+% --- TikZ 图：圆 vs 椭圆并排 ---
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+
+    % ===== 左：巴特沃斯 N=6 =====
+    \begin{scope}[xshift=-4.0cm]
+        % 坐标轴
+        \draw[->, gray] (-3, 0) -- (3, 0) node[right] {$\sigma$};
+        \draw[->, gray] (0, -3) -- (0, 3) node[above] {$j\Omega$};
+
+        % 单位圆（归一化 Omega_c=1）
+        \draw[butterworth, thick, dashed] (0,0) circle (2.2);
+
+        % 左半平面极点 (k=1,2,3: angles 120°, 180°, 240°)
+        \foreach \k in {1,2,3} {
+            \pgfmathsetmacro{\ang}{90 + (2*\k-1)*180/6}
+            \fill[butterworth] ({2.2*cos(\ang)}, {2.2*sin(\ang)}) circle (3pt);
+            \draw[butterworth, very thin] (0,0) -- ({2.2*cos(\ang)}, {2.2*sin(\ang)});
+        }
+        % 右半平面极点（灰色, k=4,5,6: angles 300°, 0°, 60°）
+        \foreach \k in {4,5,6} {
+            \pgfmathsetmacro{\ang}{90 + (2*\k-1)*180/6}
+            \fill[gray!50] ({2.2*cos(\ang)}, {2.2*sin(\ang)}) circle (2.5pt);
+        }
+
+        % 标注
+        \node[butterworth, font=\footnotesize\bfseries] at (1.2, 0.8) {$30^\circ$};
+        \node[butterworth, font=\small\bfseries] at (0, -2.8) {巴特沃斯 ($N=6$)};
+        \node[font=\footnotesize] at (2.3, 1.4) {半径 $=\Omegac$};
+
+        % σ 负方向指示（左半平面）
+        \draw[<-, thick, butterworth!60] (-1.3, 0.5) -- (-2.0, 1.2);
+        \node[butterworth!80, font=\scriptsize] at (-2.5, 1.5) {稳定极点};
+    \end{scope}
+
+    % ===== 右：切比雪夫 N=6 =====
+    \begin{scope}[xshift=4.0cm]
+        % 坐标轴
+        \draw[->, gray] (-3, 0) -- (3, 0) node[right] {$\sigma$};
+        \draw[->, gray] (0, -3) -- (0, 3) node[above] {$j\Omega$};
+
+        % 椭圆参数
+        % epsilon=0.5, N=6 -> alpha = arsinh(1/0.5)/6 = arsinh(2)/6 ≈ 1.4436/6 ≈ 0.2406
+        % a = sin(real) cos(imag)? Let me use explicit values.
+        % sh(alpha) = sh(0.2406) ≈ 0.243, ch(alpha) ≈ 1.029
+        % semi-minor = Omega_p * sh ≈ 1 * 0.243 * scale
+        % semi-major = Omega_p * ch ≈ 1 * 1.029 * scale
+        % Let's scale for visibility
+        \draw[chebyshev, thick, dashed] (0,0) ellipse (0.55 and 2.35);
+
+        % 极点 N=6 (左半平面椭圆上)
+        \foreach \k in {1,2,3,4,5,6} {
+            \pgfmathsetmacro{\theta}{90*(2*\k-1)/6}
+            \pgfmathsetmacro{\x}{-0.55*sin(\theta)}
+            \pgfmathsetmacro{\y}{2.35*cos(\theta)}
+            \fill[chebyshev] (\x, \y) circle (3pt);
+        }
+        % 右半平面极点（灰色）
+        \foreach \k in {1,2,3,4,5,6} {
+            \pgfmathsetmacro{\theta}{90*(2*\k-1)/6}
+            \pgfmathsetmacro{\x}{0.55*sin(\theta)}
+            \pgfmathsetmacro{\y}{2.35*cos(\theta)}
+            \fill[gray!50] (\x, \y) circle (2.5pt);
+        }
+
+        \node[chebyshev, font=\small\bfseries] at (0, -2.8) {切比雪夫 I 型 ($N=6$)};
+        \node[font=\footnotesize] at (1.5, 1.8) {长轴 $=\Omegap\ch\alpha$};
+        \node[font=\footnotesize] at (1.2, 0.4) {短轴 $=\Omegap\sh\alpha$};
+
+        % 稳定性指示
+        \draw[<-, thick, chebyshev!60] (-0.8, 0.5) -- (-1.8, 1.3);
+        \node[chebyshev!80, font=\scriptsize] at (-2.4, 1.6) {稳定极点};
+    \end{scope}
+
+\end{tikzpicture}
+\caption{巴特沃斯（左）与切比雪夫~I 型（右）极点分布几何对比。
+圆上均匀分布的极点带来「最大平坦」；椭圆分布则通过挤压换取通带波纹与过渡带陡度。}
+\label{fig:pole_geometry}
+\end{figure}
+
+% --- 共轭极点合并 ---
+\subsubsection*{共轭极点合并为实系数二阶节——化简为工程实现}
+
+极点成对出现（共轭对），每一对共轭极点合并为一个实系数的二阶多项式：
+
+\begin{align*}
+\text{单极点（实轴）:}&\quad (s - s_k), \quad s_k \in \mathbb{R} \\
+\text{共轭对:}&\quad (s - s_k)(s - s_k^*) = s^2 - 2\operatorname{Re}\{s_k\}s + |s_k|^2
+\end{align*}
+
+\begin{insight}
+\textbf{工程意义：}
+\textit{复数系数}的滤波器无法用运放实现。把共轭极点合并为实系数二阶节之后，每个二阶节恰好对应一个 Sallen-Key 或 MFB 二阶单元。级联后就是完整的滤波器硬件。这就是为什么所有归一化表格都用「一阶节 + 多个二阶节」的形式列出——表格里的每行就是一块运放电路。
+\end{insight}
+
+\newpage
+% =============================================================================
+%  PART II: 4步傻瓜设计法
+% =============================================================================
+\section{终极工程模板：模拟滤波器 4 步傻瓜设计法}
+
+先把变量声明清楚：
+\[
+\begin{aligned}
+\Omegap &= 2\pi f_p &&\text{—— 通带截止角频率} \\
+\Omegas &= 2\pi f_s &&\text{—— 阻带截止角频率} \\
+\alpha_p &\ \db &&\text{—— 通带最大允许衰减} \\
+\alpha_s &\ \db &&\text{—— 阻带最小所需衰减}
+\end{aligned}
+\]
+
+目标：找到阶数 $N$ 和 $3\db$ 截止频率 $\Omegac$（巴特沃斯）或波纹参数 $\varepsilon$（切比雪夫），进而写出 $H(s)$。
+
+\bigskip
+\hrule
+\subsection*{Step 1：探底线——求最小阶数 $N$}
+
+\textbf{巴特沃斯：}
+\[
+N \ge \frac{\lg\!\left(\dfrac{10^{\alpha_s/10}-1}{10^{\alpha_p/10}-1}\right)}
+                {2\,\lg\!\left(\dfrac{\Omegas}{\Omegap}\right)}
+\]
+
+\textbf{切比雪夫 I 型：}
+\[
+N \ge \frac{\arch\!\left(\sqrt{\dfrac{10^{\alpha_s/10}-1}{10^{\alpha_p/10}-1}}\right)}
+                {\arch\!\left(\dfrac{\Omegas}{\Omegap}\right)}
+\]
+
+\textbf{记忆口诀：} 巴特沃斯看「对数比」；切比雪夫看「反双曲余弦比」。两者的 $N$ 公式分母都是过渡带的「压缩比」$\Omegas/\Omegap$——过渡带越窄，$N$ 越大，很直观。
+
+\textbf{切比雪夫 $\arch$ 的数值技巧：} $\arch(x) = \ln\!\bigl(x + \sqrt{x^2-1}\,\bigr)$，$x>1$。考场没有 $\arch$ 按钮就用这个。
+
+\bigskip
+\hrule
+\subsection*{Step 2：定硬件——阶数向上取整}
+
+\[
+N_{\text{实际}} = \ceil{N_{\text{计算}}}
+\]
+
+\textbf{工程师的直觉：} 滤波器的阶数必须是整数——你不可能做 $3.2$ 个运放。取整意味着「硬件冗余」：
+\begin{itemize}
+    \item 多出来的 $0.x$ 阶不会浪费，它会转化为额外的衰减余量。
+    \item 这个余量我们可以「分配」给通带（把截止频率往外挪）或者吃掉（保持原来指标更轻松地满足）。
+\end{itemize}
+
+\bigskip
+\hrule
+\subsection*{Step 3：分蛋糕——计算真实参数}
+
+\textbf{巴特沃斯——两种策略：}
+
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\textbf{策略 A：「保通带」}\\[4pt]
+\fbox{$\displaystyle \Omegac = \frac{\Omegap}{\bigl(10^{\alpha_p/10}-1\bigr)^{1/(2N)}}$}\\[8pt]
+$3\db$ 点取在通带指标刚好满足的位置。阻带自动获得额外余量。
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\textbf{策略 B：「保阻带」}\\[4pt]
+\fbox{$\displaystyle \Omegac = \frac{\Omegas}{\bigl(10^{\alpha_s/10}-1\bigr)^{1/(2N)}}$}\\[8pt]
+$3\db$ 点取在阻带指标刚好满足的位置。通带自动获得额外余量。
+\end{minipage}
+
+\vspace{8pt}
+
+\textbf{切比雪夫 I 型——波纹因子：}
+\[
+\varepsilon = \sqrt{10^{\alpha_p/10} - 1}
+\]
+
+\textbf{选哪个策略？} 如果甲方对通带平坦度极端敏感（比如音频），选「保通带」；如果甲方更在意阻带衰减（比如抗混叠），选「保阻带」。如果没特别说明，一般保通带。
+
+\bigskip
+\hrule
+\subsection*{Step 4：查表与施工——去归一化}
+
+\begin{enumerate}[leftmargin=1.5em, label=\textbf{\arabic*.}]
+    \item \textbf{查归一化表：} 根据 $N$ 查得归一化传递函数 $\HanNorm$（$\Omegac=1$ 或 $\Omegap=1$ 的原型）。
+    \item \textbf{去归一化：}
+    \begin{itemize}
+        \item \textbf{巴特沃斯：} 令 $s \to s/\Omegac$，即
+        \[
+        \Han = \HanNorm\big|_{s \to s/\Omegac}
+        \]
+        \item \textbf{切比雪夫：} 令 $s \to s/\Omegap$，即
+        \[
+        \Han = \HanNorm\big|_{s \to s/\Omegap}
+        \]
+    \end{itemize}
+    \item \textbf{化简：} 将替换后的表达式展开为实系数多项式之比，即
+    \[
+    \Han = \frac{b_0 + b_1 s + \cdots}{a_0 + a_1 s + \cdots + a_N s^N}
+    \]
+\end{enumerate}
+
+\begin{pitfall}
+去归一化的核心陷阱：巴特沃斯用 $\Omegac$ 归一化，切比雪夫用 $\Omegap$ 归一化。两者查的表不同，换的变量也不同——千万别在考场上张冠李戴！
+\end{pitfall}
+
+\newpage
+% =============================================================================
+%  APPENDIX: 归一化表
+% =============================================================================
+\subsection*{附：归一化低通原型多项式表（简表）}
+
+以下给出巴特沃斯和切比雪夫（$1\db$ 波纹）的归一化传递函数分母多项式 $D_{an}(s)$，分子均为 $1$。
+
+\vspace{4pt}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering\small
+\textbf{巴特沃斯}（$\Omegac=1$）\\[4pt]
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{c|p{0.75\textwidth}}
+\toprule
+$N$ & $D_{an}(s)$ 因式分解形式 \\
+\midrule
+1  & $s+1$ \\
+2  & $s^2 + 1.4142s + 1$ \\
+3  & $(s+1)(s^2 + s + 1)$ \\
+4  & $(s^2 + 0.7654s + 1)(s^2 + 1.8478s + 1)$ \\
+5  & $(s+1)(s^2 + 0.6180s + 1)(s^2 + 1.6180s + 1)$ \\
+6  & $(s^2 + 0.5176s + 1)(s^2 + 1.4142s + 1)(s^2 + 1.9319s + 1)$ \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+
+\vspace{10pt}
+
+\noindent
+\begin{minipage}{\textwidth}
+\centering\small
+\textbf{切比雪夫 I 型}（$1\db$ 波纹，$\Omegap=1$）\\[4pt]
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{c|p{0.75\textwidth}}
+\toprule
+$N$ & $D_{an}(s)$ 因式分解形式 \\
+\midrule
+1  & $s+1.9652$ \\
+2  & $s^2 + 1.0977s + 1.1025$ \\
+3  & $(s+0.4942)(s^2 + 0.4942s + 0.9942)$ \\
+4  & $(s^2+0.2791s+0.9865)(s^2+0.6737s+0.2794)$ \\
+5  & $(s+0.2895)(s^2+0.1790s+0.9883)(s^2+0.4684s+0.4293)$ \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+
+\vspace{8pt}
+\begin{pitfall}
+上表仅为最常用的 $1\db$ 波纹切比雪夫。考场上请根据题目给出的表格为准。巴特沃斯表注意区分归一化到 $\Omegac$ 还是 $\Omegap$——大多数教材给出归一化到 $3\db$ 点的表格，与本文一致。
+\end{pitfall}
+
+\newpage
+% =============================================================================
+%  PART III: 经典精讲例题
+% =============================================================================
+\section{经典精讲例题}
+
+% ==============================
+%  例题 1: 巴特沃斯
+% ==============================
+\subsection{例题 1：巴特沃斯低通滤波器设计（保通带）}
+
+\begin{tcolorbox}[enhanced, colback=white, colframe=butterworth!60,
+    title={\textbf{题目}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{设计指标：}
+\[
+f_p = 1\ \mathrm{kHz},\quad \alpha_p = 1\db,\qquad
+f_s = 3\ \mathrm{kHz},\quad \alpha_s = 40\db
+\]
+
+用巴特沃斯逼近设计模拟低通滤波器，求：
+\begin{enumerate}[label=(\arabic*)]
+    \item 所需最小阶数 $N$；
+    \item 采用「保通带」策略的 $3\db$ 截止频率 $f_c$；
+    \item 归一化传递函数 $\HanNorm$；
+    \item 去归一化后的实际传递函数 $\Han$（化简为实系数多项式之比）。
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+% ----- 详细解答 -----
+\begin{center}
+    \textbf{——— 详细解析 ———}
+\end{center}
+
+\textbf{\color{butterworth!90}Step 1: 探底线（求 $N$）}
+
+\begin{align*}
+\Omega_p &= 2\pi \times 1000 = 2000\pi \ \rads \\
+\Omega_s &= 2\pi \times 3000 = 6000\pi \ \rads \\[4pt]
+N &\ge \frac{\lg\!\left(\dfrac{10^{40/10}-1}{10^{1/10}-1}\right)}
+                {2\,\lg\!\left(\dfrac{6000\pi}{2000\pi}\right)}
+     = \frac{\lg\!\left(\dfrac{10^4-1}{10^{0.1}-1}\right)}
+                {2\,\lg(3)} \\[4pt]
+  &= \frac{\lg\!\left(\dfrac{9999}{0.2589}\right)}{2 \times 0.4771}
+     = \frac{\lg(38620)}{0.9542}
+     = \frac{4.5868}{0.9542}
+     = 4.807
+\end{align*}
+
+\begin{insight}
+注意 $10^{0.1} \approx 1.2589$，$10^{0.1}-1 \approx 0.2589$。$1\db$ 这个数在滤波器设计里极其常见——它对应的功率比约为 $1.259$，幅度比约为 $1.122$。记住 $10^{0.1}\approx 1.259$ 可以在考场上省去按计算器的时间。
+\end{insight}
+
+\textbf{\color{deepgreen!90}Step 2: 定硬件（取整）}
+
+\[
+N = \ceil{4.807} = \mathbf{5}
+\]
+
+取整到 $5$ 阶，意味着「硬件冗余」约为 $0.193$ 阶——这部分余量将被 Step 3 消化。
+
+\vspace{4pt}
+
+\textbf{\color{chebyshev!90}Step 3: 分蛋糕（计算 $\Omega_c$）}
+
+甲方要求「保通带」—— 通带指标必须精确满足，阻带多吃点余量无妨：
+
+\begin{align*}
+\Omegac &= \frac{\Omega_p}{\bigl(10^{\alpha_p/10}-1\bigr)^{1/(2N)}}
+         = \frac{2000\pi}{(10^{0.1}-1)^{1/10}} \\[4pt]
+        &= \frac{2000\pi}{(0.2589)^{0.1}}
+         = \frac{2000\pi}{0.8734} \\[4pt]
+        &\approx 2289.8\pi \ \rads \\[4pt]
+f_c &= \frac{\Omega_c}{2\pi} \approx 1144.9 \ \mathrm{Hz}
+\end{align*}
+
+\begin{insight}
+注意 $\Omega_c > \Omega_p$（$1145\Hz > 1000\Hz$）——取整后多出的硬件余量被我们「分」到 $3\db$ 点上了：把截止频率往外推，通带指标依然安然无恙。如果取整后仍然卡在原来的 $\Omega_c$ 上，那阻带余量会大到离谱——那是浪费。
+\end{insight}
+
+\textbf{\color{black!80}Step 4: 查表与施工（去归一化）}
+
+查巴特沃斯归一化表，$N=5$：
+
+\[
+\HanNorm = \frac{1}{(s+1)(s^2 + 0.6180s + 1)(s^2 + 1.6180s + 1)}
+\]
+
+去归一化：令 $s \to s/\Omegac = s/(2289.8\pi)$。
+
+\textbf{—— 逐项替换 ——}
+
+\begin{align*}
+\text{一阶因子:}&\quad (s/\Omegac + 1)
+    = \frac{1}{\Omegac}s + 1
+    = \frac{s + \Omegac}{\Omegac} \\[4pt]
+\text{二阶因子 (a):}&\quad (s/\Omegac)^2 + 0.6180(s/\Omegac) + 1
+    = \frac{s^2 + 0.6180\,\Omegac\,s + \Omegac^2}{\Omegac^2} \\[4pt]
+\text{二阶因子 (b):}&\quad (s/\Omegac)^2 + 1.6180(s/\Omegac) + 1
+    = \frac{s^2 + 1.6180\,\Omegac\,s + \Omegac^2}{\Omegac^2}
+\end{align*}
+
+\textbf{—— 合并 ——}
+
+\begin{align*}
+\Han &= \frac{1}
+    {\dfrac{s + \Omegac}{\Omegac}
+     \cdot \dfrac{s^2 + 0.6180\,\Omegac\,s + \Omegac^2}{\Omegac^2}
+     \cdot \dfrac{s^2 + 1.6180\,\Omegac\,s + \Omegac^2}{\Omegac^2}} \\[8pt]
+    &= \frac{\Omegac^5}
+       {(s + \Omegac)\,
+        (s^2 + 0.6180\,\Omegac\,s + \Omegac^2)\,
+        (s^2 + 1.6180\,\Omegac\,s + \Omegac^2)}
+\end{align*}
+
+\begin{pitfall}
+去归一化之后分子的 $\Omegac^N$ 因子\textbf{不能丢}！分子 $\Omegac^5$ 保证了直流增益 $|H(j0)| = 1$。如果忘了写这个因子，$H(0) \neq 1$，滤波器会把直流信号也衰减掉——这在绝大多数应用中都是不可接受的。
+\end{pitfall}
+
+\textbf{—— 代入数值 }$\Omegac \approx 2289.8\pi = 7193.3\ \rads$：
+
+\[
+\boxed{\displaystyle
+\Han = \frac{(7193.3)^5}
+    {(s + 7193.3)\,
+    (s^2 + 4445.5\,s + 7193.3^2)\,
+    (s^2 + 11638.8\,s + 7193.3^2)}
+}
+\]
+
+%（可进一步乘开得到标准多项式形式，但考试一般要求到因式分解形式即可。）
+
+
+\newpage
+% ==============================
+%  例题 2: 切比雪夫
+% ==============================
+\subsection{例题 2：切比雪夫 I 型低通滤波器设计}
+
+\begin{tcolorbox}[enhanced, colback=white, colframe=chebyshev!60,
+    title={\textbf{题目}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{设计指标：}
+\[
+f_p = 2\ \mathrm{kHz},\quad \alpha_p = 1\db,\qquad
+f_s = 3.5\ \mathrm{kHz},\quad \alpha_s = 30\db
+\]
+
+用切比雪夫 I 型逼近设计模拟低通滤波器，求：
+\begin{enumerate}[label=(\arabic*)]
+    \item 波纹因子 $\varepsilon$；
+    \item 所需最小阶数 $N$；
+    \item 归一化传递函数 $\HanNorm$；
+    \item 去归一化后的实际传递函数 $\Han$。
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+% ----- 详细解答 -----
+\begin{center}
+    \textbf{——— 详细解析 ———}
+\end{center}
+
+\textbf{\color{butterworth!90}Step 1a: 计算波纹因子}
+
+\[
+\varepsilon = \sqrt{10^{\alpha_p/10} - 1} = \sqrt{10^{0.1} - 1}
+            = \sqrt{1.2589 - 1} = \sqrt{0.2589} \approx 0.5088
+\]
+
+物理含义：$\varepsilon = 0.5088$ 意味着通带内 $|H|$ 在 $1$ 和 $1/\sqrt{1+\varepsilon^2} \approx 1/\sqrt{1.2589} \approx 0.8913$（恰好 $-1\db$）之间等幅振荡——波纹幅度恰好等于甲方规定的 $\alpha_p$。
+
+\vspace{4pt}
+
+\textbf{\color{butterworth!90}Step 1b: 探底线（求 $N$）}
+
+\begin{align*}
+\Omega_p &= 4000\pi\ \rads,\qquad \Omega_s = 7000\pi\ \rads \\[4pt]
+N &\ge \frac{\arch\!\left(\sqrt{\dfrac{10^{30/10}-1}{10^{1/10}-1}}\right)}
+                {\arch(3.5/2)}
+     = \frac{\arch\!\left(\sqrt{\dfrac{1000-1}{0.2589}}\right)}
+                {\arch(1.75)} \\[4pt]
+  &= \frac{\arch(62.12)}{\arch(1.75)}
+\end{align*}
+
+使用 $\arch(x) = \ln\bigl(x + \sqrt{x^2-1}\bigr)$：
+\begin{align*}
+\arch(62.12) &= \ln\!\bigl(62.12 + \sqrt{62.12^2-1}\bigr)
+              = \ln(62.12 + 62.11) = \ln(124.23) = 4.822 \\[2pt]
+\arch(1.75)  &= \ln\!\bigl(1.75 + \sqrt{1.75^2-1}\bigr)
+              = \ln(1.75 + 1.4361) = \ln(3.1861) = 1.159 \\[4pt]
+N &\ge \frac{4.822}{1.159} = 4.160
+\end{align*}
+
+\begin{insight}
+\textbf{对比意识：} 如果这是巴特沃斯，$N$ 会是多少？带入巴特沃斯公式：
+$N_{\text{BW}} \ge \lg(3859)/(2\lg1.75) = 3.587/(2\times0.243)=7.38$，取整后 $N=8$。
+切比雪夫只用 $N=5$ 阶就达到了同样的阻带衰减——\textbf{省了 $3$ 个运放！}这就是「用波纹换阶数」的工程价值。
+\end{insight}
+
+\textbf{\color{deepgreen!90}Step 2: 定硬件（取整）}
+
+\[
+N = \ceil{4.160} = \mathbf{5}
+\]
+
+\vspace{4pt}
+
+\textbf{\color{chebyshev!90}Step 3: 参数确认}
+
+切比雪夫不需要像巴特沃斯那样重算截止频率——$\Omegap$ 本身就是归一化参考点，取整后通带指标自然满足（因为 $N$ 增大只会让通带波纹更多但不超出 $\varepsilon$ 的限制）。
+
+实际参数：
+\[
+\varepsilon = 0.5088,\quad N = 5,\quad \Omega_p = 4000\pi\ \rads
+\]
+
+\textbf{\color{black!80}Step 4: 查表与施工（去归一化）}
+
+查切比雪夫 I 型归一化表（$1\db$ 波纹），$N=5$：
+
+\[
+\HanNorm = \frac{1}{(s+0.2895)(s^2+0.1790s+0.9883)(s^2+0.4684s+0.4293)}
+\]
+
+去归一化：令 $s \to s/\Omegap = s/(4000\pi)$。
+
+\textbf{—— 逐项替换 ——}
+
+\begin{align*}
+\text{一阶因子:}&\quad s/\Omegap + 0.2895
+    = \frac{s + 0.2895\Omegap}{\Omegap} \\[4pt]
+\text{二阶因子 (a):}&\quad (s/\Omegap)^2 + 0.1790(s/\Omegap) + 0.9883
+    = \frac{s^2 + 0.1790\Omegap\,s + 0.9883\Omegap^2}{\Omegap^2} \\[4pt]
+\text{二阶因子 (b):}&\quad (s/\Omegap)^2 + 0.4684(s/\Omegap) + 0.4293
+    = \frac{s^2 + 0.4684\Omegap\,s + 0.4293\Omegap^2}{\Omegap^2}
+\end{align*}
+
+\textbf{—— 合并 ——}
+
+\begin{align*}
+\Han &= \frac{1}
+    {\dfrac{s + 0.2895\Omegap}{\Omegap}
+     \cdot \dfrac{s^2 + 0.1790\Omegap\,s + 0.9883\Omegap^2}{\Omegap^2}
+     \cdot \dfrac{s^2 + 0.4684\Omegap\,s + 0.4293\Omegap^2}{\Omegap^2}} \\[8pt]
+    &= \frac{\Omegap^5}
+       {(s + 0.2895\Omegap)\,
+        (s^2 + 0.1790\Omegap\,s + 0.9883\Omegap^2)\,
+        (s^2 + 0.4684\Omegap\,s + 0.4293\Omegap^2)}
+\end{align*}
+
+代入 $\Omegap = 4000\pi \approx 12566.4\ \rads$：
+
+\[
+\boxed{\displaystyle
+\Han = \frac{(12566.4)^5}
+    {(s + 3638.0)\,
+    (s^2 + 2249.4\,s + 0.9883\cdot\Omegap^2)\,
+    (s^2 + 5886.4\,s + 0.4293\cdot\Omegap^2)}
+}
+\]
+
+\begin{pitfall}
+切比雪夫去归一化时，\textbf{归一化表中的常数系数在替换后保持不变}（如 $0.2895$ 直接乘以 $\Omegap$，$0.9883$ 乘以 $\Omegap^2$），没有额外的功率补偿因子。这跟巴特沃斯不同——巴特沃斯去归一化后所有系数恰好凑成 $\Omegac$ 的整数次幂，而切比雪夫的系数保留了归一化表中的小数。
+\end{pitfall}
+
+
+\newpage
+% =============================================================================
+%  PART IV: 肌肉记忆训练营
+% =============================================================================
+\section{肌肉记忆训练营（刷题区）}
+
+\textbf{使用说明：}
+以下 4 道题目完全覆盖巴特沃斯和切比雪夫滤波器的常见考法。先独立完成，再对照答案核对核心节点数据。不要看详细解析——你对的是\textbf{数字}，不是思路。思路要在前面两节里形成。
+
+\vspace{10pt}
+
+% ---- 练习 1: 巴特沃斯（保通带） ----
+\begin{tcolorbox}[enhanced, colback=white, colframe=black!40,
+    title={\textbf{练习 1：巴特沃斯·保通带}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{指标：} $f_p = 800\Hz$，$\alpha_p = 2\db$；$f_s = 2400\Hz$，$\alpha_s = 30\db$。
+
+求 $N$，用「保通带」策略求 $f_c$，写出最终的 $H(s)$ 因式分解形式（归一化查表，不展开多项式）。
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{answerbox}
+$N = 4$；$f_c \approx 854.8\Hz$；$\Omegac \approx 5371.2\rads$。
+
+\[
+\HanNorm = \frac{1}{(s^2+0.7654s+1)(s^2+1.8478s+1)}
+\]
+
+\[
+\Han = \frac{\Omegac^4}
+    {(s^2 + 0.7654\Omegac\,s + \Omegac^2)\,
+     (s^2 + 1.8478\Omegac\,s + \Omegac^2)}
+\]
+\end{answerbox}
+
+\vspace{16pt}
+
+% ---- 练习 2: 巴特沃斯（保阻带） ----
+\begin{tcolorbox}[enhanced, colback=white, colframe=black!40,
+    title={\textbf{练习 2：巴特沃斯·保阻带}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{指标：} $f_p = 500\Hz$，$\alpha_p = 1\db$；$f_s = 1200\Hz$，$\alpha_s = 50\db$。
+
+求 $N$，用「保阻带」策略求 $f_c$，写出 $\Han$ 的因式分解形式。
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{answerbox}
+$N_{\text{计算}} \approx 8.60$，取 $N = 9$。
+
+$\Omegac$（保阻带）$\approx 3052.6\rads$，$f_c \approx 485.9\Hz$。
+
+\[
+\HanNorm = \frac{1}{(s+1)(s^2+0.3473s+1)(s^2+s+1)(s^2+1.5321s+1)(s^2+1.8794s+1)}
+\]
+
+\[
+\Han = \HanNorm\big|_{s\to s/\Omegac}\quad\text{（代入 $\Omegac$，分子配 $\Omegac^9$）}
+\]
+\end{answerbox}
+
+\vspace{16pt}
+
+% ---- 练习 3: 切比雪夫 ----
+\begin{tcolorbox}[enhanced, colback=white, colframe=black!40,
+    title={\textbf{练习 3：切比雪夫 I 型·标准设计}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{指标：} $f_p = 1500\Hz$，$\alpha_p = 0.5\db$；$f_s = 2800\Hz$，$\alpha_s = 45\db$。
+
+求 $\varepsilon$、$N$，写出 $\Han$ 因式分解形式（归一化参数可用字母表示）。
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{answerbox}
+$\varepsilon = \sqrt{10^{0.05}-1} \approx 0.3493$。
+
+$\arch$ 参数：$\arch(1.8667) \approx 1.2146$；$\arch(\sqrt{31621.7/0.1220}) \approx \arch(509.1) \approx 6.926$。
+
+$N_{\text{计算}} \approx 5.70$，取 $N = 6$。
+
+查 $0.5\db$ 波纹表 $N=6$（本文仅附 $1\db$ 表，考场依题给表为准），得归一化 $\HanNorm$。
+
+$\Omegap = 3000\pi$，去归一化：$s \to s/\Omegap$，分子配 $\Omegap^6$。
+\[
+\Han = \frac{\Omegap^6}{\prod_{k=1}^{3}(s^2 + a_k\Omegap s + b_k\Omegap^2)}
+\]
+（$a_k, b_k$ 查考场提供的 $0.5\db$ 归一化表）
+\end{answerbox}
+
+\vspace{16pt}
+
+% ---- 练习 4: 切比雪夫·大衰减 ----
+\begin{tcolorbox}[enhanced, colback=white, colframe=black!40,
+    title={\textbf{练习 4：切比雪夫 I 型·大衰减考验}}, fonttitle=\bfseries, sharp corners, breakable]
+
+\textbf{指标：} $f_p = 100\Hz$，$\alpha_p = 2\db$；$f_s = 210\Hz$，$\alpha_s = 60\db$。
+
+求 $\varepsilon$、$N$，简要写出去归一化后的 $\Han$。
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{answerbox}
+$\varepsilon = \sqrt{10^{0.2}-1} \approx 0.7648$。
+
+$\arch$ 分子：$\sqrt{(10^6-1)/(10^{0.2}-1)} \approx \sqrt{999999/0.5849} \approx \sqrt{1.709\times10^6} \approx 1307.3$。
+
+$\arch(1307.3) \approx 7.869$。
+
+$\arch(\Omegas/\Omegap) = \arch(210/100) = \arch(2.1) \approx 1.426$。
+
+$N_{\text{计算}} \approx 5.52$，取 $N = 6$。
+
+$\Omegap = 200\pi \approx 628.32\rads$。
+
+查表 $N=6$（$1\db$ 波纹同一表），去归一化 $s \to s/\Omegap$，乘 $\Omegap^6$ 得 $\Han$。
+\end{answerbox}
+
+\vspace{20pt}
+
+\begin{center}
+\rule{0.6\textwidth}{0.5pt}\\[8pt]
+{\large\kaishu\bfseries —— 祝刷题愉快，考场神挡杀神 ——}
+\end{center}
+
+% =============================================================================
+%  APPENDIX
+% =============================================================================
+\newpage
+\section*{附录 A：核心公式速查卡}
+
+\begin{tcolorbox}[enhanced, colback=white, colframe=black!60,
+    title={\textbf{公式速查：一张 A4 纸搞定滤波器设计}}, fonttitle=\bfseries\large,
+    sharp corners, breakable]
+
+\subsubsection*{巴特沃斯}
+\[
+|H(j\Omega)|^2 = \frac{1}{1+(\Omega/\Omegac)^{2N}},\qquad
+\Omegac = \Omega_p\bigl(10^{\alpha_p/10}-1\bigr)^{-1/(2N)}
+\]
+\[
+N = \frac{\lg\!\left(\dfrac{10^{\alpha_s/10}-1}{10^{\alpha_p/10}-1}\right)}{2\lg(\Omegas/\Omegap)},\qquad
+s_k = \Omegac\cdot e^{j\frac{\pi}{2}\left(1+\frac{2k-1}{N}\right)}
+\]
+
+\subsubsection*{切比雪夫 I 型}
+\[
+|H(j\Omega)|^2 = \frac{1}{1+\varepsilon^2 C_N^2(\Omega/\Omegap)},\qquad
+\varepsilon = \sqrt{10^{\alpha_p/10}-1}
+\]
+\[
+N = \frac{\arch\!\left(\sqrt{\dfrac{10^{\alpha_s/10}-1}{10^{\alpha_p/10}-1}}\right)}{\arch(\Omegas/\Omegap)},\qquad
+\arch(x) = \ln(x+\sqrt{x^2-1})
+\]
+
+\subsubsection*{去归一化}
+\[
+\text{巴特沃斯：}\ s\to s/\Omegac;\qquad
+\text{切比雪夫：}\ s\to s/\Omegap
+\]
+
+\subsubsection*{角频率与频率}
+\[
+\Omega = 2\pi f,\qquad
+\Omegap = 2\pi f_p,\qquad
+\Omegas = 2\pi f_s,\qquad
+\Omegac = 2\pi f_c
+\]
+
+\end{tcolorbox}
+
+% =============================================================================
+\end{document}

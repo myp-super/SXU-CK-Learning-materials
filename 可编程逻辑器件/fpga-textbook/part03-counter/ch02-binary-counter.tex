@@ -118,24 +118,123 @@ end behavioral;
 将每个时钟上升沿后寄存器内容画出来：
 
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-  \foreach \i in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15} {
-    \pgfmathtruncatemacro{\x}{\i * 1.2}
-    \node at (\x, 0) {\small \i};
+\begin{tikzpicture}[scale=1.0]
+  \def\dx{0.7}      % 每拍宽度(cm)
+  \def\hi{0.5}      % 高电平偏移
+  \def\lo{0.05}     % 低电平偏移
+
+  % === 纵坐标定义 ===
+  \def\Yclk{1.4}
+  \def\Yzero{2.8}
+  \def\Yone{4.2}
+  \def\Ytwo{5.6}
+  \def\Ythree{7.0}
+
+  % === 横轴刻度线 0-15 ===
+  \foreach \n in {0,...,15} {
+    \draw[gray!50, thin] ({\n*\dx}, 0.8) -- ({\n*\dx}, \Ythree+\hi+0.2);
+    \node[font=\footnotesize] at ({\n*\dx}, 0.5) {\n};
   }
-  \node at (19.2, 0) {\small 0};
+  % 拍16标记(回到0)
+  \draw[gray!40, dashed, thin] ({16*\dx}, 0.8) -- ({16*\dx}, \Ythree+\hi+0.2);
+  \node[font=\footnotesize, gray] at ({16*\dx}, 0.5) {0};
 
-  \draw[->] (-0.5,0) -- (20,0) node[right] {时钟拍号};
+  % 横轴
+  \draw[->] (-0.2, 0.8) -- ({16*\dx+0.3}, 0.8) node[right, font=\small] {时钟拍号};
 
-  % Q0: toggle every clock
-  \draw[blue, thick] (0, 1.5) -- (0.3, 1.5) -- (0.3, 2.5) -- (1.5, 2.5) -- (1.5, 1.5) -- (2.7, 1.5) -- (2.7, 2.5) -- (3.9, 2.5);
-  \node[blue] at (21, 2) {\small Q0};
+  % === 纵向虚线(每个上升沿) ===
+  \foreach \n in {0,...,15} {
+    \draw[gray!25, dotted, thin] ({\n*\dx}, \Yclk-0.1) -- ({\n*\dx}, \Ythree+\hi+0.1);
+  }
 
-  % Q1: toggle every 2 clocks
-  \draw[red, thick] (0, 0.5) -- (0.3, 0.5) -- (0.3, 1.5) -- (2.7, 1.5) -- (2.7, 0.5) -- (5.1, 0.5);
-  \node[red] at (21, 1) {\small Q1};
+  % ====== CLK ======
+  \draw[black, thick]
+    (0, \Yclk+\lo) -- (0, \Yclk+\hi)
+    \foreach \n in {0,...,15} {
+      -- ({\n*\dx+0.5*\dx}, \Yclk+\hi) -- ({\n*\dx+0.5*\dx}, \Yclk+\lo) -- ({\n*\dx+\dx}, \Yclk+\lo)
+    }
+    -- ({16*\dx}, \Yclk+\hi);
+  \node[font=\small] at ({16*\dx+0.5}, \Yclk+0.25) {clk};
+
+  % ====== Q0 (blue): 0,1,0,1,... 每拍翻转 ======
+  \draw[blue, very thick]
+    (0,\Yzero+\lo) -- (0,\Yzero+\lo) -- (0,\Yzero+\hi) -- (1*\dx,\Yzero+\hi)
+    -- (1*\dx,\Yzero+\lo) -- (2*\dx,\Yzero+\lo)
+    -- (2*\dx,\Yzero+\hi) -- (3*\dx,\Yzero+\hi)
+    -- (3*\dx,\Yzero+\lo) -- (4*\dx,\Yzero+\lo)
+    -- (4*\dx,\Yzero+\hi) -- (5*\dx,\Yzero+\hi)
+    -- (5*\dx,\Yzero+\lo) -- (6*\dx,\Yzero+\lo)
+    -- (6*\dx,\Yzero+\hi) -- (7*\dx,\Yzero+\hi)
+    -- (7*\dx,\Yzero+\lo) -- (8*\dx,\Yzero+\lo)
+    -- (8*\dx,\Yzero+\hi) -- (9*\dx,\Yzero+\hi)
+    -- (9*\dx,\Yzero+\lo) -- (10*\dx,\Yzero+\lo)
+    -- (10*\dx,\Yzero+\hi) -- (11*\dx,\Yzero+\hi)
+    -- (11*\dx,\Yzero+\lo) -- (12*\dx,\Yzero+\lo)
+    -- (12*\dx,\Yzero+\hi) -- (13*\dx,\Yzero+\hi)
+    -- (13*\dx,\Yzero+\lo) -- (14*\dx,\Yzero+\lo)
+    -- (14*\dx,\Yzero+\hi) -- (15*\dx,\Yzero+\hi)
+    -- (15*\dx,\Yzero+\lo) -- (16*\dx,\Yzero+\lo);
+  \node[blue, font=\small] at (\xE+0.5, \Yzero+0.25) {Q0};
+
+  % ====== Q1 (red): 0,0,1,1,0,0,1,1,... 每2拍翻转 ======
+  \draw[red, very thick]
+    (0,\Yone+\lo) -- (0,\Yone+\lo) -- (1*\dx,\Yone+\lo)
+    -- (1*\dx,\Yone+\lo) -- (2*\dx,\Yone+\lo)
+    -- (2*\dx,\Yone+\hi) -- (3*\dx,\Yone+\hi)
+    -- (3*\dx,\Yone+\hi) -- (4*\dx,\Yone+\hi)
+    -- (4*\dx,\Yone+\lo) -- (5*\dx,\Yone+\lo)
+    -- (5*\dx,\Yone+\lo) -- (6*\dx,\Yone+\lo)
+    -- (6*\dx,\Yone+\hi) -- (7*\dx,\Yone+\hi)
+    -- (7*\dx,\Yone+\hi) -- (8*\dx,\Yone+\hi)
+    -- (8*\dx,\Yone+\lo) -- (9*\dx,\Yone+\lo)
+    -- (9*\dx,\Yone+\lo) -- (10*\dx,\Yone+\lo)
+    -- (10*\dx,\Yone+\hi) -- (11*\dx,\Yone+\hi)
+    -- (11*\dx,\Yone+\hi) -- (12*\dx,\Yone+\hi)
+    -- (12*\dx,\Yone+\lo) -- (13*\dx,\Yone+\lo)
+    -- (13*\dx,\Yone+\lo) -- (14*\dx,\Yone+\lo)
+    -- (14*\dx,\Yone+\hi) -- (15*\dx,\Yone+\hi)
+    -- (15*\dx,\Yone+\hi) -- (16*\dx,\Yone+\hi);
+  \node[red, font=\small] at (\xE+0.5, \Yone+0.25) {Q1};
+
+  % ====== Q2 (green): 0,0,0,0,1,1,1,1,... 每4拍翻转 ======
+  \draw[green!50!black, very thick]
+    (0,\Ytwo+\lo) -- (3*\dx,\Ytwo+\lo)
+    -- (3*\dx,\Ytwo+\lo) -- (4*\dx,\Ytwo+\lo)
+    -- (4*\dx,\Ytwo+\hi) -- (7*\dx,\Ytwo+\hi)
+    -- (7*\dx,\Ytwo+\hi) -- (8*\dx,\Ytwo+\hi)
+    -- (8*\dx,\Ytwo+\lo) -- (11*\dx,\Ytwo+\lo)
+    -- (11*\dx,\Ytwo+\lo) -- (12*\dx,\Ytwo+\lo)
+    -- (12*\dx,\Ytwo+\hi) -- (15*\dx,\Ytwo+\hi)
+    -- (15*\dx,\Ytwo+\hi) -- (16*\dx,\Ytwo+\hi);
+  \node[green!50!black, font=\small] at (\xE+0.5, \Ytwo+0.25) {Q2};
+
+  % ====== Q3 (violet): 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1 每8拍翻转 ======
+  \draw[violet, very thick]
+    (0,\Ythree+\lo) -- (7*\dx,\Ythree+\lo)
+    -- (7*\dx,\Ythree+\lo) -- (8*\dx,\Ythree+\lo)
+    -- (8*\dx,\Ythree+\hi) -- (15*\dx,\Ythree+\hi)
+    -- (15*\dx,\Ythree+\hi) -- (16*\dx,\Ythree+\hi);
+  \node[violet, font=\small] at (\xE+0.5, \Ythree+0.25) {Q3};
+
+  % === 图例 ===
+  \node[font=\footnotesize, align=left, anchor=north west]
+    at (0, \Ythree+\hi+0.5) {
+    \textcolor{blue}{Q0}: $f_{clk}/2$\quad
+    \textcolor{red}{Q1}: $f_{clk}/4$\quad
+    \textcolor{green!50!black}{Q2}: $f_{clk}/8$\quad
+    \textcolor{violet}{Q3}: $f_{clk}/16$
+  };
 \end{tikzpicture}
 \end{center}
+
+\textbf{关键观察}：
+\begin{itemize}
+  \item Q0在\textbf{每个}时钟上升沿翻转——这是二分频的基础
+  \item Q1每2个时钟周期翻转一次——Q0的翻转频率是Q1的2倍
+  \item Q2每4个时钟周期翻转一次——Q1的翻转频率是Q2的2倍
+  \item Q3每8个时钟周期翻转一次——Q2的翻转频率是Q3的2倍
+  \item 规律：$Q_k$的频率 = $f_{clk} / 2^{k+1}$，这正是\textbf{分频器}的核心原理
+\end{itemize}
 
 \section{Testbench}
 

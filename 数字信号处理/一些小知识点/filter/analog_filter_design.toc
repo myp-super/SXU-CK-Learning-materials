@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}核心理论：两种滤波器的物理本质}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}从「甲方需求」说起——滤波器到底在解决什么问题？}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}幅度平方函数：看清公式背后的逻辑}{2}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}巴特沃斯幅度平方函数：最大平坦的代价}{2}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}切比雪夫幅度平方函数：用波纹换陡峭}{3}{subsubsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.3}极点分布的几何图景：圆与椭圆的宿命}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}终极工程模板：模拟滤波器 4 步傻瓜设计法}{6}{section.2}%
+\contentsline {section}{\numberline {3}经典精讲例题}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}例题 1：巴特沃斯低通滤波器设计（保通带）}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}例题 2：切比雪夫 I 型低通滤波器设计}{12}{subsection.3.2}%
+\contentsline {section}{\numberline {4}肌肉记忆训练营（刷题区）}{15}{section.4}%

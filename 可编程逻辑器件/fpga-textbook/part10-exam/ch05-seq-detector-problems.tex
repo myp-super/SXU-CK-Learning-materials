@@ -220,6 +220,8 @@ S11 → S110(110) →(1→检测1101)
 \textbf{第四步：写状态转移表。}整理为表格形式。
 
 \textbf{第五步：写VHDL。}
+\end{examtip}
+
 \begin{lstlisting}
 type state_type is (...);
 signal state : state_type;
@@ -234,6 +236,8 @@ process(clk, rst_n) begin
   end if;
 end process;
 \end{lstlisting}
+
+\begin{examtip}[序列检测器类题目的统一解法——核心步骤（续）]
 
 \textbf{第六步：区分重叠/非重叠。}
 \begin{itemize}

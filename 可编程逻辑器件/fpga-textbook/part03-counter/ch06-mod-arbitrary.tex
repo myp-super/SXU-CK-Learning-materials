@@ -12,6 +12,8 @@ $$k = \lceil \log_2 N \rceil$$
 $$\text{清零} \iff cnt = N-1$$
 
 \textbf{步骤3：编写VHDL}
+\end{designflow}
+
 \begin{lstlisting}
  if rising_edge(clk) then
   if cnt = (N-1) then
@@ -21,7 +23,6 @@ $$\text{清零} \iff cnt = N-1$$
   end if;
 end if;
 \end{lstlisting}
-\end{designflow}
 
 \section{为什么这个模板适用于任意N}
 
