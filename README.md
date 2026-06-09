@@ -86,6 +86,7 @@
 - 部分资料来源于网络收集（西电试题、考研题等），仅供学习参考，版权归原作者所有。
 - 文件格式以 PDF、DOCX、PPTX 为主，部分含 ZIP 压缩包及 MATLAB 源码（`.m`）。
 - 如有资料缺失、错误或侵权问题，欢迎提 [Issue](https://github.com/myp-super/SXU-CK-Learning-materials/issues)。
+- 如有更详细的问题和资料需求，请添加微信联系：ma13933838842
 
 ## 许可
 
