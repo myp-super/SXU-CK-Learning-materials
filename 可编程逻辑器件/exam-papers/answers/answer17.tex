@@ -1,0 +1,177 @@
+\chapter{第17套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{B} — CPLD基于乘积项；FPGA基于LUT。A混淆结构，C错(FPGA SRAM掉电丢失)，D错(CPLD非易失)。
+\item \textbf{C} — CASE并行无优先级；IF-ELSE级联有优先级。A错(IF-ELSE不一定优先)，B错(误导)，D与实际相反。
+\item \textbf{B} — COMPONENT声明在ARCHITECTURE声明区(IS与BEGIN之间)。
+\item \textbf{D} — GENERIC语法：\texttt{name : type := default}，用\texttt{:=}不是\texttt{<=}。
+\item \textbf{A} — FOR GENERATE循环复制；IF GENERATE条件生成。
+\item \textbf{D} — One-Hot(N个FF译码简单)；Binary($\lceil\log_2 N\rceil$个FF译码复杂)。
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{（1）COMPONENT}在声明区，\textbf{（2）PORT MAP}实例化连接
+\item \textbf{（1）GENERIC}在PORT\textbf{之前}，\textbf{（2）GENERIC MAP}传参
+\item \textbf{（1）FOR GENERATE}（重复），\textbf{（2）IF GENERATE}（条件）
+\item One-Hot: N个FF；Binary: $\lceil\log_2 N\rceil$个FF
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+{\small
+\begin{enumerate}[label=错误\arabic*：]
+\item COMPONENT名称与实例化标签混用
+\item PORT MAP进位索引错误(\texttt{carry(i-1)}应为\texttt{carry(i)})
+\item 重复的ENTITY声明块
+\item 敏感列表不完整
+\item 进位链索引越界(carry位宽不足)
+\end{enumerate}
+}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\textbf{（1）（1分）}模60 BCD计数器（个位0-9，十位0-5）。\\
+\textbf{（2）（1分）}异步高电平复位(\texttt{if rst='1'})。\\
+\textbf{（3）（1.5分）}$tc=1$当十位=5且个位=9（59）。\\
+\textbf{（4）（1.5分）}改清零条件为$tens=9, units=9$即模100。
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：4位比较器（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity comparator_4bit is
+  port(A, B : in std_logic_vector(3 downto 0);
+       AgtB, AeqB, AltB : out std_logic);
+end comparator_4bit;
+
+architecture behav of comparator_4bit is
+begin
+  process(A, B)
+  begin
+    if A > B then AgtB<='1'; AeqB<='0'; AltB<='0';
+    elsif A = B then AgtB<='0'; AeqB<='1'; AltB<='0';
+    else AgtB<='0'; AeqB<='0'; AltB<='1'; end if;
+  end process;
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}ENTITY 3分 + 三种互斥输出5分 + IF完整4分 + 敏感列表2分 + 规范2分 + 输出互斥保证4分。
+
+\subsection{设计题2：模60 BCD计数器（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity bcd_mod60 is
+  port(clk, rst : in std_logic;
+       units, tens : out std_logic_vector(3 downto 0);
+       tc : out std_logic);
+end bcd_mod60;
+
+architecture behav of bcd_mod60 is
+  signal u_cnt, t_cnt : unsigned(3 downto 0);
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then u_cnt<=(others=>'0'); t_cnt<=(others=>'0');
+    elsif rising_edge(clk) then
+      if t_cnt=5 and u_cnt=9 then
+        u_cnt<=(others=>'0'); t_cnt<=(others=>'0');
+      elsif u_cnt=9 then u_cnt<=(others=>'0'); t_cnt<=t_cnt+1;
+      else u_cnt<=u_cnt+1; end if;
+    end if;
+  end process;
+  units<=std_logic_vector(u_cnt); tens<=std_logic_vector(t_cnt);
+  tc<='1' when t_cnt=5 and u_cnt=9 else '0';
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}BCD进位8分 + 清零(59→00)4分 + 复位3分 + tc 2分 + NUMERIC\_STD 2分 + 端口1分。
+
+\subsection{设计题3：密码锁控制器（20分）}
+
+\textbf{【分析】}16位密码"2-5-3-7"=0010-0101-0011-0111，din逐位输入。18状态Moore型（S0=IDLE, S1-S16逐位匹配, S17=UNLOCK）。任意位错误→回S0。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity combo_lock is
+  port(clk, rst, din : in std_logic; unlock : out std_logic);
+end combo_lock;
+
+architecture moore_fsm of combo_lock is
+  type state_type is (S0,S1,S2,S3,S4,S5,S6,S7,S8,
+                      S9,S10,S11,S12,S13,S14,S15,S16,S17);
+  signal curr, nxt : state_type;
+begin
+  reg_proc: process(clk, rst)
+  begin
+    if rst='1' then curr<=S0;
+    elsif rising_edge(clk) then curr<=nxt; end if;
+  end process;
+
+  comb_proc: process(curr, din)
+  begin
+    case curr is
+      when S0=> if din='0' then nxt<=S1; else nxt<=S0; end if;
+      when S1=> if din='0' then nxt<=S2; else nxt<=S0; end if;
+      when S2=> if din='1' then nxt<=S3; else nxt<=S0; end if;
+      when S3=> if din='0' then nxt<=S4; else nxt<=S0; end if;
+      when S4=> if din='0' then nxt<=S5; else nxt<=S0; end if;
+      when S5=> if din='1' then nxt<=S6; else nxt<=S0; end if;
+      when S6=> if din='0' then nxt<=S7; else nxt<=S0; end if;
+      when S7=> if din='1' then nxt<=S8; else nxt<=S0; end if;
+      when S8=> if din='0' then nxt<=S9; else nxt<=S0; end if;
+      when S9=> if din='0' then nxt<=S10; else nxt<=S0; end if;
+      when S10=> if din='1' then nxt<=S11; else nxt<=S0; end if;
+      when S11=> if din='1' then nxt<=S12; else nxt<=S0; end if;
+      when S12=> if din='0' then nxt<=S13; else nxt<=S0; end if;
+      when S13=> if din='1' then nxt<=S14; else nxt<=S0; end if;
+      when S14=> if din='1' then nxt<=S15; else nxt<=S0; end if;
+      when S15=> if din='1' then nxt<=S16; else nxt<=S0; end if;
+      when S16=> if din='1' then nxt<=S17; else nxt<=S0; end if;
+      when S17=> nxt<=S17;
+      when others=> nxt<=S0;
+    end case;
+  end process;
+  unlock<='1' when curr=S17 else '0';
+end moore_fsm;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}状态定义4分 + 逐位匹配逻辑8分 + 错误回S0 3分 + Moore输出2分 + 代码完整3分。
+
+\subsection{设计题3补充：状态转移图}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=2cm,auto,scale=0.7]
+\node[draw,circle] (S0) at (0,0) {S0};
+\node[draw,circle] (S1) at (1.5,0) {S1};
+\node[draw,circle] (S2) at (3,0) {S2};
+\node[draw,circle] (S3) at (4.5,0) {S3};
+\node[draw,circle] (S4) at (6,0) {S4};
+\node[draw,circle] (S17) at (3,-2) {S17/1};
+\draw (S0) edge node{0} (S1);
+\draw (S1) edge node{0} (S2);
+\draw (S2) edge node{1} (S3);
+\draw (S3) edge node{0} (S4);
+\node at (7.5,0) {$\cdots$};
+\draw[->] (S4) -- (7.5,0);
+\draw[->] (9.5,0) -- (S17);
+\draw (S17) edge[loop below] node{$\times$} (S17);
+\node at (4.5,-3) {\small 每步din错误→回S0（省略未画出）};
+\end{tikzpicture}
+\end{center}
+
+\textbf{【评分】（20分）}状态定义4分 + 逐位匹配8分 + 错误回S0 3分 + Moore输出2分 + 代码/图3分。

@@ -1,0 +1,658 @@
+\chapter{第20套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础进阶试卷（二十）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟 \hspace{2em} 难度：中等）\\[0.3cm]
+\textit{考查范围：FPGA开发流程、LUT原理、VHDL描述风格、Testbench基础、GENERATE语句、属性、配置、断言以及组合/时序/状态机设计。}
+\end{center}
+
+% ============================================
+\section*{一、选择题（共6题，每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于FPGA开发流程（Design Flow）的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 综合（Synthesis）阶段将HDL代码转化为门级网表（Netlist）；布局布线（Place \& Route）阶段将网表中的逻辑单元映射到FPGA物理资源并完成互连；比特流生成（Bitstream Generation）阶段产生FPGA配置文件 &
+B. & 综合和布局布线是同一个步骤的不同叫法，均由综合工具在后台自动并行完成 \\
+C. & 比特流生成（Bitstream Generation）在综合之前执行，用于确定逻辑资源分配方案 &
+D. & 布局布线（Place \& Route）仅涉及I/O引脚分配，与内部逻辑单元的位置无关 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 关于FPGA中查找表（LUT）实现组合逻辑的原理，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & $k$输入LUT本质上是一个$2^k\times1$位的SRAM，通过将真值表存入SRAM单元，地址端接输入信号，数据端输出函数值，从而可实现任意$k$输入布尔函数 &
+B. & 一个4输入LUT只能实现至多4种不同的逻辑函数，无法覆盖所有16种2输入布尔函数 \\
+C. & LUT的输出延迟与存入真值表的复杂度成正比，逻辑函数越复杂延迟越大 &
+D. & LUT只能实现组合逻辑中的与、或、非三种基本操作，更复杂的逻辑需配合触发器实现 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item VHDL中采用\textbf{结构化描述（Structural）}与\textbf{行为描述（Behavioral）}各自的特点，以下说法\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 结构化描述使用COMPONENT声明、PORT MAP例化来连接子模块，类似绘制电路原理图，适合描述层次化设计的拓扑结构；行为描述使用PROCESS、CASE、IF等语句描述电路功能，更抽象且接近算法级思维 &
+B. & 行为描述方式综合出的电路总是比结构化描述占用更多逻辑资源 \\
+C. & 结构化描述中不允许使用PROCESS语句，行为描述中不允许使用COMPONENT例化 \\
+D. & 两种描述风格在同一结构体（ARCHITECTURE）中不能混合使用 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 关于VHDL测试平台（Testbench）的基本概念，以下描述\textbf{错误的是}（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Testbench是一个顶层无端口实体（ENTITY中无PORT声明），其作用是为待测设计（UUT/DUT）生成输入激励，并监测/验证输出响应 &
+B. & Testbench内部通过COMPONENT声明和PORT MAP例化连接UUT，激励信号在PROCESS中使用WAIT FOR或AFTER语句生成 \\
+C. & Testbench中包含的WAIT、ASSERT、REPORT等语句均为可综合语句，可被FPGA综合工具正常处理并下载到芯片中运行 &
+D. & 在Testbench中使用ASSERT语句可以自动检查UUT输出是否与预期一致，并在仿真控制台输出报错信息 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，\texttt{FOR-GENERATE}与\texttt{IF-GENERATE}是两种并发生成语句，以下关于它们区别的描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & FOR-GENERATE用于按固定次数重复生成一组并发语句（如重复实例化多个相同组件）；IF-GENERATE用于根据条件选择性地生成某些并发语句（条件不成立时对应硬件不被生成） &
+B. & FOR-GENERATE只能在PROCESS内部作为顺序循环使用，IF-GENERATE只能在结构体并发区使用 \\
+C. & FOR-GENERATE的循环变量必须在信号声明区显式声明（如\texttt{SIGNAL i : INTEGER}），否则编译报错 \\
+D. & IF-GENERATE语句必须有ELSE分支（类似于IF语句中的ELSE），否则该语句不被允许 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，关于属性（ATTRIBUTE）的用途和语法，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & ATTRIBUTE（属性）用于将额外的元数据信息附加到VHDL对象（如信号、实体、结构体、类型等）上，可用于驱动综合工具行为（如指定状态编码方式、引脚位置等），ATTRIBUTE声明使用关键字\texttt{ATTRIBUTE}，属性指定使用运算符\texttt{'}'（撇号） \\
+B. & VHDL仅支持预定义的固定属性（如\texttt{'EVENT}、\texttt{'RANGE}等），不允许用户自定义属性 \\
+C. & ATTRIBUTE指定的内容直接影响电路的逻辑功能，修改属性值会改变综合出的电路逻辑行为（真值表） \\
+D. & ATTRIBUTE只能在ARCHITECTURE的声明区使用，不能在ENTITY或PACKAGE中使用 \\
+\end{tabular}
+
+\vspace{0.3cm}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（共4题，每题3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{CONFIGURATION（配置）声明：}
+\begin{itemize}
+  \item 在VHDL中，CONFIGURATION语句的基本语法结构如下（填写空白处的关键字）：
+  \begin{verbatim}
+  CONFIGURATION 配置名 OF 实体名 IS
+    FOR 结构体名            -- 指定默认结构体
+      [FOR 例化标号 : 元件名
+         USE ENTITY 库名.实体名(结构体名);  -- 为特定实例绑定具体实现
+       END FOR;]
+    END FOR;
+  END [CONFIGURATION] [配置名];
+  \end{verbatim}
+  \item 在上面语法中，关键字\underline{\hspace{2.5cm}}用于引入配置声明；内部\underline{\hspace{2.5cm}}子句用于将特定的ENTITY-ARCHITECTURE对绑定到某个元件例化标签（Label）上。
+  \item 一个实体拥有多个不同结构体实现时，可以通过\underline{\hspace{2.5cm}}语句选择绑定哪一个，而不必修改顶层设计代码。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item \textbf{FOR-GENERATE语句的基本语法：}
+\begin{itemize}
+  \item FOR-GENERATE是一种\underline{\hspace{2.5cm}}（填“并发”或“顺序”）语句，必须放置在ARCHITECTURE的并发语句区域（BEGIN之后），\textbf{不能}出现在PROCESS内部。
+  \item 其基本语法格式为（填写空白关键字）：
+  \begin{verbatim}
+  标号: FOR 循环变量 IN 范围 GENERATE
+    [并发语句组]
+  END GENERATE [标号];
+  \end{verbatim}
+  \item FOR-GENERATE中的循环变量（如\texttt{i}）由工具\underline{\hspace{2.5cm}}（填“隐式”或“显式”）声明，不需要在信号的声明区提前定义；循环变量的作用域仅限于该GENERATE语句内部。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item \textbf{Testbench中的元件例化与激励生成：}
+\begin{itemize}
+  \item 在Testbench中例化待测设计（UUT）时，通常使用\underline{\hspace{2cm}}关键字声明UUT的接口模板，再通过\underline{\hspace{2cm}}将外层信号连接到UUT端口上。
+  \item 激励（Stimulus）信号通常在单独的\underline{\hspace{2cm}}语句块中生成，使用\underline{\hspace{2cm}}语句（填“\texttt{WAIT FOR}”或“\texttt{AFTER}”）来控制时序间隔。
+  \item Testbench实体声明中PORT列表应为\underline{\hspace{2.5cm}}（填“显式列出所有端口”或“空”），因为Testbench是顶层仿真环境，不需要对外接口。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item \textbf{ASSERT与REPORT语句：}
+\begin{itemize}
+  \item 在VHDL中，\texttt{ASSERT}语句用于检查某个条件是否成立。其基本语法为：
+  \begin{verbatim}
+  ASSERT 条件表达式
+    REPORT "消息字符串"
+    SEVERITY 严重级别;
+  \end{verbatim}
+  \item 当条件表达式为\underline{\hspace{2.5cm}}（填TRUE或FALSE）时，\texttt{REPORT}后指定的消息字符串被输出到仿真控制台。
+  \item \texttt{SEVERITY}（严重级别）有4个预定义级别：NOTE（提示）、\underline{\hspace{1.5cm}}（警告）、\underline{\hspace{1.5cm}}（错误）和FAILURE（致命失败）。其中级别为FAILURE时，仿真器通常会\underline{\hspace{3cm}}（填“停止仿真”或“忽略该断言”）。
+\end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+\textbf{题目：}以下VHDL代码意图使用FOR-GENERATE语句构建一个8位行波进位加法器（Ripple Carry Adder），由8个全加器（Full Adder）元件例化级联而成，并通过配置（CONFIGURATION）指定全加器的具体实现。代码中存在\textbf{至少7处错误}（涵盖GENERATE语法、端口位宽/类型不匹配、COMPONENT声明丢失、配置语法错误等）。请找出任意\textbf{5处}（每处1分，共5分），指出错误位置、原因及正确写法。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={含错误的8位加法器VHDL代码（7处错误，找出5处即满分）}, language=VDL, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY ripple_adder8 IS
+  PORT(
+    a, b   : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
+    cin    : IN  STD_LOGIC;
+    sum    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    cout   : OUT STD_LOGIC
+  );
+END ENTITY ripple_adder8;
+
+ARCHITECTURE structural OF ripple_adder8 IS
+  -- 内部进位信号
+  SIGNAL carry : STD_LOGIC_VECTOR(8 DOWNTO 0);
+BEGIN
+  carry(0) <= cin;
+
+  -- (错误1-3所在区域) FOR-GENERATE实例化8个全加器
+  gen_fa: FOR i IN 0 TO 7 GENERATE
+    fa_inst: full_adder PORT MAP(     -- 错误1: COMPONENT未声明
+      a    => a(i),                   -- 错误2: a为STD_LOGIC_VECTOR, a(i)实际返回STD_LOGIC——此处正确但可能被误认为错误
+      b    => b(i),
+      cin  => carry(i),
+      sum  => sum(i),
+      cout => carry(i+1)
+    );
+  END GENERATE;                       -- 错误3: 缺少GENERATE标号(或多了不该有的部分)
+
+  cout <= carry(8);
+END ARCHITECTURE structural;
+
+-- (错误4-5所在区域) CONFIGURATION配置
+CONFIGURATION rca_config OF ripple_adder8 IS
+  FOR structural                    -- 错误4: 应为完整的"FOR 结构体名"语法
+    FOR gen_fa: full_adder          -- FOR-GENERATE中的组件使用特殊FOR语法
+      FOR ALL: full_adder           -- 错误5: 配置语法错误——应使用"FOR OTHERS"或"FOR ALL"
+        USE ENTITY work.full_adder(behav);
+      END FOR;
+    END FOR;
+  END FOR;
+END CONFIGURATION rca_config;
+
+-- 以下为全加器实体声明（位于同一文件中）
+ENTITY full_adder IS
+  PORT(
+    a, b, cin : IN  STD_LOGIC;
+    sum, cout : OUT STD_LOGIC
+  );
+END ENTITY full_adder;
+
+ARCHITECTURE behav OF full_adder IS
+BEGIN
+  -- (错误6) 组合逻辑描述
+  PROCESS(a, b)
+  BEGIN
+    sum  <= a XOR b XOR cin;         -- 错误6: 敏感信号表不完整，cin未列入但被读取
+    cout <= (a AND b) OR (a AND cin) OR (b AND cin);
+  END PROCESS;
+END ARCHITECTURE behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}按以下格式逐条列出5处错误（每处1分，共5分）。代码中共有至少7处错误，请选择5处作答。
+
+\noindent 错误1（第\_\_行）：\underline{\hspace{3cm}} \quad 原因：\underline{\hspace{5cm}}\\[2pt]
+错误2（第\_\_行）：\underline{\hspace{3cm}} \quad 原因：\underline{\hspace{5cm}}\\[2pt]
+错误3（第\_\_行）：\underline{\hspace{3cm}} \quad 原因：\underline{\hspace{5cm}}\\[2pt]
+错误4（第\_\_行）：\underline{\hspace{3cm}} \quad 原因：\underline{\hspace{5cm}}\\[2pt]
+错误5（第\_\_行）：\underline{\hspace{3cm}} \quad 原因：\underline{\hspace{5cm}}
+
+\vspace{0.3cm}
+\textbf{错误类型提示：}涉及(1)~COMPONENT声明缺失；(2)~FOR-GENERATE中END GENERATE标号语法；(3)~CONFIGURATION的FOR结构体语法不完整；(4)~组合进程敏感信号表遗漏；(5)~IF-GENERATE被误用为FOR-GENERATE（条件生成与循环生成的混淆）；(6)~ENTITY声明应放在ARCHITECTURE之前（代码顺序问题）；(7)~配置中对GENERATE实例的引用语法错误。
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+\textbf{题目：}阅读以下VHDL代码——这是一个算术逻辑单元（ALU）的描述，回答下列问题。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={ALU模块VHDL代码——待分析}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY alu IS
+  GENERIC(
+    DATA_WIDTH : POSITIVE := 8
+  );
+  PORT(
+    a, b   : IN  STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+    op_sel : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);
+    result : OUT STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+    zero   : OUT STD_LOGIC;
+    sign   : OUT STD_LOGIC;
+    carry  : OUT STD_LOGIC
+  );
+END ENTITY alu;
+
+ARCHITECTURE behav OF alu IS
+  SIGNAL a_int, b_int, res_int : SIGNED(DATA_WIDTH DOWNTO 0);
+  SIGNAL res_std : STD_LOGIC_VECTOR(DATA_WIDTH-1 DOWNTO 0);
+BEGIN
+  -- 将输入扩展1位以捕捉进位
+  a_int <= SIGNED('0' & a);
+  b_int <= SIGNED('0' & b);
+
+  PROCESS(a, b, op_sel)
+  BEGIN
+    carry <= '0';   -- 默认值
+    CASE op_sel IS
+      WHEN "000" =>
+        res_int <= a_int + b_int;
+        carry <= res_int(DATA_WIDTH);
+      WHEN "001" =>
+        res_int <= a_int - b_int;
+        carry <= res_int(DATA_WIDTH);
+      WHEN "010" =>
+        res_int <= '0' & SIGNED(a AND b);
+      WHEN "011" =>
+        res_int <= '0' & SIGNED(a OR b);
+      WHEN "100" =>
+        res_int <= '0' & SIGNED(a XOR b);
+      WHEN "101" =>
+        res_int <= '0' & SIGNED(NOT a);
+      WHEN "110" =>
+        res_int <= a_int;    -- 直通a
+      WHEN "111" =>
+        res_int <= b_int;    -- 直通b
+      WHEN OTHERS =>
+        res_int <= (OTHERS => '0');
+    END CASE;
+  END PROCESS;
+
+  res_std <= STD_LOGIC_VECTOR(res_int(DATA_WIDTH-1 DOWNTO 0));
+  result  <= res_std;
+
+  -- 标志位生成
+  zero  <= '1' WHEN res_std = (res_std'RANGE => '0') ELSE '0';
+  sign  <= res_std(DATA_WIDTH-1);
+END ARCHITECTURE behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该ALU的数据位宽是多少？由什么参数控制？若需修改为16位ALU，需要对代码做哪些修改？
+  \item （2分）根据代码，列出该ALU支持的\textbf{全部8种操作}（按op\_sel值从"000"到"111"依次说明），并指出每种操作的助记符名称（如ADD、SUB、AND等）和功能。
+  \item （1分）该ALU内部为什么要将操作数\texttt{a}和\texttt{b}扩展为\texttt{DATA\_WIDTH+1}位的\texttt{SIGNED}类型（第22--23行）？这种扩展对进位标志\texttt{carry}的检测有什么帮助？
+  \item （1分）当\texttt{op\_sel="001"}（减法操作），且\texttt{a = "00001010"} (10)、\texttt{b = "00000101"} (5)时，写出\texttt{result}和三个标志位（\texttt{zero, sign, carry}）的输出值。若\texttt{a = "00000101"} (5)、\texttt{b = "00001010"} (10)时，结果又如何？（提示：注意有符号数的借位情况）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共3题，共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：8位行波进位加法器——结构化设计（20分）}
+
+设计一个8位行波进位加法器（Ripple Carry Adder, RCA），要求采用\textbf{结构化描述风格}（Structural VHDL），通过\textbf{FOR-GENERATE}语句实例化8个1位全加器（Full Adder）并级联构成完整的8位加法器。
+
+\vspace{0.3cm}
+
+\textbf{设计说明：}
+一个$N$位行波进位加法器由$N$个1位全加器级联组成。每个全加器有三个输入（被加数位$a_i$、加数位$b_i$、低位进位$c_i$）和两个输出（和位$s_i$、向高位的进位$c_{i+1}$）。$N$个全加器的进位链首尾相连：$c_0 = cin$（外部最低进位），$c_i \to c_{i+1}$依次传递，$c_N = cout$（最高进位输出）。
+
+\begin{center}
+1位全加器的逻辑方程：
+\begin{itemize}
+  \item $s_i = a_i \oplus b_i \oplus c_i$
+  \item $c_{i+1} = (a_i \land b_i) \lor (a_i \land c_i) \lor (b_i \land c_i)$
+\end{itemize}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{a(7~downto~0)}（输入）：8位被加数。
+  \item \texttt{b(7~downto~0)}（输入）：8位加数。
+  \item \texttt{cin}（输入）：最低位进位输入。
+  \item \texttt{sum(7~downto~0)}（输出）：8位和。
+  \item \texttt{cout}（输出）：最高位进位输出（可用于检测溢出）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）画出8位行波进位加法器的结构框图，标注：8个全加器（FA0$\sim$FA7）的级联方式、进位链信号（$c_0\sim c_8$）的连接关系，以及所有外部端口。
+  \item （3分）编写1位全加器\texttt{full\_adder}的完整VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 实体中声明正确的端口（\texttt{a, b, cin}输入；\texttt{sum, cout}输出，均为\texttt{STD\_LOGIC}类型）；
+    \item 结构体采用\textbf{数据流描述风格}（使用并发信号赋值语句，直接以布尔表达式描述$s_i$和$c_{i+1}$）；
+    \item 也可采用\textbf{行为描述}（PROCESS敏感所有输入），但需在注释中标注选择的描述风格。
+  \end{itemize}
+  \item （10分）编写顶层模块\texttt{ripple\_adder8}的完整VHDL代码。要求：
+  \begin{itemize}
+    \item 实体中正确声明8位加法器的所有端口；
+    \item 在结构体声明区使用\texttt{COMPONENT}声明\texttt{full\_adder}；
+    \item 声明内部进位信号\texttt{carry(8~DOWNTO~0)}（\texttt{carry(0)}接\texttt{cin}，\texttt{carry(8)}接\texttt{cout}）；
+    \item 使用\textbf{FOR-GENERATE}（\texttt{FOR i IN 0 TO 7 GENERATE}）循环实例化8个全加器，通过\texttt{PORT MAP}将每个全加器连接到对应的输入位和进位链；
+    \item \texttt{sum}和\texttt{cout}通过并发信号赋值连接到正确位置；
+    \item 代码中添加清晰的中文注释。
+  \end{itemize}
+  \item （2分）在代码注释中说明：FOR-GENERATE在此设计中的优势（相比逐一写出8个例化语句），以及为什么FOR-GENERATE\textbf{不能}放在PROCESS内部。
+  \item （2分）分析：若将8位加法器扩展为32位加法器（\texttt{a(31~downto~0)}、\texttt{b(31~downto~0)}），代码的哪些地方需要修改？GENERIC参数化在此场景中有何优势？
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item COMPONENT声明示例：
+  \begin{verbatim}
+  COMPONENT full_adder IS
+    PORT( a, b, cin : IN  STD_LOGIC;
+          sum, cout : OUT STD_LOGIC );
+  END COMPONENT;
+  \end{verbatim}
+  \item FOR-GENERATE中的例化格式：
+  \begin{verbatim}
+  gen_fa: FOR i IN 0 TO 7 GENERATE
+    fa_i: full_adder PORT MAP(
+      a    => a(i),
+      b    => b(i),
+      cin  => carry(i),
+      sum  => sum(i),
+      cout => carry(i+1)
+    );
+  END GENERATE gen_fa;
+  \end{verbatim}
+  \item 注意：FOR-GENERATE中的循环变量\texttt{i}自动隐式声明，无需在信号声明区定义。这在纯组合逻辑端口映射中完全合法。
+  \item 内部进位信号\texttt{carry}的声明：\texttt{SIGNAL carry : STD\_LOGIC\_VECTOR(8 DOWNTO 0);}
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：4位Johnson计数器（扭环形计数器）设计（20分）}
+
+设计一个4位Johnson计数器（Johnson Counter，又称扭环形计数器），包含\textbf{自启动逻辑}（非法状态自动恢复），确保在任何初始状态下均能在有限个时钟周期内进入有效的8状态循环。
+
+\vspace{0.3cm}
+
+\textbf{Johnson计数器原理：}
+$N$级Johnson计数器由$N$个D触发器首尾相接构成，最后一个触发器的\textbf{反相输出}（$\overline{Q}$）反馈到第一个触发器的$D$输入端。$N$级Johnson计数器共有$2N$个有效状态。以$N=4$为例，8个有效状态为：
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{状态序号} & \textbf{$Q_3$} & \textbf{$Q_2$} & \textbf{$Q_1$} & \textbf{$Q_0$} \\
+\hline
+S0 & 0 & 0 & 0 & 0 \\
+S1 & 1 & 0 & 0 & 0 \\
+S2 & 1 & 1 & 0 & 0 \\
+S3 & 1 & 1 & 1 & 0 \\
+S4 & 1 & 1 & 1 & 1 \\
+S5 & 0 & 1 & 1 & 1 \\
+S6 & 0 & 0 & 1 & 1 \\
+S7 & 0 & 0 & 0 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+状态循环：S0 $\to$ S1 $\to$ S2 $\to$ S3 $\to$ S4 $\to$ S5 $\to$ S6 $\to$ S7 $\to$ S0 $\to\cdots$
+
+\textbf{自启动问题：}4位二进制共有16种可能状态，但Johnson计数器仅有8个有效状态。其余8个状态为非法状态（如"1010"、"0101"等），若因干扰或上电初始值恰好进入非法状态，普通Johnson计数器将永远在非法状态子循环中运行，无法回到有效循环。因此需要设计\textbf{自启动逻辑}，检测非法状态并在下一个时钟沿自动将计数值纠正至有效状态（通常选择复位至S0="0000"或最近的有效状态）。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：异步复位，高电平有效；复位后输出\texttt{q = "0000"}（状态S0）。
+  \item \texttt{en}（输入）：计数器使能，高电平有效。\texttt{en = '1'}时每个时钟上升沿状态转移一次；\texttt{en = '0'}时保持当前状态。
+  \item \texttt{q(3~downto~0)}（输出）：4位Johnson计数器当前状态值。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）画出$N=4$时Johnson计数器的完整状态转移图，包括：
+  \begin{itemize}
+    \item 标注全部8个有效状态（S0$\sim$S7）以及它们之间的转移关系（单向循环）；
+    \item 列出其余8个非法状态，标注各自的自启动恢复路径（即非法状态如何在一个时钟周期后转入有效状态或S0）；
+    \item 在图上标注反馈逻辑：$D_0 = \overline{Q_3}$。
+  \end{itemize}
+  \item （2分）分析非法状态集合（共8个状态），设计自启动逻辑。请写出：
+  \begin{enumerate}
+    \item 列出全部8个非法状态的二进制值；
+    \item 说明你选择的自启动策略（例如：检测$Q$值不属于有效状态集合时，次态强制为S0；或利用特定的逻辑条件判断）；
+    \item 写出该自启动逻辑的布尔表达式或判断条件（可以用伪代码或VHDL条件表达式表示）。
+  \end{enumerate}
+  \item （12分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 实体中正确声明所有端口；
+    \item 结构体采用\textbf{行为描述风格}（PROCESS），内部使用一个\texttt{STD\_LOGIC\_VECTOR(3~DOWNTO~0)}信号\texttt{q\_reg}作为状态寄存器；
+    \item 异步复位（\texttt{rst='1'}）时\texttt{q\_reg <= "0000"}；
+    \item 在时钟上升沿（\texttt{rst='0'} 且 \texttt{clk'EVENT AND clk='1'} 或 \texttt{rising\_edge(clk)}）：
+    \begin{itemize}
+      \item 若\texttt{en='1'}，执行状态转移逻辑；
+      \item 若当前状态属于8个有效状态之一，按Johnson计数器正常逻辑转移：\texttt{q\_reg <= q\_reg(2 DOWNTO 0) \& (NOT q\_reg(3));}
+      \item 若当前状态为非法状态（自启动逻辑），强制下一个状态为\texttt{"0000"}（或其他有效状态，需在注释中说明理由）；
+    \end{itemize}
+    \item \texttt{en='0'}时\texttt{q\_reg}保持不变；
+    \item 输出\texttt{q <= q\_reg}；
+    \item 代码中包含详细的中文注释，解释自启动逻辑的设计思路。
+  \end{itemize}
+  \item （3分）回答以下问题：
+  \begin{enumerate}
+    \item Johnson计数器与普通环形计数器（Ring Counter，即$Q_N$直接反馈到$D_0$而非反相）的主要区别是什么？两者的有效状态数分别为多少（$N$级情况下）？
+    \item 如果$N=8$（8级Johnson计数器），有效状态数为多少？此时非法状态有多少个？自启动逻辑的复杂度如何变化？
+    \item 在本设计中，为何推荐在非法状态时将输出强制复位至\texttt{"0000"}而不是其他有效状态？从电路可靠性角度简要说明。
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 有效状态判断可通过列出全部8个有效状态的二进制编码，使用组合逻辑进行比较（例如：\texttt{IF q\_reg = "0000" OR q\_reg = "1000" OR ... THEN}）。也可使用更简洁的表达式。
+  \item 自启动逻辑的典型写法框架：
+  \begin{verbatim}
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      q_reg <= "0000";
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        -- 判断是否为合法状态
+        CASE q_reg IS
+          WHEN "0000"|"1000"|"1100"|"1110"|
+               "1111"|"0111"|"0011"|"0001" =>
+            q_reg <= q_reg(2 DOWNTO 0) & (NOT q_reg(3));
+          WHEN OTHERS =>
+            q_reg <= "0000";  -- 非法状态→复位至S0
+        END CASE;
+      END IF;
+    END IF;
+  END PROCESS;
+  \end{verbatim}
+  \item Johnson计数器的反馈逻辑\texttt{q\_reg(2 DOWNTO 0) \& (NOT q\_reg(3))}等价于：将所有位右移一位，新的最高位由原来最高位的反相值填充。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：8位波形发生器——Moore型状态机设计（20分）}
+
+设计一个\textbf{波形发生器（Waveform Generator）}，能够以串行方式循环输出一个预定义的8位波形模式\texttt{"10011001"}。每个时钟周期在1位输出端口\texttt{wave\_out}上输出模式中的1位。该系统使用Moore型有限状态机（FSM）实现，通过状态序列控制输出。
+
+\vspace{0.3cm}
+
+\textbf{功能描述：}
+\begin{itemize}
+  \item 待输出的8位模式为：\texttt{"10011001"}（bit7=1, bit6=0, bit5=0, bit4=1, bit3=1, bit2=0, bit1=0, bit0=1）。输出顺序为：先输出bit7（最高位），依次至bit0（最低位），然后循环回到bit7。
+  \item 每个时钟周期输出1位，经过8个时钟周期完成一个完整模式，然后自动循环重复。
+  \item 系统使用Moore型状态机控制：共有8个状态S0$\sim$S7，每个状态对应固定的1位输出值——S0对应输出$\text{bit}_7$，S1对应$\text{bit}_6$，$\ldots$，S7对应$\text{bit}_0$。
+  \item Moore型状态机的输出\textbf{仅取决于当前状态}，与外部输入无关。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{状态与输出映射（Moore型）：}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{状态} & \textbf{含义} & \textbf{输出 wave\_out} \\
+\hline
+S0 & 输出位7（MSB） & `1' \\
+S1 & 输出位6 & `0' \\
+S2 & 输出位5 & `0' \\
+S3 & 输出位4 & `1' \\
+S4 & 输出位3 & `1' \\
+S5 & 输出位2 & `0' \\
+S6 & 输出位1 & `0' \\
+S7 & 输出位0（LSB） & `1' \\
+\hline
+\end{tabular}
+\end{center}
+
+状态转移：S0 $\to$ S1 $\to$ S2 $\to$ S3 $\to$ S4 $\to$ S5 $\to$ S6 $\to$ S7 $\to$ S0 $\to\cdots$（无条件循环转移，每个时钟沿转移一次）。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：系统时钟，上升沿触发。
+  \item \texttt{rst}（输入）：异步复位，高电平有效。复位后状态回到S0，输出\texttt{wave\_out = '1'}。
+  \item \texttt{en}（输入）：使能信号，高电平有效。\texttt{en = '1'}时每个时钟周期状态转移一次并更新输出；\texttt{en = '0'}时状态和输出保持不变。
+  \item \texttt{wave\_out}（输出）：1位波形输出信号。
+  \item \texttt{state\_disp(2~downto~0)}（输出，可选）：当前状态的3位二进制编码，用于调试显示（S0="000", S1="001", ..., S7="111"）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出该波形发生器的\textbf{Moore型状态转移图}。要求：
+  \begin{itemize}
+    \item 标注全部8个状态（S0$\sim$S7）；
+    \item 每个状态节点内标注该状态下的输出值（\texttt{wave\_out = ?}）；
+    \item 标注状态间的转移方向（单向循环）；
+    \item 标注异步复位后进入的初始状态。
+  \end{itemize}
+  \item （3分）列出该状态机的\textbf{状态转移表}（State Transition Table），包括以下列：当前状态、\texttt{en}输入、次态、输出（\texttt{wave\_out}）。注意Moore型输出仅由当前状态决定，与\texttt{en}无关。
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义8个状态：\texttt{TYPE wave\_state IS (S0, S1, S2, S3, S4, S5, S6, S7);}
+    \item 采用\textbf{双进程描述风格}：
+    \begin{itemize}
+      \item 进程1（时序进程）：状态寄存器 + 异步复位（\texttt{rst='1'}回到S0）+ 时钟上升沿检测 + \texttt{en}使能控制；
+      \item 进程2（组合进程）：Moore型输出逻辑——根据当前状态生成\texttt{wave\_out}和\texttt{state\_disp}；
+    \end{itemize}
+    \item 在输出进程中使用CASE语句（或WITH-SELECT语句）为每个状态赋值对应的\texttt{wave\_out}；
+    \item \texttt{state\_disp}使用3位二进制编码表示8个状态（S0$\to$"000", S1$\to$"001", ..., S7$\to$"111"），可使用\texttt{STD\_LOGIC\_VECTOR}类型或\texttt{INTEGER}类型信号配合类型转换；
+    \item 代码中包含详细的中文注释。
+  \end{itemize}
+  \item （3分）回答以下问题：
+  \begin{enumerate}
+    \item \textbf{（关键问题）}这个设计本质上只是依次输出一个固定的8位模式，为什么说它是一个“状态机”？请从\textbf{状态、状态转移、输出与状态的对应关系}三个角度论证。（至少3句话）
+    \item 若改用Mealy型状态机实现相同功能（同样的8位模式输出），状态数和输出逻辑会有何不同？Mealy型能减少状态数吗？为什么？
+    \item 如果希望输出模式不是固定的"10011001"，而是可由外部输入\texttt{pattern(7~downto~0)}动态配置，当前的Moore型设计需要做哪些修改？（仅文字说明，不要求写代码）
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 枚举类型定义与信号声明示例：
+  \begin{verbatim}
+  TYPE wave_state IS (S0, S1, S2, S3, S4, S5, S6, S7);
+  SIGNAL cur_state, nxt_state : wave_state;
+  \end{verbatim}
+  \item 时序进程（进程1）框架：
+  \begin{verbatim}
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      cur_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cur_state <= nxt_state;
+      END IF;
+    END IF;
+  END PROCESS;
+  \end{verbatim}
+  \item 组合进程（进程2）中次态逻辑：
+  \begin{verbatim}
+  PROCESS(cur_state)
+  BEGIN
+    CASE cur_state IS
+      WHEN S0 => nxt_state <= S1;
+      WHEN S1 => nxt_state <= S2;
+      ...
+      WHEN S7 => nxt_state <= S0;
+    END CASE;
+  END PROCESS;
+  \end{verbatim}
+  \item 也可将次态逻辑合并到时序进程中，使用双进程（状态时序 + 输出组合）保持Moore型结构清晰。
+  \item \textbf{思考：}为什么这个设计是状态机？即使没有外部条件判断，状态仍然按照既定规则转移，且输出是当前状态的函数——这是经典Moore型状态机的简化形式（无输入条件的状态转移）。
+\end{itemize}
+\end{framed}
+
+\vspace{0.8cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

@@ -1,0 +1,190 @@
+\chapter{第2套试卷}
+
+\section{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 以下关于GAL（Generic Array Logic）器件的描述，\textbf{错误}的是（\quad）
+
+\begin{enumerate}[label=(\Alph*)]
+\item GAL的与阵列是可编程的，或阵列是固定的
+\item GAL的输出逻辑宏单元（OLMC）可配置为组合输出或寄存器输出
+\item GAL采用的是EEPROM工艺，可重复编程
+\item GAL的与阵列和或阵列均是可编程的
+\end{enumerate}
+
+\item FPGA中用于实现组合逻辑函数的基本可编程单元是（\quad）
+
+\begin{enumerate}[label=(\Alph*)]
+\item 可编程连线（PIP）
+\item 查找表（LUT）
+\item 输入输出块（IOB）
+\item Block RAM
+\end{enumerate}
+
+\item 以下VHDL实体声明中，\textbf{语法正确}的是（\quad）
+
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{ENTITY adder IS PORT (a,b: IN BIT; s: OUT BIT); END adder;}
+\item \texttt{ENTITY adder IS PORT (a,b: IN BIT; s: OUT BIT) END adder;}
+\item \texttt{ENTITY adder PORT (a,b: IN BIT; s: OUT BIT); END ENTITY adder;}
+\item \texttt{ENTITY adder IS PORT (a,b: IN BIT, s: OUT BIT); END adder;}
+\end{enumerate}
+
+\item 在VHDL的PROCESS语句中，关于信号（SIGNAL）赋值和变量（VARIABLE）赋值的描述，\textbf{正确}的是（\quad）
+
+\begin{enumerate}[label=(\Alph*)]
+\item 信号赋值和变量赋值都是立即生效的
+\item 信号赋值在进程结束时生效，变量赋值立即生效
+\item 信号赋值立即生效，变量赋值在进程结束时生效
+\item 信号赋值和变量赋值都在进程结束时生效
+\end{enumerate}
+
+\item CPLD与FPGA在结构上的主要区别是（\quad）
+
+\begin{enumerate}[label=(\Alph*)]
+\item CPLD基于查找表结构，FPGA基于乘积项结构
+\item CPLD基于乘积项结构，FPGA基于查找表结构
+\item 两者均基于相同的可编程结构
+\item CPLD不能实现时序逻辑，FPGA可以
+\end{enumerate}
+
+\item 一个4输入LUT可以实现任意（\quad）变量的组合逻辑函数
+
+\begin{enumerate}[label=(\Alph*)]
+\item 2个及以下
+\item 3个及以下
+\item 4个及以下
+\item 8个及以下
+\end{enumerate}
+
+\end{enumerate}
+
+\section{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中，使用IEEE标准库中的标准逻辑类型时，需在代码开头添加的库声明语句为：\texttt{LIBRARY} \underline{\qquad}; \texttt{USE IEEE.STD\_LOGIC\_1164.ALL;}。
+
+\item VHDL中，\texttt{STD\_LOGIC\_VECTOR} 是一种\underline{\qquad} 数据类型，它表示一组标准逻辑信号的集合。（填“标量”或“复合”）
+
+\item 在VHDL中，拼接运算符的符号是\underline{\qquad}。
+
+\item 一个VHDL设计的结构体（ARCHITECTURE）内部可以包含多条\underline{\qquad} 语句，用于描述多个并发的硬件模块。（填关键字）
+
+\end{enumerate}
+
+\section{三、程序改错题（5分）}
+
+下面是一个3线-8线译码器的VHDL代码，其中包含\textbf{5处错误}。请指出错误所在行（可用行号标注）并写出正确的代码。
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:decoder3t8}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY decoder3t8 IS
+  PORT (
+    sel : IN  INTEGER RANGE 0 TO 7;
+    en  : IN  std_logic;
+    y   : OUT STD_LOGIC_VECTOR(7 DOWNTO 1)
+  );
+END decoder3t8;
+
+ARCHITECTURE behav OF decoder3t8 IS
+BEGIN
+  PROCESS (sel)
+  BEGIN
+    y <= (OTHERS => '0');
+    IF en = '1' THEN
+      CASE sel IS
+        WHEN 0 => y(0) <= '1';
+        WHEN 1 => y(1) <= '1';
+        WHEN 2 => y(2) <= '1';
+        WHEN 3 => y(3) <= '1';
+        WHEN 4 => y(4) <= '1';
+        WHEN 5 => y(5) <= '1';
+        WHEN 6 => y(6) <= '1';
+        WHEN 7 => y(7) <= '1';
+      END CASE
+    END IF
+  END PROCESS
+END behav;
+\end{lstlisting}
+
+\section{四、程序阅读分析题（5分）}
+
+阅读以下VHDL代码，回答后面的问题。
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:mux41}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY mux4to1 IS
+  PORT (
+    a, b, c, d : IN  STD_LOGIC;
+    sel        : IN  STD_LOGIC_VECTOR(1 DOWNTO 0);
+    y          : OUT STD_LOGIC
+  );
+END mux4to1;
+
+ARCHITECTURE behav OF mux4to1 IS
+BEGIN
+  PROCESS (a, b, c, d, sel)
+  BEGIN
+    CASE sel IS
+      WHEN "00"   => y <= a;
+      WHEN "01"   => y <= b;
+      WHEN "10"   => y <= c;
+      WHEN "11"   => y <= d;
+      WHEN OTHERS => y <= '0';
+    END CASE;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+\item 该代码描述的是一个什么电路？（1分）
+\item 该电路的输入信号有哪些？输出信号有哪些？（1分）
+\item 当 \texttt{sel = "10"} 时，输出 \texttt{y} 的值由哪个输入信号决定？（1分）
+\item 如果在Vivado等综合工具中综合该代码，\texttt{sel} 被综合成什么物理资源？（1分）
+\item 该电路的行为描述使用了哪种VHDL语句？它与IF语句在使用场景上的主要区别是什么？（1分）
+\end{enumerate}
+
+\section{五、综合设计题（共60分）}
+
+\subsection{设计题1：组合逻辑设计——8位数值比较器（20分）}
+
+请使用VHDL语言设计一个8位数值比较器，要求如下：
+
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{端口定义（4分）：} 定义实体端口，包括两个8位输入数据端口 \texttt{a}、\texttt{b}（类型为 \texttt{STD\_LOGIC\_VECTOR(7 DOWNTO 0)}），以及三个输出端口 \texttt{agtb}（a大于b）、\texttt{aeqb}（a等于b）、\texttt{altb}（a小于b）。
+\item \textbf{功能实现（10分）：} 在结构体中用行为描述方式（使用IF语句或条件信号赋值语句）实现比较功能。
+\item \textbf{设计思路说明（3分）：} 用注释简要说明设计思路。
+\item \textbf{代码规范（3分）：} 代码缩进规范、信号命名合理、注释清晰。
+\end{enumerate}
+
+\subsection{设计题2：时序逻辑设计——模6计数器（20分）}
+
+请使用VHDL语言设计一个模6计数器（计数范围：0$\sim$5），要求如下：
+
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{端口定义（4分）：} 端口包括时钟信号 \texttt{clk}、异步复位信号 \texttt{rst}（高电平复位）、计数使能信号 \texttt{en}，以及4位计数输出 \texttt{q}（类型为 \texttt{STD\_LOGIC\_VECTOR(3 DOWNTO 0)}）和进位输出 \texttt{cout}（计数值为5且en有效时输出高电平）。
+\item \textbf{功能实现（10分）：} 在进程（PROCESS）中使用IF语句描述时序行为：异步复位优先级最高，复位时 \texttt{q <= "0000"}；在时钟上升沿，若 \texttt{en = '1'} 则进行加1计数，计数值从0$\sim$5循环。
+\item \textbf{设计思路说明（3分）：} 用注释说明模6计数器的工作流程。
+\item \textbf{代码规范（3分）：} 时钟边沿检测语法正确、信号类型使用恰当。
+\end{enumerate}
+
+\subsection{设计题3：状态机设计——“101”序列检测器（Mealy型）（20分）}
+
+请使用VHDL语言设计一个\textbf{Mealy型}状态机，用于检测串行输入序列“101”。要求如下：
+
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{功能说明（2分）：} 当输入端 \texttt{din} 连续收到“101”序列时（每个时钟周期输入1位），输出端 \texttt{dout} 在检测到完整序列的同一时钟周期输出高电平“1”，其余情况输出“0”。允许序列重叠检测（即“10101”中应能检测出两次“101”）。
+\item \textbf{状态图绘制（4分）：} 画出Mealy型状态机的状态转换图（可手绘后拍照贴入答题区，或用文字描述各状态及转换条件）。标注状态名称、转换条件及输出值。
+\item \textbf{端口定义（3分）：} 端口包括时钟 \texttt{clk}、异步复位 \texttt{rst}（低电平复位）、串行输入 \texttt{din}、检测输出 \texttt{dout}。
+\item \textbf{VHDL代码（8分）：} 使用双进程（或三进程）结构编写完整的Mealy型状态机代码。
+\item \textbf{设计思路说明与代码规范（3分）：} 代码结构清晰，状态编码合理，有适当注释。
+\end{enumerate}
+
+\end{enumerate}

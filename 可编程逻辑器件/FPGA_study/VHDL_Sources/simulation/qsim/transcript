@@ -1,0 +1,77 @@
+# do Traffic_Light_Controller.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# 
+# Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+# Start time: 18:14:13 on Jun 16,2026
+# vlog -work work Traffic_Light_Controller.vo 
+# -- Compiling module Traffic_Light_Top
+# 
+# Top level modules:
+# 	Traffic_Light_Top
+# End time: 18:14:13 on Jun 16,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+# Start time: 18:14:13 on Jun 16,2026
+# vlog -work work Waveform1.vwf.vt 
+# -- Compiling module Traffic_Light_Top_vlg_sample_tst
+# -- Compiling module Traffic_Light_Top_vlg_check_tst
+# -- Compiling module Traffic_Light_Top_vlg_vec_tst
+# 
+# Top level modules:
+# 	Traffic_Light_Top_vlg_vec_tst
+# End time: 18:14:13 on Jun 16,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -c -do "Traffic_Light_Controller.do" 
+# Start time: 18:14:13 on Jun 16,2026
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# 
+# //  ModelSim SE-64 10.4 Dec  3 2014 
+# //
+# //  Copyright 1991-2014 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //  THIS DOCUMENT CONTAINS TRADE SECRETS AND COMMERCIAL OR FINANCIAL
+# //  INFORMATION THAT ARE PRIVILEGED, CONFIDENTIAL, AND EXEMPT FROM
+# //  DISCLOSURE UNDER THE FREEDOM OF INFORMATION ACT, 5 U.S.C. SECTION 552.
+# //  FURTHERMORE, THIS INFORMATION IS PROHIBITED FROM DISCLOSURE UNDER
+# //  THE TRADE SECRETS ACT, 18 U.S.C. SECTION 1905.
+# //
+# Refreshing C:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim/work.Traffic_Light_Top_vlg_vec_tst
+# Loading work.Traffic_Light_Top_vlg_vec_tst
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim/work.Traffic_Light_Top
+# Loading work.Traffic_Light_Top
+# Loading cycloneive_ver.cycloneive_io_obuf
+# Loading cycloneive_ver.cycloneive_io_ibuf
+# Loading cycloneive_ver.cycloneive_clkctrl
+# Loading cycloneive_ver.cycloneive_mux41
+# Loading cycloneive_ver.cycloneive_ena_reg
+# Loading cycloneive_ver.cycloneive_lcell_comb
+# Loading altera_ver.dffeas
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim/work.Traffic_Light_Top_vlg_sample_tst
+# Loading work.Traffic_Light_Top_vlg_sample_tst
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim/work.Traffic_Light_Top_vlg_check_tst
+# Loading work.Traffic_Light_Top_vlg_check_tst
+# SDF 10.4 Compiler 2014.12 Dec  3 2014
+# 
+# Loading instances from Traffic_Light_Controller_v.sdo
+# Loading altera_ver.PRIM_GDFF_LOW
+# Loading timing data from Traffic_Light_Controller_v.sdo
+# ** Note: (vsim-3587) SDF Backannotation Successfully Completed.
+#    Time: 0 ps  Iteration: 0  Instance: /Traffic_Light_Top_vlg_vec_tst File: Waveform1.vwf.vt
+# Simulation passed !
+# ** Note: $finish    : Waveform1.vwf.vt(555)
+#    Time: 1 us  Iteration: 0  Instance: /Traffic_Light_Top_vlg_vec_tst/tb_out
+# End time: 18:14:15 on Jun 16,2026, Elapsed time: 0:00:02
+# Errors: 3, Warnings: 1

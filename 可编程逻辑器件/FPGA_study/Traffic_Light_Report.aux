@@ -1,0 +1,58 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/D>>}
+\@writefile{toc}{\contentsline {section}{\numberline {1}设计目的和要求}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}设计目的}{1}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}功能要求}{1}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}设计方案}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}总体架构}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}顶层模块框图}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 顶层模块结构框图}}{2}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:block}{{1}{2}{顶层模块结构框图}{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}端口定义}{3}{subsection.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Traffic\_Light\_Top 端口定义表}}{3}{table.caption.2}\protected@file@percent }
+\newlabel{tab:ports}{{1}{3}{Traffic\_Light\_Top 端口定义表}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}状态机设计}{3}{subsection.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 状态机编码定义表}}{3}{table.caption.3}\protected@file@percent }
+\newlabel{tab:state}{{2}{3}{状态机编码定义表}{table.caption.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 各状态计时参数}}{4}{table.caption.4}\protected@file@percent }
+\newlabel{tab:timing}{{3}{4}{各状态计时参数}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}状态转移图}{4}{subsection.2.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 状态转移图（Moore 型，独热编码）}}{4}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:fsm}{{2}{4}{状态转移图（Moore 型，独热编码）}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}设计过程}{5}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Clock\_Generator —— 时钟分频模块}{5}{subsection.3.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Clock\_Generator.vhd}}{5}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}BCD\_Down\_Counter —— BCD 减计数器}{5}{subsection.3.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces BCD\_Down\_Counter.vhd}}{5}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Traffic\_Light\_FSM —— 三段式状态机控制器}{6}{subsection.3.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces Traffic\_Light\_FSM.vhd}}{6}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Seven\_Seg\_Decoder —— 七段译码器}{9}{subsection.3.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces Seven\_Seg\_Decoder.vhd}}{9}{lstlisting.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Traffic\_Light\_Top —— 顶层集成}{10}{subsection.3.5}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces Traffic\_Light\_Top.vhd}}{10}{lstlisting.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}RTL 综合电路结构}{11}{subsection.3.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Quartus II RTL 综合电路结构图}}{11}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:rtl}{{3}{11}{Quartus II RTL 综合电路结构图}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}测试源程序}{12}{section.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces Traffic\_Light\_TB.vhd}}{12}{lstlisting.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}设计仿真分析}{13}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}仿真环境}{13}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}场景一：无车等待}{13}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 无车等待——关键信号状态}}{13}{table.caption.7}\protected@file@percent }
+\newlabel{tab:sim1}{{4}{13}{无车等待——关键信号状态}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}场景二：车辆触发完整周期}{14}{subsection.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 完整周期——关键切换时刻信号状态}}{14}{table.caption.8}\protected@file@percent }
+\newlabel{tab:sim2}{{5}{14}{完整周期——关键切换时刻信号状态}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}仿真波形}{14}{subsection.5.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces ModelSim 功能仿真波形图}}{14}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:sim}{{4}{14}{ModelSim 功能仿真波形图}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}总结与心得}{15}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}同步/异步复位的工程选择}{15}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}三段式状态机对毛刺的抑制}{15}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}\texttt  {numeric\_std} 与类型安全}{15}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}VHDL 标识符冲突——ST\_ 前缀约定}{15}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}工程设计心得}{15}{subsection.6.5}\protected@file@percent }
+\gdef \@abspage@last{15}

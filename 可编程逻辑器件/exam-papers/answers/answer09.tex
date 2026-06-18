@@ -1,0 +1,595 @@
+\chapter{第9套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{【答案】C} \quad（3分）\\
+\textbf{解析：}CPLD采用基于与或阵列的连续式互连结构，信号传输路径相对固定，延时可预测性较好（C正确，A将CPLD特征错误地安在FPGA上）。FPGA采用分段式互连，通过可编程开关矩阵连接，延时受布线影响较大（B错误，D错误）。
+
+\item \textbf{【答案】B} \quad（3分）\\
+\textbf{解析：}现代主流FPGA（Xilinx/Altera）基于SRAM工艺，配置数据存储在SRAM单元中，掉电即丢失，因此上电时需从外部配置存储器（如SPI Flash）加载比特流（B正确）。反熔丝工艺（C）仅用于航天等特殊场景；Flash型FPGA（D）掉电不丢失且可在线更新；FPGA支持JTAG/主串/从串等多种配置模式（A错误）。
+
+\item \textbf{【答案】D} \quad（3分）\\
+\textbf{解析：}题目要求选\textbf{错误}的。进程内部的语句在仿真时按书写顺序\textbf{依次调度执行}，但信号赋值（$\le$）的值在进程\textbf{挂起时才更新}，而非逐条立即生效——这与实际硬件的并发特性相对应。因此D的描述“逐条立即生效”是错误的。A、B、C均正确。
+
+\item \textbf{【答案】A} \quad（3分）\\
+\textbf{解析：}Moore型状态机的输出仅与当前状态有关；Mealy型的输出与当前状态和输入均有关（A正确）。两者均可用于序列检测或产生序列（B错误）。状态数量与类型无必然关系（C错误）。Mealy型输出是输入和状态的组合函数，可在输入变化时立即变化而不必等时钟边沿（D错误）。
+
+\item \textbf{【答案】C} \quad（3分）\\
+\textbf{解析：}VHDL中逻辑运算符优先级从高到低为：\texttt{NOT}最高；其次\texttt{AND/NAND}等同级；再次\texttt{OR/NOR}；最后\texttt{XOR/XNOR}。按此顺序，\texttt{NOT > AND > XOR > OR}正确（C）。需注意：在IEEE 1076标准中AND/OR/XOR实际为同一优先级，但国内教材通常按此区分教学。
+
+\item \textbf{【答案】C} \quad（3分）\\
+\textbf{解析：}\texttt{FOR...GENERATE}是并发生成语句，用于在结构体中按规律重复生成多个相同或相似的硬件模块实例（C正确）。它不是进程内的循环控制语句（A错误），也不用于仿真激励生成（B错误），更不替代IF语句（D错误）。
+
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{【答案】}（每空1分，共3分）
+\begin{itemize}
+  \item 进程间（或：模块间、并行模块间）\hfill（1分）
+  \item PROCESS（或进程）\hfill（1分）
+  \item 仿真前 \hfill（1分）
+\end{itemize}
+\textbf{解析：}SIGNAL用于进程间/模块间通信，其值在进程挂起时更新。VARIABLE作用域仅限于声明它的PROCESS或子程序内部，赋值立即生效。CONSTANT的值在仿真前（编译/精化阶段）确定，运行期间不可更改。
+
+\item \textbf{【答案】}（每空1分，共3分）
+\begin{itemize}
+  \item COMPONENT \hfill（1分）
+  \item PORT MAP \hfill（1分）
+  \item 静态参数（或：类属参数）\hfill（1分）
+\end{itemize}
+
+\item \textbf{【答案】}（每空1.5分，共3分）
+\begin{itemize}
+  \item FOR \hfill（1.5分）
+  \item IF \hfill（1.5分）
+\end{itemize}
+
+\item \textbf{【答案】}（每空1.5分，共3分）
+\begin{itemize}
+  \item 所有输入信号 \hfill（1.5分）
+  \item 锁存器（Latch）\hfill（1.5分）
+\end{itemize}
+\textbf{解析：}组合逻辑进程中若敏感信号列表不完整，综合工具会推断出锁存器（Latch）来“记住”未覆盖分支下的信号值，导致综合前后仿真结果不一致。
+
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\textbf{题目分析：}代码意图实现带异步复位和时钟使能的D触发器。共5处错误。
+
+\begin{enumerate}[label={错误\arabic*：}]
+
+\item \textbf{（第13行/代码第16行）} \texttt{PROCESS(clk)} 改为 \texttt{PROCESS(clk, rst)}\hfill（1分）\\
+\textbf{原因：}异步复位信号\texttt{rst}必须列入敏感信号列表，否则仿真时只有时钟沿变化才检查\texttt{rst}，无法实现异步复位行为，导致仿真与综合结果不一致。
+
+\item \textbf{（第18行/代码第22行）} \texttt{q := d} 改为 \texttt{q <= d}\hfill（1分）\\
+\textbf{原因：}\texttt{q}是输出端口，属于信号（SIGNAL），必须使用信号赋值符号\verb|<=|，而非变量赋值符号\verb|:=|。
+
+\item \textbf{（第17--21行/代码第21--25行）} 内层IF语句的ELSE分支\texttt{ELSE q <= q}应\textbf{删除}（即删除第23--24行）。\hfill（1分）\\
+\textbf{原因：}当时钟使能\texttt{ce=`0'}时，D触发器应自动保持原值。信号未赋值时即保持，\texttt{q <= q}虽语法合法但冗余，且在部分综合器中可能产生不期望的反馈路径。
+
+\item \textbf{（第14行/代码第20行）} \texttt{ELSIF clk'EVENT AND clk = '1'} 改为 \texttt{ELSIF rising\_edge(clk)}\hfill（1分）\\
+\textbf{原因：}\texttt{rising\_edge()}是IEEE标准函数，能正确处理\texttt{STD\_LOGIC}的9值逻辑（包括`X'、`Z'），比手动写\texttt{clk'EVENT AND clk = '1'}更健壮，是推荐的现代VHDL写法。
+
+\item \textbf{（第12行/代码第12行）} \texttt{END dff\_ce} 改为 \texttt{END ENTITY dff\_ce}（或在\texttt{dff\_ce}后添加分号）。\hfill（1分）\\
+\textbf{原因：}VHDL-2008推荐明确写出\texttt{END ENTITY <实体名>}以增强可读性。部分严格兼容性检查要求实体结束标识完整。
+
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{改正后的完整VHDL代码：}
+
+\begin{lstlisting}[language=VHDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY dff_ce IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    ce   : IN  STD_LOGIC;
+    d    : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC
+  );
+END ENTITY dff_ce;
+
+ARCHITECTURE behav OF dff_ce IS
+BEGIN
+  PROCESS(clk, rst)                    -- 修复1：加入rst
+  BEGIN
+    IF rst = '1' THEN
+      q <= '0';
+    ELSIF rising_edge(clk) THEN        -- 修复4：使用rising_edge
+      IF ce = '1' THEN
+        q <= d;                        -- 修复2：<= 替代 :=
+      END IF;                          -- 修复3：删除冗余ELSE分支
+    END IF;
+  END PROCESS;
+END ARCHITECTURE behav;
+\end{lstlisting}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\begin{enumerate}[label=(\arabic*)]
+
+\item \textbf{（1分）电路识别：}该代码描述的是一个\textbf{参数化偶数分频器}（时钟分频电路）。\\
+\textbf{评分：}答出“分频器”或“时钟分频电路”即得1分。
+
+\item \textbf{（1分）GENERIC参数N的作用：}\texttt{N}为分频系数（分频比）。当\texttt{N=4}时，输出时钟\texttt{clk\_out}的频率为输入时钟\texttt{clk\_in}频率的\textbf{$1/(2N) = 1/8$}。\\
+\textbf{原理：}计数器从0计数到\texttt{N-1}（即3）后翻转\texttt{temp}，计数周期为N个\texttt{clk\_in}周期，\texttt{temp}每N个周期翻转一次，故\texttt{temp}的周期为$2N$个\texttt{clk\_in}周期，输出频率$f_{out} = f_{in}/(2N)$。\\
+\textbf{评分：}答出“分频系数”得0.5分，频率关系正确（1/8）得0.5分。
+
+\item \textbf{（1分）信号作用：}
+\begin{itemize}
+  \item \texttt{count}：内部计数器，对\texttt{clk\_in}上升沿计数，范围$0\sim N-1$，用于控制翻转时刻。（0.5分）
+  \item \texttt{temp}：内部翻转标志位，每N个时钟周期翻转一次，经并发赋值输出为\texttt{clk\_out}。（0.5分）
+\end{itemize}
+
+\item \textbf{（1分）复位类型：异步复位。}\\
+\textbf{判断依据：}（1）PROCESS敏感信号列表中同时包含\texttt{clk\_in}和\texttt{rst}；（2）代码中先判断\texttt{rst = `1'}再判断时钟沿（\texttt{IF rst = `1' ... ELSIF rising\_edge(clk\_in)}），这是异步复位的典型VHDL模板——当\texttt{rst}有效时，无论时钟如何立即复位。\\
+\textbf{评分：}答出“异步复位”得0.5分，能从敏感列表和IF结构两方面说明得0.5分。
+
+\item \textbf{（1分）修改分析：}若第24行改为\texttt{count <= count + 2}且N=4：\\
+计数器步长变为2，计数值序列为0、2、4(→复位至0)、2、4…，不再访问到计数值3（即\texttt{N-1}）。由于只有在\texttt{count = N-1}（即3）时才翻转\texttt{temp}，而\texttt{count}永远不会等于3，因此\texttt{temp}永不被翻转，\texttt{clk\_out}不产生脉冲（或维持恒值），即\textbf{输出无有效分频信号}。\\
+\textbf{评分：}正确说明计数序列变化及翻转条件不满足得1分。
+
+\end{enumerate}
+
+\section{五、综合设计题参考答案（60分）}
+
+% ============================================================
+\subsection*{设计题1：BCD码——七段数码管译码器（20分）}
+
+\subsubsection*{（1）七段码真值表（5分）}
+
+共阳极数码管：0=亮（低电平），1=灭（高电平）。\\
+\texttt{seg(6 downto 0) = \{a, b, c, d, e, f, g\}}。
+
+\begin{table}[h]
+\centering
+\caption{共阳极七段码真值表}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{十进制} & \textbf{bcd(3:0)} & \textbf{a(seg6)} & \textbf{b(seg5)} & \textbf{c(seg4)} & \textbf{d(seg3)} & \textbf{e(seg2)} & \textbf{f(seg1)} & \textbf{g(seg0)} \\
+\hline
+0 & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+1 & 0001 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+2 & 0010 & 0 & 0 & 1 & 0 & 0 & 1 & 0 \\
+3 & 0011 & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+4 & 0100 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+5 & 0101 & 0 & 1 & 0 & 0 & 1 & 0 & 0 \\
+6 & 0110 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+7 & 0111 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+8 & 1000 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+9 & 1001 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+10--15 & 1010--1111 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{评分标准：}每两个正确数字的段码得1分（0--9共10个数字分5组），每错一组扣1分，扣完为止。非法输入处理正确额外加0.5分（总分不超5分）。
+
+\subsubsection*{（2）VHDL代码（15分）}
+
+\begin{lstlisting}[language=VHDL, numbers=left, caption={BCD码--七段共阳极数码管译码器}]
+-- ============================================================
+-- 模块名：bcd_7seg
+-- 功能  ：BCD码（0--9）至七段共阳极数码管译码器
+-- 说明  ：共阳极，seg=0亮 / seg=1灭
+--        seg(6)=a, seg(5)=b, ..., seg(0)=g
+--        非法输入(10--15)时所有段熄灭（全'1'）
+-- ============================================================
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY bcd_7seg IS
+  PORT(
+    bcd : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);  -- 4位BCD输入
+    seg : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)   -- 七段输出(共阳)
+  );
+END ENTITY bcd_7seg;
+
+ARCHITECTURE dataflow OF bcd_7seg IS
+BEGIN
+  -- 使用WITH...SELECT选择信号赋值语句实现译码
+  WITH bcd SELECT
+    seg <= "0000001" WHEN "0000",   -- 0: a,b,c,d,e,f亮, g灭
+           "1001111" WHEN "0001",   -- 1: b,c亮
+           "0010010" WHEN "0010",   -- 2: a,b,d,e,g亮
+           "0000110" WHEN "0011",   -- 3: a,b,c,d,g亮
+           "1001100" WHEN "0100",   -- 4: b,c,f,g亮
+           "0100100" WHEN "0101",   -- 5: a,c,d,f,g亮
+           "0100000" WHEN "0110",   -- 6: a,c,d,e,f,g亮
+           "0001111" WHEN "0111",   -- 7: a,b,c亮
+           "0000000" WHEN "1000",   -- 8: 全亮
+           "0000100" WHEN "1001",   -- 9: a,b,c,d,f,g亮
+           "1111111" WHEN OTHERS;   -- 10--15: 全灭
+END ARCHITECTURE dataflow;
+\end{lstlisting}
+
+\textbf{评分标准（15分）：}
+\begin{itemize}
+  \item 库声明完整（IEEE.STD\_LOGIC\_1164）\hfill（1分）
+  \item 实体定义：端口名、方向、类型、位宽正确 \hfill（3分）
+  \item 结构体名与实体关联正确\hfill（1分）
+  \item 使用WITH...SELECT或WHEN...ELSE实现译码\hfill（2分）
+  \item 段码映射顺序正确（seg(6)=a,\dots,seg(0)=g）\hfill（2分）
+  \item 10个有效输入（0--9）的段码全部正确\hfill（4分）\\（每2个数字段码正确得0.8分，允许个别位轻微偏差视情况扣分）
+  \item OTHERS分支处理非法输入（seg全1熄灭）\hfill（1分）
+  \item 代码规范：缩进一致、注释清晰、命名合理\hfill（1分）
+\end{itemize}
+
+\newpage
+
+% ============================================================
+\subsection*{设计题2：4位双向移位寄存器（20分）}
+
+\subsubsection*{（1）顶层模块端口框图（4分）}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[auto, node distance=1.5cm, >=stealth]
+  % 模块主体
+  \node[draw, minimum width=5cm, minimum height=4cm, thick, fill=gray!10] (mod) at (0,0) {\textbf{bidir\_shift\_reg}};
+
+  % 输入端口（左侧）
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=1.5cm] (clk_l) {};
+  \draw[->, thick] (mod.west|-clk_l) -- ++(-1.5,0) node[left] {\texttt{clk}};
+
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=0.8cm] (rst_l) {};
+  \draw[->, thick] (mod.west|-rst_l) -- ++(-1.5,0) node[left] {\texttt{rst}};
+
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=0.1cm] (mode_l) {};
+  \draw[->, thick] (mod.west|-mode_l) -- ++(-1.5,0) node[left] {\texttt{mode(1:0)}};
+
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=-0.6cm] (din_l) {};
+  \draw[->, thick] (mod.west|-din_l) -- ++(-1.5,0) node[left] {\texttt{din(3:0)}};
+
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=-1.3cm] (si_l) {};
+  \draw[->, thick] (mod.west|-si_l) -- ++(-1.5,0) node[left] {\texttt{si\_r}};
+
+  \node[left=0.3cm of mod.west, xshift=-0.5cm, yshift=-2.0cm] (si_l2) {};
+  \draw[->, thick] (mod.west|-si_l2) -- ++(-1.5,0) node[left] {\texttt{si\_l}};
+
+  % 输出端口（右侧）
+  \node[right=0.3cm of mod.east, xshift=0.5cm, yshift=0cm] (q_r) {};
+  \draw[->, thick] (mod.east|-q_r) -- ++(1.5,0) node[right] {\texttt{q(3:0)}};
+\end{tikzpicture}
+\caption{顶层模块端口框图}
+\end{figure}
+
+\textbf{评分标准：}模块框图包含所有7个端口并标注方向（2分）；位宽标注正确（2分）。
+
+\subsubsection*{（2）底层D触发器符号框图（3分）}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[auto, node distance=1.5cm, >=stealth]
+  \node[draw, minimum width=2.5cm, minimum height=2.5cm, thick, fill=gray!5] (dff) {\textbf{D触发器}};
+
+  \draw[->, thick] (dff.west|-0,0.6) -- ++(-1.2,0) node[left] {\texttt{clk}};
+  \draw[->, thick] (dff.west|-0,-0.1) -- ++(-1.2,0) node[left] {\texttt{rst}};
+  \draw[->, thick] (dff.west|-0,-0.8) -- ++(-1.2,0) node[left] {\texttt{d}};
+  \draw[->, thick] (dff.east|-0,-0.3) -- ++(1.2,0) node[right] {\texttt{q}};
+\end{tikzpicture}
+\caption{底层D触发器符号框图（带异步复位）}
+\end{figure}
+
+\textbf{评分标准：}框图包含4个端口（clk/rst/d/q）且方向正确（2分）；标注清晰（1分）。
+
+\subsubsection*{（3）完整VHDL代码（10分）}
+
+\begin{lstlisting}[language=VHDL, numbers=left, caption={4位双向移位寄存器——结构化描述}]
+-- ============================================================
+-- 模块名：bidir_shift_reg
+-- 功能  ：4位双向移位寄存器（左移/右移/置数/保持）
+-- 描述  ：结构化VHDL，底层D触发器 + 顶层MUX组合逻辑
+-- ============================================================
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+-- ==================== 底层模块：D触发器（带异步复位） ====================
+ENTITY dff_rst IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;
+    d   : IN  STD_LOGIC;
+    q   : OUT STD_LOGIC
+  );
+END ENTITY dff_rst;
+
+ARCHITECTURE behav OF dff_rst IS
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      q <= '0';
+    ELSIF rising_edge(clk) THEN
+      q <= d;
+    END IF;
+  END PROCESS;
+END ARCHITECTURE behav;
+
+-- ==================== 顶层模块：4位双向移位寄存器 ====================
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY bidir_shift_reg IS
+  PORT(
+    clk   : IN  STD_LOGIC;
+    rst   : IN  STD_LOGIC;
+    mode  : IN  STD_LOGIC_VECTOR(1 DOWNTO 0);
+    din   : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    si_r  : IN  STD_LOGIC;     -- 右移串行输入
+    si_l  : IN  STD_LOGIC;     -- 左移串行输入
+    q     : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END ENTITY bidir_shift_reg;
+
+ARCHITECTURE structural OF bidir_shift_reg IS
+  -- 声明底层D触发器组件
+  COMPONENT dff_rst IS
+    PORT(
+      clk : IN  STD_LOGIC;
+      rst : IN  STD_LOGIC;
+      d   : IN  STD_LOGIC;
+      q   : OUT STD_LOGIC
+    );
+  END COMPONENT dff_rst;
+
+  -- 内部信号：每个触发器的D输入和Q输出
+  SIGNAL d_in  : STD_LOGIC_VECTOR(3 DOWNTO 0);  -- 各触发器D端输入
+  SIGNAL q_int : STD_LOGIC_VECTOR(3 DOWNTO 0);  -- 各触发器Q端输出
+BEGIN
+  -- ===== 组合逻辑：为每个D触发器生成4选1MUX输入 =====
+  -- mode=00: 保持 (选自身q_int(i))
+  -- mode=01: 右移 (高位←左侧输出或si_r)
+  -- mode=10: 左移 (低位←右侧输出或si_l)
+  -- mode=11: 置数 (选din(i))
+
+  -- 位3（最高位）的MUX
+  d_in(3) <= q_int(3)              WHEN mode = "00" ELSE  -- 保持
+             si_r                   WHEN mode = "01" ELSE  -- 右移：移入si_r
+             q_int(2)               WHEN mode = "10" ELSE  -- 左移：来自右侧位2
+             din(3);                                        -- 置数
+
+  -- 位2的MUX
+  d_in(2) <= q_int(2)              WHEN mode = "00" ELSE
+             q_int(3)               WHEN mode = "01" ELSE  -- 右移：来自左侧位3
+             q_int(1)               WHEN mode = "10" ELSE  -- 左移：来自右侧位1
+             din(2);
+
+  -- 位1的MUX
+  d_in(1) <= q_int(1)              WHEN mode = "00" ELSE
+             q_int(2)               WHEN mode = "01" ELSE  -- 右移：来自左侧位2
+             q_int(0)               WHEN mode = "10" ELSE  -- 左移：来自右侧位0
+             din(1);
+
+  -- 位0（最低位）的MUX
+  d_in(0) <= q_int(0)              WHEN mode = "00" ELSE
+             q_int(1)               WHEN mode = "01" ELSE  -- 右移：来自左侧位1
+             si_l                   WHEN mode = "10" ELSE  -- 左移：移入si_l
+             din(0);
+
+  -- ===== 使用FOR...GENERATE实例化4个D触发器 =====
+  gen_dff: FOR i IN 0 TO 3 GENERATE
+    dffx: dff_rst
+      PORT MAP(
+        clk => clk,
+        rst => rst,
+        d   => d_in(i),
+        q   => q_int(i)
+      );
+  END GENERATE gen_dff;
+
+  -- 输出驱动
+  q <= q_int;
+END ARCHITECTURE structural;
+\end{lstlisting}
+
+\textbf{评分标准（10分）：}
+\begin{itemize}
+  \item 底层D触发器实体和结构体完整正确（含异步复位）\hfill（2分）
+  \item 顶层COMPONENT声明正确（与底层接口一致）\hfill（1分）
+  \item FOR...GENERATE正确实例化4个D触发器\hfill（2分）
+  \item 每个D触发器的MUX输入逻辑正确（4种mode对应4种数据源）\hfill（3分）\\（每位MUX逻辑0.75分，共4位）
+  \item 数据流向清晰、信号命名合理\hfill（1分）
+  \item PORT MAP端口关联正确\hfill（1分）
+\end{itemize}
+
+\subsubsection*{（4）代码注释（3分）}
+
+代码中已包含分层注释，说明各模块功能（底层D触发器、顶层MUX逻辑、移位方向的数据路由）。\\
+\textbf{评分标准：}注释说明底层模块功能得1分；注释说明MUX数据流向得1分；注释说明移位操作逻辑得1分。
+
+\newpage
+
+% ============================================================
+\subsection*{设计题3：自动售货机控制器（20分）}
+
+\subsubsection*{（1）状态转移图（7分）}
+
+\textbf{状态机类型：Moore型}——输出\texttt{dispense}仅取决于当前状态（累计金额达到3元时输出），与输入无关。
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[->, >=stealth, auto, node distance=3cm, semithick,
+  every state/.style={draw, rectangle, rounded corners, minimum width=2.2cm, minimum height=1cm, fill=gray!10}]
+
+  \node[state, initial below, initial text={复位}] (S0) {S0(0元)\\dispense=0\\st\_disp=00};
+  \node[state] (S1) [right of=S0] {S1(1元)\\dispense=0\\st\_disp=01};
+  \node[state] (S2) [right of=S1] {S2(2元)\\dispense=0\\st\_disp=10};
+  \node[state, fill=green!15] (S3) [right of=S2] {S3($\ge$3元)\\dispense=1\\st\_disp=11};
+
+  \path (S0) edge[loop above] node{coin=00} (S0)
+             edge[bend left] node[above]{coin=01(1元)} (S1)
+             edge[bend left=40] node[above]{coin=10(2元)} (S2)
+        (S1) edge[loop above] node{coin=00} (S1)
+             edge[bend left] node[above]{coin=01(1元)} (S2)
+             edge[bend left=30] node[above]{coin=10(2元)} (S3)
+        (S2) edge[loop above] node{coin=00} (S2)
+             edge[bend left] node[above]{coin=01(1元)} (S3)
+             edge[bend left=30] node[above]{coin=10(2元)} (S3)
+        (S3) edge[bend left=80] node[below]{下一时钟\\自动返回} (S0);
+
+  \node[below=0.3cm of S1, font=\footnotesize] {coin=11作无投入处理（保持当前状态）};
+\end{tikzpicture}
+\caption{自动售货机控制器Moore型状态转移图}
+\end{figure}
+
+\textbf{评分标准（7分）：}
+\begin{itemize}
+  \item 状态定义合理（S0/S1/S2/S3或等价），含义清晰\hfill（2分）
+  \item 4种输入组合下的转移条件全部正确\hfill（3分）
+  \item 每个状态标注输出dispense值正确（仅S3为1）\hfill（1分）
+  \item 明确说明采用Moore型并给出恰当理由\hfill（1分）
+\end{itemize}
+
+\subsubsection*{（2）状态转移表（3分）}
+
+\begin{table}[h]
+\centering
+\caption{自动售货机状态转移表}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{当前状态} & \textbf{coin(1:0)} & \textbf{次态} & \textbf{dispense} \\
+\hline
+S0(0元) & 00 & S0 & 0 \\
+S0(0元) & 01 & S1 & 0 \\
+S0(0元) & 10 & S2 & 0 \\
+S0(0元) & 11 & S0 & 0 \\
+\hline
+S1(1元) & 00 & S1 & 0 \\
+S1(1元) & 01 & S2 & 0 \\
+S1(1元) & 10 & S3 & 0 \\
+S1(1元) & 11 & S1 & 0 \\
+\hline
+S2(2元) & 00 & S2 & 0 \\
+S2(2元) & 01 & S3 & 0 \\
+S2(2元) & 10 & S3 & 0 \\
+S2(2元) & 11 & S2 & 0 \\
+\hline
+S3($\ge$3元) & $\times\times$ & S0 & 1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{评分标准：}状态转移表覆盖所有状态和输入组合（2分）；次态完全正确（1分，允许1--2个轻微错误扣0.5分）。
+
+\subsubsection*{（3）完整VHDL代码（10分）}
+
+\begin{lstlisting}[language=VHDL, numbers=left, caption={自动售货机控制器VHDL（双进程Moore型）}]
+-- ============================================================
+-- 模块名：vending_machine
+-- 功能  ：自动售货机控制器（Moore型状态机）
+-- 说明  ：商品3元，接受1元/2元硬币，不设找零
+--        coin=01(1元), coin=10(2元), coin=00(无), coin=11(非法)
+-- ============================================================
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY vending_machine IS
+  PORT(
+    clk        : IN  STD_LOGIC;
+    rst        : IN  STD_LOGIC;                    -- 异步复位，高有效
+    coin       : IN  STD_LOGIC_VECTOR(1 DOWNTO 0); -- 硬币检测
+    dispense   : OUT STD_LOGIC;                    -- 出货信号
+    state_disp : OUT STD_LOGIC_VECTOR(1 DOWNTO 0)  -- 状态编码输出
+  );
+END ENTITY vending_machine;
+
+ARCHITECTURE fsm OF vending_machine IS
+  -- 自定义枚举类型定义状态
+  TYPE state_type IS (S0, S1, S2, S3);  -- S0:0元 S1:1元 S2:2元 S3:>=3元
+  SIGNAL current_state, next_state : state_type;
+BEGIN
+
+  -- ==================== 时序进程：状态寄存器 + 异步复位 ====================
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;          -- 异步复位回到初始状态(0元)
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- ==================== 组合进程：次态逻辑 + 输出逻辑 ====================
+  PROCESS(current_state, coin)
+  BEGIN
+    -- 默认值
+    next_state <= current_state;
+    dispense   <= '0';
+
+    CASE current_state IS
+      WHEN S0 =>  -- 当前累计0元
+        IF coin = "01" THEN
+          next_state <= S1;         -- 投1元 → 累计1元
+        ELSIF coin = "10" THEN
+          next_state <= S2;         -- 投2元 → 累计2元
+        END IF;                     -- coin="00"或"11"保持S0
+        dispense <= '0';
+        state_disp <= "00";
+
+      WHEN S1 =>  -- 当前累计1元
+        IF coin = "01" THEN
+          next_state <= S2;         -- 再投1元 → 累计2元
+        ELSIF coin = "10" THEN
+          next_state <= S3;         -- 再投2元 → 累计3元
+        END IF;
+        dispense <= '0';
+        state_disp <= "01";
+
+      WHEN S2 =>  -- 当前累计2元
+        IF coin = "01" THEN
+          next_state <= S3;         -- 再投1元 → 累计3元
+        ELSIF coin = "10" THEN
+          next_state <= S3;         -- 再投2元 → 累计4元(≥3元)
+        END IF;
+        dispense <= '0';
+        state_disp <= "10";
+
+      WHEN S3 =>  -- 当前累计≥3元
+        dispense <= '1';            -- Moore型：仅此状态输出出货信号
+        state_disp <= "11";
+        next_state <= S0;           -- 下一时钟自动回到初始状态
+
+      WHEN OTHERS =>
+        next_state <= S0;
+        dispense <= '0';
+        state_disp <= "00";
+    END CASE;
+  END PROCESS;
+
+END ARCHITECTURE fsm;
+\end{lstlisting}
+
+\textbf{评分标准（10分）：}
+\begin{itemize}
+  \item 使用自定义枚举类型定义状态（TYPE state\_type IS...）\hfill（1分）
+  \item 双进程描述风格清晰（时序进程+组合进程分离）\hfill（1分）
+  \item 异步复位实现正确（rst在敏感表中，IF rst=`1'先于时钟判断）\hfill（1分）
+  \item 状态编码和state\_disp输出正确\hfill（1分）
+  \item S0状态次态逻辑正确（3种输入对应的转移）\hfill（1分）
+  \item S1状态次态逻辑正确\hfill（1分）
+  \item S2状态次态逻辑正确\hfill（1分）
+  \item S3状态处理正确（dispense=1，回S0）\hfill（1分）
+  \item Moore型输出逻辑正确（仅S3时dispense=1）\hfill（1分）
+  \item 代码规范：注释清晰、缩进一致、信号命名合理\hfill（1分）
+\end{itemize}
+
+\vspace{0.5cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 第9套参考答案结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

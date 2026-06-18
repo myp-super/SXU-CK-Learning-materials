@@ -1,0 +1,92 @@
+# -------------------------------------------------------------------------- #
+# Quartus II Project Settings File (.qsf)
+# Project    : Traffic_Light_Controller
+# Top Entity : Traffic_Light_Top
+# Device     : Cyclone IV E EP4CE6E22C8 (可根据实际开发板修改)
+# -------------------------------------------------------------------------- #
+
+# ========================== 项目信息 ==========================
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 13.1
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "2026-06-16"
+
+# ========================== 器件选择 ==========================
+# 若使用其他 FPGA 型号，请修改以下两行
+set_global_assignment -name FAMILY "Cyclone IV E"
+set_global_assignment -name DEVICE EP4CE6E22C8
+
+# ========================== 顶层实体 ==========================
+set_global_assignment -name TOP_LEVEL_ENTITY Traffic_Light_Top
+
+# ========================== VHDL 源文件 ==========================
+
+# ========================== 仿真文件（可选） ==========================
+# 添加 Testbench 以便在 Quartus II 中直接仿真
+# 仿真时建议将 Clock_Generator_Sim.vhd 替换 Clock_Generator.vhd
+# 取消下一行注释即可启用仿真加速:
+# set_global_assignment -name VHDL_FILE Clock_Generator_Sim.vhd
+# 并注释掉上面的 Clock_Generator.vhd
+
+# ========================== 综合与布局布线选项 ==========================
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+# ========================== 未用引脚设置 ==========================
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
+
+# ========================== 时序约束 (可选) ==========================
+# 50 MHz 时钟约束
+set_global_assignment -name FMAX_REQUIREMENT "50 MHz"
+
+# ========================== 功耗与优化 ==========================
+set_global_assignment -name OPTIMIZATION_TECHNIQUE BALANCED
+set_global_assignment -name AUTO_RESTART_CONFIGURATION ON
+
+# ========================== 引脚分配（请根据实际硬件修改） ==========================
+# 以下为示例引脚分配，使用开发板前务必修改为正确的引脚号
+#
+#  信号名              引脚号    I/O 标准
+#  -------------------------------------------------------
+#  clk_50MHz           PIN_E1    3.3-V LVTTL
+#  reset_n             PIN_M2    3.3-V LVTTL
+#  vehicle_detected    PIN_N1    3.3-V LVTTL
+#  main_red            PIN_R16   3.3-V LVTTL
+#  main_yellow         PIN_P16   3.3-V LVTTL
+#  main_green          PIN_N16   3.3-V LVTTL
+#  branch_red          PIN_R14   3.3-V LVTTL
+#  branch_yellow       PIN_P14   3.3-V LVTTL
+#  branch_green        PIN_N14   3.3-V LVTTL
+#  seg_high[6]         PIN_xxx   3.3-V LVTTL
+#  ... (省略剩余段码引脚)
+#
+# set_location_assignment PIN_E1  -to clk_50MHz
+# set_location_assignment PIN_M2  -to reset_n
+# set_location_assignment PIN_N1  -to vehicle_detected
+# set_location_assignment PIN_R16 -to main_red
+# set_location_assignment PIN_P16 -to main_yellow
+# set_location_assignment PIN_N16 -to main_green
+# set_location_assignment PIN_R14 -to branch_red
+# set_location_assignment PIN_P14 -to branch_yellow
+# set_location_assignment PIN_N14 -to branch_green
+
+set_global_assignment -name LAST_QUARTUS_VERSION 13.1
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name EDA_NETLIST_WRITER_OUTPUT_DIR "C:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim/" -section_id eda_simulation
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_simulation
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name VHDL_FILE Clock_Generator_Sim.vhd
+set_global_assignment -name VHDL_FILE BCD_Down_Counter.vhd
+set_global_assignment -name VHDL_FILE Traffic_Light_FSM.vhd
+set_global_assignment -name VHDL_FILE Seven_Seg_Decoder.vhd
+set_global_assignment -name VHDL_FILE Traffic_Light_Top.vhd
+set_global_assignment -name VHDL_FILE Traffic_Light_TB.vhd
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform1.vwf

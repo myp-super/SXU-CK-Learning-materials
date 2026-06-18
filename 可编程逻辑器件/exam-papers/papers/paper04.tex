@@ -1,0 +1,191 @@
+\chapter{第4套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列哪种可编程逻辑器件属于与阵列可编程、或阵列固定的结构？
+\begin{enumerate}[label=\Alph*.]
+  \item CPLD
+  \item FPGA
+  \item PAL
+  \item GAL
+\end{enumerate}
+
+\item 在VHDL中，\texttt{ENTITY}（实体）的主要作用是？
+\begin{enumerate}[label=\Alph*.]
+  \item 描述电路的内部逻辑功能
+  \item 定义电路的输入输出端口
+  \item 声明电路中使用的信号
+  \item 指定仿真激励信号
+\end{enumerate}
+
+\item FPGA中查找表（LUT）的核心组成部分是？
+\begin{enumerate}[label=\Alph*.]
+  \item 触发器和锁存器
+  \item 多路选择器和与或阵列
+  \item SRAM存储单元和译码器
+  \item 寄存器和加法器
+\end{enumerate}
+
+\item 在VHDL进程中，下列关于信号（\texttt{SIGNAL}）的赋值语句描述正确的是？
+\begin{enumerate}[label=\Alph*.]
+  \item 信号赋值立即生效，类似于变量的行为
+  \item 信号赋值在当前进程结束时才更新，进程内读到的是旧值
+  \item 信号赋值不受进程控制，随时更新
+  \item 信号只能在进程外部进行赋值
+\end{enumerate}
+
+\item 某LUT有4个输入信号，请问该LUT能实现的任意逻辑函数的最大输入变量数为？
+\begin{enumerate}[label=\Alph*.]
+  \item 2
+  \item 4
+  \item 8
+  \item 16
+\end{enumerate}
+
+\item 一个典型的FPGA逻辑单元（Logic Element）通常包含？
+\begin{enumerate}[label=\Alph*.]
+  \item 一个查找表和一个触发器
+  \item 一个乘法器和一个RAM块
+  \item 一个微处理器核
+  \item 一个模拟比较器
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item VHDL中，用于定义电路内部互连信号的关键字是\underline{\hspace{3cm}}，用于定义常量的关键字是\underline{\hspace{3cm}}。
+
+\item 在IEEE库中，定义标准逻辑类型\texttt{STD\_LOGIC}和\texttt{STD\_LOGIC\_\-VECTOR}的程序包名称是\underline{\hspace{4cm}}。
+
+\item VHDL中，并行信号赋值语句的常用形式有三种：简单信号赋值语句、条件信号赋值语句（\underline{\hspace{2cm}}）和选择信号赋值语句（\underline{\hspace{2cm}}）。
+
+\item CPLD（\underline{\hspace{3cm}} Programmable Logic Device）的英文全称是Complex Programmable Logic Device，其内部主要由\underline{\hspace{3cm}}阵列和宏单元组成。
+
+\end{enumerate}
+
+\section*{三、程序改错题（5分）}
+
+\begin{framed}
+\textbf{题目要求：}以下VHDL代码描述的是一个4选1多路选择器（MUX），但代码中存在\textbf{6处错误}。请找出所有错误并说明改正方法。（找出5处即得满分）
+\end{framed}
+
+\begin{lstlisting}[caption={4选1多路选择器（含6处错误）}, label={lst:err04}]
+library ieee
+use ieee.std_logic_1164.all
+
+entity mux4to1 is
+  port (
+    d0, d1, d2, d3 : in  std_logic_vector(3 downto 0);
+    sel            : in  std_logic_vector(1 downto 0);
+    y              : out std_logic_vector(3 downto 0)
+  );
+end mux4to1;
+
+architecture behavioral of mux4to1 is
+begin
+  process(sel)
+    variable temp : std_logic_vector(3 downto 0)
+  begin
+    case sel is
+      when "00" =>
+        temp <= d0;
+      when "01" =>
+        temp <= d1;
+      when "10" =>
+        temp <= d2;
+      when "11" =>
+        temp <= d3;
+      when others =>
+        temp <= (others => '0');
+    end case;
+    y := temp;
+  end process;
+end behavioral;
+\end{lstlisting}
+
+\section*{四、程序阅读分析题（5分）}
+
+\begin{framed}
+\textbf{题目要求：}阅读以下VHDL代码，回答：（1）该电路实现的是什么功能？（2分）（2）该电路是组合逻辑还是时序逻辑？说明判断依据。（3分）
+\end{framed}
+
+\begin{lstlisting}[caption={程序阅读分析}, label={lst:ana04}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity priority_enc is
+  port (
+    din  : in  std_logic_vector(3 downto 0);
+    dout : out std_logic_vector(1 downto 0);
+    v    : out std_logic
+  );
+end priority_enc;
+
+architecture rtl of priority_enc is
+begin
+  process(din)
+  begin
+    v <= '1';
+    if din(3) = '1' then
+      dout <= "11";
+    elsif din(2) = '1' then
+      dout <= "10";
+    elsif din(1) = '1' then
+      dout <= "01";
+    elsif din(0) = '1' then
+      dout <= "00";
+    else
+      dout <= "00";
+      v <= '0';
+    end if;
+  end process;
+end rtl;
+\end{lstlisting}
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计——8位二进制比较器（20分）}
+
+\begin{framed}
+\textbf{题目要求：}设计一个8位二进制数值比较器，比较两个8位输入\texttt{A[7:0]}和\texttt{B[7:0]}的大小关系，输出三个信号：\texttt{AGTBOUT}（A大于B时为1）、\texttt{AEQBOUT}（A等于B时为1）、\texttt{ALTBOUT}（A小于B时为1）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出顶层模块的端口框图，标注所有输入输出信号及位宽。（5分）
+  \item 写出完整的VHDL代码（实体+结构体）。（10分）
+  \item 用VHDL编写测试激励（Testbench），至少覆盖三种比较结果（A>B、A=B、A<B）的测试用例。（5分）
+\end{enumerate}
+\end{framed}
+
+\subsection*{设计题2：时序逻辑设计——模10计数器（20分）}
+
+\begin{framed}
+\textbf{题目要求：}设计一个带同步清零和使能端的模10计数器（计数范围0$\sim$9）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出状态转移图，标注所有状态及转移条件。（5分）
+  \item 写出完整的VHDL代码。要求：
+  \begin{itemize}
+    \item 输入：\texttt{clk}（时钟）、\texttt{rst}（同步清零，高有效）、\texttt{en}（计数使能，高有效）
+    \item 输出：\texttt{q[3:0]}（当前计数值）、\texttt{cout}（进位输出，计数值为9且en=1时为1）
+  \end{itemize}
+  （10分）
+  \item 若需要将计数范围扩展为0$\sim$59（模60计数器），请写出修改后的VHDL代码，并在代码注释中说明关键改动。（5分）
+\end{enumerate}
+\end{framed}
+
+\subsection*{设计题3：状态机设计——``101''序列检测器（20分）}
+
+\begin{framed}
+\textbf{题目要求：}设计一个Moore型状态机，用于检测串行输入序列``101''。每当检测到完整的``101''序列时，输出\texttt{detect}为1（维持1个时钟周期），其余情况输出为0。允许序列重叠检测（即``10101''中应检测到两次``101''）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出状态转移图，标注各状态的名称、含义、输出值以及转移条件。（6分）
+  \item 列出状态转移表（状态编码自定）。（4分）
+  \item 写出完整的VHDL代码（实体+结构体），要求使用双进程（或三进程）描述风格，且状态编码清晰可读。（10分）
+\end{enumerate}
+\end{framed}

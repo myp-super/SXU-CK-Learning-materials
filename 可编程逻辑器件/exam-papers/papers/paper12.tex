@@ -1,0 +1,387 @@
+\chapter{第12套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于FPGA配置方式的描述，\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 基于SRAM工艺的FPGA，配置数据存储在内部Flash中，掉电不丢失 &
+B. & 基于SRAM工艺的FPGA上电后需从外部配置存储器（如SPI Flash）加载比特流，配置数据掉电丢失 \\
+C. & FPGA只支持JTAG一种配置方式 &
+D. & CPLD和FPGA的配置原理完全相同，均基于SRAM工艺 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 以下关于FPGA主流配置模式的描述，\textbf{错误}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 主串模式（Master Serial）由FPGA主动从外部串行PROM读取配置数据 &
+B. & 从串模式（Slave Serial）由外部控制器向FPGA串行传输配置数据 \\
+C. & JTAG模式主要用于调试和在线编程，也可用于配置FPGA &
+D. & USB配置模式是FPGA最基础、最常用的配置模式，所有FPGA均支持 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，下列关于并发语句与顺序语句的说法，\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & PROCESS内部的IF语句和CASE语句是并发执行的 &
+B. & 结构体（ARCHITECTURE）中，PROCESS外部的信号赋值语句（如\verb|y <= a AND b|）是顺序执行的 \\
+C. & PROCESS内部的语句按书写顺序依次执行，多个PROCESS之间是并发关系 &
+D. & 变量赋值语句（\texttt{:=}）可以出现在结构体中的任何位置 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item Moore型与Mealy型状态机在输出时序上的典型差异是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Moore型输出比Mealy型输出晚一个时钟周期，这是由两者的输出逻辑结构决定的 &
+B. & Mealy型输出总是比Moore型输出晚一个时钟周期 \\
+C. & 两者输出时序完全相同，仅在状态编码方式上有差异 &
+D. & Moore型输出与时钟无关，Mealy型输出与时钟同步 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，逻辑运算符\texttt{NOT}、\texttt{AND}、\texttt{OR}、\texttt{XOR}四者的优先级从高到低排列\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{AND > OR > NOT > XOR} &
+B. & \texttt{NOT > AND > OR > XOR} \\
+C. & \texttt{NOT} 最高，\texttt{AND/OR/XOR}三者优先级相同且低于\texttt{NOT} &
+D. & \texttt{NOT > AND > XOR > OR} \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL结构描述风格（Structural Description）中，以下哪组关键字是\textbf{必不可少}的？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{VARIABLE} 和 \texttt{SIGNAL} &
+B. & \texttt{COMPONENT} 和 \texttt{PORT MAP} \\
+C. & \texttt{FUNCTION} 和 \texttt{PROCEDURE} &
+D. & \texttt{TYPE} 和 \texttt{SUBTYPE} \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+\section*{二、填空题（每空3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中，\textbf{SIGNAL}（信号）通常在\underline{\hspace{2.5cm}}中声明，用于模块间的互连与通信，其赋值符号为\underline{\hspace{1cm}}。\\
+\textbf{VARIABLE}（变量）只能在\underline{\hspace{2.5cm}}内部或子程序（FUNCTION/PROCEDURE）内部声明，其赋值符号为\underline{\hspace{1cm}}。\\
+\textbf{CONSTANT}（常量）的值在仿真运行期间\underline{\hspace{2cm}}（填“可以”或“不可以”）被修改。
+
+\vspace{0.8cm}
+
+\item 在VHDL的实体（ENTITY）声明中，\underline{\hspace{2.5cm}}关键字用于定义可配置的静态参数（如数据位宽$N$、延时值$T_{pd}$等），使同一设计单元可用于不同参数配置。在顶层模块中通过\underline{\hspace{2.5cm}}将这些参数的实际值传递给被例化的子模块。
+
+\vspace{0.8cm}
+
+\item 在VHDL的结构化描述中，需先在结构体的声明区使用\underline{\hspace{2.5cm}}语句声明待例化的子模块接口，然后使用\underline{\hspace{2.5cm}}语句将子模块的端口与顶层信号实际连接。
+
+\vspace{0.8cm}
+
+\item VHDL中的\underline{\hspace{2.5cm}}语句用于在结构体中按规律重复生成一组相同或相似的硬件结构。该语句的两种形式分别为\underline{\hspace{2cm}}（循环生成）和IF（条件生成），它们均属于\underline{\hspace{2cm}}语句（填“并发”或“顺序”），只能出现在结构体内部而不能出现在PROCESS内部。
+
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+阅读以下VHDL代码（该代码意图实现一个组合逻辑二选一多路选择器和一个带异步复位的4位计数器，但代码中存在\textbf{5处错误}），找出错误并写出正确的修改方案。
+
+\begin{lstlisting}[caption={存在5处错误的VHDL代码}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY mixed_err IS
+  PORT(
+    clk, rst, sel : IN  STD_LOGIC;
+    a, b          : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    y             : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+    q             : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END mixed_err;
+
+ARCHITECTURE behav OF mixed_err IS
+  SIGNAL cnt  : STD_LOGIC_VECTOR(3 DOWNTO 0);
+  SIGNAL temp : INTEGER RANGE 0 TO 15;
+BEGIN
+  -- ===== 组合逻辑：二选一多路选择器 =====
+  PROCESS(a)                              -- 敏感信号列表
+  BEGIN
+    IF sel = '1' THEN
+      y <= a;
+    -- 此处缺少对sel='0'情况的处理
+    END IF;
+  END PROCESS;
+
+  -- ===== 时序逻辑：4位计数器 =====
+  PROCESS(rst)                            -- 敏感信号列表
+  BEGIN
+    IF rst = '1' THEN
+      cnt := (OTHERS => '0');             -- 复位操作
+    ELSIF rising_edge(clk) THEN
+      cnt <= cnt + 1;
+    END IF;
+  END PROCESS;
+
+  temp <= cnt;                            -- 类型转换
+  q <= temp;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}按以下格式逐条列出5处错误（每处1分，共5分）：
+
+\noindent 错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码——移位寄存器}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY shift_reg IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;
+    din    : IN  STD_LOGIC;
+    q      : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END shift_reg;
+
+ARCHITECTURE behav OF shift_reg IS
+  SIGNAL sr : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000";
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rising_edge(clk) THEN
+      IF rst = '1' THEN
+        sr <= (OTHERS => '0');
+      ELSE
+        sr <= din & sr(3 DOWNTO 1);
+      END IF;
+    END IF;
+  END PROCESS;
+  q <= sr;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？该电路属于组合逻辑还是时序逻辑？请说明判断依据。
+  \item （1分）信号\texttt{rst}是同步复位还是异步复位？请结合代码说明判断依据。
+  \item （2分）假设初始状态\texttt{sr}已清零。若\texttt{din}依次输入`1'、`0'、`1'、`1'（每个时钟周期输入1位），写出经过1、2、3、4个时钟上升沿后\texttt{sr}的值分别是多少？（以4位二进制形式表示）。
+  \item （1分）若将代码第20行的\texttt{sr <= din \& sr(3 DOWNTO 1)}改为\texttt{sr <= sr(2 DOWNTO 0) \& din}，移位方向发生什么变化？此时若\texttt{din}固定为`0'，经过4个时钟周期后\texttt{sr}的值将变成什么？
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：4位算术逻辑单元（ALU）设计（20分）}
+
+设计一个4位算术逻辑单元（ALU），可对两个4位输入操作数执行4种运算。要求使用\textbf{数据流描述风格}（条件信号赋值语句或选择信号赋值语句）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{a(3~downto~0)}、\texttt{b(3~downto~0)}（输入）：两个4位操作数（均为无符号二进制数）。
+  \item \texttt{op(1~downto~0)}（输入）：操作码，用于选择运算类型，定义如下：
+  \begin{itemize}
+    \item \texttt{"00"} --- 加法（\texttt{a + b}）
+    \item \texttt{"01"} --- 减法（\texttt{a - b}）
+    \item \texttt{"10"} --- 按位与（\texttt{a AND b}）
+    \item \texttt{"11"} --- 按位或（\texttt{a OR b}）
+  \end{itemize}
+  \item \texttt{result(4~downto~0)}（输出）：5位运算结果。加法/减法时最高位为进位/借位标志；逻辑运算时最高位填`0'。
+  \item \texttt{zero}（输出）：零标志位，当\texttt{result(3~downto~0) = "0000"}时输出`1'，否则输出`0'。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出该ALU的顶层模块端口框图，标注所有端口名称、方向和位宽。
+  \item （3分）列出该ALU的功能表（包含\texttt{op}的四种取值对应的运算功能、输出表达式以及\texttt{result}各位的来源）。
+  \item （10分）使用\textbf{数据流描述风格}编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 使用\texttt{WITH...SELECT}语句或\texttt{WHEN...ELSE}条件信号赋值语句实现运算选择；
+    \item 使用\texttt{IEEE.NUMERIC\_STD.ALL}包中的类型转换函数处理加减法（例如\texttt{UNSIGNED}与\texttt{STD\_LOGIC\_VECTOR}之间的转换）；
+    \item 单独用一个并发信号赋值语句生成\texttt{zero}标志位。
+  \end{itemize}
+  \item （3分）在代码中以注释方式说明：（1）为什么算术运算和逻辑运算需要不同的处理方式；（2）\texttt{result}的位宽为什么设为5位而非4位。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 加法示例：\texttt{result <= STD\_LOGIC\_VECTOR( ('0' \& UNSIGNED(a)) + ('0' \& UNSIGNED(b)) );}
+  \item 减法示例：\texttt{result <= STD\_LOGIC\_VECTOR( ('0' \& UNSIGNED(a)) - ('0' \& UNSIGNED(b)) );}
+  \item 逻辑运算：将两操作数按位进行逻辑操作后，在最高位补`0'组成5位输出。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：参数化模N计数器设计（20分）}
+
+设计一个参数化的模$N$同步计数器（计数范围$0 \sim N-1$），使用\texttt{GENERIC}参数使计数器模值可配置。该计数器带有同步复位、计数使能和进位输出功能。要求以\textbf{行为描述风格}（PROCESS）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：同步复位信号，高电平有效。复位时计数值清零。
+  \item \texttt{en}（输入）：计数使能信号，高电平有效。\texttt{en=`1'}时每个时钟上升沿计数值加1；\texttt{en=`0'}时计数值保持不变。
+  \item \texttt{q(3~downto~0)}（输出）：4位计数值输出（假设$N \le 16$，若$N>16$可只输出低4位）。
+  \item \texttt{tc}（输出）：进位/终端计数（Terminal Count）输出。当计数值为$N-1$且\texttt{en=`1'}时，\texttt{tc}输出`1'（持续一个时钟周期）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）在实体中使用\texttt{GENERIC}声明参数$N$（默认值为10）。说明\texttt{GENERIC}在参数化设计中的意义。
+  \item （5分）画出该模$N$计数器的状态转移图（以$N=6$为例，画出所有$0 \sim 5$的状态及其转移条件，标注各状态下的\texttt{tc}输出值）。
+  \item （9分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item \texttt{GENERIC}定义模值$N$，类型为\texttt{INTEGER}，默认值为10；
+    \item 内部使用\texttt{INTEGER}类型的信号（或变量）存储计数值，取值范围$0 \sim N-1$；
+    \item 在PROCESS中描述同步计数逻辑：同步复位优先级最高，其次是使能控制；
+    \item 使用\texttt{rising\_edge(clk)}检测时钟上升沿；
+    \item 计数值达到$N-1$后，下一个有效计数脉冲使其回到0，同时\texttt{tc}输出`1'。
+  \end{itemize}
+  \item （3分）回答以下问题：
+  \begin{enumerate}
+    \item 若将模值$N$改为60（$N=60$），4位输出的\texttt{q}端口是否还能完整表示计数值？如果不能，应如何修改端口位宽？
+    \item 同步复位与异步复位在此计数器设计中各有什么优缺点？如果改用异步复位，代码需要做哪些修改？
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 内部计数信号可使用\texttt{INTEGER RANGE 0 TO N-1}类型，输出时转换为\texttt{STD\_LOGIC\_VECTOR}。
+  \item 终端计数\texttt{tc}在计数值等于$N-1$时置`1'，否则为`0'。可在PROCESS内部用IF语句实现，也可在PROCESS外部用并发信号赋值语句实现。
+  \item 同步复位仅在时钟上升沿到达时生效；异步复位不依赖时钟，一旦复位信号有效立即生效。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：电子密码锁控制器（20分）}
+
+设计一个电子密码锁控制器状态机。用户通过一个串行输入端口逐位输入4位二进制密码，当时钟上升沿采样到正确的4位密码序列时，开锁信号有效。密码为固定值\textbf{``1101''}（即依次输入1、1、0、1）。
+
+\vspace{0.3cm}
+
+\textbf{功能说明：}
+\begin{itemize}
+  \item 输入信号\texttt{din}（1位）：每个时钟周期输入密码的1位（`0'或`1'）。
+  \item 系统在每个时钟上升沿采样\texttt{din}，并与预设密码逐位比对。
+  \item 若连续4位输入恰好为``1101''，则输出\texttt{unlock = `1'}（开锁），持续一个时钟周期后回到初始状态。
+  \item 若在输入过程中任何一位不匹配，状态机立即回到初始状态（IDLE），用户需重新输入。
+  \item 支持\textbf{非重叠}检测：例如输入序列``1101101''中，第1--4位为``1101''（开锁一次），之后状态机回到初始状态重新检测。
+  \item 输入信号\texttt{rst}为异步复位（高电平有效），复位后状态机回到初始状态，\texttt{unlock = `0'}。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号
+  \item \texttt{rst}（输入）：异步复位，高电平有效
+  \item \texttt{din}（输入）：1位串行密码输入
+  \item \texttt{unlock}（输出）：开锁信号，高电平有效
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）说明该密码锁控制器的状态定义。画出\textbf{Moore型}状态机的状态转移图。标注：
+  \begin{itemize}
+    \item 每个状态的名称（建议S0$\sim$S4）及含义（说明已正确匹配到密码的第几位）；
+    \item 每个状态下的\texttt{unlock}输出值；
+    \item 所有状态转移条件（即输入\texttt{din}的值）和转移方向。
+  \end{itemize}
+  \item （4分）列出该Moore型状态机的状态转移表，包含以下列：当前状态、输入\texttt{din}、次态、输出\texttt{unlock}。
+  \item （9分）编写完整的VHDL代码实现该密码锁控制器。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义所有状态（如\texttt{TYPE lock\_state IS (S0, S1, S2, S3, S4)}）；（1分）
+    \item 采用\textbf{双进程描述风格}：一个时序进程描述状态寄存器和异步复位，一个组合进程描述次态逻辑和输出逻辑；（3分）
+    \item 异步复位\texttt{rst}为高电平时，状态立即回到S0，\texttt{unlock}输出`0'；（1分）
+    \item 代码中包含清晰的注释，说明各状态含义和关键转换条件。（2分）
+    \item 代码规范：缩进一致、信号命名合理。（2分）
+  \end{itemize}
+  \item （3分）回答以下问题：
+  \begin{enumerate}
+    \item 简述Moore型状态机与Mealy型状态机在该密码锁应用中的主要区别。如果改用Mealy型实现，\texttt{unlock}信号的输出时序会有什么变化？
+    \item 若需要支持密码\textbf{可修改}（即密码不固定为``1101''，而是由外部输入动态设定），现有设计需要增加哪些输入端口？状态机设计需要做哪些主要改动？（仅需文字说明，不要求写代码）
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 密码``1101''的匹配过程：S0（初始）$\xrightarrow{\text{din=1}}$ S1（匹配``1''）$\xrightarrow{\text{din=1}}$ S2（匹配``11''）$\xrightarrow{\text{din=0}}$ S3（匹配``110''）$\xrightarrow{\text{din=1}}$ S4（匹配``1101''，开锁）。任何不匹配的输入均使状态回到S0。
+  \item Moore型状态机的\texttt{unlock}输出仅取决于当前状态：仅S4状态下\texttt{unlock = `1'}，其余状态均为`0'。
+  \item 非重叠检测示例：输入``11011101''可检测出两次``1101''。
+\end{itemize}
+\end{framed}
+
+\vspace{0.3cm}
+
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

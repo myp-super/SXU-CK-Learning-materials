@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{ctexbook}
+
+% ── Packages ──────────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{framed}
+
+% ── Geometry ──────────────────────────────────────────────────────
+\geometry{
+  left=2.5cm,
+  right=2.5cm,
+  top=3cm,
+  bottom=2.5cm
+}
+
+% ── Listings (VHDL) ───────────────────────────────────────────────
+\lstset{
+  language=VHDL,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2
+}
+
+% ── Fancy Header / Footer ─────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\leftmark}
+\fancyhead[RE,LO]{FPGA与VHDL期末考试}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Hyperref ──────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=cyan,
+  citecolor=green
+}
+
+% ── Title ─────────────────────────────────────────────────────────
+\title{FPGA与VHDL期末考试\\——20套模拟试卷}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+
+\maketitle
+
+\setcounter{tocdepth}{0}
+\tableofcontents
+
+\mainmatter
+
+% ── 20 套模拟试卷 ────────────────────────────────────────────────
+\input{papers/paper01.tex}
+\input{papers/paper02.tex}
+\input{papers/paper03.tex}
+\input{papers/paper04.tex}
+\input{papers/paper05.tex}
+\input{papers/paper06.tex}
+\input{papers/paper07.tex}
+\input{papers/paper08.tex}
+\input{papers/paper09.tex}
+\input{papers/paper10.tex}
+\input{papers/paper11.tex}
+\input{papers/paper12.tex}
+\input{papers/paper13.tex}
+\input{papers/paper14.tex}
+\input{papers/paper15.tex}
+\input{papers/paper16.tex}
+\input{papers/paper17.tex}
+\input{papers/paper18.tex}
+\input{papers/paper19.tex}
+\input{papers/paper20.tex}
+
+\backmatter
+
+\end{document}

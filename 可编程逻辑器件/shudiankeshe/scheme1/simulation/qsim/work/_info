@@ -1,0 +1,86 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Lenovo/Desktop/shudiankeshe/scheme1/simulation/qsim
+vclock_top_scheme1
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+r1
+!s85 0
+31
+!i10b 1
+!s100 O:dCRg2@73_2?Z3dMM;:H2
+IfMgd4zi`jXGj;kO:O9hoW2
+R0
+w1781531607
+8clock_top_scheme1.vo
+Fclock_top_scheme1.vo
+L0 31
+Z2 OL;L;10.4;61
+!s108 1781531609.227000
+!s107 clock_top_scheme1.vo|
+!s90 -work|work|clock_top_scheme1.vo|
+!i113 0
+Z3 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+vclock_top_scheme1_vlg_check_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 V=YgnNk?iDFW:2d;kgH>W1
+IEJ0hRKzoQH=[OJl[;KDIY2
+R0
+Z4 w1781531606
+Z5 8Waveform.vwf.vt
+Z6 FWaveform.vwf.vt
+L0 65
+R2
+Z7 !s108 1781531609.323000
+Z8 !s107 Waveform.vwf.vt|
+Z9 !s90 -work|work|Waveform.vwf.vt|
+!i113 0
+R3
+vclock_top_scheme1_vlg_sample_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 zgHHI3SUc9[aTg6JaYH]C3
+IYYYW[HCh^^:dPU^=Q5lAG0
+R0
+R4
+R5
+R6
+L0 29
+R2
+R7
+R8
+R9
+!i113 0
+R3
+vclock_top_scheme1_vlg_vec_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 VmO<Ye0Gn;3iGVh[AU=FB2
+IzT5KNU7icBk?jC`I:1djk0
+R0
+R4
+R5
+R6
+L0 1511
+R2
+R7
+R8
+R9
+!i113 0
+R3

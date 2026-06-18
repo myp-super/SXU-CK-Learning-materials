@@ -1,0 +1,175 @@
+\chapter{第20套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{C} — FPGA开发流程：设计输入→综合→布局布线→生成比特流→下载配置。
+\item \textbf{B} — n输入LUT可实现任意n变量函数(真值表直接映射到SRAM)。
+\item \textbf{A} — 结构化描述使用COMPONENT+PORT MAP实例化底层模块；行为描述用PROCESS。
+\item \textbf{D} — Testbench不需要端口(空ENTITY)，内部实例化DUT并产生激励。
+\item \textbf{B} — FOR GENERATE循环生成相同结构；IF GENERATE条件生成不同结构(类似if-else)。
+\item \textbf{C} — ATTRIBUTE可用于指定状态编码(如enum\_encoding)、信号约束等。
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{（1）CONFIGURATION}用于为ENTITY选择ARCHITECTURE，\textbf{（2）绑定COMPONENT到具体ENTITY-ARCHITECTURE
+\item FOR GENERATE语法：\texttt{label: FOR i IN range GENERATE ... END GENERATE label;}
+\item Testbench中DUT实例化使用\textbf{COMPONENT}声明+\textbf{PORT MAP}连接
+\item \textbf{ASSERT}语句用于仿真检查；\textbf{REPORT}输出消息；\textbf{SEVERITY}指定严重级别
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\begin{enumerate}[label=错误\arabic*：]
+\item FOR GENERATE中循环变量i未声明→需在GENERATE前声明为常量
+\item GENERATE体内信号索引越界→位宽应匹配循环范围
+\item COMPONENT声明缺少→需在ARCHITECTURE声明区添加
+\item 实例化标签重复→每个实例标签必须唯一
+\item CONFIGURATION中ENTITY名与实际ENTITY不匹配
+\end{enumerate}
+
+{\centering 评分：每处1分，共5分。\par}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\textbf{（1）（1分）}4位ALU（算术逻辑单元）。\\
+\textbf{（2）（1分）}支持8种操作：ADD,SUB,AND,OR,XOR,NOT,左移,右移。通过op(2:0)选择。\\
+\textbf{（3）（2分）}采用GENERIC参数化位宽，可扩展为N位ALU。\\
+\textbf{（4）（1分）}组合逻辑(无时钟)，输出随输入立即变化。
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：8位加法器（结构化）（20分）}
+
+\textbf{【VHDL——FOR GENERATE结构化】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity adder_8bit is
+  port(A, B : in std_logic_vector(7 downto 0);
+       Cin : in std_logic;
+       Sum : out std_logic_vector(7 downto 0);
+       Cout : out std_logic);
+end adder_8bit;
+
+architecture structural of adder_8bit is
+  component full_adder is
+    port(a, b, cin : in std_logic; sum, cout : out std_logic);
+  end component;
+  signal carry : std_logic_vector(8 downto 0);
+begin
+  carry(0) <= Cin;
+  gen_fa: for i in 0 to 7 generate
+    fa_i: full_adder port map(
+      a=>A(i), b=>B(i), cin=>carry(i),
+      sum=>Sum(i), cout=>carry(i+1));
+  end generate;
+  Cout <= carry(8);
+end structural;
+\end{lstlisting}
+
+\textbf{【全加器COMPONENT】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity full_adder is
+  port(a, b, cin : in std_logic; sum, cout : out std_logic);
+end full_adder;
+architecture behav of full_adder is
+begin
+  sum <= a xor b xor cin;
+  cout <= (a and b) or (a and cin) or (b and cin);
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}FULL\_ADDER COMPONENT 4分 + FOR GENERATE实例化8个FA 6分 + 进位链串联5分 + COMPONENT声明正确3分 + PORT MAP完整2分。
+
+\subsection{设计题2：Johnson计数器（20分）}
+
+\textbf{【分析】}4位Johnson($\sim$Q0反馈到D3)，8状态：0000$\to$1000$\to$1100$\to$1110$\to$1111$\to$0111$\to$0011$\to$0001$\to$0000。
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity johnson_counter is
+  port(clk, rst : in std_logic; q : out std_logic_vector(3 downto 0));
+end johnson_counter;
+
+architecture behav of johnson_counter is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then reg<=(others=>'0');
+    elsif rising_edge(clk) then
+      if reg="0000" or reg="1000" or reg="1100" or reg="1110" or
+         reg="1111" or reg="0111" or reg="0011" or reg="0001" then
+        reg <= (not reg(0)) & reg(3 downto 1);  -- 正常移位
+      else
+        reg <= (others=>'0');  -- 非法状态恢复
+      end if;
+    end if;
+  end process;
+  q <= reg;
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}Johnson反馈(\texttt{not reg(0)}) 6分 + 8合法状态识别5分 + 非法状态恢复4分 + 异步复位3分 + 端口/代码2分。
+
+\subsection{设计题3：波形发生器（20分）}
+
+\textbf{【分析】}输出模式"10011001"(8位)，每个时钟输出1位，循环。Moore型8状态(S0-S7)，每状态输出对应位的模式值。
+
+\textbf{【状态定义与输出】}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline 状态 & S0 & S1 & S2 & S3 & S4 & S5 & S6 & S7 \\
+\hline 输出 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity waveform_gen is
+  port(clk, rst : in std_logic; wave_out : out std_logic);
+end waveform_gen;
+
+architecture moore_fsm of waveform_gen is
+  type state_type is (S0, S1, S2, S3, S4, S5, S6, S7);
+  signal curr, nxt : state_type;
+begin
+  reg_proc: process(clk, rst)
+  begin
+    if rst='1' then curr<=S0;
+    elsif rising_edge(clk) then curr<=nxt; end if;
+  end process;
+
+  comb_proc: process(curr)
+  begin
+    case curr is
+      when S0=> nxt<=S1; when S1=> nxt<=S2;
+      when S2=> nxt<=S3; when S3=> nxt<=S4;
+      when S4=> nxt<=S5; when S5=> nxt<=S6;
+      when S6=> nxt<=S7; when S7=> nxt<=S0;
+    end case;
+  end process;
+
+  with curr select wave_out <=
+    '1' when S0, '0' when S1, '0' when S2, '1' when S3,
+    '1' when S4, '0' when S5, '0' when S6, '1' when S7;
+end moore_fsm;
+\end{lstlisting}
+
+\textbf{【为什么这是状态机】（5分子项）}虽然不是"典型"的条件跳转FSM，但它满足状态机三要素：①8个状态存储当前输出位置；②状态转移函数(next=curr+1 mod 8)；③输出仅取决于当前状态(Moore型)。本质上是一个模8环形状态机。
+
+\textbf{【评分】（20分）}8状态定义3分 + Moore输出(仅取决于状态)4分 + 两段式VHDL 4分 + 正确模式输出"10011001" 4分 + 状态转移(S0→S7→S0)3分 + 状态机本质分析2分。

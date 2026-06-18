@@ -1,0 +1,137 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'diver:U1|m_clk1'
+Slack : -1.106
+TNS   : -20.364
+
+Type  : Slow 1200mV 85C Model Setup 'diver:U1|m_clk0'
+Slack : -0.898
+TNS   : -4.149
+
+Type  : Slow 1200mV 85C Model Setup 'clk'
+Slack : -0.227
+TNS   : -0.336
+
+Type  : Slow 1200mV 85C Model Hold 'clk'
+Slack : 0.014
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'diver:U1|m_clk1'
+Slack : 0.132
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'diver:U1|m_clk0'
+Slack : 0.381
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Recovery 'diver:U1|m_clk0'
+Slack : -2.511
+TNS   : -19.903
+
+Type  : Slow 1200mV 85C Model Removal 'diver:U1|m_clk0'
+Slack : 3.015
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -8.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'diver:U1|m_clk1'
+Slack : -1.000
+TNS   : -40.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'diver:U1|m_clk0'
+Slack : -1.000
+TNS   : -8.000
+
+Type  : Slow 1200mV 0C Model Setup 'diver:U1|m_clk1'
+Slack : -0.915
+TNS   : -15.177
+
+Type  : Slow 1200mV 0C Model Setup 'diver:U1|m_clk0'
+Slack : -0.684
+TNS   : -2.978
+
+Type  : Slow 1200mV 0C Model Setup 'clk'
+Slack : -0.096
+TNS   : -0.113
+
+Type  : Slow 1200mV 0C Model Hold 'clk'
+Slack : 0.006
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'diver:U1|m_clk1'
+Slack : 0.311
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'diver:U1|m_clk0'
+Slack : 0.333
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Recovery 'diver:U1|m_clk0'
+Slack : -2.251
+TNS   : -17.953
+
+Type  : Slow 1200mV 0C Model Removal 'diver:U1|m_clk0'
+Slack : 2.841
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -8.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'diver:U1|m_clk1'
+Slack : -1.000
+TNS   : -40.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'diver:U1|m_clk0'
+Slack : -1.000
+TNS   : -8.000
+
+Type  : Fast 1200mV 0C Model Setup 'diver:U1|m_clk1'
+Slack : -0.138
+TNS   : -1.015
+
+Type  : Fast 1200mV 0C Model Setup 'diver:U1|m_clk0'
+Slack : -0.041
+TNS   : -0.123
+
+Type  : Fast 1200mV 0C Model Setup 'clk'
+Slack : 0.101
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'clk'
+Slack : -0.038
+TNS   : -0.038
+
+Type  : Fast 1200mV 0C Model Hold 'diver:U1|m_clk1'
+Slack : 0.074
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'diver:U1|m_clk0'
+Slack : 0.199
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Recovery 'diver:U1|m_clk0'
+Slack : -1.222
+TNS   : -9.706
+
+Type  : Fast 1200mV 0C Model Removal 'diver:U1|m_clk0'
+Slack : 1.906
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -8.248
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'diver:U1|m_clk1'
+Slack : -1.000
+TNS   : -40.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'diver:U1|m_clk0'
+Slack : -1.000
+TNS   : -8.000
+
+------------------------------------------------------------

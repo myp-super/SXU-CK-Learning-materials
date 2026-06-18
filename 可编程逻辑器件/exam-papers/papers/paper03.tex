@@ -1,0 +1,224 @@
+\chapter{第3套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于CPLD和FPGA的说法中，\textbf{错误}的是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item CPLD基于乘积项（Product Term）结构，适合实现复杂的组合逻辑
+  \item FPGA基于查找表（LUT）结构，可重复编程
+  \item FPGA的基本逻辑单元是可编程逻辑块（CLB），包含LUT和触发器
+  \item CPLD的延时不可预测，不适合时序要求严格的电路
+\end{enumerate}
+
+\item FPGA中查找表（LUT）的核心功能是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item 对输入信号进行放大
+  \item 实现任意组合逻辑函数
+  \item 产生时钟信号
+  \item 存储程序指令
+\end{enumerate}
+
+\item 在VHDL中，\texttt{ENTITY}声明部分用于描述（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item 电路的内部实现细节
+  \item 电路的对外接口（端口）
+  \item 电路的仿真激励
+  \item 电路的时序约束
+\end{enumerate}
+
+\item 下列关于VHDL中信号（Signal）和变量（Variable）的描述，正确的是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item 信号和变量都可以在PROCESS外部声明
+  \item 信号的赋值立即生效，变量的赋值在进程结束时生效
+  \item 变量只能在PROCESS或子程序内部声明，赋值立即生效
+  \item 信号只能在PROCESS内部使用
+\end{enumerate}
+
+\item 在VHDL的PROCESS语句中，敏感信号表（Sensitivity List）的作用是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item 定义进程的优先级
+  \item 指定触发进程执行的信号
+  \item 限制进程的执行次数
+  \item 定义进程的局部变量
+\end{enumerate}
+
+\item VHDL中的\texttt{STD\_LOGIC}数据类型定义于下列哪个库和包中？（\quad）
+
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{LIBRARY std; USE std.standard.ALL}
+  \item \texttt{LIBRARY work; USE work.types.ALL}
+  \item \texttt{LIBRARY IEEE; USE IEEE.STD\_LOGIC\_1164.ALL}
+  \item \texttt{LIBRARY IEEE; USE IEEE.NUMERIC\_STD.ALL}
+\end{enumerate}
+
+\end{enumerate}
+
+\newpage
+
+\section*{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item VHDL中，一个完整的设计单元由\textbf{\_\_\_\_\_\_\_\_\_\_}（声明接口）和\textbf{\_\_\_\_\_\_\_\_\_\_}（描述功能）两大部分组成。
+
+\item VHDL中，信号赋值使用符号\textbf{\_\_\_\_\_\_\_\_\_\_}，变量赋值使用符号\textbf{\_\_\_\_\_\_\_\_\_\_}；并置（拼接）运算符是\textbf{\_\_\_\_\_\_\_\_\_\_}。
+
+\item IEEE标准库中，定义了\texttt{STD\_LOGIC}和\texttt{STD\_LOGIC\_VECTOR}类型的包名为\textbf{\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}，定义了\texttt{UNSIGNED}和\texttt{SIGNED}类型的包名为\textbf{\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}。
+
+\item 在VHDL中，可用的端口模式有\texttt{IN}、\texttt{OUT}、\textbf{\_\_\_\_\_\_\_\_\_\_}（双向）和\textbf{\_\_\_\_\_\_\_\_\_\_}（缓冲输出，可内部回读）。
+
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+下面的VHDL程序描述的是一个4选1多路选择器，但程序中存在\textbf{6处错误}。请指出每处错误的位置（行号）并给出正确的写法。
+
+\begin{lstlisting}[language=VDL, numbers=left]
+LIBARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY mux4to1 IS
+  PORT(
+    d : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+    s : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+    y : OUT STD_LOGIC
+  )
+END mux4to1;
+
+ARCHITECTURE behav OF mux4to1 IS
+BEGIN
+  PROCESS(d, s)
+  BEGIN
+    CASE s IS
+      WHEN "00" => y <= d(0);
+      WHEN "01" => y <= d(1);
+      WHEN "10" => y <= d(2)
+      WHEN "11" => y <= d(3);
+      WHEN OTHERS => y = '0';
+    END CASE
+  END PROCESS;
+END behavior;
+\end{lstlisting}
+
+\medskip
+\noindent\textbf{要求：}在答题纸上按以下格式依次写出各错误：
+
+\begin{framed}
+\noindent 错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_ \\
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_ \\
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_ \\
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_ \\
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_ \\
+错误6（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读下面的VHDL程序，回答问题。
+
+\begin{lstlisting}[language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY dff_arst IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    d    : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC
+  );
+END dff_arst;
+
+ARCHITECTURE behav OF dff_arst IS
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      q <= '0';
+    ELSIF rising_edge(clk) THEN
+      q <= d;
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item （2分）该程序描述的是什么电路？它的基本功能是什么？
+  \item （2分）请说明信号\texttt{clk}、\texttt{d}、\texttt{rst}、\texttt{q}各自的作用。该电路是同步复位还是异步复位？为什么？
+  \item （1分）如果将第19行的\texttt{rising\_edge(clk)}改为\texttt{clk'event AND clk = '1'}，功能是否相同？请简要说明。
+\end{enumerate}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计——8线-3线优先编码器（20分）}
+
+设计一个8线-3线优先编码器，具体要求如下：
+
+\begin{itemize}
+  \item 输入信号：\texttt{din(7~downto~0)}，低电平有效（0表示有请求），优先级\texttt{din(7)}最高，\texttt{din(0)}最低。
+  \item 输出信号：\texttt{dout(2~downto~0)}，输出优先级最高的有效输入编号（二进制编码）。
+  \item 额外输出：\texttt{gs}（Group Signal），当任意输入有效时\texttt{gs = '1'}，否则\texttt{gs = '0'}。
+\end{itemize}
+
+\medskip
+\noindent\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （8分）列出该优先编码器的真值表（可适当简化，至少包括关键输入组合）。
+  \item （3分）写出\texttt{dout(2)}、\texttt{dout(1)}、\texttt{dout(0)}和\texttt{gs}的逻辑表达式。
+  \item （9分）用VHDL编写完整的\texttt{ENTITY}和\texttt{ARCHITECTURE}代码，使用条件信号赋值语句（\texttt{WITH-SELECT-WHEN}或\texttt{WHEN-ELSE}）实现。
+\end{enumerate}
+
+\subsection*{设计题2：时序逻辑设计——模10计数器（20分）}
+
+设计一个模10计数器（BCD码计数器），计数范围0$\sim$9，具体要求如下：
+
+\begin{itemize}
+  \item 输入信号：\texttt{clk}（时钟）、\texttt{rst}（复位，高电平有效，同步复位）。
+  \item 输出信号：\texttt{q(3~downto~0)}（计数值，BCD码输出）、\texttt{tc}（进位输出，当计数值为9且下一时钟变为0时产生一个时钟周期的高电平脉冲）。
+\end{itemize}
+
+\medskip
+\noindent\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出该计数器的状态转换图（状态图），标注状态值和转换条件。
+  \item （3分）说明\texttt{tc}信号的产生逻辑。
+  \item （13分）用VHDL编写完整的\texttt{ENTITY}和\texttt{ARCHITECTURE}代码，使用PROCESS实现。要求：包含一个内部信号\texttt{count}用于保存当前计数值，在PROCESS中描述计数逻辑。
+\end{enumerate}
+
+\subsection*{设计题3：状态机设计——序列检测器（20分）}
+
+设计一个Moore型有限状态机，用于检测串行输入序列``101''（重叠检测），具体要求如下：
+
+\begin{itemize}
+  \item 输入信号：\texttt{clk}（时钟）、\texttt{rst}（复位，高电平有效，异步复位）、\texttt{x}（串行数据输入，1位）。
+  \item 输出信号：\texttt{z}（检测结果输出，1位），当检测到``101''序列时\texttt{z = '1'}，否则\texttt{z = '0'}。
+  \item 重叠检测的含义：输入序列``10101''应检测出两次``101''。
+\end{itemize}
+
+\medskip
+\noindent\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （6分）画出该Moore型状态机的状态转换图，标注状态名、状态编码、转换条件和各状态的输出值。需明确说明状态编码方案。
+  \item （4分）列出状态转换表，包含当前状态、输入、次态和输出。
+  \item （10分）用VHDL编写完整的\texttt{ENTITY}和\texttt{ARCHITECTURE}代码。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型（如\texttt{TYPE state\_type IS (S0, S1, S2, S3)}）定义状态；
+    \item 采用双进程（或三进程）描述风格：一个时序进程描述状态寄存器，一个组合进程描述次态逻辑和输出逻辑；
+    \item 必须包含异步复位逻辑。
+  \end{itemize}
+\end{enumerate}
+
+\endinput

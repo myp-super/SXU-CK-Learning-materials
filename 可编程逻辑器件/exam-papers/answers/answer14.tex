@@ -1,0 +1,501 @@
+\chapter{第14套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{答案：C}
+
+\textbf{解析：}基于SRAM工艺的FPGA芯片，SRAM为易失性存储，断电后配置数据丢失。上电时需从外部非易失性存储器（如PROM或SPI Flash）中加载配置数据。选项A、B错误——片内掩膜ROM和EEPROM不是SRAM FPGA的特征；选项D明显错误。
+
+\item \textbf{答案：B}
+
+\textbf{解析：}CPLD的基本逻辑单元是宏单元（Macrocell），典型组成包括：乘积项阵列、可配置触发器、输出极性选择与反馈通路。\textbf{查找表（LUT）是FPGA的基本逻辑单元特征}，而非CPLD宏单元的组成部分。因此选项B正确。
+
+\item \textbf{答案：D}
+
+\textbf{解析：}选择信号赋值语句\texttt{WITH-SELECT-WHEN}是并发信号赋值语句的一种，只能出现在结构体的并发区域（PROCESS外部）。选项A和B（IF-ELSIF-ELSE和CASE-WHEN）既可出现在PROCESS内部（顺序语句），也可作为条件信号赋值出现在外部（并发形式）；选项C（变量赋值:=）只能出现在PROCESS或子程序内部。
+
+\item \textbf{答案：A}
+
+\textbf{解析：}Moore型状态机的输出仅与当前状态有关；Mealy型状态机的输出与当前状态和输入均有关。这是两者的根本定义性区别。选项B错误（Moore型可能需要更多状态）；选项C错误（Mealy型输出与状态也有关）；选项D错误（两者均可用于序列检测）。
+
+\item \textbf{答案：C}
+
+\textbf{解析：}VHDL运算符优先级从高到低依次为：
+\begin{enumerate}
+\item 最高：\texttt{NOT}、\texttt{ABS}、\texttt{**}
+\item 乘法类：\texttt{*}、\texttt{/}、\texttt{MOD}、\texttt{REM}
+\item 加减与拼接：\texttt{+}、\texttt{-}、\texttt{\&}
+\item 关系运算：\texttt{=}、\texttt{/=}、\texttt{<}、\texttt{<=}、\texttt{>}、\texttt{>=}
+\item 最低：\texttt{AND}、\texttt{OR}、\texttt{NAND}、\texttt{NOR}、\texttt{XOR}、\texttt{XNOR}
+\end{enumerate}
+因此\texttt{NOT}优先级最高。
+
+\item \textbf{答案：B}
+
+\textbf{解析：}在VHDL中，\texttt{CONSTANT}（常量）可以在ENTITY声明区、ARCHITECTURE声明区（BEGIN之前）、PROCESS内部、PACKAGE（包）等多处声明。选项B描述了其中一个有效声明位置（结构体声明区）。选项A错误（CONSTANT不在PORT中声明）；选项C错误（不仅限于PACKAGE）；选项D错误（不仅限于PROCESS内部）。
+
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{ARCHITECTURE声明区}（或结构体声明区）中定义；\textbf{PROCESS或子程序}内部声明。
+
+（每空1.5分，共3分）
+
+\item \textbf{GENERIC} 关键字用于传递静态参数；\textbf{COMPONENT} 关键字用于声明可复用的子电路模板。
+
+（每空1.5分，共3分）
+
+\item \textbf{被读取}；\textbf{锁存器（Latch）}。
+
+（每空1.5分，共3分）
+
+\textbf{解析：}在组合逻辑进程中，若敏感信号表中缺少某个被读取的输入信号，则当该信号变化时进程不被触发，输出不更新——综合工具会推断出锁存器以维持原输出值，导致综合前后仿真不一致。
+
+\item \textbf{FOR}-GENERATE（按迭代次数重复生成）；\textbf{IF}-GENERATE（按布尔条件选择性生成）。
+
+（每空1.5分，共3分）
+
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\begin{framed}
+\textbf{评分标准：}每正确找出一处错误并给出正确修改方案得1分，共5分。代码中有6+处错误，找出任意5处即可。
+\end{framed}
+
+\begin{enumerate}[label=\textbf{错误\arabic*：}]
+
+\item \textbf{（第84行）\texttt{)} 应改为 \texttt{);}}
+
+\textbf{原因：}VHDL中PORT声明必须以分号结束：\texttt{PORT( ... );}。原代码第84行的右括号后缺少分号，导致语法错误。
+
+\item \textbf{（第90行）\texttt{PROCESS(clk)} 应改为 \texttt{PROCESS(clk, rst)}}
+
+\textbf{原因：}代码意图实现\textbf{异步复位}（第92行用IF rst在时钟边沿之前判断），异步复位信号\texttt{rst}必须出现在进程的敏感信号表中。缺少\texttt{rst}会使复位变为同步行为（仅在时钟边沿被采样），与设计意图不符，且综合工具可能推断错误逻辑。
+
+\item \textbf{（第93行）\texttt{cnt := "0000"} 应改为 \texttt{cnt <= "0000"}}
+
+\textbf{原因：}\texttt{cnt}在第88行声明为\texttt{SIGNAL}，信号只能使用\texttt{<=}赋值。\texttt{:=}是变量赋值符号，仅用于\texttt{VARIABLE}。此处混淆了信号和变量的赋值方式。
+
+\item \textbf{（第96行）\texttt{cnt <= cnt + 1} 缺少必要的库}
+
+\textbf{原因：}\texttt{STD\_LOGIC\_VECTOR}类型在\texttt{IEEE.STD\_LOGIC\_1164}包中没有定义算术运算符（+）。需在代码开头添加\texttt{USE IEEE.NUMERIC\_STD.ALL;}，然后将\texttt{cnt}转为\texttt{UNSIGNED}类型，或添加\texttt{USE IEEE.STD\_LOGIC\_UNSIGNED.ALL;}（非标准但常用）。\\
+\textbf{正确写法：}添加库声明\texttt{USE IEEE.NUMERIC\_STD.ALL;}，并将第96行改为：
+\texttt{cnt <= STD\_LOGIC\_VECTOR(UNSIGNED(cnt) + 1);}
+
+\item \textbf{（第97行）\texttt{END IF} 应改为 \texttt{END IF;}}
+
+\textbf{原因：}VHDL中所有结束语句必须跟分号。内层IF语句的结束缺少分号，导致语法错误。
+
+\end{enumerate}
+
+\begin{framed}
+\textbf{修正后的完整代码（供参考）：}
+\begin{lstlisting}[language=VDL]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;              -- 修正4: 添加算术运算库
+
+ENTITY counter_bad IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;
+    en  : IN  STD_LOGIC;
+    q   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );                                    -- 修正1: 添加分号
+END ENTITY counter_bad;
+
+ARCHITECTURE behav OF counter_bad IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)                     -- 修正2: 添加rst到敏感表
+  BEGIN
+    IF rst = '1' THEN
+      cnt <= "0000";                    -- 修正3: := 改为 <=
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cnt <= STD_LOGIC_VECTOR(UNSIGNED(cnt) + 1);  -- 修正4
+      END IF;                           -- 修正5: 添加分号
+    END IF;
+  END PROCESS;
+  q <= cnt;
+END behav;
+\end{lstlisting}
+\end{framed}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\begin{framed}
+\textbf{评分标准：}(1) 2分；(2) 1分；(3) 2分。
+\end{framed}
+
+\begin{enumerate}[label=(\arabic*)]
+
+\item \textbf{电路功能与分频比：}
+
+该电路实现的是\textbf{偶数分频器（偶分频电路）}，分频比为\textbf{8}（即$f_{out} = f_{in}/8$）。
+
+\textbf{分析：}信号\texttt{count}从0计数到3（共4个时钟周期），当\texttt{count=3}时\texttt{temp}取反。\texttt{temp}每翻转一次需要4个时钟周期，因此一个完整的输出周期为$4\times 2 = 8$个时钟周期，分频比为8。（2分）
+
+\item \textbf{count信号的作用与取值：}
+
+\texttt{count}是一个模4计数器，作用是对输入时钟\texttt{clk\_in}的上升沿进行计数，为\texttt{temp}的翻转提供定时基准。
+
+其取值范围为：\textbf{0, 1, 2, 3}（共4种取值）。虽然类型声明为\texttt{INTEGER RANGE 0 TO 7}，但逻辑上仅使用了0$\sim$3。（1分）
+
+\item \textbf{输出频率与占空比：}
+
+输入频率 $f_{in} = 80\,\text{MHz}$，分频比 $N = 8$：
+
+$$f_{out} = \frac{80\,\text{MHz}}{8} = 10\,\text{MHz}$$
+
+\textbf{占空比为50\%}：\texttt{temp}信号在\texttt{count=3}时翻转，高电平和低电平均持续4个输入时钟周期，因此占空比为50\%。（2分）
+
+\end{enumerate}
+
+\newpage
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：BCD码转7段数码管译码器（20分）}
+
+\subsubsection{（1）真值表（6分）}
+
+\begin{framed}
+\textbf{评分标准：}每个有效数字的段码值正确得0.4分（9个共3.6分）；非法输入全1得0.4分；输入输出标注清晰得2分；共6分。
+\end{framed}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{十进制} & \textbf{bcd(3:0)} & \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} & \textbf{e} & \textbf{f} & \textbf{g} & \textbf{seg(6:0)} \\
+\hline
+0 & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1000000 \\
+1 & 0001 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 1111001 \\
+2 & 0010 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0100100 \\
+3 & 0011 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0110000 \\
+4 & 0100 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 0011001 \\
+5 & 0101 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0010010 \\
+6 & 0110 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0000010 \\
+7 & 0111 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 0001111 \\
+8 & 1000 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0000000 \\
+9 & 1001 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0000100 \\
+10$\sim$15 & 1010$\sim$1111 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1111111 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{（2）顶层模块端口框图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.8cm, auto,
+  block/.style={rectangle, draw, thick, minimum width=4cm, minimum height=2.5cm,
+                align=center, fill=blue!10}]
+  \node[block] (dec) {\textbf{bcd2seg7}\\[4pt]
+                      BCD—7段共阳极\\译码器};
+  \draw[<-] ([yshift=0.25cm]dec.west) -- ++(-1.5cm,0) node[left] {\texttt{bcd(3:0)}};
+  \draw[->] ([yshift=-0.25cm]dec.east) -- ++(1.5cm,0) node[right] {\texttt{seg(6:0)}};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item 输入：\texttt{bcd(3 DOWNTO 0)} —— 4位BCD码输入（0000$\sim$1001）
+\item 输出：\texttt{seg(6 DOWNTO 0)} —— 7段数码管段选信号（seg(6)=a, ..., seg(0)=g），低电平点亮
+\end{itemize}
+
+\subsubsection{（3）完整VHDL代码（10分）}
+
+\begin{framed}
+\textbf{评分标准：}库声明和实体定义（1.5分）；结构体WITH-SELECT语句正确（5分）；代码注释完整性（1分）；非法输入处理（1.5分）；代码规范性（1分）。
+\end{framed}
+
+\begin{lstlisting}[language=VDL, caption={BCD码转7段数码管译码器VHDL代码——数据流描述}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY bcd2seg7 IS
+  PORT(
+    bcd : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    seg : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
+  );
+END bcd2seg7;
+
+ARCHITECTURE dataflow OF bcd2seg7 IS
+BEGIN
+  -- 共阳极数码管: 0=亮, 1=灭
+  -- seg(6)=a, seg(5)=b, seg(4)=c, seg(3)=d,
+  -- seg(2)=e, seg(1)=f, seg(0)=g
+  WITH bcd SELECT
+    seg <= "1000000" WHEN "0000",  -- 数字0
+           "1111001" WHEN "0001",  -- 数字1
+           "0100100" WHEN "0010",  -- 数字2
+           "0110000" WHEN "0011",  -- 数字3
+           "0011001" WHEN "0100",  -- 数字4
+           "0010010" WHEN "0101",  -- 数字5
+           "0000010" WHEN "0110",  -- 数字6
+           "0001111" WHEN "0111",  -- 数字7
+           "0000000" WHEN "1000",  -- 数字8
+           "0000100" WHEN "1001",  -- 数字9
+           "1111111" WHEN OTHERS;  -- 非法输入: 全灭
+END dataflow;
+\end{lstlisting}
+
+\subsection{设计题2：4位双向移位寄存器（20分）}
+
+\subsubsection{（1）端口定义（4分）}
+
+\textbf{输入端口：}
+\begin{itemize}
+\item \texttt{clk}：时钟信号（1位）
+\item \texttt{rst}：异步复位，高电平有效（1位）
+\item \texttt{data\_in(3 DOWNTO 0)}：并行加载数据（4位）
+\item \texttt{load}：加载使能，高电平有效（1位）
+\item \texttt{dir}：移位方向，0=右移、1=左移（1位）
+\item \texttt{sin}：串行输入位（1位）
+\end{itemize}
+
+\textbf{输出端口：}
+\begin{itemize}
+\item \texttt{q(3 DOWNTO 0)}：当前寄存器值（4位）
+\end{itemize}
+
+\subsubsection{（2）功能描述（4分）}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{模式} & \textbf{rst} & \textbf{load} & \textbf{dir} & \textbf{操作} \\
+\hline
+复位 & 1 & X & X & q <= "0000" \\
+并行加载 & 0 & 1 & X & q <= data\_in \\
+右移 & 0 & 0 & 0 & q <= q(2 downto 0) \& sin \\
+左移 & 0 & 0 & 1 & q <= sin \& q(3 downto 1) \\
+保持 & 0 & 0 & (无时钟) & q不变 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{注：}右移时数据从高位向低位移动，\texttt{q(2:0)}移至\texttt{q(3:1)}，\texttt{sin}移入\texttt{q(0)}。左移时数据从低位向高位移动，\texttt{q(3:1)}移至\texttt{q(2:0)}，\texttt{sin}移入\texttt{q(3)}。
+
+\subsubsection{（3）VHDL代码（12分）}
+
+\begin{framed}
+\textbf{评分标准：}实体定义（1分）；结构体声明（1分）；PROCESS与敏感表（2分）；rst/load/移位优先级正确（4分）；移位逻辑正确（3分）；代码规范性（1分）。
+\end{framed}
+
+\begin{lstlisting}[language=VDL, caption={4位双向移位寄存器VHDL代码——行为描述}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY shift_reg_4bit IS
+  PORT(
+    clk     : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;      -- 异步复位，高电平有效
+    data_in : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    load    : IN  STD_LOGIC;      -- 并行加载使能
+    dir     : IN  STD_LOGIC;      -- 0=右移, 1=左移
+    sin     : IN  STD_LOGIC;      -- 串行输入位
+    q       : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END shift_reg_4bit;
+
+ARCHITECTURE behav OF shift_reg_4bit IS
+  SIGNAL q_int : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN                     -- 异步复位（最高优先级）
+      q_int <= (OTHERS => '0');
+    ELSIF rising_edge(clk) THEN
+      IF load = '1' THEN                  -- 并行加载（第2优先级）
+        q_int <= data_in;
+      ELSE                                -- 移位操作（第3优先级）
+        IF dir = '0' THEN                 -- 右移
+          -- q(2:0) -> q(3:1), sin -> q(0)
+          q_int <= q_int(2 DOWNTO 0) & sin;
+        ELSE                              -- 左移
+          -- sin -> q(3), q(3:1) -> q(2:0)
+          q_int <= sin & q_int(3 DOWNTO 1);
+        END IF;
+      END IF;
+    END IF;
+  END PROCESS;
+
+  q <= q_int;
+END behav;
+\end{lstlisting}
+
+\subsection{设计题3：自动售货机控制器——Mealy型（20分）}
+
+\subsubsection{（1）状态转移图（8分）}
+
+\begin{framed}
+\textbf{评分标准：}状态定义正确（2分）；转移弧完整（3分）；输出标注正确（3分）。
+\end{framed}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth', node distance=3.2cm, auto,
+  every state/.style={draw, thick, fill=gray!10, minimum size=1.3cm, align=center}]
+
+  \node[state] (S0) {S0\\累计0元};
+  \node[state, right of=S0] (S1) {S1\\累计1元};
+  \node[state, right of=S1] (S2) {S2\\累计2元};
+
+  % S0 self-loops and transitions
+  \draw (S0) edge[loop above] node{无投币:0/00} (S0)
+        (S0) edge[bend left] node[above]{coin1=1:0/00} (S1)
+        (S0) edge[bend left=35] node[above]{coin2=1:0/00} (S2);
+
+  % S1 self-loops and transitions
+  \draw (S1) edge[loop above] node{无投币:0/00} (S1)
+        (S1) edge[bend left] node[above]{coin1=1:0/00} (S2)
+        (S1) edge[bend left=40] node[below]{coin2=1:1/00} (S0);
+
+  % S2 self-loops and transitions
+  \draw (S2) edge[loop above] node{无投币:0/00} (S2)
+        (S2) edge[bend right=60] node[below]{coin1=1:1/00} (S0)
+        (S2) edge[bend left=40] node[below]{coin2=1:1/01} (S0);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{弧上标注格式：输入/输出(give change)}
+
+\begin{itemize}
+\item S0$\rightarrow$S1：投1元，输出00（不出货不找零）
+\item S0$\rightarrow$S2：投2元，输出00
+\item S1$\rightarrow$S0：投2元，累计=3元，输出10（出货不找零）
+\item S2$\rightarrow$S0(投1元)：累计=3元，输出10（出货不找零）
+\item S2$\rightarrow$S0(投2元)：累计=4元，输出11（出货且找零）
+\end{itemize}
+
+\subsubsection{（2）状态转移表（4分）}
+
+\begin{framed}
+\textbf{评分标准：}表格完整（2分）；输入/次态/输出逻辑正确（2分）。
+\end{framed}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{当前状态} & \textbf{coin1 coin2} & \textbf{次态} & \textbf{give change} & \textbf{说明} \\
+\hline
+S0（0元） & 0 0 & S0 & 0 0 & 无投币，等待 \\
+S0 & 1 0 & S1 & 0 0 & 投1元 \\
+S0 & 0 1 & S2 & 0 0 & 投2元 \\
+S0 & 1 1 & — & — & 不会同时出现 \\
+\hline
+S1（1元） & 0 0 & S1 & 0 0 & 无投币，等待 \\
+S1 & 1 0 & S2 & 0 0 & 再投1元→累计2元 \\
+S1 & 0 1 & S0 & \textbf{1 0} & 再投2元→累计3元→出货 \\
+\hline
+S2（2元） & 0 0 & S2 & 0 0 & 无投币，等待 \\
+S2 & 1 0 & S0 & \textbf{1 0} & 再投1元→累计3元→出货 \\
+S2 & 0 1 & S0 & \textbf{1 1} & 再投2元→累计4元→出货+找零 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{（3）VHDL代码实现（8分）}
+
+\begin{framed}
+\textbf{评分标准：}枚举类型定义（1分）；实体定义（1分）；时序进程（异步复位+状态寄存器）（2分）；组合进程（次态+输出逻辑）（3分）；代码完整性和规范性（1分）。
+\end{framed}
+
+\begin{lstlisting}[language=VDL, caption={自动售货机控制器——Mealy型状态机VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY vending_machine IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;   -- 异步复位，高有效
+    coin1  : IN  STD_LOGIC;   -- 投入1元
+    coin2  : IN  STD_LOGIC;   -- 投入2元
+    give   : OUT STD_LOGIC;   -- 出货信号
+    change : OUT STD_LOGIC    -- 找零1元信号
+  );
+END vending_machine;
+
+ARCHITECTURE mealy OF vending_machine IS
+  TYPE state_type IS (S0, S1, S2);  -- 累计0元/1元/2元
+  SIGNAL current_state, next_state : state_type;
+
+BEGIN
+  -- ======== 进程1: 状态寄存器（时序逻辑 + 异步复位） ========
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- ======== 进程2: 次态逻辑 + 输出逻辑（组合逻辑） ========
+  PROCESS(current_state, coin1, coin2)
+  BEGIN
+    -- 默认值赋值（避免锁存器）
+    next_state <= current_state;
+    give   <= '0';
+    change <= '0';
+
+    CASE current_state IS
+      WHEN S0 =>                      -- 累计0元
+        IF coin1 = '1' THEN
+          next_state <= S1;           -- 投1元→累计1元
+        ELSIF coin2 = '1' THEN
+          next_state <= S2;           -- 投2元→累计2元
+        END IF;
+
+      WHEN S1 =>                      -- 累计1元
+        IF coin1 = '1' THEN
+          next_state <= S2;           -- 再投1元→累计2元
+        ELSIF coin2 = '1' THEN
+          next_state <= S0;           -- 再投2元→累计3元
+          give <= '1';                -- 出货！
+        END IF;
+
+      WHEN S2 =>                      -- 累计2元
+        IF coin1 = '1' THEN
+          next_state <= S0;           -- 再投1元→累计3元
+          give <= '1';                -- 出货！
+        ELSIF coin2 = '1' THEN
+          next_state <= S0;           -- 再投2元→累计4元
+          give   <= '1';              -- 出货！
+          change <= '1';              -- 找零1元！
+        END IF;
+
+      WHEN OTHERS =>
+        next_state <= S0;
+    END CASE;
+  END PROCESS;
+
+END mealy;
+\end{lstlisting}
+
+\vspace{0.5cm}
+\begin{framed}
+\textbf{评分细则总结 —— 设计题3（20分）：}
+\begin{itemize}
+\item 状态转移图：8分（状态定义与含义3分；转移弧完整3分；输出标注正确2分）
+\item 状态转移表：4分（表格完整性2分；次态和输出逻辑各1分）
+\item VHDL代码：8分（实体2分；枚举类型1分；时序进程2分；组合进程3分）
+\end{itemize}
+
+\textbf{关键扣分点：}
+\begin{itemize}
+\item 状态转移图中遗漏转移条件（如无投币时的自循环），每条扣0.5分
+\item Mealy型输出错误地放在状态节点而非转移弧上，扣2分
+\item 组合进程中未给所有输出信号赋默认值（导致锁存器推断），扣1.5分
+\item 缺少WHEN OTHERS分支，扣0.5分
+\end{itemize}
+\end{framed}
+
+\endinput

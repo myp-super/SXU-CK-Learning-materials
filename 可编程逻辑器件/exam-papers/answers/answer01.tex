@@ -1,0 +1,799 @@
+\chapter{第1套试卷——参考答案与评分标准}
+
+\section{单项选择题（共6小题，每小题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{答案：C}
+
+\textbf{解析：} GAL（Generic Array Logic）属于简单可编程逻辑器件（SPLD）。SPLD 主要包括 PLA、PAL 和 GAL 三种类型。FPGA 和 CPLD 属于复杂可编程逻辑器件（CPLD 广义上也可归类为高密度 SPLD，但题目中与 GAL 并列时，GAL 是典型的 SPLD），ASIC 是专用集成电路，不属于可编程逻辑器件。
+
+\begin{itemize}
+    \item A. FPGA —— 现场可编程门阵列，属于高密度可编程器件
+    \item B. CPLD —— 复杂可编程逻辑器件，密度高于 SPLD
+    \item C. GAL —— 通用阵列逻辑，是典型的 SPLD \quad \checkmark
+    \item D. ASIC —— 专用集成电路，不可编程
+\end{itemize}
+
+\item \textbf{答案：B}
+
+\textbf{解析：} FPGA 中实现组合逻辑的基本单元是查找表（LUT，Look-Up Table）。LUT 本质上是一个小容量 SRAM，通过预先存储真值表来实现任意组合逻辑函数。
+
+\begin{itemize}
+    \item A. Flip-Flop —— 用于实现时序逻辑，非组合逻辑
+    \item B. LUT —— 查找表，实现组合逻辑的基本单元 \quad \checkmark
+    \item C. Multiplier —— 专用硬核乘法器，非基本单元
+    \item D. PLL —— 锁相环，用于时钟管理，与逻辑实现无关
+\end{itemize}
+
+\item \textbf{答案：B}
+
+\textbf{解析：} 在 VHDL 中，实体（ENTITY）的端口定义使用关键字 \texttt{PORT}。PORT 后跟端口名称、方向和数据类型。
+
+\begin{itemize}
+    \item A. ARCHITECTURE —— 定义实体的实现（结构体）
+    \item B. PORT —— 定义实体端口的关键字 \quad \checkmark
+    \item C. SIGNAL —— 声明内部信号的类型
+    \item D. COMPONENT —— 声明待例化的元件
+\end{itemize}
+
+\item \textbf{答案：C}
+
+\textbf{解析：} CPLD 与 FPGA 的核心区别在于：
+\begin{itemize}
+    \item CPLD 基于乘积项（Product Term）结构，互连线是连续的（基于开关矩阵），因此布线延迟可预测
+    \item FPGA 基于查找表（LUT）结构，互连线为分段式，延迟不可预测
+    \item CPLD 逻辑密度通常低于 FPGA
+    \item CPLD 更适合组合逻辑密集型电路，FPGA 更适合大规模时序电路
+\end{itemize}
+
+选项分析：
+\begin{itemize}
+    \item A. CPLD 逻辑密度低于 FPGA，错误
+    \item B. CPLD 基于乘积项而非 LUT，FPGA 基于 LUT 而非乘积项，描述颠倒，错误
+    \item C. CPLD 互连为连续式、延迟可预测，正确 \quad \checkmark
+    \item D. CPLD 更适合组合逻辑，FPGA 更适合大规模时序电路，错误
+\end{itemize}
+
+\item \textbf{答案：C}
+
+\textbf{解析：} 在 VHDL 的 PROCESS 中，SIGNAL 和 VARIABLE 的关键区别如下：
+
+\begin{itemize}
+    \item A. 正确：SIGNAL 使用 \texttt{<=}（信号赋值），VARIABLE 使用 \texttt{:=}（变量赋值）
+    \item B. 正确：VARIABLE 只能在 PROCESS 内部定义和使用，其作用域仅限于所在 PROCESS
+    \item C. 错误：\textbf{SIGNAL 赋值在进程结束时（或遇到 WAIT 语句时）才生效}，而非立即生效；VARIABLE 赋值则是立即生效。题干描述恰恰说反了 \quad \checkmark
+    \item D. 正确：SIGNAL 用于进程间通信，VARIABLE 用于进程内部临时计算
+\end{itemize}
+
+\item \textbf{答案：C}
+
+\textbf{解析：} 一个 $n$-输入 LUT 最多可以实现 $n$ 个变量的任意组合逻辑函数。4-输入 LUT 有 $2^4 = 16$ 个存储单元，可存储并实现最多 4 个变量的任意逻辑函数。
+
+若变量数超过 4 个（如 5、6、7、8 个变量），则需要多个 LUT 级联实现。
+
+\end{enumerate}
+
+%====================================
+\section{填空题（共4小题，每小题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{答案：} \underline{IEEE}，\underline{STD\_LOGIC}
+
+\textbf{解析：} VHDL 标准逻辑库名称为 IEEE，其中最常用的数据类型是 STD\_LOGIC（9 值逻辑类型，可综合）。另一个常用类型是 STD\_LOGIC\_VECTOR（总线类型）。
+
+\textbf{评分标准：} 每空 1.5 分。第一空写成 \texttt{ieee}（小写）亦给分；第二空必须为 \texttt{STD\_LOGIC}（或 \texttt{std\_logic}）。
+
+\item \textbf{答案：} \underline{<=}，\underline{ON}
+
+\textbf{解析：}
+\begin{itemize}
+    \item 并发信号赋值语句使用关键字 \texttt{<=}。注意：在结构体中直接使用（不在 PROCESS 内）的信号赋值即为并发赋值。
+    \item PROCESS 的敏感信号列表关键字是 \texttt{ON}，语法为 \texttt{WAIT ON 信号名}，或在 PROCESS 后直接列出敏感信号：\texttt{PROCESS(signal1, signal2)}。
+\end{itemize}
+
+\textbf{评分标准：} 每空 1.5 分。第一空写 \texttt{<=} 或写 \texttt{WHEN...ELSE}（并发条件赋值）亦可；第二空必须为 \texttt{ON}。
+
+\item \textbf{答案：} \underline{IOB（输入输出模块）}，\underline{互联资源（Interconnect/PI）}
+
+\textbf{解析：} FPGA 的基本结构由三部分组成：
+\begin{enumerate}
+    \item CLB（Configurable Logic Block，可配置逻辑块）——实现逻辑功能
+    \item IOB（Input/Output Block，输入/输出模块）——与外部引脚接口
+    \item 互联资源（Interconnect / Programmable Interconnect，可编程互连）——连接各 CLB 和 IOB
+\end{enumerate}
+
+\textbf{评分标准：} 每空 1.5 分。答出 IOB/IO 模块（或输入输出块）即给分；答出互联资源/互连/PI/布线资源即给分。
+
+\item \textbf{答案：} \underline{/=}，\underline{>=}
+
+\textbf{解析：} VHDL 关系运算符：
+\begin{itemize}
+    \item 等于：\texttt{=}
+    \item 不等于：\texttt{/=}
+    \item 大于：\texttt{>}
+    \item 小于：\texttt{<}
+    \item 大于等于：\texttt{>=}
+    \item 小于等于：\texttt{<=}
+\end{itemize}
+
+注意 \texttt{<=} 在 VHDL 中既是“小于等于”又是信号赋值符号，通过上下文区分：在条件表达式（IF、WHEN 等）中为关系运算符，在信号赋值语句中为赋值符。
+
+\textbf{评分标准：} 每空 1.5 分。必须为 \texttt{/=} 和 \texttt{>=}。
+
+\end{enumerate}
+
+%====================================
+\section{程序改错题（共5分）}
+
+\textbf{原程序：}
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee；
+USE ieee.std_logic_1164.ALL；
+
+ENTIFY mux2to1 IS
+  PORT(
+    a, b : IN  STD_LOGIG；
+    sel  : IN  STD_LOGIC；
+    y    : OUT STD_LOGIC
+  )；
+END mux2to1；
+
+ARCHITE_CTURE behavioral OF mux2to1 IS
+BEGIN
+  PROCESS(a, b, sel)
+  BEGIN
+    IF sel = '0' THEN
+      y := a；
+    ELSE
+      y := b；
+    END IF；
+  END PROCESS；
+END behavioral；
+\end{lstlisting}
+
+\subsection*{错误分析与修改}
+
+本题共 5 处错误（含中文分号），每处 1 分，共 5 分。\textbf{评分说明：} 指出错误位置并给出正确写法即得分；若指出错误但未写正确写法，得 0.5 分。
+
+\begin{enumerate}[label=\textbf{错误\arabic*：},leftmargin=*]
+
+\item \textbf{关键字拼写错误：} \texttt{ENTIFY} $\rightarrow$ \texttt{ENTITY}
+
+    第 3 行：``ENTIFY mux2to1 IS'' 应为 ``\texttt{ENTITY mux2to1 IS}''。
+
+    \textbf{解析：} ENTITY 是 VHDL 中声明实体（设计单元接口）的关键字，不可拼错。
+
+\item \textbf{数据类型拼写错误：} \texttt{STD\_LOGIG} $\rightarrow$ \texttt{STD\_LOGIC}
+
+    第 5 行：``STD\_LOGIG'' 应为 ``\texttt{STD\_LOGIC}''。
+
+    \textbf{解析：} IEEE 标准库 1164 中定义的逻辑类型为 STD\_LOGIC。
+
+\item \textbf{关键字拼写错误：} \texttt{ARCHITE\_CTURE} $\rightarrow$ \texttt{ARCHITECTURE}
+
+    第 11 行：``ARCHITE\_CTURE behavioral OF mux2to1 IS'' 应为 ``\texttt{ARCHITECTURE behavioral OF mux2to1 IS}''。
+
+    \textbf{解析：} ARCHITECTURE 是定义结构体（描述实体内部实现）的关键字。
+
+\item \textbf{中文分号错误：多处 \texttt{；} $\rightarrow$ \texttt{;}}
+
+    第 1 行 \texttt{ieee；}、第 2 行 \texttt{ALL；}、第 5 行 \texttt{STD\_LOGIG；}、第 8 行 \texttt{)；}、第 9 行 \texttt{；}、第 16 行 \texttt{a；}、第 18 行 \texttt{b；}——所有中文全角分号（；）均应改为英文半角分号（;）。
+
+    \textbf{解析：} VHDL 仅识别 ASCII 字符集中的半角标点。中文全角分号会导致语法解析失败。
+
+\item \textbf{信号赋值操作符错误：} \texttt{:=} $\rightarrow$ \texttt{<=}
+
+    第 16 行 \texttt{y := a；} 和第 18 行 \texttt{y := b；} 均应改为 \texttt{y <= a;} 和 \texttt{y <= b;}。
+
+    \textbf{解析：} \texttt{y} 是 OUT 模式的端口，在结构体中表现为 SIGNAL 语义，必须使用信号赋值操作符 \texttt{<=}。\texttt{:=} 仅用于 VARIABLE（变量）赋值。
+
+\end{enumerate}
+
+\subsection*{修正后的完整程序}
+
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY mux2to1 IS
+  PORT(
+    a, b : IN  STD_LOGIC;
+    sel  : IN  STD_LOGIC;
+    y    : OUT STD_LOGIC
+  );
+END mux2to1;
+
+ARCHITECTURE behavioral OF mux2to1 IS
+BEGIN
+  PROCESS(a, b, sel)
+  BEGIN
+    IF sel = '0' THEN
+      y <= a;
+    ELSE
+      y <= b;
+    END IF;
+  END PROCESS;
+END behavioral;
+\end{lstlisting}
+
+%====================================
+\section{程序阅读分析题（共5分）}
+
+\subsection*{程序内容}
+
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY decoder38 IS
+  PORT(
+    a  : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);
+    en : IN  STD_LOGIC;
+    y  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END decoder38;
+
+ARCHITECTURE behavior OF decoder38 IS
+BEGIN
+  PROCESS(a, en)
+  BEGIN
+    IF en = '0' THEN
+      y <= (OTHERS => '1');
+    ELSE
+      CASE a IS
+        WHEN "000"  => y <= "11111110";
+        WHEN "001"  => y <= "11111101";
+        WHEN "010"  => y <= "11111011";
+        WHEN "011"  => y <= "11110111";
+        WHEN "100"  => y <= "11101111";
+        WHEN "101"  => y <= "11011111";
+        WHEN "110"  => y <= "10111111";
+        WHEN "111"  => y <= "01111111";
+        WHEN OTHERS => y <= (OTHERS => '1');
+      END CASE;
+    END IF;
+  END PROCESS;
+END behavior;
+\end{lstlisting}
+
+\subsection*{分析与答案}
+
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item \textbf{电路类型：} 3线--8线译码器（3-to-8 decoder）。（2分）
+
+\item \textbf{功能说明：}（3分）
+    \begin{itemize}
+        \item 输入 \texttt{a} 为 3 位二进制选择信号（地址），\texttt{en} 为高电平有效使能信号
+        \item 当 \texttt{en = '1'} 时，根据输入 \texttt{a} 的值选中 8 个输出中的 1 路，该路输出为低电平（\texttt{'0'}），其余 7 路输出为高电平（\texttt{'1'}）——即\textbf{输出低电平有效（active-low）}
+        \item 当 \texttt{en = '0'} 时，译码器禁止工作，所有 8 路输出均为高电平 \texttt{'1'}（全禁止状态）
+        \item 例如：\texttt{a = "000"} 且 \texttt{en = '1'} 时，\texttt{y(0)} 输出 \texttt{'0'}（被选中），\texttt{y(7 downto 1)} 输出 \texttt{'1'}
+    \end{itemize}
+\end{enumerate}
+
+\textbf{评分标准：}
+\begin{itemize}
+    \item 答出“3-8译码器”得 2 分
+    \item 答出“使能高电平有效”得 1 分
+    \item 答出“输出低电平有效”或“被选中的输出为0，其余为1”得 1 分
+    \item 答出“en=0 时全输出高电平/禁止状态”得 1 分
+\end{itemize}
+
+%====================================
+\section{设计题（共60分）}
+
+%====================================
+\subsection{设计题1：4位比较器（20分）}
+
+\subsubsection*{1. 端口图（5分）}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, auto]
+    % 模块框
+    \node[draw, minimum width=4cm, minimum height=3cm, thick] (comp) at (0,0) {\textbf{comp4}};
+
+    % 左侧输入端口
+    \node[left of=comp, xshift=-2cm, yshift=0.8cm] (a_label) {};
+    \node[left of=comp, xshift=-2cm, yshift=-0.8cm] (b_label) {};
+
+    % A 输入
+    \draw[<-] (comp.west |- a_label) -- ++(-1.5,0)
+        node[left, font=\small] {\texttt{a[3:0]}};
+
+    % B 输入
+    \draw[<-] (comp.west |- b_label) -- ++(-1.5,0)
+        node[left, font=\small] {\texttt{b[3:0]}};
+
+    % 右侧输出端口
+    \node[right of=comp, xshift=2cm, yshift=0.6cm] (eq_label) {};
+    \node[right of=comp, xshift=2cm, yshift=0cm] (gt_label) {};
+    \node[right of=comp, xshift=2cm, yshift=-0.6cm] (lt_label) {};
+
+    \draw[->] (comp.east |- eq_label) -- ++(1.5,0)
+        node[right, font=\small] {\texttt{equal}};
+    \draw[->] (comp.east |- gt_label) -- ++(1.5,0)
+        node[right, font=\small] {\texttt{greater}};
+    \draw[->] (comp.east |- lt_label) -- ++(1.5,0)
+        node[right, font=\small] {\texttt{less}};
+
+    % 端口标注
+    \node[font=\footnotesize, anchor=north west] at (comp.north west) { 输入};
+    \node[font=\footnotesize, anchor=north east] at (comp.north east) {输出 };
+\end{tikzpicture}
+\end{center}
+
+\textbf{端口说明：}
+\begin{itemize}
+    \item \texttt{a[3:0]}：4 位输入 A（比较操作数 1）
+    \item \texttt{b[3:0]}：4 位输入 B（比较操作数 2）
+    \item \texttt{equal}：输出，当 \texttt{a = b} 时为 \texttt{'1'}
+    \item \texttt{greater}：输出，当 \texttt{a > b} 时为 \texttt{'1'}
+    \item \texttt{less}：输出，当 \texttt{a < b} 时为 \texttt{'1'}
+\end{itemize}
+
+\textbf{评分标准（5分）：}
+\begin{itemize}
+    \item 模块框绘制正确（1分）
+    \item 输入端 a[3:0]、b[3:0] 标注正确（1.5分）
+    \item 输出端 equal、greater、less 标注正确（1.5分）
+    \item 端口方向箭头正确（1分）
+\end{itemize}
+
+\subsubsection*{2. 完整 VHDL 代码（15分）}
+
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;       -- 用于 unsigned 比较
+
+ENTITY comp4 IS
+  PORT(
+    a       : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    b       : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    equal   : OUT STD_LOGIC;
+    greater : OUT STD_LOGIC;
+    less    : OUT STD_LOGIC
+  );
+END comp4;
+
+ARCHITECTURE behavioral OF comp4 IS
+BEGIN
+  PROCESS(a, b)
+  BEGIN
+    -- 默认值，避免推断锁存器
+    equal   <= '0';
+    greater <= '0';
+    less    <= '0';
+
+    IF a = b THEN
+      equal <= '1';
+    ELSIF a > b THEN
+      greater <= '1';
+    ELSE
+      less <= '1';
+    END IF;
+  END PROCESS;
+END behavioral;
+\end{lstlisting}
+
+\textbf{评分标准（15分）：}
+\begin{itemize}
+    \item 库声明正确，包含 \texttt{ieee} 和 \texttt{std\_logic\_1164}（1分）
+    \item 包含 \texttt{numeric\_std} 库用于比较（1分）（若未使用该库但用 \texttt{unsigned(a)>unsigned(b)} 转换方式也不扣分）
+    \item ENTITY 声明正确，端口名称、方向、位宽正确（4分）
+    \item ARCHITECTURE 结构正确（1分）
+    \item PROCESS 敏感信号列表包含 a 和 b（1分）
+    \item 比较逻辑正确：\$a=b \rightarrow equal=1\$，\$a>b \rightarrow greater=1\$，\$a<b \rightarrow less=1\$（3分）
+    \item 默认值赋值避免锁存器推断（1分）
+    \item 代码可综合，语法正确，结构完整（3分）
+\end{itemize}
+
+\textbf{补充说明：} 也可使用并发条件信号赋值（WHEN-ELSE）实现，同样给分：
+\begin{lstlisting}[style=Vivado]
+ARCHITECTURE dataflow OF comp4 IS
+BEGIN
+  equal   <= '1' WHEN a = b ELSE '0';
+  greater <= '1' WHEN a > b ELSE '0';
+  less    <= '1' WHEN a < b ELSE '0';
+END dataflow;
+\end{lstlisting}
+
+%====================================
+\subsection{设计题2：模10同步计数器（20分）}
+
+\subsubsection*{设计需求回顾}
+\begin{itemize}
+    \item 端口：\texttt{clk}（时钟），\texttt{rst}（异步复位，低电平有效），\texttt{en}（使能），\texttt{q[3:0]}（计数输出）
+    \item 模10计数：计数值 0 $\sim$ 9，到 9 后回 0
+    \item 同步计数：在时钟 \texttt{clk} 上升沿触发
+\end{itemize}
+
+\subsubsection*{1. 状态转移图（5分）}
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=1.8cm, on grid, auto]
+  \tikzstyle{every state}=[fill=blue!10, draw=blue!50, thick, minimum size=10mm]
+
+  \node[state,initial above,initial text={}] (S0) {$0000$};
+  \node[state] (S1)  [right of=S0]  {$0001$};
+  \node[state] (S2)  [right of=S1]  {$0010$};
+  \node[state] (S3)  [right of=S2]  {$0011$};
+  \node[state] (S4)  [right of=S3]  {$0100$};
+  \node[state] (S5)  [below of=S4]  {$0101$};
+  \node[state] (S6)  [left  of=S5]  {$0110$};
+  \node[state] (S7)  [left  of=S6]  {$0111$};
+  \node[state] (S8)  [left  of=S7]  {$1000$};
+  \node[state] (S9)  [left  of=S8]  {$1001$};
+
+  \path[->,thick]
+    (S0) edge [bend left=5]  node[above] {en=1} (S1)
+    (S1) edge [bend left=5]  node[above] {} (S2)
+    (S2) edge [bend left=5]  node[above] {} (S3)
+    (S3) edge [bend left=5]  node[above] {} (S4)
+    (S4) edge [bend left=5]  node[right] {} (S5)
+    (S5) edge [bend left=5]  node[below] {} (S6)
+    (S6) edge [bend left=5]  node[below] {} (S7)
+    (S7) edge [bend left=5]  node[below] {} (S8)
+    (S8) edge [bend left=5]  node[below] {} (S9)
+    (S9) edge [bend left=15] node[left]  {} (S0);
+
+  % 自环：en=0时保持
+  \path[->,thick]
+    (S0) edge [loop above]   node[above,font=\small] {en=0} (S0)
+    (S1) edge [loop above]   node[above,font=\small] {en=0} (S1)
+    (S2) edge [loop above]   node[above,font=\small] {en=0} (S2)
+    (S3) edge [loop above]   node[above,font=\small] {en=0} (S3)
+    (S4) edge [loop above]   node[above,font=\small] {en=0} (S4)
+    (S5) edge [loop below]   node[below,font=\small] {en=0} (S5)
+    (S6) edge [loop below]   node[below,font=\small] {en=0} (S6)
+    (S7) edge [loop below]   node[below,font=\small] {en=0} (S7)
+    (S8) edge [loop below]   node[below,font=\small] {en=0} (S8)
+    (S9) edge [loop below]   node[below,font=\small] {en=0} (S9);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{简化版状态转移图（推荐答题版本）：}
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=2.5cm, on grid, auto]
+  \tikzstyle{every state}=[fill=blue!10, draw=blue!50, thick]
+
+  \node[state,initial,initial text={rst}] (S0) {\small $S_0$\\(0000)};
+  \node[state] (S1)  [right of=S0]  {\small $S_1$\\(0001)};
+  \node[state] (S9)  [left  of=S0]  {\small $S_9$\\(1001)};
+  \node[draw,dashed,inner sep=0pt,fit=(S1) (S0) (S9),minimum height=2.2cm,minimum width=7cm,label={[font=\footnotesize]above:中间状态 $S_2 \sim S_8$ (0010$\sim$1000) 省略, 转移规律同上}] {};
+
+  \path[->,thick]
+    (S0) edge [bend left=15] node[above] {en=1} (S1)
+    (S1) edge [bend left=15] node[above] {\scriptsize ...} (S0)
+    (S9) edge [bend left=15] node[below] {en=1} (S0)
+    (S0) edge [bend left=15] node[below] {\scriptsize ...} (S9)
+    (S0) edge [loop below]   node[below] {en=0} (S0);
+\end{tikzpicture}
+\end{center}
+
+\textbf{评分标准（5分）：}
+\begin{itemize}
+    \item 状态编号或编码明确（0$\sim$9 或 0000$\sim$1001）（1分）
+    \item 状态间转移方向正确——循环递增（1分）
+    \item en=1 时转移标注正确（1分）
+    \item en=0 时保持（自环）标注正确（1分）
+    \item 图面清晰，箭头、标注齐全（1分）
+\end{itemize}
+
+\subsubsection*{2. 完整可综合 VHDL 代码（10分）}
+
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY mod10_counter IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;           -- 异步复位，低电平有效
+    en  : IN  STD_LOGIC;           -- 使能，高电平有效
+    q   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END mod10_counter;
+
+ARCHITECTURE behavioral OF mod10_counter IS
+  SIGNAL count : UNSIGNED(3 DOWNTO 0);    -- 内部计数寄存器
+BEGIN
+  -- 异步复位、同步计数进程
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '0' THEN                      -- 异步复位，低电平有效
+      count <= (OTHERS => '0');
+    ELSIF rising_edge(clk) THEN            -- 时钟上升沿
+      IF en = '1' THEN                     -- 使能有效
+        IF count = 9 THEN                  -- 计数值到9
+          count <= (OTHERS => '0');         -- 回0
+        ELSE
+          count <= count + 1;              -- 递增
+        END IF;
+      END IF;
+      -- en = '0' 时保持当前值（count <= count 隐含）
+    END IF;
+  END PROCESS;
+
+  q <= STD_LOGIC_VECTOR(count);            -- 类型转换输出
+END behavioral;
+\end{lstlisting}
+
+\textbf{评分标准（10分）：}
+\begin{itemize}
+    \item 库声明正确（ieee + numeric\_std）（1分）
+    \item ENTITY 端口定义正确：clk、rst、en 输入，q[3:0] 输出（2分）
+    \item 内部信号 count 用 UNSIGNED 类型（或 INTEGER，或 STD\_LOGIC\_VECTOR + 手动逻辑）（1分）
+    \item 异步复位实现正确：\texttt{IF rst='0' THEN} 在 \texttt{ELSIF rising\_edge(clk)} 之前（2分）
+    \item 使能逻辑正确：en=1 时才计数，en=0 时保持（1分）
+    \item 模10边界条件正确：count=9 时下一状态为 0（1分）
+    \item 输出类型转换正确（1分）
+    \item 代码可综合，无语法错误（1分）
+\end{itemize}
+
+\textbf{补充说明：} 若使用 INTEGER 类型实现计数，逻辑等同，也同样给分。示例：
+\begin{lstlisting}[style=Vivado]
+  SIGNAL count_int : INTEGER RANGE 0 TO 9;
+  ...
+  IF count_int = 9 THEN
+    count_int <= 0;
+  ELSE
+    count_int <= count_int + 1;
+  END IF;
+  q <= STD_LOGIC_VECTOR(TO_UNSIGNED(count_int, 4));
+\end{lstlisting}
+
+%====================================
+\subsection{设计题3：Moore型"101"序列检测器（20分）}
+
+\subsubsection*{设计需求回顾}
+\begin{itemize}
+    \item 输入：\texttt{clk}（时钟），\texttt{rst}（同步复位，高电平有效），\texttt{x}（串行输入）
+    \item 输出：\texttt{y}（当检测到"101"序列时输出 1，否则输出 0）
+    \item 类型：Moore 型状态机（输出仅取决于当前状态）
+    \item 状态定义：
+    \begin{itemize}
+        \item $S_0$：初始状态（未匹配任何有效序列/刚复位）
+        \item $S_1$：已匹配“1”
+        \item $S_2$：已匹配“10”
+        \item $S_3$：已匹配“101”（检测成功）
+    \end{itemize}
+    \item 编码风格：2/3-进程描述方式
+\end{itemize}
+
+\subsubsection*{1. 状态转移图（8分）}
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=3.5cm, on grid, auto]
+  \tikzstyle{every state}=[fill=blue!10, draw=blue!50, thick, minimum size=10mm]
+
+  \node[state,initial above,initial text={rst}] (S0) {\small $S_0$\\(初始)};
+  \node[state] (S1) [right of=S0]  {\small $S_1$\\(匹配"1")};
+  \node[state] (S2) [below of=S1]  {\small $S_2$\\(匹配"10")};
+  \node[state,accepting] (S3) [left of=S2]  {\small $S_3$\\(匹配"101")};
+
+  \path[->,thick]
+    % 从 S0 出发
+    (S0) edge [bend left=15] node[above] {$x=1$} (S1)
+    (S0) edge [loop above]   node[above] {$x=0$} (S0)
+
+    % 从 S1 出发
+    (S1) edge [bend left=15] node[right] {$x=0$} (S2)
+    (S1) edge [loop above]   node[right=3pt] {$x=1$} (S1)
+
+    % 从 S2 出发
+    (S2) edge [bend left=15] node[below] {$x=1$} (S3)
+    (S2) edge [bend left=30] node[left=3pt]  {$x=0$} (S0)
+
+    % 从 S3 出发（检测到101后）
+    (S3) edge [bend left=15] node[left]  {$x=1$} (S1)
+    (S3) edge [bend left=30] node[below] {$x=0$} (S2);
+
+  % 添加状态标注
+  \node[font=\footnotesize, below=0.3cm of S3] {$y=1$};
+  \node[font=\footnotesize, below=0.3cm of S0, xshift=-0.5cm] {$y=0$};
+  \node[font=\footnotesize, below=0.3cm of S1, xshift=0.5cm]  {$y=0$};
+  \node[font=\footnotesize, below=0.3cm of S2] {$y=0$};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\textbf{状态转移表：}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{当前状态} & \textbf{含义} & \textbf{输出 y} & \textbf{次态（x=0 / x=1）} \\
+\hline
+$S_0$ & 初始/未匹配       & 0 & $S_0$ / $S_1$ \\
+\hline
+$S_1$ & 已匹配“1”        & 0 & $S_2$ / $S_1$ \\
+\hline
+$S_2$ & 已匹配“10”       & 0 & $S_0$ / $S_3$ \\
+\hline
+$S_3$ & 已匹配“101”      & 1 & $S_2$ / $S_1$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{评分标准（8分）：}
+\begin{itemize}
+    \item 4 个状态定义正确，含名称和含义（2分）
+    \item 状态间的转移方向正确（3分）——每错一条转移扣 0.5 分
+    \item 转移条件 x=0/x=1 标注正确（2分）
+    \item Moore 型输出标注在状态上（非转移线上）（1分）
+\end{itemize}
+
+特别说明——Moore 型状态机关键特征：
+\begin{itemize}
+    \item 输出 \texttt{y} 仅由当前状态决定，与输入 \texttt{x} 无关
+    \item 仅有 $S_3$ 对应输出 $y=1$，其余状态 $y=0$
+    \item 因此检测为“\textbf{非重叠}”模式（non-overlapping）：检测到"101"后返回 $S_0$ 重新开始。若需重叠检测（overlapping），则 $S_3$ 遇到 $x=0$ 时不是回到 $S_2$ 而是另一个分支——但本题采用标准 Moore 实现，$S_3\xrightarrow{x=0}S_2$\footnote{注意：Moore 机中 $S_3$ 到 $S_2$ 的转移允许重叠检测，如输入序列 “10101” 可检测出两次“101”。若要求非重叠检测，则 $S_3\xrightarrow{x=0}S_0$，考生作答时两种方案均给分，只需逻辑自洽。} 可支持重叠检测。
+\end{itemize}
+
+\subsubsection*{2. 完整 VHDL 代码——3 进程 Moore 型（12分）}
+
+%====================================
+\textbf{方案一：3 进程描述（推荐——最规范）}
+
+\begin{lstlisting}[style=Vivado]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY seq_detector_101 IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;            -- 同步复位，高电平有效
+    x   : IN  STD_LOGIC;            -- 串行输入
+    y   : OUT STD_LOGIC             -- 检测输出（Moore型）
+  );
+END seq_detector_101;
+
+ARCHITECTURE moore_3proc OF seq_detector_101 IS
+  -- 枚举类型定义状态
+  TYPE state_type IS (S0, S1, S2, S3);
+  SIGNAL current_state, next_state : state_type;
+
+BEGIN
+  -- ==========================================
+  -- 进程1：状态寄存器（同步时序逻辑）
+  -- ==========================================
+  state_reg: PROCESS(clk)
+  BEGIN
+    IF rising_edge(clk) THEN
+      IF rst = '1' THEN
+        current_state <= S0;           -- 同步复位到初始状态
+      ELSE
+        current_state <= next_state;
+      END IF;
+    END IF;
+  END PROCESS state_reg;
+
+  -- ==========================================
+  -- 进程2：次态逻辑（组合逻辑）
+  -- ==========================================
+  next_state_logic: PROCESS(current_state, x)
+  BEGIN
+    -- 默认值，避免推断锁存器
+    next_state <= S0;
+
+    CASE current_state IS
+      WHEN S0 =>
+        IF x = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S1 =>
+        IF x = '1' THEN
+          next_state <= S1;            -- 连续收到"1"，保持在S1
+        ELSE
+          next_state <= S2;            -- 收到"0"，进入S2（匹配"10"）
+        END IF;
+
+      WHEN S2 =>
+        IF x = '1' THEN
+          next_state <= S3;            -- 收到"1"，进入S3（匹配"101"）
+        ELSE
+          next_state <= S0;            -- 收到"00"，回到初始
+        END IF;
+
+      WHEN S3 =>
+        IF x = '1' THEN
+          next_state <= S1;            -- 重叠检测：新"1"可作为下一序列起点
+        ELSE
+          next_state <= S2;            -- 收到"0"，可视为"10"的前缀
+        END IF;
+
+      WHEN OTHERS =>
+        next_state <= S0;
+    END CASE;
+  END PROCESS next_state_logic;
+
+  -- ==========================================
+  -- 进程3：输出逻辑（组合逻辑——Moore型特征）
+  -- ==========================================
+  output_logic: PROCESS(current_state)
+  BEGIN
+    CASE current_state IS
+      WHEN S3 =>
+        y <= '1';                      -- 仅S3输出1
+      WHEN OTHERS =>
+        y <= '0';                      -- 其余状态输出0
+    END CASE;
+  END PROCESS output_logic;
+
+END moore_3proc;
+\end{lstlisting}
+
+\textbf{方案二：2 进程描述（次态逻辑与输出合并）}
+
+\begin{lstlisting}[style=Vivado]
+ARCHITECTURE moore_2proc OF seq_detector_101 IS
+  TYPE state_type IS (S0, S1, S2, S3);
+  SIGNAL state : state_type;
+
+BEGIN
+  -- 进程1：状态寄存器
+  state_reg: PROCESS(clk)
+  BEGIN
+    IF rising_edge(clk) THEN
+      IF rst = '1' THEN
+        state <= S0;
+      ELSE
+        CASE state IS
+          WHEN S0 =>
+            IF x = '1' THEN state <= S1; ELSE state <= S0; END IF;
+          WHEN S1 =>
+            IF x = '1' THEN state <= S1; ELSE state <= S2; END IF;
+          WHEN S2 =>
+            IF x = '1' THEN state <= S3; ELSE state <= S0; END IF;
+          WHEN S3 =>
+            IF x = '1' THEN state <= S1; ELSE state <= S2; END IF;
+          WHEN OTHERS =>
+            state <= S0;
+        END CASE;
+      END IF;
+    END IF;
+  END PROCESS state_reg;
+
+  -- 进程2：Moore 输出逻辑（仅取决于当前状态）
+  output_logic: PROCESS(state)
+  BEGIN
+    IF state = S3 THEN
+      y <= '1';
+    ELSE
+      y <= '0';
+    END IF;
+  END PROCESS output_logic;
+
+END moore_2proc;
+\end{lstlisting}
+
+\textbf{评分标准（12分）：}
+\begin{itemize}
+    \item 库声明和 ENTITY 端口定义正确（1分）
+    \item 状态枚举类型定义（TYPE state\_type IS...）和使用（1分）
+    \item 进程1——状态寄存器：时钟上升沿触发 + 同步复位 rst=1 $\rightarrow$ S0（2分）
+    \item 进程2——次态逻辑：CASE 语句覆盖全部 4 个状态，转移逻辑 100\% 正确（4分）
+    \item 进程3——输出逻辑：Moore 型特征——仅取决于 current\_state/state，与 x 无关（2分）
+    \item 输出逻辑正确：S3 时 y=1，其余 y=0（1分）
+    \item 代码风格规范：缩进、注释、避免锁存器（1分）
+\end{itemize}
+
+\textbf{常见错误及扣分：}
+\begin{itemize}
+    \item 将输出逻辑写成\texttt{y <= '1' WHEN state=S3 AND x='...' ELSE '0'}——Moore 型输出不应依赖 x（扣 2 分）
+    \item 忘记 WHEN OTHERS 分支——可能推断锁存器（扣 1 分）
+    \item 复位逻辑写成异步（\texttt{IF rst='1' THEN ... ELSIF rising\_edge(clk)}）——若题目明确要求同步复位，扣 1 分
+    \item 状态转移表中有错误——每个错误转移扣 1 分
+\end{itemize}
+
+%====================================
+% 文档结束

@@ -1,0 +1,658 @@
+\chapter{第19套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（十九）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟 \hspace{2em} 难度：中等）
+
+\vspace{0.3cm}
+\textit{适用对象：正在学习FPGA/VHDL基础的学生。考查VHDL基本数据类型、并发语句、进程执行模型、FPGA配置方式、子程序及基本数字系统设计能力。}
+\end{center}
+
+% ============================================
+\section*{一、选择题（共6题，每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中，\texttt{STD\_LOGIC}与\texttt{STD\_ULOGIC}是两种常用的逻辑数据类型。关于两者的区别，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{STD\_LOGIC}有9种取值（'U','X','0','1','Z','W','L','H','-'），而\texttt{STD\_ULOGIC}只有4种取值（'0','1','Z','X'） &
+B. & \texttt{STD\_LOGIC}是决断类型（Resolved Type），包含决断函数，允许多个驱动源同时驱动同一信号；\texttt{STD\_ULOGIC}是非决断类型（Unresolved Type），若有多个驱动源则产生错误 \\
+C. & \texttt{STD\_LOGIC}只能用于内部信号声明，不能用于端口；\texttt{STD\_ULOGIC}只能用于端口声明 \\
+D. & 两者在综合实现上产生完全不同的硬件电路，不能互换使用 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item \texttt{SIGNED}和\texttt{UNSIGNED}数据类型定义于\texttt{IEEE.NUMERIC\_STD}包中，常用于算术运算。关于两者的描述，以下\textbf{错误}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{SIGNED}以二进制补码（Two's Complement）形式表示有符号数，\texttt{UNSIGNED}表示无符号整数 \\
+B. & 两者本质上都是\texttt{STD\_LOGIC}元素组成的一维数组，但各自重载了不同的算术运算符（+、-、*等）以匹配有符号/无符号语义 \\
+C. & \texttt{SIGNED}和\texttt{UNSIGNED}可以不经类型转换直接与\texttt{STD\_LOGIC\_VECTOR}进行算术运算 \\
+D. & 使用\texttt{NUMERIC\_STD}包替代过时的\texttt{STD\_LOGIC\_ARITH/STD\_LOGIC\_UNSIGNED}包，是IEEE推荐的做法 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item VHDL中，条件信号赋值语句（\texttt{WHEN-ELSE}）和选择信号赋值语句（\texttt{WITH-SELECT}）是两种常用的并发语句。关于两者，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{WHEN-ELSE}和\texttt{WITH-SELECT}都是顺序语句，只能在PROCESS内部使用 \\
+B. & \texttt{WHEN-ELSE}中各条件按书写顺序依次判断（具有优先级），最先满足的条件对应的值被选中；而\texttt{WITH-SELECT}中所有分支是平等（并行）判断的，不允许有分支重叠 \\
+C. & \texttt{WITH-SELECT}语句中可以不使用\texttt{WHEN OTHERS}分支，只要所有显式列出的分支覆盖了选择表达式的全部可能取值即可 \\
+D. & \texttt{WHEN-ELSE}和\texttt{WITH-SELECT}的综合结果总是完全相同的组合逻辑电路，无任何区别 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 下列关于VHDL中PROCESS（进程）执行模型的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 一个带敏感信号列表的PROCESS在仿真中，当敏感列表中的任一信号发生事件（值变化）时被激活，执行完内部语句后挂起等待下一次事件 \\
+B. & PROCESS内部对同一信号的多次赋值中，只有第一次赋值生效，后续赋值被忽略 \\
+C. & 在PROCESS的敏感信号列表中只写时钟信号\texttt{clk}，但进程中使用了\texttt{rising\_edge(clk)}，综合工具会自动推断出\texttt{rst}也为敏感信号 \\
+D. & 不带敏感信号列表的PROCESS（含WAIT语句）与带敏感信号列表的PROCESS在综合时没有任何区别 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item FPGA器件的配置（Configuration）是指将比特流数据加载到FPGA内部的SRAM配置存储器中的过程。以下关于FPGA常用配置模式的描述，\textbf{错误}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 主串模式（Master Serial）：FPGA主动产生配置时钟CCLK，从外部SPI Flash/PROM逐位串行读取配置数据 \\
+B. & 从串模式（Slave Serial）：由外部处理器或下载器提供CCLK，将配置数据逐位送入FPGA \\
+C. & JTAG模式（Boundary Scan）：仅能用于芯片的边界扫描测试和在线调试，\textbf{不能}用于FPGA的初始配置下载 \\
+D. & 主并模式（Master Parallel/SelectMAP）：FPGA产生控制信号，从外部并行NOR Flash以8位或16位宽度读取配置数据，速度较串行模式更快 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item VHDL子程序包括\texttt{FUNCTION}（函数）和\texttt{PROCEDURE}（过程）。关于两者的使用，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & FUNCTION可以有多个RETURN语句以返回不同值；PROCEDURE必须至少包含一个RETURN语句 \\
+B. & FUNCTION可以出现在表达式中（如赋值语句右侧），而PROCEDURE的调用是一条独立的顺序语句 \\
+C. & FUNCTION和PROCEDURE都可以在内部包含WAIT语句，以暂停执行等待信号事件 \\
+D. & PROCEDURE的参数模式默认为IN，因此无须显式指定；FUNCTION的参数模式默认为OUT \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（共4题，每题3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{std\_logic的9值系统：}VHDL中\texttt{STD\_LOGIC}类型（定义于\texttt{IEEE.STD\_LOGIC\_1164}包）是一个9值逻辑系统，用于精确建模数字电路的各种物理状态。请根据下表中的取值字符，填写各字符对应的含义（中文或英文均可）：
+
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tabular}{|c|l|c|l|}
+\hline
+\textbf{字符} & \textbf{含义} & \textbf{字符} & \textbf{含义} \\
+\hline
+\verb|'U'| & \underline{\hspace{2.5cm}}（未初始化） & \verb|'X'| & \underline{\hspace{2.5cm}}（强未知/冲突） \\
+\hline
+\verb|'0'| & 强逻辑0 & \verb|'1'| & \underline{\hspace{2.5cm}}（强逻辑1） \\
+\hline
+\verb|'Z'| & \underline{\hspace{2.5cm}}（高阻态） & \verb|'W'| & \underline{\hspace{2.5cm}}（弱未知） \\
+\hline
+\verb|'L'| & \underline{\hspace{2.5cm}}（弱逻辑0） & \verb|'H'| & \underline{\hspace{2.5cm}}（弱逻辑1） \\
+\hline
+\verb|'-'| & \underline{\hspace{2.5cm}}（无关项） & \multicolumn{2}{c|}{} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.6cm}
+
+\item \textbf{函数（FUNCTION）与过程（PROCEDURE）的参数与返回：}
+\begin{itemize}
+  \item FUNCTION的所有形式参数的模式只能为\underline{\hspace{2cm}}（若不写模式关键字，默认为此模式）；FUNCTION体内\textbf{必须}包含\underline{\hspace{2cm}}语句，向调用者返回计算结果。
+  \item PROCEDURE的参数模式有三种：\underline{\hspace{1cm}}（输入）、\underline{\hspace{1cm}}（输出）和INOUT（双向）。PROCEDURE将运算结果通过\underline{\hspace{1.5cm}}模式参数传递给调用者（不需要RETURN语句）。
+  \item 调用FUNCTION时，返回值可出现在\underline{\hspace{2cm}}（例如赋值语句的右侧、IF条件表达式等）；调用PROCEDURE则是一条独立的\underline{\hspace{2cm}}语句（不能嵌套在表达式中）。
+\end{itemize}
+
+\vspace{0.6cm}
+
+\item \textbf{程序包（PACKAGE）的结构：}
+\begin{itemize}
+  \item 一个完整的VHDL程序包由\textbf{两个}设计单元组成：第一部分称为\underline{\hspace{3cm}}（PACKAGE声明），其中放置对外可见的\underline{\hspace{2.5cm}}（至少写出两种：如常量声明、类型声明）、元件声明以及子程序的\textbf{接口声明}（即FUNCTION/PROCEDURE的原型）；第二部分称为\underline{\hspace{3cm}}（PACKAGE BODY），其中包含第一部分所声明的子程序的\underline{\hspace{2.5cm}}（即具体实现代码）。
+  \item 如果PACKAGE声明中只包含常量、类型和信号声明而没有声明任何子程序，则该PACKAGE\underline{\hspace{2cm}}（填“需要”或“不需要”）配套的PACKAGE BODY。
+\end{itemize}
+
+\vspace{0.6cm}
+
+\item \textbf{并发语句与顺序语句：}
+\begin{itemize}
+  \item 出现在ARCHITECTURE（结构体）中、PROCESS\textbf{之外}的语句属于\underline{\hspace{2.5cm}}语句（Concurrent Statement）。它们的执行顺序与代码中的书写顺序\underline{\hspace{2.5cm}}（填“有关”或“无关”）。
+  \item 出现在PROCESS、FUNCTION或PROCEDURE\textbf{内部}的语句属于\underline{\hspace{2.5cm}}语句（Sequential Statement）。它们按照代码中的书写顺序\underline{\hspace{2.5cm}}执行。
+  \item 常见的并发信号赋值语句包括：简单并发信号赋值（\texttt{<=}）、条件信号赋值（\underline{\hspace{2.5cm}}）和选择信号赋值（\underline{\hspace{2.5cm}}）。
+\end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共1题，共5分）}
+% ============================================
+
+\textbf{题目：}以下VHDL代码意图实现一个带复位功能的4位计数器，并将计数值通过7段数码管译码输出。代码中存在\textbf{6处错误}，请找出\textbf{任意5处}（共6处错误，找出5处即满分），指出错误位置、错误原因及正确写法。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={含多类错误的VHDL代码——找出5处即满分（共6处错误）}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY counter_seg_err IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;
+    en     : IN  STD_LOGIC;
+    seg    : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
+  );
+END counter_seg_err;
+
+ARCHITECTURE behav OF counter_seg_err IS
+  SIGNAL count : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  -- Process 1: Counter
+  -- Error 1: 异步复位进程中敏感信号列表不全（缺少clk），
+  --          且异步复位写法与rising_edge混用不规范
+  PROCESS(rst)
+  BEGIN
+    IF rst = '1' THEN
+      count <= "0000";
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        count <= count + '1';
+      END IF;
+    END IF;
+  END PROCESS;
+
+  -- Process 2: 7-segment decoder
+  -- Error 2: 敏感信号列表中缺少count，导致组合逻辑行为错误
+  PROCESS
+  BEGIN
+    CASE count IS
+      WHEN "0000" => seg <= "1000000";  -- 显示0
+      WHEN "0001" => seg <= "1111001";  -- 显示1
+      WHEN "0010" => seg <= "0100100";  -- 显示2
+      WHEN "0011" => seg <= "0110000";  -- 显示3
+      WHEN "0100" => seg <= "0011001";  -- 显示4
+      WHEN "0101" => seg <= "0010010";  -- 显示5
+      WHEN "0110" => seg <= "0000010";  -- 显示6
+      WHEN "0111" => seg <= "1111000";  -- 显示7
+      WHEN "1000" => seg <= "0000000";  -- 显示8
+      WHEN "1001" => seg <= "0010000";  -- 显示9
+      -- Error 3: 缺少WHEN OTHERS分支
+      --          当count为"1010"~"1111"时输出未定义，综合可能产生锁存器
+    END CASE;
+  END PROCESS;
+
+  -- Error 4: STD_LOGIC_ARITH/STD_LOGIC_UNSIGNED是过时的非标准包
+  --          应使用IEEE.NUMERIC_STD.ALL
+  --
+  -- Error 5: count是STD_LOGIC_VECTOR类型，不能直接与字符'1'做算术运算
+  --          应使用NUMERIC_STD包并进行类型转换
+  --
+  -- Error 6: 进程2没有敏感信号列表也没有WAIT语句，
+  --          仿真时将无限循环（组合进程的正确写法应包含敏感列表）
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}按以下格式逐条列出5处错误（每处1分，共5分）：
+
+\noindent 错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 改正为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\
+\quad（错误原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_）\\[0.3cm]
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 改正为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\
+\quad（错误原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_）\\[0.3cm]
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 改正为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\
+\quad（错误原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_）\\[0.3cm]
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 改正为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\
+\quad（错误原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_）\\[0.3cm]
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 改正为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\
+\quad（错误原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_）
+
+\vspace{0.3cm}
+\noindent\textbf{提示：}错误类型涉及——(1) 异步复位进程中敏感信号列表不完整导致仿真-综合不匹配；(2) 过时的IEEE标准包引用（应使用NUMERIC\_STD）；(3) CASE语句缺少WHEN OTHERS分支导致锁存器推断；(4) 组合进程缺少敏感信号列表（或WAIT语句）；(5) STD\_LOGIC\_VECTOR类型信号与字符字面量\'1\'进行算术运算时类型不匹配。
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共1题，共5分）}
+% ============================================
+
+\textbf{题目：}阅读以下VHDL代码——这是一个“101”序列检测器（Sequence Detector）的状态机实现，回答下列问题。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={``101''序列检测器——待分析VHDL程序}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY seq_detector IS
+  PORT(
+    clk     : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;
+    din     : IN  STD_LOGIC;
+    detect  : OUT STD_LOGIC
+  );
+END seq_detector;
+
+ARCHITECTURE fsm OF seq_detector IS
+  TYPE state_type IS (S0, S1, S2);
+  SIGNAL current_state, next_state : state_type;
+BEGIN
+  -- 进程1：状态寄存器（时序逻辑）
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- 进程2：次态逻辑（组合逻辑）
+  PROCESS(current_state, din)
+  BEGIN
+    CASE current_state IS
+      WHEN S0 =>
+        IF din = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S1 =>
+        IF din = '0' THEN
+          next_state <= S2;
+        ELSE
+          next_state <= S1;
+        END IF;
+
+      WHEN S2 =>
+        IF din = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+    END CASE;
+  END PROCESS;
+
+  -- 进程3：输出逻辑（Moore型——输出仅依赖于当前状态）
+  PROCESS(current_state)
+  BEGIN
+    IF current_state = S2 THEN
+      detect <= '1';
+    ELSE
+      detect <= '0';
+    END IF;
+  END PROCESS;
+END fsm;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该序列检测器的\textbf{目标检测序列}是什么？请结合状态转移逻辑说明该状态机属于Moore型还是Mealy型。（提示：观察输出信号\texttt{detect}是否仅依赖于当前状态，还是同时依赖于输入\texttt{din}。）
+
+  \item （1分）该状态机包含几个状态（S0$\sim$S2）？分别用一句话描述每个状态的\textbf{含义}（即：处于该状态时，表明输入序列已匹配到什么阶段）。
+
+  \item （2分）假设复位后输入序列\texttt{din}依次为：\texttt{1, 0, 1, 0, 1, 1, 0, 1, 0, 1}（每个值对应一个时钟周期），请按下列表格格式填写每个时钟周期后的\texttt{current\_state}和\texttt{detect}输出值：
+
+  \vspace{0.2cm}
+  {\centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  时钟周期 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+  \hline
+  din & 1 & 0 & 1 & 0 & 1 & 1 & 0 & 1 & 0 & 1 \\
+  \hline
+  current\_state & & & & & & & & & & \\
+  \hline
+  detect & & & & & & & & & & \\
+  \hline
+  \end{tabular}
+  \par}
+
+  \vspace{0.2cm}
+  并回答：在哪些时钟周期\texttt{detect}输出为'1'？
+
+  \item （1分）该代码是否支持\textbf{重叠检测}（Overlapping Detection）？即输入序列``10101''是否可以检测到两次目标序列（第1$\sim$3位和第3$\sim$5位各形成一次“101”）？请结合S2状态下\texttt{din='1'}时的转移目标（S1而不是S0）进行分析。
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共3题，共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：4位多功能ALU（算术逻辑单元）设计（20分）}
+
+设计一个4位ALU（Arithmetic Logic Unit），支持加法、减法、按位与、按位或、按位异或和按位取反共6种运算。采用\textbf{行为描述风格}（PROCESS + CASE语句）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{a(3 DOWNTO 0)}（输入）：操作数A，4位。
+  \item \texttt{b(3 DOWNTO 0)}（输入）：操作数B，4位。
+  \item \texttt{op\_sel(2 DOWNTO 0)}（输入）：3位操作码，定义如下：
+  \begin{center}
+  \begin{tabular}{|c|c|l|}
+  \hline
+  \textbf{op\_sel} & \textbf{运算名} & \textbf{功能} \\
+  \hline
+  \texttt{"000"} & ADD  & 加法：\texttt{result = a + b} \\
+  \texttt{"001"} & SUB  & 减法：\texttt{result = a - b} \\
+  \texttt{"010"} & AND  & 按位与：\texttt{result = a AND b} \\
+  \texttt{"011"} & OR   & 按位或：\texttt{result = a OR b} \\
+  \texttt{"100"} & XOR  & 按位异或：\texttt{result = a XOR b} \\
+  \texttt{"101"} & NOT  & 按位取反：\texttt{result = NOT a}（仅对a操作，忽略b） \\
+  \texttt{"110"/"111"} & — & 保留，输出全0 \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \item \texttt{result(3 DOWNTO 0)}（输出）：4位运算结果。
+  \item \texttt{carry}（输出）：进位/借位标志。加法有进位或减法有借位时输出'1'；其他运算时输出'0'。
+  \item \texttt{zero}（输出）：零标志。当\texttt{result}为全零（\texttt{"0000"}）时输出'1'，否则输出'0'。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）列出该ALU的\textbf{功能表}。表头应包含：操作码\texttt{op\_sel}、运算名称、运算表达式（用端口信号名表示）以及标志位\texttt{carry}和\texttt{zero}的行为说明。
+
+  \item （3分）画出该ALU的顶层端口框图，标注所有端口名称、方向及位宽（以\texttt{op\_sel=3}位、数据通路4位标注）。
+
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 使用库\texttt{IEEE.STD\_LOGIC\_1164.ALL}和\texttt{IEEE.NUMERIC\_STD.ALL}；
+    \item 在结构体中定义一个\textbf{组合逻辑PROCESS}，敏感信号列表包含所有输入信号（\texttt{a, b, op\_sel}）；
+    \item 在PROCESS内部使用\textbf{CASE}语句（以\texttt{op\_sel}为选择表达式）实现6种运算分支，并包含\texttt{WHEN OTHERS}分支；
+    \item 加法/减法分支中，使用\textbf{VARIABLE}（变量）定义5位中间结果（如\texttt{VARIABLE tmp : UNSIGNED(4 DOWNTO 0)}），将4位操作数扩展为5位后进行运算，以捕获进位/借位（第4位）；
+    \item 按位与/或/异或/取反使用VHDL内置逻辑运算符直接对\texttt{STD\_LOGIC\_VECTOR}操作；
+    \item \texttt{zero}标志在PROCESS中根据\texttt{result}的值进行判断赋值；
+    \item 代码中必须包含清晰的中文注释，说明每个CASE分支的运算功能和标志位产生逻辑。
+  \end{itemize}
+
+  \item （4分）回答以下问题：
+  \begin{enumerate}
+    \item （2分）在ALU设计的PROCESS中，为什么加法和减法分支推荐使用\textbf{VARIABLE}（变量）而非\textbf{SIGNAL}（信号）来存储中间运算结果？请从VHDL中变量（\texttt{:=}立即赋值）与信号（\texttt{<=}延迟赋值）的语义差异角度说明。
+    \item （2分）若需要将该4位ALU扩展为\textbf{8位}ALU，需要修改哪些部分？请逐一列出：端口位宽、内部变量位宽以及CASE分支的位宽适配方式。
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 类型转换示例：\texttt{a\_uns := UNSIGNED(a);}（需要先将\texttt{STD\_LOGIC\_VECTOR}转换为\texttt{UNSIGNED}再参与算术运算）。
+  \item 加法进位检测思路：\texttt{tmp := ('0' \& a\_uns) + ('0' \& b\_uns);} 结果\texttt{tmp(4)}即为进位位。
+  \item 减法借位检测思路：\texttt{tmp := ('0' \& a\_uns) - ('0' \& b\_uns);} 结果\texttt{tmp(4)='1'}时表示借位（即a $<$ b）。
+  \item 变量声明位置：在PROCESS的声明区（\texttt{BEGIN}关键字之前）声明，不需要在ARCHITECTURE声明区声明。
+  \item 输出赋值：最终将中间变量的低4位赋值给\texttt{result}（\texttt{result <= STD\_LOGIC\_VECTOR(tmp(3 DOWNTO 0));}）。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：可编程分频器（Programmable Frequency Divider）设计（20分）}
+
+设计一个参数化的可编程时钟分频器，通过GENERIC参数\texttt{DIV}设定分频比。分频器将输入高频时钟\texttt{clk\_in}降频输出为\texttt{clk\_out}，并具备使能控制功能。
+
+\vspace{0.3cm}
+
+\textbf{功能规格：}
+\begin{itemize}
+  \item 分频关系：$f_{out} = f_{in} / DIV$，其中DIV为GENERIC参数（默认值8，整数，范围$2\sim 65535$）。
+  \item \textbf{偶数DIV}时，输出\texttt{clk\_out}的占空比必须为严格的50\%。
+  \item \textbf{奇数DIV}时，输出占空比尽力接近50\%（高电平持续\texttt{(DIV+1)/2}个\texttt{clk\_in}周期，低电平持续\texttt{(DIV-1)/2}个\texttt{clk\_in}周期）。
+  \item 使能信号\texttt{en}：当\texttt{en='1'}时分频器正常工作；当\texttt{en='0'}时分频器暂停，\texttt{clk\_out}保持当前电平不变，计数器停止计数。
+  \item 同步复位\texttt{rst}（高电平有效）：复位后计数器清零，\texttt{clk\_out}输出'0'。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \textbf{GENERIC参数}：\texttt{DIV : INTEGER := 8}——分频比（须置于PORT声明之前）。
+  \item \texttt{clk\_in}（输入）：输入高频时钟信号。
+  \item \texttt{rst}（输入）：同步复位，高电平有效。
+  \item \texttt{en}（输入）：使能信号，高电平有效。
+  \item \texttt{clk\_out}（输出）：分频后的输出时钟信号。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）说明该分频器的\textbf{工作原理}。以\texttt{DIV=6}（偶数）和\texttt{DIV=5}（奇数）为例，分别画出两种情况下的时序波形图（至少包含2个完整的\texttt{clk\_out}周期），标注：
+  \begin{itemize}
+    \item \texttt{clk\_in}波形；
+    \item 内部计数器值的变化；
+    \item \texttt{clk\_out}的翻转时刻及对应的计数值；
+    \item 占空比标注。
+  \end{itemize}
+
+  \item （2分）写出分频器内部计数器的\textbf{计数范围}以及\textbf{翻转阈值}的计算公式：
+  \begin{itemize}
+    \item 计数器计数范围：从0到\underline{\hspace{2cm}}。
+    \item 偶数DIV时，\texttt{clk\_out}的翻转计数值 = \underline{\hspace{2cm}}（填写表达式）；计数器的清零计数值 = \underline{\hspace{2cm}}。
+    \item 奇数DIV时，\texttt{clk\_out}的翻转计数值 = \underline{\hspace{2cm}}（填写表达式）。
+  \end{itemize}
+
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 实体中使用\texttt{GENERIC}声明\texttt{DIV}（默认值8），置于\texttt{PORT}声明之前；
+    \item 内部使用\texttt{INTEGER RANGE 0 TO DIV-1}类型的信号作为分频计数器；
+    \item 使用\texttt{CONSTANT}定义翻转阈值\texttt{HALF}（即高电平时钟周期数），提升代码可读性；
+    \item 采用单进程时序描述风格（\texttt{PROCESS(clk\_in)}），内部仅响应\texttt{rising\_edge(clk\_in)}：
+    \begin{itemize}
+      \item 同步复位（\texttt{rst='1'}）：计数器清零，\texttt{clk\_out <= '0'}；
+      \item \texttt{en='1'}时计数器自增，并在达到翻转阈值和清零阈值时分别执行\texttt{clk\_out}翻转和计数器归零；
+      \item \texttt{en='0'}时计数器保持，\texttt{clk\_out}保持；
+    \end{itemize}
+    \item 代码中必须包含关键逻辑的中文注释（包括翻转条件、偶数/奇数分频的处理）。
+  \end{itemize}
+
+  \item （4分）回答以下问题：
+  \begin{enumerate}
+    \item （1.5分）本设计采用\textbf{同步复位}而非异步复位。请从FPGA时序收敛和抗毛刺干扰能力两个角度说明同步复位的优势。
+    \item （1.5分）如果\texttt{DIV=1}（即要求不分频，\texttt{clk\_out}直通\texttt{clk\_in}），当前的设计能否正确工作？如果当前计数器范围为\texttt{0 TO DIV-1}（即0 TO 0），\texttt{clk\_out}的行为将如何？请说明理由，并提出必要的修改方案。
+    \item （1分）GENERIC参数\texttt{DIV}是在综合前确定的常量。若需要在系统运行过程中\textbf{动态修改}分频比（即通过输入端口改变DIV的值），应如何修改设计？简要说明修改思路（不要求写出完整代码）。
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 偶数DIV=8时：计数器0$\sim$7循环；计数值0$\sim$3时\texttt{clk\_out}为高电平（4个周期），4$\sim$7时为低电平（4个周期），占空比50\%。
+  \item 奇数DIV=5时：计数器0$\sim$4循环；计数值0$\sim$2时\texttt{clk\_out}为高电平（3个周期），3$\sim$4时为低电平（2个周期），占空比60\%/40\%。
+  \item 翻转阈值（高电平持续周期数）的计算公式：\\
+  \quad \texttt{HALF := DIV/2} \quad（偶数DIV时）\\
+  \quad \texttt{HALF := (DIV+1)/2} \quad（奇数DIV时）
+  \item 翻转逻辑：当计数值 = \texttt{HALF - 1} 时翻转\texttt{clk\_out}（使用\texttt{NOT clk\_out}）；当计数值 = \texttt{DIV - 1} 时计数器归零。
+  \item 同步复位写法：所有操作均在\texttt{IF rising\_edge(clk\_in) THEN}内部判断\texttt{rst}。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：三层电梯控制器——Moore型状态机设计（20分）}
+
+设计一个简化版的\textbf{三层电梯控制器}（Elevator Controller）。电梯在一栋3层建筑内运行（楼层编号为1、2、3）。采用Moore型有限状态机实现电梯的自动调度与控制。
+
+\vspace{0.3cm}
+
+\textbf{系统描述：}
+
+电梯接收来自各楼层的呼叫请求，根据请求方向决定上升或下降。电梯每经过一个“时钟周期”移动一层（从第$n$层到第$n+1$层或第$n-1$层需要1个时钟周期）。楼层传感器在电梯到达某层时给出当前位置信号。
+
+\vspace{0.3cm}
+
+\textbf{输入信号：}
+\begin{itemize}
+  \item \texttt{clk}（时钟）：系统工作时钟，每个上升沿代表电梯完成一个动作（移动一层或停靠判断）。
+  \item \texttt{rst}（异步复位，高电平有效）：复位后电梯回到1层，处于空闲停靠状态。
+  \item \texttt{f1, f2, f3}（楼层呼叫按钮，各1位）：分别对应1层、2层、3层的呼叫请求。高电平表示该层有乘梯请求（假设按钮信号持续保持直到被服务，即电梯到达该层并停靠后由外部逻辑清零）。
+  \item \texttt{at\_floor(1 DOWNTO 0)}（楼层位置传感器）：编码电梯当前所在楼层——\texttt{"00"}表示1层，\texttt{"01"}表示2层，\texttt{"10"}表示3层。当电梯在两层之间移动时，该信号保持前一停靠楼层的值，直到到达新楼层后才更新。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{输出信号：}
+\begin{itemize}
+  \item \texttt{motor\_up}（上升控制）：'1'时电机驱动电梯上升一层。
+  \item \texttt{motor\_down}（下降控制）：'1'时电机驱动电梯下降一层。
+  \item \texttt{motor\_stop}（停止/开门）：'1'时电梯停靠当前楼层并开门。
+  \item \textbf{互锁约束：}三个输出信号\texttt{motor\_up}、\texttt{motor\_down}和\texttt{motor\_stop}在同一时刻\textbf{有且仅有其中一个}为'1'。
+  \item \texttt{curr\_floor(1 DOWNTO 0)}（当前楼层显示）：编码电梯当前所在楼层（编码同\texttt{at\_floor}），用于楼层指示灯。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{电梯调度规则（简化版）：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 复位后，电梯停在1层，\texttt{motor\_stop='1'}，\texttt{curr\_floor="00"}。
+  \item 电梯在任意楼层停靠时，检查是否有任何楼层的呼叫请求（\texttt{f1}、\texttt{f2}或\texttt{f3}）：
+  \begin{itemize}
+    \item 若\textbf{无任何请求}，则保持当前楼层停靠（空闲状态）。
+    \item 若\textbf{有请求}且存在高于当前楼层的请求，则电梯启动上升（\texttt{motor\_up='1'}）。
+    \item 若\textbf{有请求}且只有低于当前楼层的请求（无更高楼层请求），则电梯启动下降（\texttt{motor\_down='1'}）。
+  \end{itemize}
+  \item 电梯在移动过程中（上升或下降），每经过一个时钟周期到达相邻楼层。到达每一层时，检查该层是否有请求或被包含在当前运行方向的服务范围内——如果该层有请求且运行方向匹配，则停靠（\texttt{motor\_stop}）；否则继续移动。
+  \item 当电梯到达当前运行方向上的最远请求楼层后，停靠并重新判断：若有反向请求则改变方向，若无则进入空闲。
+  \item \textbf{简化：}电梯在上升过程中只服务上方向的请求（被呼叫楼层$>$当前楼层），下降过程中只服务下方向的请求。
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{状态图与状态定义（6分）}
+  \begin{enumerate}
+    \item （2分）定义Moore型状态机的所有状态，说明每个状态的\textbf{含义}及对应的\textbf{输出值}（\texttt{motor\_up, motor\_down, motor\_stop}）。建议至少包含以下状态：
+    \begin{itemize}
+      \item \texttt{IDLE\_F1}：停靠在1层空闲
+      \item \texttt{IDLE\_F2}：停靠在2层空闲
+      \item \texttt{IDLE\_F3}：停靠在3层空闲
+      \item \texttt{MOVING\_UP}：电梯正在上升
+      \item \texttt{MOVING\_DOWN}：电梯正在下降
+      \item \texttt{STOPPED}：电梯在某层开门停靠（短暂停留）
+    \end{itemize}
+    （允许根据设计需要适当增删状态，但须保证功能完整。）
+
+    \item （4分）画出\textbf{完整的状态转移图（Moore型）}。要求：
+    \begin{itemize}
+      \item 每个状态节点内标注：状态名称和输出值（以三元组\texttt{(up,down,stop)}的形式，如\texttt{(0,0,1)}表示停止）；
+      \item 每条转移弧上标注转移条件（如：\texttt{at\_floor="01" AND (f3='1')}、\texttt{(f1 OR f2 OR f3)='0'}等）；
+      \item 图面清晰，状态布局合理。
+    \end{itemize}
+  \end{enumerate}
+
+  \item \textbf{状态转移表（3分）}
+
+  列出Moore型状态转移表。建议表头为：
+
+  {\centering
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  当前状态 & 输入条件 & 次态 & up & down & stop \\
+  \hline
+  \hspace{2cm} & \hspace{2.5cm} & \hspace{1.5cm} & & & \\
+  \hline
+  \end{tabular}
+  \par}
+
+  至少覆盖12行（覆盖各状态的主要转移情况）。
+
+  \item \textbf{VHDL代码实现（8分）}
+
+  编写完整的电梯控制器VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 实体端口定义与上述系统描述完全一致；
+    \item 使用用户自定义枚举类型定义所有状态（如\texttt{TYPE elevator\_state IS (...);}）；
+    \item 采用\textbf{三进程描述风格}（Moore型状态机的标准模板）：
+    \begin{itemize}
+      \item \textbf{进程1（时序）}：状态寄存器 + 异步复位（\texttt{rst='1'}时回到\texttt{IDLE\_F1}）+ \texttt{curr\_floor}更新逻辑；
+      \item \textbf{进程2（组合）}：次态逻辑——根据当前状态、\texttt{at\_floor}、\texttt{f1/f2/f3}决定次态。必须使用CASE语句对当前状态进行分支，在每个分支内用IF语句判断输入条件；
+      \item \textbf{进程3（组合）}：输出逻辑——根据当前状态（仅取决于状态，不依赖于输入，Moore型特征）产生\texttt{motor\_up}、\texttt{motor\_down}、\texttt{motor\_stop}信号。
+    \end{itemize}
+    \item 代码中关键判断条件需用中文注释说明。
+    \item 代码缩进规范、信号命名清晰。
+  \end{itemize}
+
+  \item \textbf{分析与思考（3分）}
+  \begin{enumerate}
+    \item （1.5分）在电梯控制器的场景下，Moore型与Mealy型状态机哪种更适合？请从\textbf{输出稳定性}和\textbf{电机控制安全性}角度说明理由。
+    \item （1.5分）当前设计中假设楼层按钮信号（\texttt{f1, f2, f3}）持续保持高电平直到被服务。在实际硬件中，按钮按下通常只产生一个短暂的脉冲。请说明：需要增加哪些内部信号，以及如何修改状态转移逻辑，以支持脉冲型按钮输入（将脉冲锁存为请求记录）。
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 状态转移条件编写建议：在次态逻辑进程中，可定义辅助信号/变量表示“是否有任何请求”“是否有上方向请求”“是否有下方向请求”，例如：
+  \begin{itemize}
+    \item \texttt{any\_req <= f1 OR f2 OR f3;}（并发语句，放在进程外部）
+    \item 上升方向请求：当前楼层为1层时，\texttt{f2 OR f3 = '1'}即有上升请求；当前楼层为2层时，\texttt{f3 = '1'}即有上升请求。
+  \end{itemize}
+  \item 输出编码示例：
+  \begin{itemize}
+    \item 停止/开门：\texttt{motor\_up <= '0'; motor\_down <= '0'; motor\_stop <= '1';}
+    \item 上升：\texttt{motor\_up <= '1'; motor\_down <= '0'; motor\_stop <= '0';}
+    \item 下降：\texttt{motor\_up <= '0'; motor\_down <= '1'; motor\_stop <= '0';}
+  \end{itemize}
+  \item 楼层更新：在时序进程中，当状态为MOVING\_UP或MOVING\_DOWN时，可用\texttt{at\_floor}更新\texttt{curr\_floor}。
+  \item 枚举类型声明示例：\\[2pt]
+  \texttt{TYPE elevator\_state IS (IDLE\_F1, IDLE\_F2, IDLE\_F3,}\\
+  \texttt{\qquad\qquad\qquad\qquad\; MOVING\_UP, MOVING\_DOWN, STOPPED);}
+\end{itemize}
+\end{framed}
+
+\vspace{0.8cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

@@ -1,0 +1,596 @@
+\chapter{第15套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{答案：B}
+
+\textbf{解析：}CPLD的基本逻辑单元基于乘积项（Product Term）结构（由与阵列+或阵列实现组合逻辑），而FPGA的基本逻辑单元基于查找表（LUT）结构（由SRAM单元实现任意组合逻辑函数）。这是两者在架构上的核心区别。选项A颠倒了两者关系；选项C、D错误。
+
+\item \textbf{答案：C}
+
+\textbf{解析：}常见的FPGA配置模式包括：Master Serial（主串模式）、Slave Serial（从串模式）、JTAG模式、SPI模式、SelectMAP（并行）模式以及BPI模式等。\textbf{DMA（直接存储器访问）模式不是FPGA配置模式}，DMA是计算机系统中外设与内存之间的数据传输机制。因此选项C正确。
+
+\item \textbf{答案：C}
+
+\textbf{解析：}顺序语句只能出现在PROCESS或子程序（FUNCTION/PROCEDURE）内部。IF语句是典型的顺序语句。选项A（简单信号赋值位于结构体并发区）属于并发语句；选项B（PROCESS本身）是并发语句（在结构体中）；选项D（元件例化PORT MAP）是并发语句。
+
+\item \textbf{答案：A}
+
+\textbf{解析：}Moore型状态机的输出仅取决于当前状态（输出标注在状态节点上）；Mealy型状态机的输出取决于当前状态和输入（输出标注在转移弧上）。这是两者的根本区。选项B颠倒了关系；选项C错误（二者均可用于各种场景）；选项D错误（描述风格与状态机类型无关）。
+
+\item \textbf{答案：B}
+
+\textbf{解析：}VHDL中逻辑运算符优先级：\texttt{NOT}优先级最高；\texttt{AND}、\texttt{OR}、\texttt{NAND}、\texttt{NOR}、\texttt{XOR}、\texttt{XNOR}优先级相同且最低。但在教学实践中通常按\texttt{NOT > AND > OR > XOR}的顺序理解。选项A将AND排在OR之前但NOT在最后（错误）；选项C将XOR放在AND之前（不符合常见认知）；选项D声称所有逻辑运算符优先级相同且按左到右计算（但NOT确实最高）。
+
+\item \textbf{答案：D}
+
+\textbf{解析：}选项D错误——\textbf{组合逻辑进程的敏感信号表绝不能省略}。敏感信号表不完整会导致综合前后仿真结果不一致（综合工具推断出锁存器，而仿真时可能因所有信号变化都触发进程而不表现出问题）。综合工具可能会对不完整敏感表给出警告，但不会自动补全所有缺失的信号（而是推断锁存器）。
+
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 信号使用\textbf{<=}（小于等于号）赋值；变量使用\textbf{:=}（冒号等号）赋值；常量的声明关键字是\textbf{CONSTANT}。
+
+（每空1分，共3分）
+
+\item 关键字\textbf{GENERIC}用于定义类属参数；必须声明在关键字\textbf{PORT}之前。
+
+（每空1.5分，共3分）
+
+\item 用关键字\textbf{COMPONENT}声明子模块接口；用关键字\textbf{PORT MAP}连接端口。
+
+（每空1.5分，共3分）
+
+\item \textbf{FOR} GENERATE（重复生成）；\textbf{IF} GENERATE（条件生成）。
+
+（每空1.5分，共3分）
+
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\begin{framed}
+\textbf{评分标准：}每正确找出一处错误并给出正确修改方案得1分，共5分。代码中共有6处错误，找出任意5处即可。
+\end{framed}
+
+\begin{enumerate}[label=\textbf{错误\arabic*：}]
+
+\item \textbf{（第94行）\texttt{PROCESS(clk)} 应改为 \texttt{PROCESS(clk, rst)}}
+
+\textbf{原因：}该寄存器意图实现异步复位（第97行IF rst在clock边沿检测之前），异步复位信号\texttt{rst}必须出现在进程敏感信号表中。缺少\texttt{rst}导致复位变为同步行为（仅在clk边沿被采样），与设计意图不符。
+
+\item \textbf{（第98行）\texttt{q\_int := (OTHERS => '0')} 应改为 \texttt{q\_int <= (OTHERS => '0')}}
+
+\textbf{原因：}\texttt{q\_int}在第92行声明为\texttt{SIGNAL}，信号必须使用\texttt{<=}赋值。\texttt{:=}是变量赋值符号，仅用于VARIABLE。
+
+\item \textbf{（第99行）\texttt{tmp <= (OTHERS => '0')} 应改为 \texttt{tmp := (OTHERS => '0')}}
+
+\textbf{原因：}\texttt{tmp}在第95行声明为\texttt{VARIABLE}，变量必须使用\texttt{:=}赋值。\texttt{<=}是信号赋值符号。此处将信号和变量的赋值符号互相混淆。
+
+\item \textbf{（第104行）\texttt{END IF} 应改为 \texttt{END IF;}}
+
+\textbf{原因：}VHDL语法中，所有结束语句必须跟分号：\texttt{END IF;}。内层IF语句（第101行\texttt{IF en = '1' THEN}）的结束缺少分号。
+
+\item \textbf{（第106行）\texttt{END PROCESS} 应改为 \texttt{END PROCESS;}}
+
+\textbf{原因：}PROCESS语句的结束必须跟分号：\texttt{END PROCESS;}（或带标签：\texttt{END PROCESS label;}）。
+
+\end{enumerate}
+
+\begin{framed}
+\textbf{修正后的完整代码（供参考）：}
+\begin{lstlisting}[language=VDL]
+ARCHITECTURE behavioral OF reg4_err IS
+  SIGNAL q_int : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)                     -- 修正1: rst加入敏感表
+    VARIABLE tmp : STD_LOGIC_VECTOR(3 DOWNTO 0);
+  BEGIN
+    IF rst = '1' THEN
+      q_int <= (OTHERS => '0');         -- 修正2: :=改为<=
+      tmp   := (OTHERS => '0');         -- 修正3: <=改为:=
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        q_int <= d;
+        tmp   := d;
+      END IF;                           -- 修正4: 添加分号
+    END IF;
+  END PROCESS;                          -- 修正5: 添加分号
+  q <= q_int;
+END behavioral;
+\end{lstlisting}
+\end{framed}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\begin{framed}
+\textbf{评分标准：}(1) 1分；(2) 2分；(3) 1分；(4) 1分。
+\end{framed}
+
+\begin{enumerate}[label=(\arabic*)]
+
+\item \textbf{电路名称与功能：}
+
+该VHDL代码描述的是一个\textbf{参数化偶数分频器}。基本功能：将输入时钟\texttt{clk}的频率除以\texttt{N}，输出占空比50\%的方波信号。（1分）
+
+\item \textbf{GENERIC参数N的作用与输出频率：}
+
+\texttt{GENERIC N}定义了分频比参数，使分频器位宽可配置。计数器\texttt{count}的范围为\texttt{0 TO N-1}。
+
+当\texttt{N=8}时：
+\begin{itemize}
+\item 计数器从0计数到\texttt{N/2-1 = 3}（即0, 1, 2, 3共4个值）后，\texttt{temp}翻转。
+\item \texttt{temp}每翻转一次需要4个时钟周期，完整输出周期 = $8$个时钟周期。
+\end{itemize}
+
+$$f_{out} = \frac{f_{clk}}{N} = \frac{100\,\text{MHz}}{8} = 12.5\,\text{MHz}$$
+
+（2分）
+
+\item \textbf{复位方式判断：}
+
+\textbf{异步复位。}判断依据：
+\begin{enumerate}
+\item \texttt{rst}出现在PROCESS敏感信号表中（第139行：\texttt{PROCESS(clk, rst)}）；
+\item 在进程体内，\texttt{rst}的判断（第141行）在\texttt{rising\_edge(clk)}之前，不依赖于时钟边沿。
+\end{enumerate}
+这两点满足异步复位的VHDL描述特征。（1分）
+
+\item \textbf{去$-1$后的影响：}
+
+若将条件改为\texttt{IF count = N/2 THEN}（即\texttt{count=4}时翻转）：
+
+\begin{itemize}
+\item \textbf{输出频率：}计数器需经历\texttt{0→1→2→3→4}共5个时钟周期才翻转一次，完整周期为$5\times 2=10$个时钟周期，输出频率变为：
+$$f_{out} = \frac{100\,\text{MHz}}{10} = 10\,\text{MHz}$$
+频率\textbf{降低}（从12.5\,MHz降至10\,MHz）。
+
+\item \textbf{占空比：}由于两个半周期仍然对称（翻转时刻等距），占空比\textbf{仍为50\%}。
+\end{itemize}
+
+\textbf{结论：}去掉$-1$后，分频比从$N$变为$N+2$（当$N=8$时，从8分频变为10分频），占空比不变。（1分）
+
+\end{enumerate}
+
+\newpage
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：BCD码—7段数码管译码器（20分）}
+
+\subsubsection{（1）真值表（5分）}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{十进制} & \textbf{bcd(3:0)} & \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} & \textbf{e} & \textbf{f} & \textbf{g} & \textbf{seg(6:0)} \\
+\hline
+0 & 0000 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1000000 \\
+1 & 0001 & 1 & 0 & 0 & 1 & 1 & 1 & 1 & 1111001 \\
+2 & 0010 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0100100 \\
+3 & 0011 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0110000 \\
+4 & 0100 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 0011001 \\
+5 & 0101 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0010010 \\
+6 & 0110 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0000010 \\
+7 & 0111 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 0001111 \\
+8 & 1000 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0000000 \\
+9 & 1001 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0000100 \\
+10$\sim$15 & 1010$\sim$1111 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1111111 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{（2）最小化逻辑表达式（3分）}
+
+\begin{framed}
+\textbf{评分标准：}每段表达式正确各得1分（共3分）。
+\end{framed}
+
+设$bcd = b_3b_2b_1b_0$，各段逻辑表达式（共阳极，0=亮）：
+
+\begin{itemize}
+\item \textbf{a段：}$a = \overline{b_3}\,\overline{b_2}\,\overline{b_1}b_0 + b_3\overline{b_2}b_1b_0$（当输入为1和4时灭→为1；即输入为0001或0100时a=1）
+
+  化简为：$a = \overline{b_2}\,\overline{b_0} \cdot (\overline{b_3} \oplus \overline{b_1})$ 或在卡诺图化简后：
+  $$a = \overline{b_2}\,\overline{b_0}\,(\overline{b_3}\,\overline{b_1} + b_3 b_1) + \overline{b_2}b_1\overline{b_0}$$
+
+  更简化的表达（最小项之和）：
+  $$a = \Sigma m(1, 4) + \Sigma d(10\text{--}15) = \overline{b_2}\,\overline{b_0}\,(\overline{b_3}\oplus b_1)$$
+  （注：实际a段在输入1(0001)和4(0100)时灭=1，其余有效输入时亮=0。具体表达式依赖化简方法。）
+
+\item \textbf{b段：}$b = \overline{b_2} + \overline{b_1}\,\overline{b_0} + b_1 b_0$ （简化形式）
+
+  化简为：
+  $$b = \overline{b_2} + \overline{b_1}\,\overline{b_0} + b_1 b_0$$
+  b段在输入5(0101)和6(0110)时灭=1。
+
+\item \textbf{g段：}$g = \overline{b_3}\,\overline{b_2}\,\overline{b_1} + b_3\overline{b_2}b_1b_0 + \overline{b_3}b_2b_1\overline{b_0} + \overline{b_3}b_2\overline{b_1}b_0$
+
+  化简为：
+  $$g = \overline{b_3}\,\overline{b_2}\,\overline{b_1} + b_2b_1\overline{b_0} + b_2\overline{b_1}b_0 + b_3\overline{b_2}b_1b_0$$
+  g段在输入0, 2, 3, 5, 6, 7, 8, 9时亮=0，仅在1和4时灭=1。
+\end{itemize}
+
+\textbf{（注：由于本题使用WITH-SELECT直接描述真值表，卡诺图化简为可选项；实际工程中由综合工具自动优化。以下给出各段的简化逻辑供参考。）}
+
+\subsubsection{（3）完整VHDL代码（10分）}
+
+\begin{lstlisting}[language=VDL, caption={BCD—7段译码器——数据流描述方式}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY bcd2seg7 IS
+  PORT(
+    bcd : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    seg : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
+  );
+END bcd2seg7;
+
+ARCHITECTURE dataflow OF bcd2seg7 IS
+BEGIN
+  -- 共阳极数码管: 0=点亮, 1=熄灭
+  -- seg(6)=a, seg(5)=b, seg(4)=c, seg(3)=d,
+  -- seg(2)=e, seg(1)=f, seg(0)=g
+  WITH bcd SELECT
+    seg <= "1000000" WHEN "0000",   -- 0
+           "1111001" WHEN "0001",   -- 1
+           "0100100" WHEN "0010",   -- 2
+           "0110000" WHEN "0011",   -- 3
+           "0011001" WHEN "0100",   -- 4
+           "0010010" WHEN "0101",   -- 5
+           "0000010" WHEN "0110",   -- 6
+           "0001111" WHEN "0111",   -- 7
+           "0000000" WHEN "1000",   -- 8
+           "0000100" WHEN "1001",   -- 9
+           "1111111" WHEN OTHERS;   -- 无效输入: 全灭
+END dataflow;
+\end{lstlisting}
+
+\subsubsection{（4）数据流描述与行为描述的差异及选用理由（2分）}
+
+\begin{itemize}
+\item \textbf{数据流描述：}使用并发信号赋值语句（如\texttt{WITH-SELECT}），直接描述输入到输出的数据流动映射关系，不描述时序行为。适合纯组合逻辑的真值表映射。
+\item \textbf{行为描述：}使用PROCESS中的顺序语句（如\texttt{IF-ELSE}、\texttt{CASE}），按算法流程描述电路行为，更抽象。
+\item \textbf{选用数据流方式的理由：}BCD译码器是典型的真值表映射——16种输入对应16种输出，条件互斥无优先级，使用\texttt{WITH-SELECT}语义最清晰、代码最简洁，综合工具可直接映射为ROM或LUT结构。
+\end{itemize}
+
+\subsection{设计题2：使用GENERATE语句设计N位双向移位寄存器（20分）}
+
+\subsubsection{（1）单个位片内部逻辑框图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, auto,
+  block/.style={rectangle, draw, thick, minimum width=1.5cm, minimum height=0.8cm, align=center}]
+
+  \node[block] (mux) {4选1\\MUX};
+  \node[block, right of=mux, xshift=1cm] (dff) {D\\FF};
+
+  % Inputs to MUX (left side)
+  \draw[<-] ([yshift=0.6cm]mux.west) -- ++(-0.8cm,0) node[left] {\scriptsize reset(0)};
+  \draw[<-] ([yshift=0.2cm]mux.west) -- ++(-0.8cm,0) node[left] {\scriptsize pdata(i)};
+  \draw[<-] ([yshift=-0.2cm]mux.west) -- ++(-0.8cm,0) node[left] {\scriptsize s\_left};
+  \draw[<-] ([yshift=-0.6cm]mux.west) -- ++(-0.8cm,0) node[left] {\scriptsize s\_right};
+
+  % Control signals (top)
+  \draw[<-] (mux.north) -- ++(0,0.5cm) node[above] {\scriptsize rst,load,dir};
+
+  % MUX to DFF
+  \draw[->] (mux.east) -- node[above] {d} (dff.west);
+
+  % DFF outputs
+  \draw[->] (dff.east) -- ++(0.6cm,0) node[right] {\texttt{q(i)}};
+  \draw[<-] (dff.south) -- ++(0,-0.5cm) node[below] {\texttt{clk}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{说明：}每位片由一个4选1多路选择器和一个D触发器组成。MUX根据控制信号选择数据源：复位值（全0）、并行加载数据\texttt{pdata(i)}、左邻位输出（左移时）、右邻位输出（右移时）。
+
+\subsubsection{（2）位片ENTITY定义（3分）}
+
+\begin{lstlisting}[language=VDL]
+ENTITY bitslice IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;
+    load   : IN  STD_LOGIC;
+    dir    : IN  STD_LOGIC;
+    pdata  : IN  STD_LOGIC;   -- 并行加载数据(该位)
+    s_left : IN  STD_LOGIC;   -- 左移时来自右邻位的数据
+    s_right: IN  STD_LOGIC;   -- 右移时来自左邻位的数据
+    q      : OUT STD_LOGIC
+  );
+END bitslice;
+\end{lstlisting}
+
+\subsubsection{（3）顶层N位寄存器完整VHDL代码（11分）}
+
+\begin{framed}
+\textbf{评分标准：}GENERIC声明（1分）；COMPONENT声明（1分）；内部信号数组（1.5分）；FOR GENERATE循环结构（3分）；位间级联正确（2.5分）；dout串行输出逻辑（1分）；代码规范性（1分）。
+\end{framed}
+
+\begin{lstlisting}[language=VDL, caption={N位双向移位寄存器——结构化+GENERATE}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY bidir_shift_reg IS
+  GENERIC(N : INTEGER := 8);
+  PORT(
+    clk   : IN  STD_LOGIC;
+    rst   : IN  STD_LOGIC;                     -- 同步复位，高有效
+    din   : IN  STD_LOGIC;                     -- 串行输入
+    dir   : IN  STD_LOGIC;                     -- '0'右移, '1'左移
+    load  : IN  STD_LOGIC;                     -- 并行置数使能
+    pdata : IN  STD_LOGIC_VECTOR(N-1 DOWNTO 0);
+    q     : OUT STD_LOGIC_VECTOR(N-1 DOWNTO 0);
+    sout  : OUT STD_LOGIC                      -- 串行输出
+  );
+END bidir_shift_reg;
+
+ARCHITECTURE struct OF bidir_shift_reg IS
+  -- 声明位片元件
+  COMPONENT bitslice IS
+    PORT(
+      clk    : IN  STD_LOGIC;
+      rst    : IN  STD_LOGIC;
+      load   : IN  STD_LOGIC;
+      dir    : IN  STD_LOGIC;
+      pdata  : IN  STD_LOGIC;
+      s_left : IN  STD_LOGIC;
+      s_right: IN  STD_LOGIC;
+      q      : OUT STD_LOGIC
+    );
+  END COMPONENT;
+
+  -- 内部级联信号数组（N位触发器输出）
+  SIGNAL q_int : STD_LOGIC_VECTOR(N-1 DOWNTO 0);
+
+BEGIN
+  -- 使用FOR...GENERATE实例化N个位片
+  gen_reg : FOR i IN 0 TO N-1 GENERATE
+  BEGIN
+    -- 第0位（LSB）：特殊处理级联输入
+    first_bit : IF i = 0 GENERATE
+      u_bit0 : bitslice PORT MAP(
+        clk     => clk,
+        rst     => rst,
+        load    => load,
+        dir     => dir,
+        pdata   => pdata(i),
+        s_left  => q_int(i+1),    -- 左移时数据来自i+1位
+        s_right => din,            -- 右移时串入数据
+        q       => q_int(i)
+      );
+    END GENERATE first_bit;
+
+    -- 第N-1位（MSB）：特殊处理级联输入
+    last_bit : IF i = N-1 GENERATE
+      u_bit_last : bitslice PORT MAP(
+        clk     => clk,
+        rst     => rst,
+        load    => load,
+        dir     => dir,
+        pdata   => pdata(i),
+        s_left  => din,            -- 左移时串入数据
+        s_right => q_int(i-1),     -- 右移时数据来自i-1位
+        q       => q_int(i)
+      );
+    END GENERATE last_bit;
+
+    -- 中间位（1到N-2）：标准级联
+    middle_bit : IF i > 0 AND i < N-1 GENERATE
+      u_bit_i : bitslice PORT MAP(
+        clk     => clk,
+        rst     => rst,
+        load    => load,
+        dir     => dir,
+        pdata   => pdata(i),
+        s_left  => q_int(i+1),    -- 左移数据来自高位
+        s_right => q_int(i-1),     -- 右移数据来自低位
+        q       => q_int(i)
+      );
+    END GENERATE middle_bit;
+  END GENERATE gen_reg;
+
+  -- 输出连接
+  q <= q_int;
+  sout <= q_int(N-1) WHEN dir = '0' ELSE   -- 右移串出取MSB
+          q_int(0);                          -- 左移串出取LSB
+
+END struct;
+\end{lstlisting}
+
+\subsubsection{（4）FOR...GENERATE与普通FOR-LOOP的本质区别（2分）}
+
+\begin{center}
+\begin{tabular}{|p{4.5cm}|p{6.5cm}|}
+\hline
+\textbf{FOR...GENERATE（生成语句）} & \textbf{FOR...LOOP（循环语句）} \\
+\hline
+并发语句，在综合时\textbf{展开为多个并行硬件}实例（$N$个独立的物理D触发器） & 顺序语句（位于PROCESS内部），综合为\textbf{单个硬件单元}在不同时间执行多次操作 \\
+\hline
+生成的是\textbf{空间上的重复}——硬件复制 & 描述的是\textbf{时间上的重复}——顺序执行 \\
+\hline
+用于结构化描述，每次迭代生成独立的硬件实例 & 用于行为描述，不产生额外的硬件副本 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{核心区别：}FOR...GENERATE产生$N$份并行硬件，FOR...LOOP在单份硬件上分时复用。前者增加面积，后者增加执行周期数。
+
+\subsection{设计题3：“1011”序列检测器——Moore型与Mealy型对比（20分）}
+
+\subsubsection{（1）Moore型状态转移图（6分）}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth', node distance=3cm, auto,
+  every state/.style={draw, thick, fill=gray!10, minimum size=1.3cm, align=center}]
+
+  \node[state] (S0) {S0\\初始\\$dout=0$};
+  \node[state, right of=S0] (S1) {S1\\已匹配``1''\\$dout=0$};
+  \node[state, right of=S1] (S2) {S2\\已匹配``10''\\$dout=0$};
+  \node[state, below of=S2] (S3) {S3\\已匹配``101''\\$dout=0$};
+  \node[state, left of=S3] (S4) {S4\\已匹配``1011''\\$dout=1$};
+
+  \draw (S0) edge[loop above] node{0} (S0)
+        (S0) edge[bend left] node{1} (S1);
+  \draw (S1) edge[bend left] node{0} (S2)
+        (S1) edge[loop above] node{1} (S1);
+  \draw (S2) edge node[above]{1} (S3)
+        (S2) edge[bend left=50] node[above]{0} (S0);
+  \draw (S3) edge node[right]{1} (S4)
+        (S3) edge[bend left=50] node[left]{0} (S2);
+  \draw (S4) edge[bend left] node[below]{1} (S1)
+        (S4) edge node[below]{0} (S2);
+\end{tikzpicture}
+\end{center}
+
+\textbf{输出在状态节点上标注。}Moore型共5个状态，仅S4状态输出$dout=1$。
+
+\subsubsection{（2）Mealy型状态转移图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth', node distance=3cm, auto,
+  every state/.style={draw, thick, fill=gray!10, minimum size=1.3cm, align=center}]
+
+  \node[state] (S0) {S0\\初始};
+  \node[state, right of=S0] (S1) {S1\\已匹配``1''};
+  \node[state, right of=S1] (S2) {S2\\已匹配``10''};
+  \node[state, below of=S2] (S3) {S3\\已匹配``101''};
+
+  \draw (S0) edge[loop above] node{0/0} (S0)
+        (S0) edge[bend left] node{1/0} (S1);
+  \draw (S1) edge[bend left] node{0/0} (S2)
+        (S1) edge[loop above] node{1/0} (S1);
+  \draw (S2) edge node[above]{1/0} (S3)
+        (S2) edge[bend left=50] node[above]{0/0} (S0);
+  \draw (S3) edge[bend right=50] node[left]{1/\textbf{1}} (S1)
+        (S3) edge[bend left=50] node[left]{0/0} (S2);
+\end{tikzpicture}
+\end{center}
+
+\textbf{输出在转移弧上标注（格式：din/dout）。}Mealy型仅需4个状态。S3状态下$din=1$时输出$dout=1$并转入S1（重叠检测）。
+
+\subsubsection{（3）Moore型三进程VHDL代码（10分）}
+
+\begin{framed}
+\textbf{评分标准：}枚举类型定义（1分）；实体定义（1分）；进程1（状态寄存器+异步复位）（2.5分）；进程2（次态组合逻辑）（3分）；进程3（输出组合逻辑）（1.5分）；代码规范性（1分）。
+\end{framed}
+
+\begin{lstlisting}[language=VDL, caption={``1011''序列检测器——Moore型三进程VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY seq_detector_1011 IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;    -- 异步复位，高电平有效
+    din  : IN  STD_LOGIC;
+    dout : OUT STD_LOGIC
+  );
+END seq_detector_1011;
+
+ARCHITECTURE moore_3p OF seq_detector_1011 IS
+  -- 用户自定义枚举类型
+  TYPE state_type IS (S0, S1, S2, S3, S4);
+  SIGNAL current_state, next_state : state_type;
+
+BEGIN
+  -- ====== 进程1: 状态寄存器（时序逻辑+异步复位） ======
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- ====== 进程2: 次态逻辑（组合逻辑） ======
+  PROCESS(current_state, din)
+  BEGIN
+    CASE current_state IS
+      WHEN S0 =>                        -- 初始/未匹配
+        IF din = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S1 =>                        -- 已匹配``1''
+        IF din = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S2;
+        END IF;
+
+      WHEN S2 =>                        -- 已匹配``10''
+        IF din = '1' THEN
+          next_state <= S3;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S3 =>                        -- 已匹配``101''
+        IF din = '1' THEN
+          next_state <= S4;
+        ELSE
+          next_state <= S2;
+        END IF;
+
+      WHEN S4 =>                        -- 已匹配``1011''
+        IF din = '1' THEN
+          next_state <= S1;     -- 重叠: 尾部的``1''作为下一序列前缀
+        ELSE
+          next_state <= S2;     -- 重叠: 尾部的``10''作为下一序列前缀
+        END IF;
+
+      WHEN OTHERS =>
+        next_state <= S0;
+    END CASE;
+  END PROCESS;
+
+  -- ====== 进程3: 输出逻辑（组合逻辑） ======
+  -- Moore型: 输出仅取决于当前状态
+  PROCESS(current_state)
+  BEGIN
+    IF current_state = S4 THEN
+      dout <= '1';
+    ELSE
+      dout <= '0';
+    END IF;
+  END PROCESS;
+
+END moore_3p;
+\end{lstlisting}
+
+\vspace{0.5cm}
+\begin{framed}
+\textbf{评分细则总结 —— 设计题3（20分）：}
+\begin{itemize}
+\item Moore型状态转移图：6分（5个状态节点标注各0.5分=2.5分；10条转移弧各0.35分=3.5分）
+\item Mealy型状态转移图：4分（4个状态各0.4分=1.6分；8条转移弧含输出标注各0.3分=2.4分）
+\item Moore型VHDL代码：10分
+  \begin{itemize}
+  \item 实体+库声明+枚举类型（2分）
+  \item 进程1——状态寄存器+异步复位（2.5分）
+  \item 进程2——次态组合逻辑（含序列检测和重叠处理，3.5分）
+  \item 进程3——输出组合逻辑（1分）
+  \item 代码规范性（1分）
+  \end{itemize}
+\end{itemize}
+
+\textbf{常见扣分说明：}
+\begin{itemize}
+\item Moore型状态转移图将输出错误地放在转移弧上，扣3分
+\item 重叠检测逻辑错误（S4输入0应回S2而非S0），扣1分
+\item 组合进程（进程2）敏感表缺\texttt{din}，扣0.5分
+\item CASE缺少WHEN OTHERS分支，扣0.5分
+\end{itemize}
+\end{framed}
+
+\endinput

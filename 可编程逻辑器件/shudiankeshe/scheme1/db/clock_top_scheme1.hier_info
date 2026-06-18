@@ -1,0 +1,955 @@
+|clock_top_scheme1
+clk => diver:U_DIVER.clk
+clk => trigger:U_TRIGGER.clk
+key_sec => switch:U_SW_SEC.key
+key_min => switch:U_SW_MIN.key
+key_hour => switch:U_SW_HOUR.key
+sec0[0] << mmux21a:U_MUX_DISP0.y[0]
+sec0[1] << mmux21a:U_MUX_DISP0.y[1]
+sec0[2] << mmux21a:U_MUX_DISP0.y[2]
+sec0[3] << mmux21a:U_MUX_DISP0.y[3]
+sec1[0] << mmux21a:U_MUX_DISP1.y[0]
+sec1[1] << mmux21a:U_MUX_DISP1.y[1]
+sec1[2] << mmux21a:U_MUX_DISP1.y[2]
+sec1[3] << mmux21a:U_MUX_DISP1.y[3]
+min0[0] << mmux21a:U_MUX_DISP2.y[0]
+min0[1] << mmux21a:U_MUX_DISP2.y[1]
+min0[2] << mmux21a:U_MUX_DISP2.y[2]
+min0[3] << mmux21a:U_MUX_DISP2.y[3]
+min1[0] << mmux21a:U_MUX_DISP3.y[0]
+min1[1] << mmux21a:U_MUX_DISP3.y[1]
+min1[2] << mmux21a:U_MUX_DISP3.y[2]
+min1[3] << mmux21a:U_MUX_DISP3.y[3]
+hour0[0] << mmux21a:U_MUX_DISP4.y[0]
+hour0[1] << mmux21a:U_MUX_DISP4.y[1]
+hour0[2] << mmux21a:U_MUX_DISP4.y[2]
+hour0[3] << mmux21a:U_MUX_DISP4.y[3]
+hour1[0] << mmux21a:U_MUX_DISP5.y[0]
+hour1[1] << mmux21a:U_MUX_DISP5.y[1]
+hour1[2] << mmux21a:U_MUX_DISP5.y[2]
+hour1[3] << mmux21a:U_MUX_DISP5.y[3]
+key_shift => trigger:U_TRIGGER.t
+speak <= speak.DB_MAX_OUTPUT_PORT_TYPE
+seg_sec0[0] <= seg7_decoder:U_SEG_SEC0.seg[0]
+seg_sec0[1] <= seg7_decoder:U_SEG_SEC0.seg[1]
+seg_sec0[2] <= seg7_decoder:U_SEG_SEC0.seg[2]
+seg_sec0[3] <= seg7_decoder:U_SEG_SEC0.seg[3]
+seg_sec0[4] <= seg7_decoder:U_SEG_SEC0.seg[4]
+seg_sec0[5] <= seg7_decoder:U_SEG_SEC0.seg[5]
+seg_sec0[6] <= seg7_decoder:U_SEG_SEC0.seg[6]
+seg_sec1[0] <= seg7_decoder:U_SEG_SEC1.seg[0]
+seg_sec1[1] <= seg7_decoder:U_SEG_SEC1.seg[1]
+seg_sec1[2] <= seg7_decoder:U_SEG_SEC1.seg[2]
+seg_sec1[3] <= seg7_decoder:U_SEG_SEC1.seg[3]
+seg_sec1[4] <= seg7_decoder:U_SEG_SEC1.seg[4]
+seg_sec1[5] <= seg7_decoder:U_SEG_SEC1.seg[5]
+seg_sec1[6] <= seg7_decoder:U_SEG_SEC1.seg[6]
+seg_min0[0] <= seg7_decoder:U_SEG_MIN0.seg[0]
+seg_min0[1] <= seg7_decoder:U_SEG_MIN0.seg[1]
+seg_min0[2] <= seg7_decoder:U_SEG_MIN0.seg[2]
+seg_min0[3] <= seg7_decoder:U_SEG_MIN0.seg[3]
+seg_min0[4] <= seg7_decoder:U_SEG_MIN0.seg[4]
+seg_min0[5] <= seg7_decoder:U_SEG_MIN0.seg[5]
+seg_min0[6] <= seg7_decoder:U_SEG_MIN0.seg[6]
+seg_min1[0] <= seg7_decoder:U_SEG_MIN1.seg[0]
+seg_min1[1] <= seg7_decoder:U_SEG_MIN1.seg[1]
+seg_min1[2] <= seg7_decoder:U_SEG_MIN1.seg[2]
+seg_min1[3] <= seg7_decoder:U_SEG_MIN1.seg[3]
+seg_min1[4] <= seg7_decoder:U_SEG_MIN1.seg[4]
+seg_min1[5] <= seg7_decoder:U_SEG_MIN1.seg[5]
+seg_min1[6] <= seg7_decoder:U_SEG_MIN1.seg[6]
+seg_hour0[0] <= seg7_decoder:U_SEG_HOUR0.seg[0]
+seg_hour0[1] <= seg7_decoder:U_SEG_HOUR0.seg[1]
+seg_hour0[2] <= seg7_decoder:U_SEG_HOUR0.seg[2]
+seg_hour0[3] <= seg7_decoder:U_SEG_HOUR0.seg[3]
+seg_hour0[4] <= seg7_decoder:U_SEG_HOUR0.seg[4]
+seg_hour0[5] <= seg7_decoder:U_SEG_HOUR0.seg[5]
+seg_hour0[6] <= seg7_decoder:U_SEG_HOUR0.seg[6]
+seg_hour1[0] <= seg7_decoder:U_SEG_HOUR1.seg[0]
+seg_hour1[1] <= seg7_decoder:U_SEG_HOUR1.seg[1]
+seg_hour1[2] <= seg7_decoder:U_SEG_HOUR1.seg[2]
+seg_hour1[3] <= seg7_decoder:U_SEG_HOUR1.seg[3]
+seg_hour1[4] <= seg7_decoder:U_SEG_HOUR1.seg[4]
+seg_hour1[5] <= seg7_decoder:U_SEG_HOUR1.seg[5]
+seg_hour1[6] <= seg7_decoder:U_SEG_HOUR1.seg[6]
+
+
+|clock_top_scheme1|diver:U_DIVER
+clk => m_clk1.CLK
+clk => m_clk0.CLK
+clk => cnt_1.CLK
+clk => cnt_0[0].CLK
+clk => cnt_0[1].CLK
+clk0 <= m_clk0.DB_MAX_OUTPUT_PORT_TYPE
+clk1 <= m_clk1.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_sec_bin:U_SEC_BIN
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+clk => count[5].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+rst => count[5].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[5].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= count[5].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_min_bin:U_MIN_BIN
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+clk => count[5].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+rst => count[5].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[5].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= count[5].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_hour_bin:U_HOUR_BIN
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_BIN2BCD_SEC
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_BIN2BCD_MIN
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_BIN2BCD_HOUR
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mux21a:U_MUX_MIN
+a => y.DATAB
+b => y.DATAA
+s => y.OUTPUTSELECT
+y <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mux21a:U_MUX_HOUR
+a => y.DATAB
+b => y.DATAA
+s => y.OUTPUTSELECT
+y <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|switch:U_SW_SEC
+key => s1.IN0
+key => s2.IN0
+s => s2.IN1
+s => s1.IN1
+s1 <= s1.DB_MAX_OUTPUT_PORT_TYPE
+s2 <= s2.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|switch:U_SW_MIN
+key => s1.IN0
+key => s2.IN0
+s => s2.IN1
+s => s1.IN1
+s1 <= s1.DB_MAX_OUTPUT_PORT_TYPE
+s2 <= s2.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|switch:U_SW_HOUR
+key => s1.IN0
+key => s2.IN0
+s => s2.IN1
+s => s1.IN1
+s1 <= s1.DB_MAX_OUTPUT_PORT_TYPE
+s2 <= s2.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_sec_bin:U_SEC_ALARM
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+clk => count[5].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+rst => count[5].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[5].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= count[5].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_min_bin:U_MIN_ALARM
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+clk => count[5].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+rst => count[5].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[5].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= count[5].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|count_hour_bin:U_HOUR_ALARM
+clk => count[0].CLK
+clk => count[1].CLK
+clk => count[2].CLK
+clk => count[3].CLK
+clk => count[4].CLK
+rst => count[0].ACLR
+rst => count[1].ACLR
+rst => count[2].ACLR
+rst => count[3].ACLR
+rst => count[4].ACLR
+en => cout.IN1
+en => count[0].ENA
+en => count[4].ENA
+en => count[3].ENA
+en => count[2].ENA
+en => count[1].ENA
+q[0] <= count[0].DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= count[1].DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= count[2].DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= count[3].DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= count[4].DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_ABIN2BCD_SEC
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_ABIN2BCD_MIN
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|bin2bcd:U_ABIN2BCD_HOUR
+bin[0] => LessThan0.IN12
+bin[0] => temp.DATAA
+bin[0] => LessThan1.IN12
+bin[0] => temp.DATAA
+bin[1] => LessThan0.IN11
+bin[1] => temp.DATAA
+bin[1] => LessThan1.IN11
+bin[1] => temp.DATAA
+bin[2] => LessThan0.IN10
+bin[2] => temp.DATAA
+bin[2] => LessThan1.IN10
+bin[2] => temp.DATAA
+bin[3] => LessThan0.IN9
+bin[3] => temp.DATAA
+bin[3] => LessThan1.IN9
+bin[3] => temp.DATAA
+bin[4] => LessThan0.IN8
+bin[4] => temp.DATAA
+bin[4] => LessThan1.IN8
+bin[4] => temp.DATAA
+bin[5] => LessThan0.IN7
+bin[5] => temp.DATAA
+bin[5] => LessThan1.IN7
+bin[5] => temp.DATAA
+mode => temp[5].OUTPUTSELECT
+mode => temp[4].OUTPUTSELECT
+mode => temp[3].OUTPUTSELECT
+mode => temp[2].OUTPUTSELECT
+mode => temp[1].OUTPUTSELECT
+mode => temp[0].OUTPUTSELECT
+bcd_tens[0] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[1] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[2] <= Div0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_tens[3] <= <GND>
+bcd_ones[0] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[1] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[2] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+bcd_ones[3] <= Mod0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP0
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP1
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP2
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP3
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP4
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|mmux21a:U_MUX_DISP5
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+s => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_SEC0
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_SEC1
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_MIN0
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_MIN1
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_HOUR0
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|seg7_decoder:U_SEG_HOUR1
+bcd[0] => Mux0.IN19
+bcd[0] => Mux1.IN19
+bcd[0] => Mux2.IN19
+bcd[0] => Mux3.IN19
+bcd[0] => Mux4.IN19
+bcd[0] => Mux5.IN19
+bcd[0] => Mux6.IN19
+bcd[1] => Mux0.IN18
+bcd[1] => Mux1.IN18
+bcd[1] => Mux2.IN18
+bcd[1] => Mux3.IN18
+bcd[1] => Mux4.IN18
+bcd[1] => Mux5.IN18
+bcd[1] => Mux6.IN18
+bcd[2] => Mux0.IN17
+bcd[2] => Mux1.IN17
+bcd[2] => Mux2.IN17
+bcd[2] => Mux3.IN17
+bcd[2] => Mux4.IN17
+bcd[2] => Mux5.IN17
+bcd[2] => Mux6.IN17
+bcd[3] => Mux0.IN16
+bcd[3] => Mux1.IN16
+bcd[3] => Mux2.IN16
+bcd[3] => Mux3.IN16
+bcd[3] => Mux4.IN16
+bcd[3] => Mux5.IN16
+bcd[3] => Mux6.IN16
+seg[0] <= Mux6.DB_MAX_OUTPUT_PORT_TYPE
+seg[1] <= Mux5.DB_MAX_OUTPUT_PORT_TYPE
+seg[2] <= Mux4.DB_MAX_OUTPUT_PORT_TYPE
+seg[3] <= Mux3.DB_MAX_OUTPUT_PORT_TYPE
+seg[4] <= Mux2.DB_MAX_OUTPUT_PORT_TYPE
+seg[5] <= Mux1.DB_MAX_OUTPUT_PORT_TYPE
+seg[6] <= Mux0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|baoshi:U_BAOSHI
+min0[0] => Equal1.IN7
+min0[1] => Equal1.IN6
+min0[2] => Equal1.IN5
+min0[3] => Equal1.IN4
+min1[0] => Equal0.IN7
+min1[1] => Equal0.IN6
+min1[2] => Equal0.IN5
+min1[3] => Equal0.IN4
+sec0[0] => Equal3.IN7
+sec0[0] => Equal4.IN7
+sec0[0] => Equal5.IN7
+sec0[0] => Equal6.IN7
+sec0[1] => Equal3.IN6
+sec0[1] => Equal4.IN6
+sec0[1] => Equal5.IN6
+sec0[1] => Equal6.IN6
+sec0[2] => Equal3.IN5
+sec0[2] => Equal4.IN5
+sec0[2] => Equal5.IN5
+sec0[2] => Equal6.IN5
+sec0[3] => Equal3.IN4
+sec0[3] => Equal4.IN4
+sec0[3] => Equal5.IN4
+sec0[3] => Equal6.IN4
+sec1[0] => Equal2.IN7
+sec1[1] => Equal2.IN6
+sec1[2] => Equal2.IN5
+sec1[3] => Equal2.IN4
+speak <= speak.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|alarm:U_ALARM
+min0[0] => Equal0.IN3
+min0[1] => Equal0.IN2
+min0[2] => Equal0.IN1
+min0[3] => Equal0.IN0
+min1[0] => Equal1.IN3
+min1[1] => Equal1.IN2
+min1[2] => Equal1.IN1
+min1[3] => Equal1.IN0
+hour0[0] => Equal2.IN3
+hour0[1] => Equal2.IN2
+hour0[2] => Equal2.IN1
+hour0[3] => Equal2.IN0
+hour1[0] => Equal3.IN3
+hour1[1] => Equal3.IN2
+hour1[2] => Equal3.IN1
+hour1[3] => Equal3.IN0
+amin0[0] => Equal0.IN7
+amin0[1] => Equal0.IN6
+amin0[2] => Equal0.IN5
+amin0[3] => Equal0.IN4
+amin1[0] => Equal1.IN7
+amin1[1] => Equal1.IN6
+amin1[2] => Equal1.IN5
+amin1[3] => Equal1.IN4
+ahour0[0] => Equal2.IN7
+ahour0[1] => Equal2.IN6
+ahour0[2] => Equal2.IN5
+ahour0[3] => Equal2.IN4
+ahour1[0] => Equal3.IN7
+ahour1[1] => Equal3.IN6
+ahour1[2] => Equal3.IN5
+ahour1[3] => Equal3.IN4
+speak <= speak.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|clock_top_scheme1|trigger:U_TRIGGER
+t => temp.ENA
+clk => temp.CLK
+q <= temp.DB_MAX_OUTPUT_PORT_TYPE
+
+

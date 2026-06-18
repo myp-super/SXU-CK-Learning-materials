@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="clock_top_scheme1">
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_MIN|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_HOUR|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_HOUR|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_MIN|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_SEC|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_HOUR|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_MIN|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_SEC|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_HOUR|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_ABIN2BCD_SEC|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_MIN|lpm_divide:Div0" CBX_FILE_NAME="lpm_divide_8gm.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|clock_top_scheme1|bin2bcd:U_BIN2BCD_SEC|lpm_divide:Mod0" CBX_FILE_NAME="lpm_divide_d8m.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

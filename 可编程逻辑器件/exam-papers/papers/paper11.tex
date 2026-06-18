@@ -1,0 +1,206 @@
+\chapter{第11套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item 下列关于CPLD宏单元（Macrocell）结构的描述，\textbf{正确}的是？
+
+\begin{enumerate}[label=\Alph*.]
+  \item CPLD宏单元仅包含一个D触发器，不含任何组合逻辑
+  \item CPLD宏单元中的乘积项阵列用于产生组合逻辑，输出可配置为组合或寄存器输出
+  \item CPLD宏单元和FPGA的逻辑单元（LE）结构完全相同
+  \item CPLD宏单元只能实现纯组合逻辑，无法实现时序逻辑
+\end{enumerate}
+
+\item 目前主流的SRAM型FPGA在上电后，其配置数据通常存储在何处？
+
+\begin{enumerate}[label=\Alph*.]
+  \item FPGA内部的Flash存储器中
+  \item FPGA内部的SRAM配置存储器中（掉电后丢失，需外部配置芯片重新加载）
+  \item FPGA内部的EEPROM中
+  \item 无需配置，FPGA上电后自动生成逻辑功能
+\end{enumerate}
+
+\item 在VHDL中，以下哪种语句\textbf{不属于}并发语句（Concurrent Statement）？
+
+\begin{enumerate}[label=\Alph*.]
+  \item 进程语句（PROCESS）
+  \item 并发信号赋值语句（Concurrent Signal Assignment）
+  \item 元件例化语句（PORT MAP）
+  \item 变量赋值语句（Variable Assignment --- \texttt{:=}）
+\end{enumerate}
+
+\item Moore型状态机与Mealy型状态机的主要区别是？
+
+\begin{enumerate}[label=\Alph*.]
+  \item Moore型状态机的输出只与当前状态有关；Mealy型的输出与当前状态和输入均有关
+  \item Moore型状态机需要更多状态；Mealy型一定更简单
+  \item Mealy型状态机只能检测序列，Moore型只能控制输出
+  \item Moore型状态机的输出比Mealy型延迟一个时钟周期，这是二者的\textbf{定义性}区别
+\end{enumerate}
+
+\item 在VHDL中，逻辑运算符\texttt{AND}、\texttt{OR}、\texttt{NOT}三者的优先级从高到低依次为？
+
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{AND > OR > NOT}
+  \item \texttt{NOT > AND > OR}
+  \item \texttt{NOT > OR > AND}
+  \item \texttt{OR > AND > NOT}
+\end{enumerate}
+
+\item 一个$n$输入的查找表（LUT），其内部SRAM存储单元的数量为？
+
+\begin{enumerate}[label=\Alph*.]
+  \item $n$个
+  \item $2n$个
+  \item $2^n$个
+  \item $n^2$个
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每空3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item VHDL中，类属参数使用关键字\underline{\hspace{2.5cm}}声明；在结构体中例化一个已定义的元件时，使用\underline{\hspace{2.5cm}}和\underline{\hspace{2.5cm}}两条语句。
+
+\item 在VHDL中，\texttt{SIGNAL}可以在\underline{\hspace{3cm}}和\underline{\hspace{3cm}}中声明，但不能在\texttt{PROCESS}语句体内部声明；\texttt{VARIABLE}仅允许在\underline{\hspace{3cm}}或子程序内部声明。
+
+\item VHDL中，用于生成重复结构的语句是\underline{\hspace{2.5cm}}，它分为两种形式：\underline{\hspace{2cm}}GENERATE（按条件生成）和\underline{\hspace{2cm}}GENERATE（按循环生成）。
+
+\item 在VHDL中，\texttt{SIGNAL}的信号赋值使用符号\underline{\hspace{1.5cm}}，\texttt{VARIABLE}的变量赋值使用符号\underline{\hspace{1.5cm}}。
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+阅读以下VHDL代码（意图为实现一个带异步复位的4位加法计数器），找出其中的\textbf{5处错误}，并写出正确的修改方案。
+
+\begin{lstlisting}[caption={存在错误的VHDL代码}, numbers=left]
+LIBRARY ieee；
+USE ieee.std_logic_1164.ALL；
+
+ENTITY counter4 IS
+  PORT(
+    clk  : IN  STD_LOGIC；
+    rst  : IN  STD_LOGIC；
+    q    : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  )；
+END counter4；
+
+ARCHITECTURE behav OF counter4 IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(3 DOWNTO 0)；
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rst = '0' THEN
+      cnt := (OTHERS => '0')；
+    ELSIF rising_edge(clk) THEN
+      cnt <= cnt + 1；
+    END IF；
+  END PROCESS；
+  q <= cnt；
+END behav；
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题要求：}逐行列出错误位置、错误原因及正确写法（每处1分，共5分）。\\
+\textbf{提示：}错误涉及：全角分号（；→;）、敏感信号表不完整（异步复位信号未列入）、信号-变量赋值混用（:=与<=）、包引用缺失（STD\_LOGIC\_VECTOR算术运算）、端口声明语法。
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY ring_counter IS
+  PORT(
+    clk, rst : IN  STD_LOGIC;
+    q        : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END ring_counter;
+
+ARCHITECTURE behavioral OF ring_counter IS
+  SIGNAL sr : STD_LOGIC_VECTOR(7 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '0' THEN
+      sr <= "00000001";
+    ELSIF rising_edge(clk) THEN
+      sr <= sr(0) & sr(7 DOWNTO 1);
+    END IF;
+  END PROCESS;
+  q <= sr;
+END behavioral;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 该VHDL代码描述的是什么电路？（1分）
+  \item 复位后输出\texttt{q}的初始值是什么？经过3个时钟上升沿后，\texttt{q}的值是什么？（2分）
+  \item 该电路经过几个时钟周期后输出会回到初始值？（即周期是多少）（1分）
+  \item 该电路是组合逻辑还是时序逻辑？判断依据是什么？（1分）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计——BCD码转7段数码管译码器（20分）}
+
+设计一个BCD码转7段数码管译码器，用于将4位BCD码输入转换为共阴极7段数码管的段选信号。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{端口定义（4分）：}输入\texttt{bcd(3~downto~0)}，输出\texttt{seg(6~downto~0)}（分别对应a$\sim$g段，seg(6)=a, seg(5)=b, \dots, seg(0)=g，高电平点亮）。还包括一个使能输入\texttt{en}：当\texttt{en='0'}时所有段熄灭（全0）；当\texttt{en='1'}时正常译码显示。
+  \item \textbf{真值表（5分）：}列出输入BCD码（0$\sim$9）与7段输出之间的对应关系真值表（段码a$\sim$g按顺序列出，无效输入10$\sim$15时全部熄灭）。
+  \item \textbf{VHDL代码（8分）：}编写完整的VHDL代码（实体+结构体），使用\textbf{数据流描述方式}（条件信号赋值语句\texttt{WHEN-ELSE}或选择信号赋值语句\texttt{WITH-SELECT-WHEN}）实现译码逻辑。
+  \item \textbf{代码规范（3分）：}端口类型选择合理，信号命名规范，注释清晰。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}共阴极7段数码管编码（高电平点亮，\texttt{seg(6~downto~0)}对应\texttt{a b c d e f g}）：\\
+数字0$\rightarrow$abcdef亮$\rightarrow$\texttt{"1111110"}, 数字1$\rightarrow$bc亮$\rightarrow$\texttt{"0110000"}, 数字2$\rightarrow$abdeg亮$\rightarrow$\texttt{"1101101"}, \\
+数字3$\rightarrow$abcdg亮$\rightarrow$\texttt{"1111001"}, 数字4$\rightarrow$bcfg亮$\rightarrow$\texttt{"0110011"}, 数字5$\rightarrow$acdfg亮$\rightarrow$\texttt{"1011011"}, \\
+数字6$\rightarrow$acdefg亮$\rightarrow$\texttt{"1011111"}, 数字7$\rightarrow$abc亮$\rightarrow$\texttt{"1110000"}, 数字8$\rightarrow$全亮$\rightarrow$\texttt{"1111111"}, \\
+数字9$\rightarrow$abcdfg亮$\rightarrow$\texttt{"1111011"}。以a为最高位(\texttt{seg(6)})，g为最低位(\texttt{seg(0)})。
+\end{framed}
+
+\subsection*{设计题2：时序逻辑设计——级联分频器（20分）}
+
+设计一个基于D触发器的\textbf{级联2分频器链}，将输入时钟进行$2^N$分频。具体而言，设计一个由\textbf{8个D触发器级联}构成的8级2分频器，每级输出频率为前一级的一半。要求使用\textbf{结构体描述方式}（元件例化\texttt{COMPONENT + PORT MAP}）配合\texttt{FOR-GENERATE}语句实现。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{底层模块设计（6分）：}首先设计一个带异步复位的D触发器（\texttt{dff\_div}）：输入\texttt{clk}、\texttt{rst}（低电平有效），输出\texttt{q}和\texttt{qn}（反相输出）。在时钟上升沿，\texttt{q <= qn}（即$Q_{n+1} = \overline{Q_n}$），形成2分频。编写该底层模块的完整VHDL代码。
+  \item \textbf{顶层模块设计（10分）：}设计顶层模块\texttt{div\_chain}，使用\texttt{GENERIC}定义级数\texttt{N=8}。采用\texttt{COMPONENT}声明\texttt{dff\_div}，然后使用\texttt{FOR-GENERATE}语句生成8级级联分频链。每一级的\texttt{q}输出连接到下一级的\texttt{clk}输入；第一级的\texttt{clk}接外部时钟。所有级的\texttt{rst}并联接外部复位。输出端口\texttt{q\_out(7~downto~0)}分别输出每一级的\texttt{q}信号。
+  \item \textbf{设计思路（4分）：}在代码注释中说明分频原理，以及为什么选择\texttt{GENERATE}语句来实现该设计。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}D触发器的2分频原理：$Q_{n+1}=\overline{Q_n}$，即每来一个时钟上升沿输出翻转一次，输出频率为输入时钟的1/2。8级级联后，第$k$级输出频率为输入时钟的$1/2^k$。请使用\texttt{STD\_LOGIC}和\texttt{STD\_LOGIC\_VECTOR}类型。
+\end{framed}
+
+\subsection*{设计题3：状态机设计——自动售货机控制器（20分）}
+
+设计一个Moore型状态机，控制一个简易自动售货机。该售货机只接受1元和2元两种硬币（不考虑找零），商品单价为\textbf{3元}。当投入的硬币总额达到或超过3元时，售货机输出出货信号并退回多余金额（但不找零，即投入4元时出货但不找零）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{功能说明（3分）：}输入信号：\texttt{coin\_1}（投入1元的脉冲信号，高有效，持续1个时钟周期）、\texttt{coin\_2}（投入2元的脉冲信号，高有效，持续1个时钟周期）。两个信号不会同时有效。输出信号：\texttt{dispense}（出货，高有效，持续1个时钟周期）。时钟\texttt{clk}上升沿触发，异步复位\texttt{rst}高电平有效。
+  \item \textbf{状态转移图（6分）：}画出Moore型状态机的状态转移图，标注所有状态的名称、含义、当前已投金额及输出值（\texttt{dispense}）。状态定义应清晰表示已投入的金额（0元、1元、2元、3元及以上）。状态总数应不超过5个。
+  \item \textbf{状态编码与状态转移表（3分）：}给出状态编码方案，并列出状态转移表（当前状态、输入、次态、输出）。
+  \item \textbf{VHDL代码（8分）：}编写完整的VHDL代码（实体+结构体），采用\textbf{双进程}（一个时序进程描述状态寄存器，一个组合进程描述次态逻辑和输出逻辑）或\textbf{三进程}描述风格。使用用户自定义枚举类型定义状态。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}注意：投入2元硬币后，已投金额≥3元（假设此前至少已投1元），应立即出货并回到初始状态。投入两个2元硬币（共4元）也应出货，但不找零。务必考虑\texttt{coin\_1}和\texttt{coin\_2}不会同时为'1'的前提。
+\end{framed}
+
+\endinput

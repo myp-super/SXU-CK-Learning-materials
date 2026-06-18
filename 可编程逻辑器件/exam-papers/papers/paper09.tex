@@ -1,0 +1,411 @@
+\chapter{第9套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（九）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟）
+\end{center}
+
+% ============================================
+\section*{一、选择题（共6题，每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于CPLD与FPGA内部互连结构的说法，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & CPLD的互连资源是分段式、通过可编程开关矩阵连接的，延时可预测性差 &
+B. & FPGA的互连资源是连续式布线池结构的，任意两个逻辑单元之间延时固定 \\
+C. & CPLD采用连续式互连结构（基于与或阵列），信号传输延时可预测性较好 &
+D. & CPLD和FPGA的互连结构完全相同，均由SRAM工艺实现 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 现代FPGA器件最主流的配置（编程）方式是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 仅支持JTAG一种配置模式 &
+B. & 基于SRAM工艺，上电时需从外部配置存储器加载比特流 \\
+C. & 采用反熔丝（Anti-fuse）工艺，只能一次性编程 &
+D. & 基于Flash工艺，配置文件掉电不丢失且不可在线更新 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 关于VHDL中并发（Concurrent）语句与顺序（Sequential）语句的描述，\textbf{错误}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 结构体（ARCHITECTURE）中直接出现的语句大多是并发语句 &
+B. & PROCESS内部的语句是顺序执行的 \\
+C. & 并发信号赋值语句（如 \texttt{y <= a AND b}）与进程是并发关系 &
+D. & 进程内部的语句在仿真时按书写顺序逐条立即生效，与实际硬件延迟无关 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item Moore型状态机与Mealy型状态机的主要区别在于（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Moore型的输出仅与当前状态有关，Mealy型的输出与当前状态和输入均有关 &
+B. & Moore型只能检测序列，Mealy型只能产生序列 \\
+C. & Moore型状态机需要更多输入端口 &
+D. & Mealy型的输出在时钟边沿变化，Moore型的输出在任何时候都可以变化 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item VHDL中，以下运算符的优先级从高到低排列\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{AND} > \texttt{NOT} > \texttt{OR} > \texttt{XOR} &
+B. & \texttt{NOT} > \texttt{AND} > \texttt{OR} > \texttt{XOR} \\
+C. & \texttt{NOT} > \texttt{AND} > \texttt{XOR} > \texttt{OR} &
+D. & \texttt{AND} > \texttt{OR} > \texttt{NOT} > \texttt{XOR} \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，\texttt{FOR...GENERATE}语句的主要用途是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 在进程中实现循环控制 &
+B. & 在仿真时产生周期性测试激励 \\
+C. & 在结构体中按规律重复生成多个相同或相似的硬件模块实例 &
+D. & 替代IF语句实现多分支条件判断 \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（共4题，每题3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中：
+\begin{itemize}
+  \item \textbf{SIGNAL}（信号）适用于元件之间的互连和\underline{\hspace{2.5cm}}通信；
+  \item \textbf{VARIABLE}（变量）只能在\underline{\hspace{2.5cm}}内部或子程序（FUNCTION/PROCEDURE）内部声明和使用；
+  \item \textbf{CONSTANT}（常量）的值在\underline{\hspace{2.5cm}}（填“仿真前”或“仿真运行时”）确定，运行期间不可更改。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item 在VHDL的结构化描述中：
+\begin{itemize}
+  \item 使用关键字\underline{\hspace{2.5cm}}声明一个待实例化的子模块接口；
+  \item 使用关键字\underline{\hspace{2.5cm}}将子模块的端口与上层信号连接起来；
+  \item \textbf{GENERIC}关键字用于向子模块传递\underline{\hspace{2.5cm}}（如位宽、延时等），提高代码复用性。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item VHDL中有两种GENERATE语句：
+\begin{itemize}
+  \item \underline{\hspace{3cm}} GENERATE语句按固定次数重复生成硬件结构；
+  \item \underline{\hspace{3cm}} GENERATE语句根据条件选择性地生成某些硬件结构。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item 关于PROCESS的敏感信号列表：
+\begin{itemize}
+  \item 组合逻辑进程的敏感信号列表中应包含\underline{\hspace{4cm}}（填“所有输入信号”或“仅时钟信号”）；
+  \item 若漏写敏感信号列表中的某个输入信号，综合工具通常会推断出\underline{\hspace{2.5cm}}（填一种不希望出现的电路结构），导致综合前后仿真结果不一致。
+\end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+\textbf{题目：}以下VHDL程序意图设计一个带异步复位和时钟使能的D触发器，但代码中存在\textbf{5处错误}。请逐一指出错误位置并写出正确的修改方案。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={带错误的D触发器程序（找出5处错误，每处1分）}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY dff_ce IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    ce   : IN  STD_LOGIC;
+    d    : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC
+  );
+END dff_ce;
+
+ARCHITECTURE behav OF dff_ce IS
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rst = '1' THEN
+      q <= '0';
+    ELSIF clk'EVENT AND clk = '1' THEN
+      IF ce = '1' THEN
+        q := d;
+      ELSE
+        q <= q;
+      END IF;
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}在答题纸上按以下格式依次写出各错误：
+
+\noindent 错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+\textbf{题目：}阅读以下VHDL程序，回答下列问题。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={待分析VHDL程序——分频器}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY clk_div IS
+  GENERIC (N : INTEGER := 4);
+  PORT(
+    clk_in  : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;
+    clk_out : OUT STD_LOGIC
+  );
+END clk_div;
+
+ARCHITECTURE behav OF clk_div IS
+  SIGNAL count : INTEGER RANGE 0 TO 15 := 0;
+  SIGNAL temp  : STD_LOGIC := '0';
+BEGIN
+  PROCESS(clk_in, rst)
+  BEGIN
+    IF rst = '1' THEN
+      count <= 0;
+      temp  <= '0';
+    ELSIF rising_edge(clk_in) THEN
+      IF count = N-1 THEN
+        count <= 0;
+        temp  <= NOT temp;
+      ELSE
+        count <= count + 1;
+      END IF;
+    END IF;
+  END PROCESS;
+  clk_out <= temp;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？
+  \item （1分）GENERIC参数N的作用是什么？当N=4时，输出信号\texttt{clk\_out}的频率与输入时钟\texttt{clk\_in}的频率之间存在怎样的关系？
+  \item （1分）信号\texttt{count}和\texttt{temp}的作用分别是什么？
+  \item （1分）该电路中的复位\texttt{rst}是同步复位还是异步复位？请结合代码说明判断依据。
+  \item （1分）若将第24行的\texttt{count <= count + 1}改为\texttt{count <= count + 2}，且N=4，输出的\texttt{clk\_out}频率将如何变化？请说明理由。
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共3题，共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：BCD码--七段数码管译码器（20分）}
+
+设计一个BCD码（0--9）到七段共阳极数码管的译码器。输入为4位BCD码\texttt{bcd(3 downto 0)}，输出为七段控制信号\texttt{seg(6 downto 0)}，分别对应数码管的a、b、c、d、e、f、g段（\texttt{seg(6)}对应a段，\texttt{seg(0)}对应g段）。共阳极数码管的段码为低电平点亮（0=亮，1=灭）。要求非法输入（10--15）时所有段熄灭。
+
+\vspace{0.3cm}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{十进制} & \textbf{bcd(3:0)} & \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} & \textbf{e} & \textbf{f} & \textbf{g} \\
+\hline
+0 & 0000 & 亮 & 亮 & 亮 & 亮 & 亮 & 亮 & 灭 \\
+1 & 0001 & 灭 & 亮 & 亮 & 灭 & 灭 & 灭 & 灭 \\
+2 & 0010 & 亮 & 亮 & 灭 & 亮 & 亮 & 灭 & 亮 \\
+3 & 0011 & 亮 & 亮 & 亮 & 亮 & 灭 & 灭 & 亮 \\
+4 & 0100 & 灭 & 亮 & 亮 & 灭 & 灭 & 亮 & 亮 \\
+5 & 0101 & 亮 & 灭 & 亮 & 亮 & 灭 & 亮 & 亮 \\
+6 & 0110 & 亮 & 灭 & 亮 & 亮 & 亮 & 亮 & 亮 \\
+7 & 0111 & 亮 & 亮 & 亮 & 灭 & 灭 & 灭 & 灭 \\
+8 & 1000 & 亮 & 亮 & 亮 & 亮 & 亮 & 亮 & 亮 \\
+9 & 1001 & 亮 & 亮 & 亮 & 亮 & 灭 & 亮 & 亮 \\
+\hline
+\end{tabular}
+\caption{共阳极数码管段码显示对照表（亮=段点亮，灭=段熄灭）}
+\label{tab:7seg}
+\end{figure}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （5分）根据上述段码显示对照表，写出完整的七段码真值表（bcd输入对应\texttt{seg}输出的二进制值，0表示点亮，1表示熄灭）。
+  \item （15分）使用\textbf{数据流描述风格}编写该译码器的完整VHDL代码。要求：
+  \begin{itemize}
+    \item 使用\texttt{WITH...SELECT}语句或\texttt{WHEN...ELSE}条件信号赋值语句实现译码逻辑；
+    \item 代码包含完整的库声明、实体定义和结构体；
+    \item 对非法输入（10--15）做安全处理，使所有段熄灭（\texttt{seg <= "1111111"}）。
+  \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：4位双向移位寄存器（20分）}
+
+设计一个4位双向移位寄存器，支持左移、右移、并行置数和保持四种操作，采用\textbf{结构化VHDL描述}（即底层使用D触发器作为基本单元，通过\texttt{COMPONENT}与\texttt{PORT MAP}搭建顶层电路）。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发
+  \item \texttt{rst}（输入）：异步复位，高电平有效，复位时\texttt{q <= "0000"}
+  \item \texttt{mode(1 downto 0)}（输入）：操作模式选择
+  \begin{itemize}
+    \item \texttt{"00"}：保持（数据不变）
+    \item \texttt{"01"}：右移（数据从高位向低位移动，\texttt{q(3)}移入串行输入\texttt{si\_r}）
+    \item \texttt{"10"}：左移（数据从低位向高位移动，\texttt{q(0)}移入串行输入\texttt{si\_l}）
+    \item \texttt{"11"}：并行置数（\texttt{q <= din}）
+  \end{itemize}
+  \item \texttt{din(3 downto 0)}（输入）：并行置数数据
+  \item \texttt{si\_r}（输入）：右移时的串行输入（移入最高位）
+  \item \texttt{si\_l}（输入）：左移时的串行输入（移入最低位）
+  \item \texttt{q(3 downto 0)}（输出）：当前移位寄存器的值
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出顶层模块的端口框图，标注所有输入输出信号及位宽。
+  \item （3分）画出单个D触发器（带时钟使能和异步复位）的符号框图，作为底层基本单元。该D触发器的端口为：\texttt{clk}、\texttt{rst}、\texttt{d}、\texttt{q}（为使能端设计留作后续步骤处理）。
+  \item （10分）编写完整的VHDL代码，采用结构化描述风格：
+  \begin{itemize}
+    \item 首先编写单个D触发器（带异步复位）的ENTITY和ARCHITECTURE；
+    \item 在顶层模块中使用\texttt{COMPONENT}声明D触发器，并使用\texttt{FOR...GENERATE}语句实例化4个D触发器；
+    \item 每个D触发器的\texttt{d}输入端由一个4选1多路选择器（MUX）驱动，根据\texttt{mode}信号选择输入源：保持时选自身\texttt{q}、右移时选左侧触发器输出或\texttt{si\_r}、左移时选右侧触发器输出或\texttt{si\_l}、置数时选\texttt{din}对应位；
+    \item MUX逻辑可以在顶层用组合逻辑描述（如条件信号赋值语句），不必也做成COMPONENT。
+  \end{itemize}
+  \item （3分）在代码中添加清晰的注释，说明各模块的功能和数据流向。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 4位寄存器从高位到低位编号为\texttt{q(3)}（最左）、\texttt{q(2)}、\texttt{q(1)}、\texttt{q(0)}（最右）。
+  \item 右移(\texttt{"01"})时：\texttt{q(3) <= si\_r}，\texttt{q(2) <= q(3)}，\texttt{q(1) <= q(2)}，\texttt{q(0) <= q(1)}。
+  \item 左移(\texttt{"10"})时：\texttt{q(0) <= si\_l}，\texttt{q(1) <= q(0)}，\texttt{q(2) <= q(1)}，\texttt{q(3) <= q(2)}。
+  \item GENERATE语句示例：\texttt{G1: FOR i IN 0 TO 3 GENERATE ... END GENERATE;}
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：自动售货机控制器（20分）}
+
+设计一个简单的自动售货机控制器状态机。该售货机只接收1元和2元硬币（每次只能投入一枚），商品价格为3元，不设找零（多投不退）。
+
+\vspace{0.3cm}
+
+\textbf{功能说明：}
+\begin{itemize}
+  \item 硬币用两位输入信号\texttt{coin(1:0)}表示：\texttt{"00"}表示无硬币投入，\texttt{"01"}表示投入1元硬币，\texttt{"10"}表示投入2元硬币（\texttt{"11"}为非法，按无投入处理）。每个时钟周期最多检测一枚硬币的投入。
+  \item 状态机追踪已投入的累计金额（0、1、2、3元）。
+  \item 当累计金额达到或超过3元时，在下一个时钟周期输出\texttt{dispense = '1'}（出货，持续一个时钟周期），同时状态机返回初始状态（0元）。
+  \item 输出信号\texttt{dispense}（1位）：出货信号，高电平有效。
+  \item 输出信号\texttt{state\_disp(1:0)}（2位）：当前状态的编码输出（可选，便于调试）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号
+  \item \texttt{rst}（输入）：异步复位，高电平有效，复位后状态回到初始状态（累计金额=0元）
+  \item \texttt{coin(1:0)}（输入）：硬币检测信号
+  \item \texttt{dispense}（输出）：出货信号
+  \item \texttt{state\_disp(1:0)}（输出）：当前累计金额的状态编码（0元="00"，1元="01"，2元="10"，3元="11"）
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （7分）画出该售货机控制器的状态转移图（Mealy型或Moore型均可，但须标明类型）。要求：
+  \begin{itemize}
+    \item 明确标注所有状态名称及含义；
+    \item 标注状态转移条件（输入）和输出值；
+    \item 说明采用的是Mealy型还是Moore型状态机及其原因。
+  \end{itemize}
+  \item （3分）列出状态转移表，包含当前状态、输入（coin）、次态和输出（dispense）。
+  \item （10分）编写完整的VHDL代码实现该控制器。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义状态（如\texttt{TYPE state\_type IS (S0, S1, S2, S3)}）；
+    \item 采用双进程描述风格：一个时序进程（状态寄存器和复位），一个组合进程（次态逻辑和输出逻辑）；
+    \item 异步复位（rst为高电平时立即回到初始状态）；
+    \item 代码中包含必要的注释。
+  \end{itemize}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}投币行为示例（假设每个时钟周期投一枚硬币）：
+时钟周期1：coin = "01"（投1元）→ 累计1元；
+时钟周期2：coin = "10"（投2元）→ 累计3元 → 触发出货，下一周期回到0元；
+时钟周期3：coin = "01"（投1元）→ 累计1元；\ldots
+\end{framed}
+
+\vspace{0.3cm}
+
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

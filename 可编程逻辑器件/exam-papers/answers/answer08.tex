@@ -1,0 +1,659 @@
+\chapter{第8套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+
+\item \textbf{答案：B}（3分）
+
+\textbf{解析：}FPGA中一个典型的逻辑单元（Slice）通常包含LUT（查找表）、D触发器、进位链和多路选择器。这是现代FPGA（如Xilinx 7系列）Slice的基本组成。选项A不完整（缺少进位链和MUX），选项C描述的是嵌入式硬核处理器（如Zynq的ARM核），选项D描述的是时钟管理资源（如CMT/MMCM）。
+
+\item \textbf{答案：C}（3分）
+
+\textbf{解析：}\texttt{IEEE.NUMERIC\_STD}是IEEE标准包，定义了\texttt{UNSIGNED}和\texttt{SIGNED}数据类型及其算术运算。该包提供了\texttt{STD\_LOGIC\_VECTOR}与\texttt{UNSIGNED}之间的类型转换。选项A仅定义STD\_LOGIC类型，选项B（STD\_LOGIC\_ARITH）是Synopsys非标准包，选项D（STD\_LOGIC\_SIGNED）也是非标准包。
+
+\item \textbf{答案：A}（3分）
+
+\textbf{解析：}异步复位不依赖时钟即可生效（敏感列表含rst），但对复位信号的毛刺较为敏感（因为任何rst变化都会触发复位）。选项B错误（同步复位需等待时钟沿，响应慢于异步复位）；选项C错误（异步复位必须将rst列入敏感信号表）；选项D不一定（同步复位未必占用更多资源，取决于综合工具）。
+
+\item \textbf{答案：A}（3分）
+
+\textbf{解析：}二进制编码使用最少的状态寄存器（$\lceil\log_2 N\rceil$位），但译码逻辑较复杂（需要组合逻辑译码）。选项B错误（独热码需要N个寄存器，是最多的）；选项C错误（格雷码相邻状态只有1位翻转）；选项D错误（独热码因每次只有1位变化，抗干扰能力较好）。
+
+\item \textbf{答案：B}（3分）
+
+\textbf{解析：}\texttt{SUBTYPE}关键字从已有类型派生子类型并添加范围约束（如\texttt{SUBTYPE digit IS INTEGER RANGE 0 TO 9;}），而非创建全新类型。选项A错误（创建全新类型使用TYPE）；选项C描述的是信号本身的功能；选项D描述的是VARIABLE。
+
+\item \textbf{答案：B}（3分）
+
+\textbf{解析：}Block RAM是FPGA片内专用的存储硬核（集成在芯片上的专用RAM模块），容量大、速度快；Distributed RAM由LUT逻辑资源构成（将LUT配置为小型RAM），灵活但占用逻辑资源。选项A将二者说反；选项C错误（有本质区别）；选项D错误（两者均可存储数据，Block RAM也可用作程序/数据存储器）。
+
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+
+\item \textbf{答案：}
+\begin{itemize}
+  \item \texttt{clk'EVENT}：表示信号值\textbf{发生变化}（1分）
+  \item \texttt{rising\_edge(clk)}等价于\texttt{clk'EVENT} AND \texttt{clk = '1'}（1分）
+  \item \texttt{data'RANGE}返回信号\texttt{data}的\textbf{索引/位宽}范围（1分）
+\end{itemize}
+
+\item \textbf{答案：}
+\begin{itemize}
+  \item 高阻态的字符表示为\textbf{'Z'}（1分）
+  \item 描述双向总线时，端口模式应使用\textbf{INOUT}（1分）
+  \item 当多个三态门驱动同一总线时，同一时刻最多只能有\textbf{1}个门的使能有效（1分）
+\end{itemize}
+
+\item \textbf{答案：}
+\begin{itemize}
+  \item 同步复位的典型结构：\texttt{IF rising\_edge(clk) THEN}\\
+    \quad \texttt{\underline{IF} rst = '1' THEN ... END IF;}\\
+    \texttt{END IF;} （1.5分）
+  \item 异步复位的典型结构：\texttt{IF rst = '1' THEN ...}\\
+    \texttt{\underline{ELSIF} rising\_edge(clk) THEN ... END IF;} （1.5分）
+\end{itemize}
+
+\item \textbf{答案：}
+\begin{itemize}
+  \item UNSIGNED→INTEGER：\texttt{TO\_INTEGER()}（1分）
+  \item INTEGER→UNSIGNED：\texttt{TO\_UNSIGNED()}（1分）
+  \item STD\_LOGIC\_VECTOR→UNSIGNED：\texttt{UNSIGNED()}（类型强制转换）（1分）
+\end{itemize}
+
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\textbf{错误分析（共5处，每处1分）：}
+
+\begin{enumerate}[label=\textbf{错误\arabic*：}, leftmargin=*]
+
+\item \textbf{（第10行）信号声明缺少分号：}\texttt{SIGNAL cnt : STD\_LOGIC\_VECTOR(7 DOWNTO 0)}末尾缺少分号。\textbf{更正：}\texttt{SIGNAL cnt : STD\_LOGIC\_VECTOR(7 DOWNTO 0);}
+
+\item \textbf{（第12行）敏感信号列表不完整：}\texttt{PROCESS(clk)}缺少\texttt{rst}信号。由于rst是异步复位，必须列入敏感信号列表（\texttt{PROCESS(clk, rst)}），否则综合和仿真可能不一致。\textbf{更正：}\texttt{PROCESS(clk, rst)}
+
+\item \textbf{（第15行）信号赋值符号错误：}\texttt{cnt := (OTHERS => '0');}——变量赋值符号\verb|:=|不能用于SIGNAL类型。\textbf{更正：}\texttt{cnt <= (OTHERS => '0');}
+
+\item \textbf{（第18行）算术运算类型不匹配：}\texttt{cnt <= cnt + '1';}——\texttt{cnt}是STD\_LOGIC\_VECTOR类型，不能直接与字符'1'进行算术加法运算。需要引用\texttt{IEEE.NUMERIC\_STD}包或\texttt{IEEE.STD\_LOGIC\_UNSIGNED}包。\textbf{更正：}添加\texttt{USE IEEE.NUMERIC\_STD.ALL;}并将此行改为：\\\texttt{cnt <= STD\_LOGIC\_VECTOR(UNSIGNED(cnt) + 1);} 或使用STD\_LOGIC\_UNSIGNED包后写成\texttt{cnt <= cnt + 1;}
+
+\item \textbf{（第16行）复位分支在时钟边沿内：}\texttt{IF rst = '1' THEN}在\texttt{PROCESS(clk)}内而未在敏感列表中包含rst——由于错误2，此问题一并修正后，原代码中的\texttt{IF rst = '1' THEN}处于\texttt{ELSIF rising\_edge(clk) THEN}之前（正确位置），但需确保rst在敏感列表中。修正后异步复位逻辑正确。
+
+\textbf{或者}如果综合工具要求同步复位：将rst判断移入\texttt{rising\_edge(clk)}分支内部。
+
+\end{enumerate}
+
+\textbf{注：}本题中5处错误较为明显，如上所列。错误2和错误5在修正敏感列表后自动解决，但作为独立知识点仍需指出。
+
+\textbf{修正后的完整VHDL代码：}
+
+\begin{lstlisting}[caption={修正后的8位计数器VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;            -- 添加NUMERIC_STD支持算术运算
+
+ENTITY counter8 IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    en   : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END counter8;
+
+ARCHITECTURE behav OF counter8 IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 修正1：添加分号
+BEGIN
+  PROCESS(clk, rst)                            -- 修正2：添加rst到敏感列表
+  BEGIN
+    IF rst = '1' THEN
+      cnt <= (OTHERS => '0');                  -- 修正3：<= 而非 :=
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cnt <= STD_LOGIC_VECTOR(UNSIGNED(cnt) + 1);  -- 修正4：类型转换
+      END IF;
+    END IF;
+  END PROCESS;
+  q <= cnt;
+END behav;
+\end{lstlisting}
+
+\textbf{评分标准：}每正确指出并改正一处错误得1分，最高5分。需准确给出错误行号、错误原因和正确写法。
+
+\section{四、程序阅读分析题解析（5分）}
+
+\begin{enumerate}[label=(\arabic*), leftmargin=*]
+
+\item \textbf{（1分）电路类型：}该VHDL代码描述的是一个\textbf{4位环形计数器（Ring Counter），或称循环右移寄存器}。具体而言，复位后初始值为“1000”，之后每个时钟上升沿将最低位移至最高位（循环右移一位）。这种电路中任一时刻仅有一位为'1'（独热码循环），属于约翰逊计数器（Johnson Counter）的变体。
+
+\textbf{评分标准：}答出“环形计数器”或“循环移位寄存器”得1分。
+
+\item \textbf{（2分）连续8个时钟上升沿后的输出序列：}
+
+复位释放后state = “1000”。每个时钟上升沿执行：\texttt{state <= state(0) \& state(3 DOWNTO 1)}（循环右移一位）。
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{时钟沿编号} & \textbf{state (q)值} & \textbf{说明} \\
+\hline
+复位 & 1000 & 初始值 \\
+第1个 & 0100 & 右移1位 \\
+第2个 & 0010 & 右移1位 \\
+第3个 & 0001 & 右移1位 \\
+第4个 & 1000 & 循环回到初始 \\
+第5个 & 0100 & 重复 \\
+第6个 & 0010 &  \\
+第7个 & 0001 &  \\
+第8个 & 1000 &  \\
+\hline
+\end{tabular}
+\end{center}
+
+序列为：1000 → 0100 → 0010 → 0001 → 1000 → 0100 → 0010 → 0001 → 1000
+
+\textbf{评分标准：}前4个值正确（1分），后4个值正确（含循环）（1分）。
+
+\item \textbf{（1分）修改后电路类型及输出序列：}
+
+若改为\texttt{state <= state(2 DOWNTO 0) \& state(3);}（循环左移），该电路将变成\textbf{4位循环左移环形计数器}。输出序列变为：1000 → 0001 → 0010 → 0100 → 1000 → ...（即环形左移方向）。
+
+原电路：右移序列 1000→0100→0010→0001→1000（4状态循环）。
+修改后：左移序列 1000→0001→0010→0100→1000（4状态循环，方向相反）。
+
+\textbf{评分标准：}指出变为“左移环形计数器”（0.5分），给出序列变化（0.5分）。
+
+\item \textbf{（1分）q(0)频率与clk频率之比：}
+
+输出信号q(0)每4个时钟周期出现一次'1'（占空比1:4），故q(0)的频率为时钟频率的1/4。
+
+推导过程：state序列为1000→0100→0010→0001→1000，共4个状态循环。q(0)在状态为“0001”时为'1'，在状态为“1000”时为'0'……q(0)每4个clk周期为1一次，故 $f_{q(0)} = f_{clk} / 4$。
+
+频率比：\textbf{1:4}（或 $f_{q(0)} : f_{clk} = 1:4$）
+
+\textbf{评分标准：}频率比正确（0.5分），推导过程完整（0.5分）。
+
+\end{enumerate}
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：8位算术逻辑单元（ALU）（20分）}
+
+\textbf{(1) 顶层模块端口框图（5分）}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  \draw[thick, fill=orange!10] (0,0) rectangle (6.5,6);
+  \node at (3.25,5.5) {\textbf{8位ALU}};
+  \node at (3.25,4.9) {\small (8-bit Arithmetic Logic Unit)};
+
+  % 左侧输入
+  \draw[thick, ->] (-2.5,4.8) -- (0,4.8) node[left] at (-2.7,4.8) {a(7:0)};
+  \draw[thick, ->] (-2.5,3.8) -- (0,3.8) node[left] at (-2.7,3.8) {b(7:0)};
+  \draw[thick, ->] (-2.5,2.8) -- (0,2.8) node[left] at (-2.7,2.8) {op(2:0)};
+
+  % 右侧输出
+  \draw[thick, ->] (6.5,5.0) -- (9,5.0) node[right] at (9.2,5.0) {y(7:0) — 结果};
+  \draw[thick, ->] (6.5,3.5) -- (9,3.5) node[right] at (9.2,3.5) {zero — 零标志};
+  \draw[thick, ->] (6.5,2.0) -- (9,2.0) node[right] at (9.2,2.0) {sign — 符号标志};
+
+  \node[rotate=90, font=\small] at (-1.8,3.8) {输入};
+  \node[rotate=-90, font=\small] at (8,3.5) {输出};
+
+  % 操作码表
+  \node[font=\small] at (3.25,1.5) {op: 000~111 → 8种运算};
+  \node[font=\footnotesize, text width=5cm, align=center] at (3.25,0.7)
+    {PASS\_A, ADD, SUB, AND, OR, XOR, NOT\_A, SHL};
+\end{tikzpicture}
+\end{center}
+
+\textbf{评分标准：}框图框架完整（1分），输入端标注完整（a/b/op含位宽）（2分），输出端标注完整（y/zero/sign）（2分）。
+
+\vspace{0.3cm}
+
+\textbf{(2)+(3) VHDL代码（12分+3分注释=15分）}
+
+\begin{lstlisting}[caption={8位ALU——VHDL行为描述代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;      -- 支持UNSIGNED算术运算
+
+-- ============================================
+-- 8位ALU：根据op(2:0)选择8种运算之一
+-- 数据流方向：a, b, op → ALU运算 → y, zero, sign
+-- zero标志：y全0时输出1
+-- sign标志：直接取y的最高位
+-- ============================================
+
+ENTITY alu_8bit IS
+  PORT(
+    a    : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 操作数A
+    b    : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 操作数B
+    op   : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);  -- 操作选择码
+    y    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 运算结果
+    zero : OUT STD_LOGIC;                     -- 零标志
+    sign : OUT STD_LOGIC                      -- 符号标志
+  );
+END alu_8bit;
+
+ARCHITECTURE behav OF alu_8bit IS
+  SIGNAL result : STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 中间结果
+BEGIN
+  -- ALU核心运算进程
+  PROCESS(a, b, op)
+    VARIABLE temp : UNSIGNED(8 DOWNTO 0);  -- 9位，容纳进位
+  BEGIN
+    CASE op IS
+      -- op="000": PASS_A —— 直通A
+      WHEN "000" =>
+        result <= a;
+
+      -- op="001": ADD —— 加法 a + b
+      WHEN "001" =>
+        result <= STD_LOGIC_VECTOR(UNSIGNED(a) + UNSIGNED(b));
+
+      -- op="010": SUB —— 减法 a - b
+      WHEN "010" =>
+        result <= STD_LOGIC_VECTOR(UNSIGNED(a) - UNSIGNED(b));
+
+      -- op="011": AND_OP —— 按位与
+      WHEN "011" =>
+        result <= a AND b;
+
+      -- op="100": OR_OP —— 按位或
+      WHEN "100" =>
+        result <= a OR b;
+
+      -- op="101": XOR_OP —— 按位异或
+      WHEN "101" =>
+        result <= a XOR b;
+
+      -- op="110": NOT_A —— 按位取反A
+      WHEN "110" =>
+        result <= NOT a;
+
+      -- op="111": SHL_A —— 逻辑左移一位（低位补0）
+      WHEN "111" =>
+        result <= a(6 DOWNTO 0) & '0';
+
+      -- 安全分支（OTHERS覆盖未定义编码）
+      WHEN OTHERS =>
+        result <= (OTHERS => '0');
+    END CASE;
+  END PROCESS;
+
+  -- 输出赋值
+  y <= result;
+
+  -- zero标志生成：当result全为0时置1
+  zero <= '1' WHEN result = "00000000" ELSE '0';
+
+  -- sign标志生成：直接输出result的最高位（第7位）
+  sign <= result(7);
+END behav;
+\end{lstlisting}
+
+\textbf{评分标准：}
+\begin{itemize}
+  \item 库声明（NUMERIC\_STD）（1分）
+  \item 实体端口完整（2分）
+  \item CASE语句覆盖8种OP编码（每2个1分，共4分）
+  \item 算术运算类型转换正确（UNSIGNED转换）（2分）
+  \item OTHERS分支（1分）
+  \item zero标志逻辑（1分）
+  \item sign标志逻辑（1分）
+  \item 代码注释清晰：数据流方向（1分），各OP分支功能说明（1分），zero/sign生成逻辑说明（1分）
+\end{itemize}
+
+\subsection{设计题2：N级二分频器链（20分）}
+
+\textbf{(1) N=3时电路框图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth, thick, node distance=3cm]
+  % 输入
+  \node (clk_label) at (0,0) {clk\_in=8MHz};
+  \draw[->] (1.2,0) -- (2.0,0);
+
+  % TFF1
+  \draw[thick, fill=blue!10] (2, -0.8) rectangle (4, 1.2);
+  \node at (3,0.6) {TFF\_0};
+  \node at (3,0.0) {\small (第0级)};
+  \node at (3,-0.4) {\tiny 4MHz};
+  \draw[->] (3,-1) -- (3,-1.5) node[below] {\tiny rst};
+  \draw[->] (4,0.2) -- (5.5,0.2) node[midway, above] {\tiny 4MHz};
+
+  % TFF2
+  \draw[thick, fill=blue!10] (5.5, -0.8) rectangle (7.5, 1.2);
+  \node at (6.5,0.6) {TFF\_1};
+  \node at (6.5,0.0) {\small (第1级)};
+  \node at (6.5,-0.4) {\tiny 2MHz};
+  \draw[->] (6.5,-1) -- (6.5,-1.5) node[below] {\tiny rst};
+  \draw[->] (7.5,0.2) -- (9.0,0.2) node[midway, above] {\tiny 2MHz};
+
+  % TFF3
+  \draw[thick, fill=blue!10] (9.0, -0.8) rectangle (11.0, 1.2);
+  \node at (10.0,0.6) {TFF\_2};
+  \node at (10.0,0.0) {\small (第2级)};
+  \node at (10.0,-0.4) {\tiny 1MHz};
+  \draw[->] (10.0,-1) -- (10.0,-1.5) node[below] {\tiny rst};
+  \draw[->] (11.0,0.2) -- (12.5,0.2) node[midway, above] {\tiny 1MHz};
+
+  % 输出
+  \node at (13.5,0) {clk\_out=1MHz};
+
+  % 分频关系说明
+  \node[font=\small, text width=12cm, align=center] at (7,-2.5)
+    {分频关系：$f_{clk\_in} = 8\text{MHz} \rightarrow 4\text{MHz} \rightarrow 2\text{MHz} \rightarrow 1\text{MHz} = f_{clk\_in}/2^3$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{评分标准：}TFF级联结构正确（1分），各级频率标注正确（1分），每级二分频关系明确（1分），框图整洁清晰（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(2) T触发器（TFF）VHDL代码（3分）}
+
+\begin{lstlisting}[caption={T触发器（TFF）VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY tff IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;       -- 异步复位，高有效
+    q   : OUT STD_LOGIC
+  );
+END tff;
+
+ARCHITECTURE behav OF tff IS
+BEGIN
+  PROCESS(clk, rst)
+    VARIABLE toggle : STD_LOGIC := '0';  -- 翻转状态变量
+  BEGIN
+    IF rst = '1' THEN
+      toggle := '0';          -- 复位时清零
+      q <= '0';
+    ELSIF rising_edge(clk) THEN
+      toggle := NOT toggle;   -- 每个时钟上升沿翻转
+      q <= toggle;
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\textbf{评分标准：}实体端口正确（0.5分），异步复位逻辑（1分），翻转逻辑（toggle := NOT toggle）（1分），代码规范（0.5分）。
+
+\vspace{0.3cm}
+
+\textbf{(3) 顶层N级分频器链VHDL代码（10分）}
+
+\begin{lstlisting}[caption={N级二分频器链——顶层结构化VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+-- ============================================
+-- N级二分频器链
+-- 各级TFF依次将时钟二分频：f_out = f_clk_in / 2^N
+-- 第0级TFF时钟=clk_in，第i级时钟=第(i-1)级输出
+-- ============================================
+
+ENTITY freq_div_chain IS
+  GENERIC(
+    N : INTEGER := 4            -- 分频级数（默认4级，分频比2^4=16）
+  );
+  PORT(
+    clk_in  : IN  STD_LOGIC;    -- 输入时钟
+    rst     : IN  STD_LOGIC;    -- 异步复位，高有效
+    clk_out : OUT STD_LOGIC     -- N级分频后输出
+  );
+END freq_div_chain;
+
+ARCHITECTURE structural OF freq_div_chain IS
+  -- 组件声明：单个T触发器
+  COMPONENT tff
+    PORT(
+      clk : IN  STD_LOGIC;
+      rst : IN  STD_LOGIC;
+      q   : OUT STD_LOGIC
+    );
+  END COMPONENT;
+
+  -- 内部信号：各级TFF的输出（N级）
+  SIGNAL chain : STD_LOGIC_VECTOR(0 TO N-1);
+BEGIN
+  -- FOR...GENERATE循环实例化N个TFF
+  gen_chain: FOR i IN 0 TO N-1 GENERATE
+  BEGIN
+    -- 第0级：时钟连接至clk_in
+    first_stage: IF i = 0 GENERATE
+      tff0: tff PORT MAP(
+        clk => clk_in,
+        rst => rst,
+        q   => chain(0)
+      );
+    END GENERATE first_stage;
+
+    -- 第1~N-1级：时钟连接至前一级的输出
+    other_stages: IF i > 0 GENERATE
+      tff_i: tff PORT MAP(
+        clk => chain(i-1),      -- 前级输出作为本级时钟
+        rst => rst,
+        q   => chain(i)
+      );
+    END GENERATE other_stages;
+  END GENERATE gen_chain;
+
+  -- 最终输出：第N-1级的输出
+  clk_out <= chain(N-1);
+END structural;
+\end{lstlisting}
+
+\textbf{评分标准：}
+\begin{itemize}
+  \item GENERIC参数声明（N）（1分）
+  \item COMPONENT tff声明（1分）
+  \item FOR...GENERATE循环（2分）
+  \item IF GENERATE区分第0级（clk\_in）与其他级（chain(i-1)）（3分）
+  \item 各级时钟级联关系正确（2分）
+  \item 最终输出连接正确（1分）
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{(4) 代码注释（3分，已包含在上方代码注释中）}
+
+\textbf{评分标准：}GENERIC参数用途说明（1分），各级时钟连接关系注释（1分），TFF翻转原理注释（1分）。
+
+\subsection{设计题3：数字密码锁控制器（20分）}
+
+\textbf{(1) 状态转移图（8分）}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, node distance=3.5cm, thick,
+  state/.style={circle, draw, minimum size=1.5cm, fill=gray!10}]
+
+  \node[state] (S0) {\textbf{S0}\\\small 初始\\\small unlock=0};
+  \node[state] (S1) [right of=S0] {\textbf{S1}\\\small 已匹配``1''\\\small unlock=0};
+  \node[state] (S2) [right of=S1] {\textbf{S2}\\\small 已匹配``10''\\\small unlock=0};
+  \node[state] (S3) [below of=S1, yshift=-1.2cm] {\textbf{S3}\\\small 已匹配``101''\\\small unlock=0};
+  \node[state] (S4) [below of=S2, yshift=-2.5cm] {\textbf{S4}\\\small 已匹配``1011''\\\small unlock=1};
+
+  \path (S0) edge [loop above] node {key\_in=0} (S0)
+             edge              node {key\_in=1} (S1)
+        (S1) edge              node {key\_in=0} (S2)
+             edge [loop above] node {key\_in=1} (S1)
+        (S2) edge [bend left]  node {key\_in=1} (S3)
+             edge [bend right=50] node [left] {key\_in=0} (S0)
+        (S3) edge [bend right] node [right] {key\_in=0} (S2)
+             edge [bend left]  node {key\_in=1} (S4)
+        (S4) edge [bend right=60] node [right] {key\_in=0} (S2)
+             edge [bend left=60]  node [left]  {key\_in=1} (S1);
+
+\end{tikzpicture}
+\end{center}
+
+\textbf{状态含义与转移逻辑详解：}
+\begin{itemize}
+  \item \textbf{S0（初始）：}reset后或未匹配任何位。key\_in=1→S1；key\_in=0→保持S0。
+  \item \textbf{S1（已匹配'1'）：}等待第二位'0'。key\_in=0→S2；key\_in=1→保持S1（重叠：最后一位'1'可作为新序列第一位）。
+  \item \textbf{S2（已匹配'10'）：}等待第三位'1'。key\_in=1→S3；key\_in=0→S0（复位，“10”后跟'0'无法继续）。
+  \item \textbf{S3（已匹配'101'）：}等待第四位'1'。key\_in=1→S4（开锁）；key\_in=0→S2（重叠：“1010”中后两位“10”对应S2前缀）。
+  \item \textbf{S4（已匹配'1011'——开锁状态）：}unlock=1（持续一个时钟周期）。key\_in=1→S1（最后的'1'作新序列起点，重叠检测）；key\_in=0→S2（“10110”的后缀“10”）。
+\end{itemize}
+
+\textbf{评分标准：}5个状态定义清晰（2分），各状态输出标注正确（unlock仅S4=1）（2分），10条转移弧全部正确（3分），S4重叠转移处理合理（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(2) 状态转移表（3分）}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{当前状态} & \textbf{输入 key\_in} & \textbf{次态} & \textbf{输出 unlock} \\
+\hline
+S0 & 0 & S0 & 0 \\
+S0 & 1 & S1 & 0 \\
+\hline
+S1 & 0 & S2 & 0 \\
+S1 & 1 & S1 & 0 \\
+\hline
+S2 & 0 & S0 & 0 \\
+S2 & 1 & S3 & 0 \\
+\hline
+S3 & 0 & S2 & 0 \\
+S3 & 1 & S4 & 0 \\
+\hline
+S4 & 0 & S2 & 1 \\
+S4 & 1 & S1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{评分标准：}表格格式规范（1分），10行转移全部正确（2分）。
+
+\vspace{0.3cm}
+
+\textbf{(3) VHDL代码（9分）}
+
+\begin{lstlisting}[caption={数字密码锁控制器——双进程Moore型VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+-- ============================================
+-- 数字密码锁控制器（密码: 1011）
+-- Moore型状态机：输出仅取决于当前状态
+-- 编码方案：二进制编码（S0=000, S1=001, ..., S4=100）
+-- 异步复位：rst=1时立即回到S0
+-- 重叠检测：支持"101011"等重叠序列
+-- ============================================
+
+ENTITY password_lock IS
+  PORT(
+    clk        : IN  STD_LOGIC;
+    rst        : IN  STD_LOGIC;       -- 异步复位，高有效
+    key_in     : IN  STD_LOGIC;       -- 串行密码输入
+    unlock     : OUT STD_LOGIC;       -- 开锁信号，高有效
+    state_disp : OUT STD_LOGIC_VECTOR(2 DOWNTO 0)  -- 状态观测（调试用）
+  );
+END password_lock;
+
+ARCHITECTURE moore OF password_lock IS
+  -- 自定义枚举类型（二进制编码自动由综合工具分配）
+  TYPE lock_state IS (S0, S1, S2, S3, S4);
+  SIGNAL current_state, next_state : lock_state;
+BEGIN
+  -- ============================================
+  -- 进程1：时序逻辑——状态寄存器 + 异步复位
+  -- ============================================
+  state_seq: PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;          -- 异步复位：立即回到初始状态
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;  -- 时钟上升沿更新状态
+    END IF;
+  END PROCESS state_seq;
+
+  -- ============================================
+  -- 进程2：组合逻辑——次态逻辑 + 输出逻辑
+  -- ============================================
+  state_comb: PROCESS(current_state, key_in)
+  BEGIN
+    -- 默认赋值（避免锁存器）
+    next_state <= S0;
+    unlock <= '0';
+
+    CASE current_state IS
+      -- S0：初始状态，等待第一位'1'
+      WHEN S0 =>
+        IF key_in = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      -- S1：已匹配'1'，等待'0'
+      WHEN S1 =>
+        IF key_in = '0' THEN
+          next_state <= S2;
+        ELSE
+          next_state <= S1;         -- 重叠：'1'可作新序列起点
+        END IF;
+
+      -- S2：已匹配'10'，等待'1'
+      WHEN S2 =>
+        IF key_in = '1' THEN
+          next_state <= S3;
+        ELSE
+          next_state <= S0;         -- '0'无法继续匹配
+        END IF;
+
+      -- S3：已匹配'101'，等待最后一位'1'
+      WHEN S3 =>
+        IF key_in = '1' THEN
+          next_state <= S4;         -- 完整匹配1011！
+        ELSE
+          next_state <= S2;         -- 重叠："1010"后"10"→S2
+        END IF;
+
+      -- S4：已匹配'1011'，开锁
+      WHEN S4 =>
+        unlock <= '1';              -- Moore型：输出仅取决于当前状态
+        IF key_in = '1' THEN
+          next_state <= S1;         -- 重叠：最后的'1'作新序列起点
+        ELSE
+          next_state <= S2;         -- "10110"后"10"→S2
+        END IF;
+    END CASE;
+  END PROCESS state_comb;
+
+  -- ============================================
+  -- 状态观测输出（调试用，可选）
+  -- ============================================
+  WITH current_state SELECT
+    state_disp <= "000" WHEN S0,
+                  "001" WHEN S1,
+                  "010" WHEN S2,
+                  "011" WHEN S3,
+                  "100" WHEN S4;
+END moore;
+\end{lstlisting}
+
+\textbf{评分标准：}
+\begin{itemize}
+  \item 枚举类型定义（lock\_state）（1分）
+  \item 进程1（时序）：状态寄存器+异步复位正确（1分）
+  \item 进程2（组合）：次态逻辑正确（含5个状态的完整转移）（3分）
+  \item 输出逻辑（Moore型：unlock仅在S4为1）（1分）
+  \item 重叠检测处理（S3→S2、S4→S1/S2）（1分）
+  \item 编码方案注释（二进制/独热码说明）（0.5分）
+  \item 功能注释清晰（0.5分）
+  \item 代码规范（缩进、命名）（1分）
+\end{itemize}
+
+\endinput

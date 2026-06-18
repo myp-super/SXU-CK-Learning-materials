@@ -1,0 +1,742 @@
+\chapter{第2套试卷——参考答案与评分标准}
+
+\section{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{答案：D}
+
+\textbf{解析：} GAL（Generic Array Logic）的与阵列是可编程的，或阵列是固定不可编程的。选项D声称两者均可编程，与GAL的实际结构不符，故为错误项。GAL采用EEPROM工艺，可重复编程；其输出逻辑宏单元（OLMC）可灵活配置为组合输出或寄存器输出。
+
+\textbf{评分标准：} 选D得3分，其他选项得0分。
+
+\item \textbf{答案：B}
+
+\textbf{解析：} FPGA的基本可编程逻辑单元是查找表（LUT, Look-Up Table）。LUT本质上是一个小容量SRAM，通过存储真值表来实现任意组合逻辑函数。PIP是可编程互连资源，IOB是输入/输出模块，Block RAM是块存储器。
+
+\textbf{评分标准：} 选B得3分，其他选项得0分。
+
+\item \textbf{答案：A}
+
+\textbf{解析：} 选项A的语法完全正确：关键字\texttt{IS}在实体名后、\texttt{PORT}前，分号在\texttt{END adder}后。选项B缺少\texttt{END adder}后的分号。选项C缺少\texttt{IS}关键字。选项D中端口列表的最后一个信号后不应使用逗号，应使用分号。
+
+\textbf{评分标准：} 选A得3分，其他选项得0分。
+
+\item \textbf{答案：B}
+
+\textbf{解析：} 在VHDL的PROCESS中，信号（SIGNAL）赋值具有“事务延迟”特性——赋值值在当前进程执行完毕后（即进程挂起时）才更新到信号驱动器中，因此当前进程中后续读取的仍是旧值。而变量（VARIABLE）赋值是立即生效的，赋值后即可读取新值。选项B正确描述了这一关键区别。
+
+\textbf{评分标准：} 选B得3分，其他选项得0分。
+
+\item \textbf{答案：B}
+
+\textbf{解析：} CPLD与FPGA在结构层面的本质区别在于基本逻辑单元的实现方式：CPLD基于乘积项（Product Term）结构，由可编程的与阵列经固定或阵列输出；FPGA基于查找表（LUT）结构，通过SRAM存储逻辑函数真值表。两者均可实现时序逻辑。
+
+\textbf{评分标准：} 选B得3分，其他选项得0分。
+
+\item \textbf{答案：C}
+
+\textbf{解析：} 一个$n$输入的LUT可以实现任意$n$个及以下变量的组合逻辑函数。4输入LUT即可以处理最多4个变量的任意逻辑函数。选项D“8个及以下”是错误的，因为4输入LUT只有$2^4=16$个存储单元，无法存储$2^8=256$行的真值表。
+
+\textbf{评分标准：} 选C得3分，其他选项得0分。
+
+\end{enumerate}
+
+\section{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{答案：IEEE}
+
+\textbf{解析：} VHDL标准库声明语句为\texttt{LIBRARY IEEE;}，用于引入IEEE标准化库，其中包含STD\_LOGIC\_1164等常用设计包。注意关键字\texttt{IEEE}需大写，且语句以分号结尾。
+
+\textbf{评分标准：} 填写“IEEE”得3分，大小写不敏感。填“ieee”亦可。填错得0分。
+
+\item \textbf{答案：复合}
+
+\textbf{解析：} VHDL中数据类型分为标量类型（Scalar）和复合类型（Composite）。标量类型如\texttt{STD\_LOGIC}、\texttt{BIT}、\texttt{INTEGER}等表示单一元素；复合类型如\texttt{STD\_LOGIC\_VECTOR}、\texttt{BIT\_VECTOR}、\texttt{ARRAY}等表示一组元素的集合。\texttt{STD\_LOGIC\_VECTOR}是由多个\texttt{STD\_LOGIC}元素组成的一维数组，属于复合数据类型。
+
+\textbf{评分标准：} 填写“复合”得3分。填“标量”得0分。
+
+\item \textbf{答案：\&}
+
+\textbf{解析：} VHDL中的拼接运算符为\&（ampersand），用于将多个信号或位拼接成一个更宽的向量。例如：\texttt{sig\_a \& sig\_b} 将\texttt{sig\_a}和\texttt{sig\_b}拼接为一个新的向量，\texttt{sig\_a}在高位，\texttt{sig\_b}在低位。
+
+\textbf{评分标准：} 填写“\&”得3分。符号错误得0分。
+
+\item \textbf{答案：并行（并发）}
+
+\textbf{解析：} VHDL的结构体（ARCHITECTURE）是一个并发域，其内部的所有语句本质上都是并发执行的，用于描述硬件固有的并行特性。常见并发语句包括：并发信号赋值语句（\texttt{<=}）、PROCESS语句、组件实例化语句（\texttt{PORT MAP}）、BLOCK语句、GENERATE语句等。这些语句在结构体中同时有效，共同描述了硬件的并发行为。
+
+\textbf{评分标准：} 填写“并行”或“并发”得3分。填错得0分。
+
+\end{enumerate}
+
+\newpage
+
+\section{三、程序改错题（5分）}
+
+\subsection*{错误分析}
+
+原代码中共有\textbf{6处}错误（本题要求找出5处即可得满分，以下逐一列出）：
+
+\begin{enumerate}[label=\textbf{错误\arabic*：}]
+
+\item \textbf{第7行：敏感信号列表不完整。}
+PROCESS的敏感信号列表中仅包含\texttt{sel}，但进程中同时读取了\texttt{en}信号。VHDL综合规则要求：组合逻辑进程的敏感信号列表必须包含所有被读取的输入信号，否则可能导致仿真与综合行为不一致（产生锁存器）。\textbf{应将\texttt{PROCESS (sel)}改为\texttt{PROCESS (sel, en)}。}
+
+\item \textbf{第7行：信号\texttt{sel}的类型定义不当。}
+\texttt{sel}被声明为\texttt{INTEGER RANGE 0 TO 7}，虽然语法上合法，但在实体端口使用\texttt{INTEGER}不利于顶层综合与布线，且与\texttt{en}使用的\texttt{STD\_LOGIC}类型体系不一致。\textbf{建议将\texttt{sel}改为\texttt{STD\_LOGIC\_VECTOR(2 DOWNTO 0)}，同时CASE分支改为二进制字面量。}
+
+\item \textbf{第9行：输出端口\texttt{y}的下标范围错误。}
+\texttt{y}被声明为\texttt{STD\_LOGIC\_VECTOR(7 DOWNTO 1)}，即只有\texttt{y(7)}至\texttt{y(1)}共7个元素。而CASE语句中尝试使用\texttt{y(0)}（第10行：\texttt{WHEN 0 => y(0) <= '1';}），\texttt{y(0)}元素不存在，属于下标越界错误。同时，3线-8线译码器应有8个输出（\texttt{y(0)}至\texttt{y(7)}），\textbf{应将\texttt{y}定义改为\texttt{STD\_LOGIC\_VECTOR(7 DOWNTO 0)}。}
+
+\item \textbf{第18行：END CASE语句缺少分号。}
+\texttt{END CASE}后必须以分号\texttt{;}结尾。\textbf{应改为\texttt{END CASE;}。}
+
+\item \textbf{第19行：END IF语句缺少分号。}
+\texttt{END IF}后必须以分号\texttt{;}结尾。\textbf{应改为\texttt{END IF;}。}
+
+\item \textbf{第20行：END PROCESS语句缺少分号。}
+\texttt{END PROCESS}后必须以分号\texttt{;}结尾。\textbf{应改为\texttt{END PROCESS;}。}
+
+\end{enumerate}
+
+\subsection*{修正后的完整代码}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:decoder3t8_fixed}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY decoder3t8 IS
+  PORT (
+    sel : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);  -- 修正1: 使用STD_LOGIC_VECTOR
+    en  : IN  STD_LOGIC;
+    y   : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)   -- 修正2: 改为 (7 DOWNTO 0)
+  );
+END decoder3t8;
+
+ARCHITECTURE behav OF decoder3t8 IS
+BEGIN
+  PROCESS (sel, en)                    -- 修正3: 敏感列表加入 en
+  BEGIN
+    y <= (OTHERS => '0');
+    IF en = '1' THEN
+      CASE sel IS
+        WHEN "000" => y(0) <= '1';
+        WHEN "001" => y(1) <= '1';
+        WHEN "010" => y(2) <= '1';
+        WHEN "011" => y(3) <= '1';
+        WHEN "100" => y(4) <= '1';
+        WHEN "101" => y(5) <= '1';
+        WHEN "110" => y(6) <= '1';
+        WHEN "111" => y(7) <= '1';
+        WHEN OTHERS => y <= (OTHERS => '0');
+      END CASE;                        -- 修正4: 添加分号
+    END IF;                            -- 修正5: 添加分号
+  END PROCESS;                         -- 修正6: 添加分号
+END behav;
+\end{lstlisting}
+
+\subsection*{评分标准（5分）}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item 每正确指出一处错误并给出正确写法得1分，最多5分。
+\item 错误\arabic*（敏感信号列表）、错误\arabic*（\texttt{y}范围）、错误\arabic*（END CASE分号）、错误\arabic*（END IF分号）、错误\arabic*（END PROCESS分号）为5个核心错误，答出其中任意5个即可得满分。
+\item 仅指出错误但未写出正确修改方法者，每处扣0.5分。
+\item 指出错误\arabic*（\texttt{sel}类型）并合理修正，可作为替代得分项。
+\end{itemize}
+
+\newpage
+
+\section{四、程序阅读分析题（5分）}
+
+\begin{enumerate}[label=(\arabic*)]
+
+\item \textbf{该代码描述的是一个什么电路？（1分）}
+
+\textbf{答案：4选1多路选择器（4-to-1 Multiplexer, MUX）。}
+
+\textbf{评分标准：} 答出“4选1多路选择器”或“4-to-1 MUX”得1分。仅答“多路选择器”未指明规模得0.5分。
+
+\item \textbf{该电路的输入信号有哪些？输出信号有哪些？（1分）}
+
+\textbf{答案：}
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item 输入信号：\texttt{a}、\texttt{b}、\texttt{c}、\texttt{d}（均为1位的\texttt{STD\_LOGIC}型数据输入端），\texttt{sel}（2位的\texttt{STD\_LOGIC\_VECTOR}型选择信号）。
+\item 输出信号：\texttt{y}（1位的\texttt{STD\_LOGIC}型输出端）。
+\end{itemize}
+
+\textbf{评分标准：} 完整列出4个数据输入、1个选择输入、1个输出得1分。遗漏任何一项扣0.5分。
+
+\item \textbf{当 \texttt{sel = "10"} 时，输出 \texttt{y} 的值由哪个输入信号决定？（1分）}
+
+\textbf{答案：} 由\texttt{c}决定。\texttt{sel = "10"}对应CASE分支\texttt{WHEN "10" => y <= c;}。
+
+\textbf{评分标准：} 答“c”得1分，其他答案得0分。
+
+\item \textbf{如果在Vivado等综合工具中综合该代码，\texttt{sel} 被综合成什么物理资源？（1分）}
+
+\textbf{答案：} \texttt{sel}被综合成LUT的地址线/选择输入端（LUT address inputs / select lines），即用于选择LUT中存储的对应数据项的控制信号。
+
+\textbf{评分标准：} 答出“LUT地址线”或“LUT选择输入”或“查找表地址输入端”得1分。仅答“连线”或“控制信号”得0.5分。
+
+\item \textbf{该电路的行为描述使用了哪种VHDL语句？它与IF语句在使用场景上的主要区别是什么？（1分）}
+
+\textbf{答案：}
+代码使用了\textbf{CASE语句}。CASE语句与IF语句的主要区别：
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item CASE语句适用于\textbf{多分支互斥}的选择场景（如多路选择器、译码器），所有分支条件值互不相同，综合器可生成并行判断结构。
+\item IF语句适用于\textbf{具有优先级}的判断场景（如优先编码器），条件按书写顺序依次判断，综合器生成级联优先结构。
+\item 在互斥场景下使用CASE比IF更高效：CASE生成并行的MUX结构，延迟小；IF可能生成不必要的优先级链，增加组合逻辑延迟。
+\end{itemize}
+
+\textbf{评分标准：} 指出使用了“CASE语句”得0.5分；正确说明区别（互斥 vs 优先级）得0.5分。
+
+\end{enumerate}
+
+\newpage
+
+\section{五、综合设计题（共60分）}
+
+\subsection{设计题1：组合逻辑设计——8位数值比较器（20分）}
+
+\subsubsection*{评分细则}
+
+\begin{table}[h!]
+\centering
+\caption{8位数值比较器评分标准}
+\begin{tabular}{|l|c|p{10cm}|}
+\hline
+\textbf{评分项目} & \textbf{分值} & \textbf{评分要点} \\
+\hline
+端口定义 & 4分 &
+实体声明语法正确（关键字IS、PORT、端口模式）；\\
+&&端口信号名\texttt{a, b, agtb, aeqb, altb}及类型、位宽正确；\\
+&&每个端口占1分。\\
+\hline
+功能实现 & 10分 &
+比较逻辑正确：\texttt{a>b} → \texttt{agtb='1'}；\texttt{a=b} → \texttt{aeqb='1'}；\texttt{a<b} → \texttt{altb='1'}；\\
+&&三种关系互斥（同一时刻仅一个输出为1）；\\
+&&使用行为描述（IF或条件信号赋值或WHEN-ELSE）；\\
+&&逻辑完整无遗漏。\\
+\hline
+设计思路 & 3分 &
+注释说明了比较器的功能；\\
+&&说明了实现方式（如“逐位比较”或“利用关系运算符”）；\\
+&&注释位置合理，不影响代码可读性。\\
+\hline
+代码规范 & 3分 &
+缩进统一（2或4空格）；\\
+&&信号命名有意义，不随意使用\texttt{x}、\texttt{y}等；\\
+&&关键字大写/小写风格统一；\\
+&&库声明\texttt{LIBRARY}和\texttt{USE}语句完整；\\
+&&注释使用恰当（不过多不过少）。\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{参考代码}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:comp8}]
+-- ============================================================
+-- 设计：8位数值比较器 (8-bit Comparator)
+-- 功能：比较两个8位无符号数a与b的大小关系
+--       输出agtb (a>b), aeqb (a=b), altb (a<b)
+-- 实现方式：使用IF-ELSIF行为描述，三种结果互斥
+-- ============================================================
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;  -- 用于无符号数比较
+
+ENTITY comparator_8bit IS
+  PORT (
+    a    : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 8位输入a
+    b    : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 8位输入b
+    agtb : OUT STD_LOGIC;                      -- a > b 输出
+    aeqb : OUT STD_LOGIC;                      -- a = b 输出
+    altb : OUT STD_LOGIC                       -- a < b 输出
+  );
+END comparator_8bit;
+
+ARCHITECTURE behav OF comparator_8bit IS
+BEGIN
+  -- 比较进程：对a和b的变化敏感
+  PROCESS (a, b)
+  BEGIN
+    -- 默认值：所有比较输出初始为'0'，避免生成锁存器
+    agtb <= '0';
+    aeqb <= '0';
+    altb <= '0';
+
+    -- 利用VHDL关系运算符进行大小比较
+    IF unsigned(a) > unsigned(b) THEN
+      agtb <= '1';       -- a > b
+    ELSIF unsigned(a) = unsigned(b) THEN
+      aeqb <= '1';       -- a = b
+    ELSE
+      altb <= '1';       -- a < b
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\subsubsection*{替代实现：条件信号赋值语句（同样满分）}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:comp8_alt}]
+ARCHITECTURE behav_alt OF comparator_8bit IS
+BEGIN
+  -- 使用条件信号赋值语句（WHEN-ELSE）实现
+  agtb <= '1' WHEN unsigned(a) > unsigned(b) ELSE '0';
+  aeqb <= '1' WHEN unsigned(a) = unsigned(b) ELSE '0';
+  altb <= '1' WHEN unsigned(a) < unsigned(b) ELSE '0';
+END behav_alt;
+\end{lstlisting}
+
+\newpage
+
+\subsection{设计题2：时序逻辑设计——模6计数器（20分）}
+
+\subsubsection*{评分细则}
+
+\begin{table}[h!]
+\centering
+\caption{模6计数器评分标准}
+\begin{tabular}{|l|c|p{10cm}|}
+\hline
+\textbf{评分项目} & \textbf{分值} & \textbf{评分要点} \\
+\hline
+端口定义 & 4分 &
+端口\texttt{clk}、\texttt{rst}、\texttt{en}、\texttt{q[3:0]}、\texttt{cout}定义完整；\\
+&&类型（\texttt{STD\_LOGIC}/\texttt{STD\_LOGIC\_VECTOR}）与方向（IN/OUT）正确；\\
+&&每个信号定义合理。\\
+\hline
+功能实现 & 10分 &
+时钟边沿检测语法正确：\texttt{IF rising\_edge(clk) THEN} 或 \texttt{IF clk'event AND clk='1' THEN}（2分）；\\
+&&异步复位优先级最高：\texttt{IF rst='1' THEN q <= "0000";}（2分）；\\
+&&使能逻辑：\texttt{ELSIF en='1' THEN}（1分）；\\
+&&计数0$\sim$5循环，5后回到0（2分）；\\
+&&进位输出逻辑：\texttt{cout <= '1' WHEN q="0101" AND en='1' ELSE '0';}（2分）；\\
+&&综合无锁存器，所有信号在进程内有完整赋值（1分）。\\
+\hline
+设计思路 & 3分 &
+注释说明计数器工作流程：复位→使能判断→加1计数→循环判断→进位输出；\\
+&&说明了模6的含义（计数范围0$\sim$5）；\\
+&&注释适度、准确。\\
+\hline
+代码规范 & 3分 &
+\texttt{rising\_edge()}函数使用正确（或\texttt{clk'event}写法正确）；\\
+&&信号类型使用恰当（\texttt{STD\_LOGIC}/\texttt{STD\_LOGIC\_VECTOR}而非\texttt{BIT}）；\\
+&&进程标签、信号命名合理；\\
+&&库声明\texttt{ieee.std\_logic\_1164}及\texttt{ieee.numeric\_std}（如需）完整。\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{参考代码}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:mod6cnt}]
+-- ============================================================
+-- 设计：模6计数器 (Mod-6 Counter)
+-- 功能：在时钟上升沿计数，计数范围0~5，循环往复
+--       rst=1 异步复位 q="0000"
+--       en=1  使能计数
+--       cout  计数值为5且en有效时输出高电平
+-- 工作流程：
+--   1) 检查异步复位 rst=1 → q=0
+--   2) 时钟上升沿且 en=1 → q+1
+--   3) q=5 时下一周期回0（模6循环）
+--   4) 同步进位：q=5且en=1时 cout=1
+-- ============================================================
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY mod6_counter IS
+  PORT (
+    clk  : IN  STD_LOGIC;                     -- 时钟信号
+    rst  : IN  STD_LOGIC;                     -- 异步复位（高有效）
+    en   : IN  STD_LOGIC;                     -- 计数使能
+    q    : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);   -- 4位计数输出
+    cout : OUT STD_LOGIC                      -- 进位输出
+  );
+END mod6_counter;
+
+ARCHITECTURE behav OF mod6_counter IS
+  SIGNAL count_reg : unsigned(3 DOWNTO 0) := "0000";  -- 内部计数寄存器
+BEGIN
+  -- 同步输出连接
+  q <= STD_LOGIC_VECTOR(count_reg);
+
+  -- 主计数进程
+  cnt_proc : PROCESS (clk, rst)
+  BEGIN
+    IF rst = '1' THEN                        -- 异步复位，优先级最高
+      count_reg <= "0000";                   -- 复位到0
+    ELSIF rising_edge(clk) THEN             -- 时钟上升沿
+      IF en = '1' THEN                       -- 使能有效
+        IF count_reg = 5 THEN               -- 计数值为5时（最大值）
+          count_reg <= "0000";              -- 回到0，实现模6循环
+        ELSE
+          count_reg <= count_reg + 1;       -- 否则正常加1
+        END IF;
+      END IF;
+    END IF;
+  END PROCESS cnt_proc;
+
+  -- 进位输出：组合逻辑
+  -- 当计数值为5且使能有效时，cout输出1
+  cout <= '1' WHEN (count_reg = 5 AND en = '1') ELSE '0';
+
+END behav;
+\end{lstlisting}
+
+\subsubsection*{替代实现：使用STD\_LOGIC\_VECTOR作为计数寄存器}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:mod6cnt_alt}]
+ARCHITECTURE behav_alt OF mod6_counter IS
+  SIGNAL count_reg : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000";
+BEGIN
+  q <= count_reg;
+
+  cnt_proc : PROCESS (clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      count_reg <= "0000";
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        IF count_reg = "0101" THEN           -- 二进制5
+          count_reg <= "0000";
+        ELSE
+          count_reg <= STD_LOGIC_VECTOR(unsigned(count_reg) + 1);
+        END IF;
+      END IF;
+    END IF;
+  END PROCESS cnt_proc;
+
+  cout <= '1' WHEN (count_reg = "0101" AND en = '1') ELSE '0';
+END behav_alt;
+\end{lstlisting}
+
+\newpage
+
+\subsection{设计题3：状态机设计——“101”序列检测器（Mealy型）（20分）}
+
+\subsubsection*{功能说明（2分）}
+
+当输入端\texttt{din}连续收到序列“101”时，输出端\texttt{dout}在检测到完整序列的同一时钟周期输出高电平“1”。其余情况输出“0”。检测允许重叠（overlapping）：输入序列“10101”可检测出两次“101”。
+
+\subsubsection*{状态图（4分）}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[
+    auto,
+    node distance=3.5cm,
+    >=stealth,
+    shorten >=1pt,
+    thick,
+    state/.style={circle, draw, minimum size=1.2cm, inner sep=0pt}
+  ]
+
+  % 状态节点
+  \node[state, initial above, initial text=] (S0) {S0};
+  \node[state] (S1) [right of=S0] {S1};
+  \node[state] (S2) [right of=S1] {S2};
+
+  % S0 自环：din=0，输出0，保持S0
+  \path[->] (S0) edge [loop above] node {0/0} (S0);
+
+  % S0 -> S1：din=1，输出0（未检测到完整序列）
+  \path[->] (S0) edge [bend left] node [above] {1/0} (S1);
+
+  % S1 -> S2：din=0，输出0
+  \path[->] (S1) edge [bend left] node [above] {0/0} (S2);
+
+  % S1 自环：din=1，输出0（重叠检测：最后一个"1"作为新序列起点）
+  \path[->] (S1) edge [loop above] node {1/0} (S1);
+
+  % S2 -> S1：din=1，输出1（检测到"101"！重叠：最后"1"作为新序列起点）
+  \path[->] (S2) edge [bend left] node [below] {1/1} (S1);
+
+  % S2 -> S0：din=0，输出0（序列中断，回到初始状态）
+  \path[->] (S2) edge [bend left=60] node [below] {0/0} (S0);
+
+\end{tikzpicture}
+\caption{Mealy型“101”序列检测器状态转换图}
+\label{fig:fsm101_mealy}
+\end{figure}
+
+\textbf{状态说明：}
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item \textbf{S0（初始状态）：} 尚未检测到任何有效位。若\texttt{din=1}则进入S1（记住“1”）；若\texttt{din=0}则保持S0。
+\item \textbf{S1（检测到“1”）：} 已收到第一位“1”。若\texttt{din=0}则进入S2（记住“10”）；若\texttt{din=1}则保持S1（重叠检测：新“1”作为下一序列的起始）。
+\item \textbf{S2（检测到“10”）：} 已收到前两位“10”。若\texttt{din=1}则输出为1（此时检测到完整“101”）且下一状态为S1（重叠：该“1”同时作为下一个“101”序列的首位）；若\texttt{din=0}则输出为0且返回S0（序列中断）。
+\end{itemize}
+
+\textbf{重叠检测示例：}
+\begin{table}[h!]
+\centering
+\caption{输入序列“10101”检测过程}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+时钟周期 & 1 & 2 & 3 & 4 & 5 & 6（之后） \\
+\hline
+\texttt{din} & 1 & 0 & 1 & 0 & 1 & — \\
+\hline
+当前状态 & S0 & S1 & S2 & S1 & S2 & S1 \\
+\hline
+\texttt{dout} & 0 & 0 & \textbf{1} & 0 & \textbf{1} & 0 \\
+\hline
+下一状态 & S1 & S2 & S1 & S2 & S1 & — \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{评分标准（状态图4分）：}
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item 状态数量正确（3个状态S0,S1,S2）且命名清晰：1分
+\item 所有转换弧线（6条）正确标注“输入/输出”格式：2分（每条弧线0.33分，汇总）
+\item 重叠检测弧线正确（S1自环1/0，S2→S1标注1/1）：1分
+\item 若使用文字描述代替绘图，需完整列出所有状态转移条件及输出，每遗漏一条转移扣1分
+\end{itemize}
+
+\subsubsection*{端口定义（3分）}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:fsm101_port}]
+ENTITY seq_detector_101 IS
+  PORT (
+    clk  : IN  STD_LOGIC;    -- 时钟信号
+    rst  : IN  STD_LOGIC;    -- 异步复位（低电平有效）
+    din  : IN  STD_LOGIC;    -- 串行数据输入
+    dout : OUT STD_LOGIC     -- 检测输出（Mealy型，与输入同周期）
+  );
+END seq_detector_101;
+\end{lstlisting}
+
+\textbf{评分标准（端口定义3分）：}
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item \texttt{clk}、\texttt{rst}、\texttt{din}、\texttt{dout}四个端口齐全：1分
+\item 端口模式（IN/OUT）与类型（STD\_LOGIC）正确：1分
+\item 复位极性注释清晰（低电平有效）：1分
+\end{itemize}
+
+\subsubsection*{VHDL代码——双进程结构（8分）}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:fsm101_full}]
+-- ============================================================
+-- 设计：Mealy型 "101" 序列检测器
+-- 功能：检测串行输入序列 "101"
+--       输出dout在检测到完整序列的同一周期置1
+--       支持重叠检测（如 "10101" 检测出两次）
+--
+-- 状态编码：
+--   S0 = "00"  初始状态（未匹配任何位）
+--   S1 = "01"  已匹配 "1"
+--   S2 = "10"  已匹配 "10"
+--
+-- 双进程结构：
+--   进程1 (state_reg): 时序逻辑——状态寄存器与异步复位
+--   进程2 (output_proc): 组合逻辑——下一状态计算与Mealy输出
+-- ============================================================
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY seq_detector_101 IS
+  PORT (
+    clk  : IN  STD_LOGIC;    -- 时钟信号
+    rst  : IN  STD_LOGIC;    -- 异步复位，低电平有效
+    din  : IN  STD_LOGIC;    -- 串行数据输入
+    dout : OUT STD_LOGIC     -- 序列检测输出（Mealy型）
+  );
+END seq_detector_101;
+
+ARCHITECTURE fsm OF seq_detector_101 IS
+
+  -- 自定义枚举类型定义状态，可读性强
+  TYPE state_type IS (S0, S1, S2);
+  SIGNAL current_state, next_state : state_type;
+
+BEGIN
+
+  -- ==========================================================
+  -- 进程1：状态寄存器（时序逻辑）
+  -- 功能：在时钟上升沿完成状态切换，处理异步复位
+  -- ==========================================================
+  state_reg : PROCESS (clk, rst)
+  BEGIN
+    IF rst = '0' THEN                         -- 异步复位，低电平有效
+      current_state <= S0;                    -- 回到初始状态
+    ELSIF rising_edge(clk) THEN              -- 时钟上升沿
+      current_state <= next_state;           -- 状态更新
+    END IF;
+  END PROCESS state_reg;
+
+  -- ==========================================================
+  -- 进程2：下一状态逻辑与输出逻辑（组合逻辑）
+  -- 功能：根据当前状态和输入信号，计算下一状态与Mealy输出
+  -- 注意：Mealy型输出同时依赖当前状态和输入din
+  -- ==========================================================
+  output_proc : PROCESS (current_state, din)
+  BEGIN
+    -- 默认赋值：避免生成锁存器
+    next_state <= S0;
+    dout <= '0';
+
+    CASE current_state IS
+
+      WHEN S0 =>
+        -- 状态S0：等待第一个 "1"
+        IF din = '1' THEN
+          next_state <= S1;    -- 收到 "1"，进入S1
+        ELSE
+          next_state <= S0;    -- 收到 "0"，保持S0
+        END IF;
+        dout <= '0';           -- Mealy输出：未完成序列
+
+      WHEN S1 =>
+        -- 状态S1：已匹配 "1"，等待 "0"
+        IF din = '1' THEN
+          next_state <= S1;    -- 又是 "1"，保持S1（重叠检测）
+        ELSE
+          next_state <= S2;    -- 收到 "0"，形成 "10"，进入S2
+        END IF;
+        dout <= '0';           -- Mealy输出：未完成序列
+
+      WHEN S2 =>
+        -- 状态S2：已匹配 "10"，等待 "1"
+        IF din = '1' THEN
+          next_state <= S1;    -- 收到 "1"，完整序列 "101" ！
+                               -- 回到S1实现重叠检测（最后"1"复用）
+          dout <= '1';         -- ★ Mealy输出：同一周期输出1
+        ELSE
+          next_state <= S0;    -- 收到 "0"，序列中断，回初始状态
+          dout <= '0';
+        END IF;
+
+      WHEN OTHERS =>
+        -- 安全分支：处理未定义状态
+        next_state <= S0;
+        dout <= '0';
+
+    END CASE;
+  END PROCESS output_proc;
+
+END fsm;
+\end{lstlisting}
+
+\subsubsection*{VHDL代码——三进程结构（同等有效，8分）}
+
+\begin{lstlisting}[language=VHDL,numbers=left,label={lst:fsm101_3proc}]
+-- 三进程结构：将下一状态逻辑（组合）与输出逻辑（组合）分离
+ARCHITECTURE fsm_3proc OF seq_detector_101 IS
+
+  TYPE state_type IS (S0, S1, S2);
+  SIGNAL current_state, next_state : state_type;
+
+BEGIN
+
+  -- 进程1：状态寄存器（时序逻辑）
+  state_reg : PROCESS (clk, rst)
+  BEGIN
+    IF rst = '0' THEN
+      current_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- 进程2：下一状态逻辑（组合逻辑）
+  next_state_proc : PROCESS (current_state, din)
+  BEGIN
+    next_state <= S0;  -- 默认值
+    CASE current_state IS
+      WHEN S0 =>
+        IF din = '1' THEN next_state <= S1;
+        ELSE              next_state <= S0; END IF;
+      WHEN S1 =>
+        IF din = '1' THEN next_state <= S1;
+        ELSE              next_state <= S2; END IF;
+      WHEN S2 =>
+        IF din = '1' THEN next_state <= S1;
+        ELSE              next_state <= S0; END IF;
+      WHEN OTHERS =>
+        next_state <= S0;
+    END CASE;
+  END PROCESS;
+
+  -- 进程3：输出逻辑（Mealy型：组合逻辑，依赖current_state和din）
+  output_proc : PROCESS (current_state, din)
+  BEGIN
+    dout <= '0';  -- 默认值
+    IF current_state = S2 AND din = '1' THEN
+      dout <= '1';
+    END IF;
+  END PROCESS;
+
+END fsm_3proc;
+\end{lstlisting}
+
+\subsubsection*{评分细则（代码8分 + 设计思路与规范3分 = 11分）}
+
+\begin{table}[h!]
+\centering
+\caption{序列检测器评分标准}
+\begin{tabular}{|l|c|p{10cm}|}
+\hline
+\textbf{评分项目} & \textbf{分值} & \textbf{评分要点} \\
+\hline
+\multicolumn{3}{|c|}{\textbf{VHDL代码（8分）}} \\
+\hline
+库与实体 & 1分 &
+库声明完整（ieee, std\_logic\_1164）；实体端口定义正确。\\
+\hline
+状态定义 & 1分 &
+状态类型定义（\texttt{TYPE state\_type IS}）或常量编码；\\
+&&至少包含S0/S1/S2三个状态。\\
+\hline
+状态寄存器 & 2分 &
+时钟边沿检测正确（\texttt{rising\_edge(clk)}）；\\
+&&异步复位逻辑正确（\texttt{rst='0'}复位到S0，低电平有效）。\\
+\hline
+下一状态逻辑 & 2分 &
+S0→S1(当din=1)，S0→S0(当din=0)；\\
+&&S1→S2(当din=0)，S1→S1(当din=1，重叠)；\\
+&&S2→S1(当din=1且输出dout=1)，S2→S0(当din=0)；\\
+&&每错一处转移扣0.5分。\\
+\hline
+Mealy输出 & 2分 &
+输出逻辑同时依赖当前状态和输入\texttt{din}（Mealy特征）；\\
+&&仅在S2且din=1时输出dout=1；\\
+&&输出在组合逻辑进程中计算（与时钟无关）。\\
+\hline
+\multicolumn{3}{|c|}{\textbf{设计思路说明与代码规范（3分）}} \\
+\hline
+设计思路 & 1.5分 &
+注释说明了状态含义和转移条件；\\
+&&说明了Mealy型输出特点（同周期输出）；\\
+&&说明了重叠检测机制。\\
+\hline
+代码规范 & 1.5分 &
+双进程/三进程结构清晰；\\
+&&信号命名合理（\texttt{current\_state/next\_state}）；\\
+&&使用枚举类型或清晰的状态编码；\\
+&&进程有标签、缩进一致。\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection*{常见错误提示}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+\item \textbf{Moore型错误：} 将输出\texttt{dout}放在时序进程中赋值（与时钟同步），导致输出延迟一个周期——这是Moore型FSM而非Mealy型，扣3分。
+\item \textbf{复位极性错误：} 题目明确要求\texttt{rst}低电平复位（\texttt{IF rst = '0' THEN}），若写成高电平复位扣1分。
+\item \textbf{重叠检测缺失：} S1状态下din=1时未保持S1，或S2状态下din=1时未回到S1——无法检测重叠序列，扣1.5分。
+\item \textbf{敏感列表遗漏：} 组合逻辑进程的敏感信号列表中缺少\texttt{din}或\texttt{current\_state}——综合时可能产生锁存器，扣1分。
+\item \textbf{默认赋值缺失：} 组合进程中未对\texttt{next\_state}或\texttt{dout}进行默认赋值——可能综合出不必要的锁存器，扣1分。
+\end{itemize}
+
+\end{enumerate}

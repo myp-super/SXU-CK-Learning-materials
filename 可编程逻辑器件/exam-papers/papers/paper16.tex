@@ -1,0 +1,387 @@
+\chapter{第16套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（十六）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟 \hspace{2em} 难度：中等）
+\end{center}
+
+% ============================================
+\section*{一、选择题（每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 一个典型的FPGA可配置逻辑块（CLB/Slice）通常包含以下哪组基本资源？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 仅由查找表（LUT）构成，不含任何触发器 &
+B. & 查找表（LUT）、D触发器、多路选择器和进位链 \\
+C. & 完整的CPU处理器核和存储器 &
+D. & 模拟锁相环（PLL）和时钟管理模块 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，关于信号（SIGNAL）与变量（VARIABLE）的赋值和更新时机，以下描述\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 信号的赋值（\texttt{<=}）在语句执行时立即生效，变量的赋值（\texttt{:=}）在进程挂起时才更新 &
+B. & 变量的赋值（\texttt{:=}）在语句执行时立即生效，信号的赋值（\texttt{<=}）在进程挂起（或经过$\Delta$延时）后才更新 \\
+C. & 信号和变量的赋值均在语句执行时立即生效，没有区别 &
+D. & 信号和变量的赋值均在进程挂起时才生效，没有区别 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL的组合逻辑PROCESS中，如果敏感信号列表遗漏了某些被读取的输入信号，综合工具通常会产生什么后果？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 综合失败，无法生成任何电路 &
+B. & 综合工具自动补全敏感信号列表，综合前后仿真结果完全一致 \\
+C. & 综合工具可能推断出锁存器（Latch），导致综合前仿真与综合后仿真结果不一致 &
+D. & 不会产生任何影响，因为敏感信号列表仅用于仿真 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 对于\textbf{同一功能}（如相同的序列检测任务），Moore型与Mealy型状态机相比，以下说法\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Moore型通常需要更多的状态，但其输出仅取决于当前状态，抗毛刺能力更强 &
+B. & Mealy型通常需要更多的状态，但其输出响应更慢 \\
+C. & 两种类型所需状态数完全相同，仅在编码方式上有差异 &
+D. & Moore型输出与输入直接相关，Mealy型输出仅取决于当前状态 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，IF语句和CASE语句属于哪类语句？它们可以出现在什么位置？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 并发语句（Concurrent Statement），可出现在结构体中的任何位置 &
+B. & 顺序语句（Sequential Statement），只能出现在PROCESS或子程序（FUNCTION/PROCEDURE）内部 \\
+C. & 既可作为并发语句也可作为顺序语句，取决于上下文 &
+D. & 并发语句，但只能出现在结构体的声明区（BEGIN之前） \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，关于逻辑运算符的优先级，以下描述\textbf{正确}的是？
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & AND优先级最高，OR次之，NOT最低 &
+B. & NOT优先级最高，AND、OR、NAND、NOR、XOR、XNOR等二元逻辑运算符的优先级相同且低于NOT \\
+C. & 所有逻辑运算符（包括NOT、AND、OR、XOR等）优先级完全相同，按从左到右顺序计算 &
+D. & XOR优先级最高，其次是AND，最后是OR和NOT \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（每空3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item VHDL中，IEEE库的两个最常用的标准程序包是\underline{\hspace{3.5cm}}（定义了STD\_LOGIC和STD\_LOGIC\_VECTOR类型）和\underline{\hspace{3.5cm}}（定义了UNSIGNED和SIGNED类型及相关的算术运算函数）。
+
+\vspace{0.8cm}
+
+\item 在VHDL中，信号（SIGNAL）使用\underline{\hspace{1.2cm}}（填符号）进行赋值，其值在进程\underline{\hspace{2.5cm}}（填“执行时”或“挂起时”）更新；变量（VARIABLE）使用\underline{\hspace{1.2cm}}（填符号）进行赋值，其值在语句\underline{\hspace{2.5cm}}（填“执行时”或“挂起时”）立即更新。
+
+\vspace{0.8cm}
+
+\item 在VHDL的实体（ENTITY）声明中，\underline{\hspace{2cm}}关键字用于定义可配置的静态参数（如数据位宽、模值等），它必须声明在\underline{\hspace{2cm}}关键字之前。在顶层例化子模块时，通过\underline{\hspace{2cm}}语句将实际参数值传递给子模块。
+
+\vspace{0.8cm}
+
+\item 在VHDL的结构化描述中，需先在结构体的声明区使用\underline{\hspace{2.5cm}}语句声明待例化子模块的接口，再使用\underline{\hspace{2.5cm}}语句将该子模块的端口与顶层信号实际连接。
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+以下VHDL代码意图设计一个\textbf{带使能的3--8译码器}。当使能信号\texttt{en = '1'}时，根据3位输入\texttt{din}将对应输出位设为\texttt{'1'}（独热码），其余位为\texttt{'0'}；当\texttt{en = '0'}时，所有输出为\texttt{'0'}。但代码中存在\textbf{至少6处错误}。请找出\textbf{任意5处}（每处1分，共5分），指出错误位置（行号）、错误原因及正确写法。
+
+\begin{lstlisting}[language=VDL, numbers=left, caption={含错误的3--8译码器VHDL代码（6处错误，找出5处即满分）}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY decoder38_err IS
+  PORT(
+    en   : IN  STD_LOGIC;
+    din  : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);
+    dout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  )                                         -- 缺少分号
+END decoder38_err;
+
+ARCHITECTURE behav OF decoder38_err IS
+BEGIN
+  PROCESS(din)                              -- 敏感信号列表不完整，缺少en
+  BEGIN
+    IF en = '1' THEN
+      CASE din IS
+        WHEN "000" => dout <= "00000001"
+        WHEN "001" => dout <= "00000010"    -- 上一行缺少分号
+        WHEN "010" => dout <= "00000100";
+        WHEN "011" => dout <= "00001000";
+        WHEN "100" => dout <= "00010000";
+        WHEN "101" => dout <= "00100000";
+        WHEN "110" => dout <= "01000000";
+        WHEN "111" => dout <= "10000000";
+        -- CASE语句缺少OTHERS分支（不完整覆盖）
+      END CASE;
+    -- 缺少en='0'时的ELSE分支，将推断出锁存器（Latch）
+    END IF;
+  END PROCESS                                 -- 缺少分号
+END behav;                                    -- 缺少分号
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题要求：}按以下格式逐条列出5处错误（每处1分，共5分）。注意：代码中的错误不止5处，请选择5处作答。\\[4pt]
+错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+\vspace{0.5cm}
+\textbf{提示：}错误类型包括但不限于——(1)实体声明语法错误（缺少分号）；(2)敏感信号列表不完整（组合逻辑进程遗漏输入信号）；(3)CASE语句中分支语句缺少分号；(4)CASE语句未覆盖所有可能取值（缺少OTHERS分支）；(5)组合逻辑进程中IF语句缺少ELSE分支，推断出锁存器；(6)PROCESS或ARCHITECTURE末尾缺少分号。
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[language=VDL, numbers=left, caption={分析用VHDL代码——6分频器}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY div6 IS
+  PORT(
+    clk     : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;
+    clk_out : OUT STD_LOGIC
+  );
+END div6;
+
+ARCHITECTURE behav OF div6 IS
+  SIGNAL count : INTEGER RANGE 0 TO 2 := 0;
+  SIGNAL temp  : STD_LOGIC := '0';
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      count <= 0;
+      temp  <= '0';
+    ELSIF rising_edge(clk) THEN
+      IF count = 2 THEN
+        count <= 0;
+        temp  <= NOT temp;
+      ELSE
+        count <= count + 1;
+      END IF;
+    END IF;
+  END PROCESS;
+  clk_out <= temp;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？其基本功能是什么？
+  \item （2分）若输入时钟\texttt{clk}的频率为12\,MHz，输出\texttt{clk\_out}的频率是多少？请写出详细的推导计算过程。
+  \item （1分）输出信号\texttt{clk\_out}的占空比是多少？请说明理由。
+  \item （1分）若要将分频比改为10（即实现10分频），代码中的信号\texttt{count}的取值范围和比较条件需要如何修改？（仅写出修改方案，不要求完整代码）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：组合逻辑设计——带使能的3--8译码器（20分）}
+
+设计一个带使能端的3线--8线译码器（3-to-8 Decoder with Enable）。输入为3位二进制地址\texttt{din(2~downto~0)}和使能信号\texttt{en}；输出为8位独热码\texttt{dout(7~downto~0)}。
+
+\textbf{功能定义：}
+\begin{itemize}
+  \item 当\texttt{en = '1'}时，根据\texttt{din}的值将\texttt{dout}的对应位置为\texttt{'1'}，其余位置为\texttt{'0'}。例如：\texttt{din = "011"}（即十进制3）时，\texttt{dout = "00001000"}（bit3为1）。
+  \item 当\texttt{en = '0'}时，无论\texttt{din}为何值，\texttt{dout}的所有位均输出\texttt{'0'}。
+\end{itemize}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （5分）列出该译码器的完整真值表（共8行有效输入+1行使能无效的情况）。真值表应包含\texttt{en}、\texttt{din(2:0)}和\texttt{dout(7:0)}。
+  \item （4分）画出顶层模块的端口框图，标注所有端口名称、方向和位宽。
+  \item （9分）使用\textbf{行为描述风格}（PROCESS + CASE语句）编写完整的VHDL代码。要求：
+  \begin{itemize}
+    \item 正确声明库和实体；
+    \item 在PROCESS中使用IF语句判断\texttt{en}，在CASE语句中根据\texttt{din}为\texttt{dout}赋值；
+    \item CASE语句必须覆盖\texttt{din}的所有可能取值（使用WHEN OTHERS分支）；
+    \item 当\texttt{en = '0'}时，所有输出复位为全\texttt{'0'}（避免锁存器推断）。
+  \end{itemize}
+  \item （2分）在代码中以注释方式说明：为什么组合逻辑的PROCESS敏感信号列表必须包含\texttt{en}？如果遗漏了\texttt{en}，综合结果会有什么问题？
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}3--8译码器的输出是``独热码''（One-Hot Code），即8位输出中仅有一位为\texttt{'1'}，其余为\texttt{'0'}。\texttt{din = "000"}对应\texttt{dout(0) = '1'}，\texttt{din = "001"}对应\texttt{dout(1) = '1'}，以此类推。
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：时序逻辑设计——模6计数器（Mod-6 Counter）（20分）}
+
+设计一个\textbf{模6同步计数器}（计数范围：0~5，即$0 \to 1 \to 2 \to 3 \to 4 \to 5 \to 0 \to \cdots$）。该计数器的模值$N=6$不是2的幂次，需要使用复位逻辑或条件判断实现正确的循环计数。
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：同步复位，高电平有效。复位时计数值归零，\texttt{tc}输出\texttt{'0'}。
+  \item \texttt{en}（输入）：计数使能信号，高电平有效。\texttt{en = '1'}时每个时钟上升沿计数值加1；\texttt{en = '0'}时保持当前计数值不变。
+  \item \texttt{q(2~downto~0)}（输出）：3位计数值输出（因为计数值范围为0~5，需3位二进制表示）。
+  \item \texttt{tc}（输出）：终端计数（Terminal Count）输出。当计数值为5且\texttt{en = '1'}时，\texttt{tc}输出\texttt{'1'}（持续一个时钟周期）；其余时间输出\texttt{'0'}。
+\end{itemize}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出该模6计数器的状态转移图。标注6个状态（0~5）的名称（以计数值表示）、各状态下的\texttt{tc}输出值，以及所有状态转移条件（需标注\texttt{en}的取值）。
+  \item （3分）画出顶层模块的端口框图，标注所有端口名称、方向和位宽。
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 使用\textbf{行为描述风格}（PROCESS实现）；
+    \item 内部使用\texttt{INTEGER RANGE 0 TO 5}类型的信号存储计数值；
+    \item 在PROCESS中实现同步复位、使能控制和模6循环计数逻辑；
+    \item 优先级：同步复位 > 使能控制 > 计数；
+    \item 输出\texttt{tc}和\texttt{q}需从内部计数值正确生成。
+  \end{itemize}
+  \item （3分）画出该计数器的\textbf{简化测试平台（Testbench）草图}，包括：
+  \begin{itemize}
+    \item 时钟信号的生成方式（周期和占空比自定，标注参数）；
+    \item 复位信号的时序；
+    \item 至少覆盖一个完整计数周期（0~5）的使能信号波形；
+    \item 用波形示意图的形式画出关键信号的时序关系（clk、rst、en、q、tc）。
+  \end{itemize}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 模6计数器的关键：当计数值达到5时，下一个有效计数脉冲使其回到0（而非继续增加到6）。
+  \item 由于模值为6（$2^2=4 < 6 < 2^3=8$），输出端口\texttt{q}至少需要3位位宽。
+  \item \texttt{tc}信号在计数值=5且\texttt{en='1'}时为\texttt{'1'}（不必等到下一时钟沿），也可选择在PROCESS内部同步生成。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：状态机设计——自动售货机控制器（20分）}
+
+设计一个\textbf{自动售货机控制器}（Vending Machine Controller），使用\textbf{Moore型有限状态机}实现。售货机中某种商品的售价为\textbf{5元}，机器\textbf{只接受1元和2元硬币}（不接受纸币或其他面额）。用户逐次投入硬币，当累计投入金额\textbf{恰好达到或超过5元}时，售货机输出出货信号并自动找零（若超过5元则退还超出部分对应的硬币数）。为简化设计，本题目中暂不考虑找零——即要求\textbf{投入金额恰好等于5元时出货}，若某次投币会使金额超过5元，则\textbf{忽略该次投币}（金额保持不变）。
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：同步复位，高电平有效。复位后状态机回到初始状态，累计金额清零。
+  \item \texttt{coin(1~downto~0)}（输入）：投币信号。编码定义如下：
+  \begin{itemize}
+    \item \texttt{"00"}：本次无硬币投入。
+    \item \texttt{"01"}：投入1元硬币。
+    \item \texttt{"10"}：投入2元硬币。
+    \item \texttt{"11"}：无效编码，等同于无硬币投入。
+  \end{itemize}
+  \item \texttt{dispense}（输出）：出货信号，高电平有效。当累计金额达到5元时，持续输出一个时钟周期的\texttt{'1'}，随后自动复位为\texttt{'0'}。
+\end{itemize}
+
+\textbf{Moore型状态机设计说明：}
+\begin{itemize}
+  \item 状态定义：每个状态表示当前累计已投入的金额（单位：元）。
+  \item 状态设置：S0（0元）、S1（1元）、S2（2元）、S3（3元）、S4（4元）、S5（5元——出货状态）。
+  \item 输出定义（Moore型）：仅S5状态下\texttt{dispense = '1'}，其余所有状态下\texttt{dispense = '0'}。
+  \item 状态转移规则：
+  \begin{itemize}
+    \item 当前状态为Si（累计i元），若投入1元（\texttt{coin = "01"}），则次态为S$_{i+1}$（若$i+1 \le 5$）；若投入2元（\texttt{coin = "10"}），则次态为S$_{i+2}$（若$i+2 \le 5$）。
+    \item 若投入的硬币会使累计金额\textbf{超过5元}（即$i+1>5$或$i+2>5$），则\textbf{状态保持不变}（忽略该次投币）。
+    \item 在S5状态下（已出货），无论输入为何值，次态均无条件回到S0（准备下一次交易）。
+  \end{itemize}
+\end{itemize}
+
+\textbf{示例：}用户依次投入2元、2元、1元硬币。
+\begin{center}
+S0 $\xrightarrow{\text{2元}}$ S2 $\xrightarrow{\text{2元}}$ S4 $\xrightarrow{\text{1元}}$ S5（出货）$\to$ S0
+\end{center}
+若用户在S4状态下尝试投入2元（累计将达到6元 > 5元），则该次投币被忽略，状态保持S4。
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （6分）画出\textbf{Moore型状态转移图}。要求：
+  \begin{itemize}
+    \item 清晰标注全部6个状态（S0~S5）的名称和含义（以累计金额标注）；
+    \item 标注每个状态的\texttt{dispense}输出值；
+    \item 标注所有状态之间的转移条件（基于\texttt{coin}的不同取值），包括：投入1元、投入2元、无硬币投入、以及超额的无效投币。
+  \end{itemize}
+  \item （4分）列出\textbf{状态转移表}，包含以下列：当前状态、输入\texttt{coin}（区分"00"、"01"、"10"）、次态、输出\texttt{dispense}。
+  \item （8分）编写\textbf{完整的VHDL代码}（实体+结构体）实现该自动售货机控制器。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义所有状态：\texttt{TYPE vending\_state IS (S0, S1, S2, S3, S4, S5);}
+    \item 采用\textbf{双进程描述风格}（推荐）或三进程风格：
+    \begin{itemize}
+      \item 进程1（时序进程）：描述状态寄存器和同步复位逻辑。时钟上升沿触发，复位时回到S0；
+      \item 进程2（组合进程）：描述次态逻辑和输出逻辑。根据当前状态和输入\texttt{coin}确定次态，根据当前状态确定\texttt{dispense}输出。
+    \end{itemize}
+    \item 正确使用CASE语句描述状态转移；
+    \item 代码中必须包含清晰的注释，说明各状态的含义和关键转移逻辑。
+  \end{itemize}
+  \item （2分）代码规范：缩进一致、信号命名合理、注释完整清晰。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item Moore型状态机的输出只取决于当前状态，与输入无关——因此\texttt{dispense}信号仅在S5状态时为\texttt{'1'}。
+  \item 注意处理边界情况：S4状态时，投入2元（总额6元>5元）应忽略并保持S4；投入1元（恰好5元）则进入S5。
+  \item S5状态的下一个时钟周期无条件回到S0（即每完成一次交易后，状态机自动准备好接受下一次交易）。
+  \item 进程2（组合逻辑）的敏感信号列表中应包含当前状态信号和\texttt{coin}信号。
+  \item 若使用双进程风格，次态逻辑和输出逻辑可合并于同一个组合进程中。
+\end{itemize}
+\end{framed}
+
+\vspace{0.5cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

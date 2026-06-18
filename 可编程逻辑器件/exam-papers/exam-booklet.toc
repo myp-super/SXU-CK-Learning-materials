@@ -1,0 +1,36 @@
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}第1套试卷}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}第2套试卷}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}一、选择题（每题3分，共18分）}{9}{section.2.1}%
+\contentsline {section}{\numberline {2.2}二、填空题（每题3分，共12分）}{10}{section.2.2}%
+\contentsline {section}{\numberline {2.3}三、程序改错题（5分）}{10}{section.2.3}%
+\contentsline {section}{\numberline {2.4}四、程序阅读分析题（5分）}{11}{section.2.4}%
+\contentsline {section}{\numberline {2.5}五、综合设计题（共60分）}{12}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}设计题1：组合逻辑设计——8位数值比较器（20分）}{12}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}设计题2：时序逻辑设计——模6计数器（20分）}{13}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}设计题3：状态机设计——“101”序列检测器（Mealy型）（20分）}{13}{subsection.2.5.3}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}第3套试卷}{15}{chapter.3}%
+\contentsline {chapter}{\numberline {第四章\hspace {.3em}}第4套试卷}{23}{chapter.4}%
+\contentsline {chapter}{\numberline {第五章\hspace {.3em}}第5套试卷}{29}{chapter.5}%
+\contentsline {section}{\numberline {5.1}一、选择题（共6题，每题3分，共18分）}{29}{section.5.1}%
+\contentsline {section}{\numberline {5.2}二、填空题（共4题，每题3分，共12分）}{30}{section.5.2}%
+\contentsline {section}{\numberline {5.3}三、程序改错题（共1题，每题5分，共5分）}{30}{section.5.3}%
+\contentsline {section}{\numberline {5.4}四、程序阅读分析题（共1题，每题5分，共5分）}{31}{section.5.4}%
+\contentsline {section}{\numberline {5.5}五、综合设计题（共3题，共60分）}{33}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}设计题1：8线--3线优先编码器设计（20分）}{33}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}设计题2：模60计数器设计（20分）}{33}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}设计题3：``101''序列检测器（Moore状态机）设计（20分）}{33}{subsection.5.5.3}%
+\contentsline {chapter}{\numberline {第六章\hspace {.3em}}第6套试卷}{35}{chapter.6}%
+\contentsline {chapter}{\numberline {第七章\hspace {.3em}}第7套试卷}{43}{chapter.7}%
+\contentsline {chapter}{\numberline {第八章\hspace {.3em}}第8套试卷}{51}{chapter.8}%
+\contentsline {chapter}{\numberline {第九章\hspace {.3em}}第9套试卷}{65}{chapter.9}%
+\contentsline {chapter}{\numberline {第十章\hspace {.3em}}第10套试卷}{77}{chapter.10}%
+\contentsline {chapter}{\numberline {第十一章\hspace {.3em}}第11套试卷}{87}{chapter.11}%
+\contentsline {chapter}{\numberline {第十二章\hspace {.3em}}第12套试卷}{95}{chapter.12}%
+\contentsline {chapter}{\numberline {第十三章\hspace {.3em}}第13套试卷}{109}{chapter.13}%
+\contentsline {chapter}{\numberline {第十四章\hspace {.3em}}第14套试卷}{117}{chapter.14}%
+\contentsline {chapter}{\numberline {第十五章\hspace {.3em}}第15套试卷}{125}{chapter.15}%
+\contentsline {chapter}{\numberline {第十六章\hspace {.3em}}第16套试卷}{133}{chapter.16}%
+\contentsline {chapter}{\numberline {第十七章\hspace {.3em}}第17套试卷}{147}{chapter.17}%
+\contentsline {chapter}{\numberline {第十八章\hspace {.3em}}第18套试卷}{163}{chapter.18}%
+\contentsline {chapter}{\numberline {第十九章\hspace {.3em}}第19套试卷}{181}{chapter.19}%
+\contentsline {chapter}{\numberline {第二十章\hspace {.3em}}第20套试卷}{203}{chapter.20}%

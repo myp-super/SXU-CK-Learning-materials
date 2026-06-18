@@ -1,0 +1,16 @@
+Fitter Status : Successful - Mon Jun 15 21:34:11 2026
+Quartus II 64-Bit Version : 13.1.0 Build 162 10/23/2013 SJ Full Version
+Revision Name : clock_top_1
+Top-level Entity Name : clock_top_1
+Family : Cyclone III
+Device : EP3C5F256C6
+Timing Models : Final
+Total logic elements : 125 / 5,136 ( 2 % )
+    Total combinational functions : 123 / 5,136 ( 2 % )
+    Dedicated logic registers : 53 / 5,136 ( 1 % )
+Total registers : 53
+Total pins : 30 / 183 ( 16 % )
+Total virtual pins : 0
+Total memory bits : 0 / 423,936 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 46 ( 0 % )
+Total PLLs : 0 / 2 ( 0 % )

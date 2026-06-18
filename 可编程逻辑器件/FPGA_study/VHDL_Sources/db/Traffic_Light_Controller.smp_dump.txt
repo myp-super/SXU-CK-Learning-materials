@@ -1,0 +1,8 @@
+
+State Machine - |Traffic_Light_Top|Traffic_Light_FSM:U_FSM|current_state
+Name current_state.ST_BRANCH_YELLOW current_state.ST_BRANCH_GREEN current_state.ST_MAIN_YELLOW current_state.ST_MAIN_GREEN current_state.ST_IDLE 
+current_state.ST_IDLE 0 0 0 0 0 
+current_state.ST_MAIN_GREEN 0 0 0 1 1 
+current_state.ST_MAIN_YELLOW 0 0 1 0 1 
+current_state.ST_BRANCH_GREEN 0 1 0 0 1 
+current_state.ST_BRANCH_YELLOW 1 0 0 0 1 

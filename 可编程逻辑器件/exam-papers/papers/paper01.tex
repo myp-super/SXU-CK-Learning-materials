@@ -1,0 +1,195 @@
+\chapter{第1套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item 下列哪种器件属于简单可编程逻辑器件（SPLD）？
+\begin{enumerate}[label=\Alph*.]
+  \item FPGA
+  \item CPLD
+  \item GAL
+  \item ASIC
+\end{enumerate}
+
+\item FPGA芯片中实现组合逻辑功能的基本单元是？
+\begin{enumerate}[label=\Alph*.]
+  \item 触发器（Flip-Flop）
+  \item 查找表（LUT）
+  \item 乘法器（Multiplier）
+  \item 锁相环（PLL）
+\end{enumerate}
+
+\item 在VHDL中，以下哪个关键字用于定义实体的端口？
+\begin{enumerate}[label=\Alph*.]
+  \item ARCHITECTURE
+  \item PORT
+  \item SIGNAL
+  \item COMPONENT
+\end{enumerate}
+
+\item CPLD与FPGA相比，以下说法正确的是？
+\begin{enumerate}[label=\Alph*.]
+  \item CPLD的逻辑单元密度通常高于FPGA
+  \item CPLD基于查找表结构，FPGA基于乘积项结构
+  \item CPLD的互连结构通常是连续式的，延时可预测
+  \item CPLD更适合实现大规模时序电路
+\end{enumerate}
+
+\item 在VHDL的PROCESS语句中，以下关于信号（SIGNAL）与变量（VARIABLE）的描述，错误的是？
+\begin{enumerate}[label=\Alph*.]
+  \item 信号赋值使用“<=”，变量赋值使用“:=”
+  \item 变量只能在PROCESS内部定义和使用
+  \item 信号赋值立即生效，变量赋值在进程结束时生效
+  \item 信号用于进程间通信，变量用于进程内部计算
+\end{enumerate}
+
+\item 一个4输入LUT可以实现任意最多几个变量的组合逻辑函数？
+\begin{enumerate}[label=\Alph*.]
+  \item 2个
+  \item 3个
+  \item 4个
+  \item 8个
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每空3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item VHDL中，标准逻辑库的名称是\underline{\hspace{2cm}}，其中最常用的数据类型是\underline{\hspace{2cm}}。
+
+\item 在VHDL中，并发信号赋值语句的关键字是\underline{\hspace{2cm}}，进程的敏感信号表使用的关键字是\underline{\hspace{2cm}}（填英文，大小写均可）。
+
+\item FPGA器件主要由可编程逻辑块（CLB）、\underline{\hspace{2cm}}和\underline{\hspace{2cm}}三部分组成（写出两种主要资源的名称即可）。
+
+\item VHDL的关系运算符中，“不等于”写作\underline{\hspace{2cm}}，“大于等于”写作\underline{\hspace{2cm}}。
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+阅读以下VHDL代码，找出其中的5处错误，并写出正确的修改方案。
+
+\begin{lstlisting}[caption={存在错误的VHDL代码}]
+LIBRARY ieee；
+USE ieee.std_logic_1164.ALL；
+
+ENTIFY mux2to1 IS
+  PORT(
+    a, b : IN  STD_LOGIG；
+    sel  : IN  STD_LOGIC；
+    y    : OUT STD_LOGIC
+  )；
+END mux2to1；
+
+ARCHITE_CTURE behavioral OF mux2to1 IS
+BEGIN
+  PROCESS(a, b, sel)
+  BEGIN
+    IF sel = '0' THEN
+      y := a；
+    ELSE
+      y := b；
+    END IF；
+  END PROCESS；
+END behavioral；
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题要求：}逐行列出错误位置、错误原因及正确写法（每处1分，共5分）。
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY decoder38 IS
+  PORT(
+    a  : IN  STD_LOGIC_VECTOR(2 DOWNTO 0);
+    en : IN  STD_LOGIC;
+    y  : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END decoder38;
+
+ARCHITECTURE behavioral OF decoder38 IS
+BEGIN
+  PROCESS(a, en)
+  BEGIN
+    IF en = '0' THEN
+      y <= (OTHERS => '1');
+    ELSE
+      CASE a IS
+        WHEN "000" => y <= "11111110";
+        WHEN "001" => y <= "11111101";
+        WHEN "010" => y <= "11111011";
+        WHEN "011" => y <= "11110111";
+        WHEN "100" => y <= "11101111";
+        WHEN "101" => y <= "11011111";
+        WHEN "110" => y <= "10111111";
+        WHEN "111" => y <= "01111111";
+        WHEN OTHERS => y <= (OTHERS => '1');
+      END CASE;
+    END IF;
+  END PROCESS;
+END behavioral;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 该VHDL代码描述的是什么电路？（1分）
+  \item 该电路的输入输出端口各有多少位？功能是什么？（2分）
+  \item 信号en的作用是什么？当en=‘0’时输出y的值是什么？（2分）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计（20分）}
+
+设计一个4位比较器。输入为两个4位二进制数A和B，输出为三个标志信号：GT（大于）、EQ（等于）、LT（小于）。当A>B时GT=‘1’；当A=B时EQ=‘1’；当A<B时LT=‘1’。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出顶层模块的端口框图，标注所有端口名称和位宽。（5分）
+  \item 写出完整的VHDL代码，包含库声明、实体定义和结构体。（15分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}可以使用IF-ELSE语句或条件信号赋值语句实现比较逻辑。
+\end{framed}
+
+\subsection*{设计题2：时序逻辑设计（20分）}
+
+设计一个模10同步计数器（计数范围0--9，计到9后回0）。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 端口要求：时钟clk（输入）、异步复位rst（输入，低电平有效）、使能en（输入）、4位计数输出q（输出）。（5分）
+  \item 画出状态转移图。（5分）
+  \item 写出完整的可综合VHDL代码，复位时输出清零。（10分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}异步复位指复位信号不依赖于时钟边沿，直接生效。
+\end{framed}
+
+\subsection*{设计题3：状态机设计（20分）}
+
+设计一个Moore型状态机，实现“101”序列检测器。输入信号为din（1位串行输入），输出信号为found（1位），当检测到连续输入“101”序列时found输出‘1’（高电平有效），其余时间输出‘0’。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出状态转移图，标注每个状态的名称、含义及输出值。（8分）
+  \item 写出完整的VHDL代码，采用双进程（或三进程）描述方式。时钟clk上升沿触发，复位rst为同步复位（高电平有效）。（12分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}Moore型状态机的输出只与当前状态有关，与输入无关。建议定义4个状态：S0（初始/未匹配）、S1（已匹配“1”）、S2（已匹配“10”）、S3（已匹配“101”）。
+\end{framed}

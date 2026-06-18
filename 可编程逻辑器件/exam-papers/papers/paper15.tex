@@ -1,0 +1,222 @@
+\chapter{第15套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于CPLD与FPGA内部基本逻辑单元实现方式的说法，正确的是？
+\begin{enumerate}[label=\Alph*.]
+  \item CPLD基于查找表（LUT）结构，FPGA基于乘积项（Product Term）结构
+  \item CPLD基于乘积项结构，FPGA基于查找表结构
+  \item CPLD和FPGA均基于查找表结构
+  \item CPLD和FPGA均基于乘积项结构
+\end{enumerate}
+
+\item 以下哪种\textbf{不是}常见的FPGA配置（编程）模式？
+\begin{enumerate}[label=\Alph*.]
+  \item Master Serial（主串模式）
+  \item JTAG模式
+  \item DMA模式
+  \item SPI模式
+\end{enumerate}
+
+\item 在VHDL中，以下语句中属于\textbf{顺序语句}（只能出现在PROCESS或子程序内部）的是？
+\begin{enumerate}[label=\Alph*.]
+  \item 简单信号赋值语句（如\verb|y <= a;| 位于结构体中）
+  \item PROCESS语句本身
+  \item IF语句
+  \item 元件例化语句（PORT MAP）
+\end{enumerate}
+
+\item Moore型与Mealy型有限状态机（FSM）的主要区别是？
+\begin{enumerate}[label=\Alph*.]
+  \item Moore型的输出仅取决于当前状态；Mealy型的输出取决于当前状态和输入
+  \item Moore型的输出取决于当前状态和输入；Mealy型的输出仅取决于当前状态
+  \item Moore型只能用于序列检测，Mealy型只能用于计数控制
+  \item Moore型必须用双进程描述，Mealy型必须用三进程描述
+\end{enumerate}
+
+\item 在VHDL中，以下逻辑运算符按优先级从高到低排列，正确的是？
+\begin{enumerate}[label=\Alph*.]
+  \item AND > OR > NOT > XOR
+  \item NOT > AND > OR > XOR
+  \item NOT > XOR > AND > OR
+  \item 所有逻辑运算符优先级相同，按从左到右计算
+\end{enumerate}
+
+\item 下列关于PROCESS敏感信号列表（Sensitivity List）的描述，\textbf{错误}的是？
+\begin{enumerate}[label=\Alph*.]
+  \item 组合逻辑进程的敏感信号列表应包含所有被读取的输入信号
+  \item 时序逻辑进程的敏感信号列表通常只包含时钟和异步复位/置位信号
+  \item 敏感信号列表不完整可能导致综合前仿真与综合后仿真结果不一致
+  \item 组合逻辑进程的敏感信号列表可以省略，综合工具会自动补全
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中，信号（SIGNAL）使用\underline{\hspace{1.5cm}}（填符号）赋值，变量（VARIABLE）使用\underline{\hspace{1.5cm}}（填符号）赋值。常量的声明关键字是\underline{\hspace{2cm}}。
+
+\item 在实体（ENTITY）声明中，关键字\underline{\hspace{2.5cm}}用于定义类属参数（如位宽、计数模值等），它必须声明在关键字\underline{\hspace{2.5cm}}之前。
+
+\item 使用结构化描述风格时，需在结构体中用关键字\underline{\hspace{3cm}}声明待例化的子模块接口，再用关键字\underline{\hspace{2.5cm}}将其端口与顶层信号连接。
+
+\item VHDL中的生成语句有两种形式：\underline{\hspace{2cm}} GENERATE用于重复生成多个相同结构；\underline{\hspace{2cm}} GENERATE用于根据条件选择性地生成硬件结构。
+
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+以下VHDL代码意图描述一个带异步复位的4位寄存器（含使能端），但存在\textbf{6处错误}。请找出任意5处，指出错误位置、原因及正确写法。
+
+\begin{lstlisting}[caption={含错误的VHDL代码（6处错误，找出5处即满分）}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY reg4_err IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;
+    en  : IN  STD_LOGIC;
+    d   : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    q   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END reg4_err;
+
+ARCHITECTURE behavioral OF reg4_err IS
+  SIGNAL q_int : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk)
+    VARIABLE tmp : STD_LOGIC_VECTOR(3 DOWNTO 0);
+  BEGIN
+    IF rst = '1' THEN
+      q_int := (OTHERS => '0');
+      tmp <= (OTHERS => '0');
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        q_int <= d;
+        tmp := d;
+      END IF
+    END IF
+  END PROCESS
+  q <= q_int;
+END behavioral;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题格式要求：}逐行指出错误位置、错误原因及正确写法。
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码}]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY freq_divider IS
+  GENERIC(N : INTEGER := 8);
+  PORT(
+    clk     : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;
+    clk_out : OUT STD_LOGIC
+  );
+END freq_divider;
+
+ARCHITECTURE behav OF freq_divider IS
+  SIGNAL count : INTEGER RANGE 0 TO N-1 := 0;
+  SIGNAL temp  : STD_LOGIC := '0';
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      count <= 0;
+      temp  <= '0';
+    ELSIF rising_edge(clk) THEN
+      IF count = N/2 - 1 THEN
+        temp  <= NOT temp;
+        count <= 0;
+      ELSE
+        count <= count + 1;
+      END IF;
+    END IF;
+  END PROCESS;
+  clk_out <= temp;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 该VHDL代码描述的是什么电路？其基本功能是什么？（1分）
+  \item GENERIC参数N的作用是什么？如果\texttt{clk}频率为100MHz，N=8时，输出信号\texttt{clk\_out}的频率是多少？（2分）
+  \item 信号\texttt{rst}的复位方式是同步复位还是异步复位？请结合代码说明判断依据。（1分）
+  \item 若将条件\texttt{IF count = N/2 - 1 THEN}改为\texttt{IF count = N/2 THEN}（即去掉$-1$），对输出频率和占空比各有何影响？（1分）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：BCD码—7段数码管译码器（20分）}
+
+设计一个BCD码到7段共阳极数码管的译码电路。输入为4位BCD码\texttt{bcd[3:0]}（表示十进制数0\~{}9），输出为7位段选信号\texttt{seg[6:0]}，分别对应数码管的a\~{}g段（\texttt{seg(6)}对应a段，\texttt{seg(0)}对应g段）。共阳极数码管：段选信号为`0'时对应段点亮，为`1'时熄灭。当输入为非法BCD码（10\~{}15）时，所有段熄灭。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 列出该译码器的真值表，至少包含输入0\~{}9及非法输入10\~{}15对应的输出段码。（5分）
+  \item 分别写出a段、b段和g段的最小化逻辑表达式（可用卡诺图化简）。（3分）
+  \item 使用\textbf{数据流描述方式}（选择信号赋值语句\texttt{WITH-SELECT-WHEN}）编写完整的VHDL代码，包含库声明、实体定义和结构体。（10分）
+  \item 说明数据流描述与行为描述的差异，并指出本题选择数据流方式的理由。（2分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}共阳极数码管段码：数字0为\texttt{"1000000"}，数字1为\texttt{"1111001"}，其余自行推导。非法输入时输出\texttt{"1111111"}。
+\end{framed}
+
+\subsection*{设计题2：使用GENERATE语句设计N位双向移位寄存器（20分）}
+
+设计一个参数化N位双向移位寄存器。要求使用GENERATE语句和结构化描述方式。寄存器功能如下：
+
+\begin{itemize}
+  \item 输入端口：\texttt{clk}（时钟）、\texttt{rst}（同步复位，高电平有效）、\texttt{din}（串行输入，1位）、\texttt{dir}（移位方向：`0'右移，`1'左移）、\texttt{load}（并行置数使能）、\texttt{pdata[N-1:0]}（并行置数数据）。
+  \item 输出端口：\texttt{q[N-1:0]}（当前寄存器值）、\texttt{sout}（串行输出）。
+  \item 工作模式（优先级从高到低）：复位$\rightarrow$并行置数$\rightarrow$移位（右移或左移）$\rightarrow$保持。
+  \item 右移时：最高位移入\texttt{din}，最低位移出至\texttt{sout}；左移时：最低位移入\texttt{din}，最高位移出至\texttt{sout}。
+\end{itemize}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出单个位片（BitSlice）的内部逻辑框图，标注所有输入输出信号。（4分）
+  \item 写出位片的ENTITY声明，将其定义为COMPONENT。（3分）
+  \item 使用GENERIC（定义位宽）和\texttt{FOR...GENERATE}语句，编写顶层N位寄存器的完整VHDL代码（实体+结构体）。要求例化N个位片并正确连接级联信号。（11分）
+  \item 说明\texttt{FOR...GENERATE}与普通\texttt{FOR-LOOP}语句的本质区别。（2分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}位片内部包含一个D触发器和选择逻辑（复位/置数/移位/保持）；相邻位片之间需正确连接移位数据线。顶层可使用中间信号数组实现位间级联。
+\end{framed}
+
+\subsection*{设计题3：``1011''序列检测器——Moore型与Mealy型对比（20分）}
+
+设计一个有限状态机，用于检测串行输入序列``1011''。输入信号为\texttt{din}（1位，每个时钟周期输入1位），当检测到完整的``1011''序列时，输出信号\texttt{dout}输出一个时钟周期的高电平。允许序列重叠检测（例如序列``1011011''中，前4位``1011''和后4位``1011''重叠，应检测到两次）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出\textbf{Moore型}状态机的状态转换图，标注每个状态的名称/含义、转换条件以及各状态的输出值。Moore型输出仅取决于当前状态。（6分）
+  \item 画出\textbf{Mealy型}状态机的状态转换图，标注每个状态的名称/含义、转换条件以及各转移边上的输出值。Mealy型输出取决于当前状态和输入。（4分）
+  \item 选择\textbf{Moore型}，编写完整的VHDL代码（实体+结构体）。要求：使用用户自定义枚举类型定义状态，采用三进程描述风格（状态寄存器进程+次态逻辑进程+输出逻辑进程），时钟上升沿触发，复位\texttt{rst}为异步复位（高电平有效）。（10分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}Moore型需要5个状态：S0（初始/未匹配）、S1（已匹配``1''）、S2（已匹配``10''）、S3（已匹配``101''）、S4（已匹配``1011''——输出1）。注意重叠检测：S4状态下若\texttt{din=0}则转到S2（因为尾部的``10''可作为下一个序列的前缀）。Mealy型仅需4个状态。
+\end{framed}
+
+\endinput

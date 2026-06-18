@@ -1,0 +1,1326 @@
+% !TEX program = xelatex
+% ============================================================
+% 《STM32标准库函数手写代码速学手册》
+% 期末考试 / 面试手写代码速查
+% 编译: XeLaTeX ×2
+% ============================================================
+\documentclass[10pt,a4paper,oneside]{ctexart}
+
+% ---------- 页面设置 ----------
+\usepackage[top=1.5cm, bottom=1.5cm, left=1.6cm, right=1.6cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc, shadows.blur}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{multirow}
+\usepackage{amssymb}
+
+% ---------- 颜色定义 ----------
+\definecolor{mainblue}{RGB}{0,82,136}
+\definecolor{accent}{RGB}{196,30,58}
+\definecolor{bglight}{RGB}{245,247,250}
+\definecolor{codebg}{RGB}{250,250,252}
+\definecolor{commentgreen}{RGB}{0,128,0}
+\definecolor{warnbg}{RGB}{255,245,238}
+\definecolor{warnborder}{RGB}{220,80,60}
+\definecolor{flowbg}{RGB}{240,248,255}
+\definecolor{flowline}{RGB}{0,105,165}
+\definecolor{nodefill}{RGB}{230,243,255}
+\definecolor{nodeborder}{RGB}{0,82,136}
+\definecolor{tipbg}{RGB}{235,255,235}
+\definecolor{tipborder}{RGB}{50,150,50}
+
+% ---------- 页眉页脚 ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{mainblue}{STM32标准库 速学手册}}
+\fancyhead[R]{\small\textcolor{mainblue}{期末/面试速查}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+% ---------- TikZ 流程图样式 ----------
+\tikzset{
+    flowbox/.style={
+        rectangle, rounded corners=3pt, draw=nodeborder, fill=nodefill,
+        text width=5.2cm, align=center, minimum height=0.55cm,
+        font=\small\sffamily, inner sep=4pt
+    },
+    flowboxw/.style={
+        rectangle, rounded corners=3pt, draw=nodeborder, fill=nodefill,
+        text width=6.8cm, align=center, minimum height=0.55cm,
+        font=\small\sffamily, inner sep=4pt
+    },
+    flowarrow/.style={->, >=stealth, line width=0.7pt, color=flowline},
+    flowlabel/.style={font=\footnotesize\sffamily, color=flowline},
+}
+
+% ---------- listing 代码样式 ----------
+\lstdefinestyle{stm32}{
+    language=C,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{commentgreen}\itshape,
+    stringstyle=\color{accent},
+    backgroundcolor=\color{codebg},
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{gray!40},
+    breaklines=true,
+    breakatwhitespace=false,
+    showstringspaces=false,
+    tabsize=4,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=6pt,
+    aboveskip=4pt,
+    belowskip=4pt,
+    xleftmargin=8pt,
+    xrightmargin=4pt,
+    captionpos=b,
+    morekeywords={GPIO_InitTypeDef, EXTI_InitTypeDef, TIM_TimeBaseInitTypeDef,
+                  TIM_OCInitTypeDef, ADC_InitTypeDef, USART_InitTypeDef,
+                  NVIC_InitTypeDef, uint16_t, uint8_t, GPIO_Init,
+                  GPIO_SetBits, GPIO_ResetBits, GPIO_ReadInputDataBit,
+                  EXTI_Init, TIM_TimeBaseInit, TIM_OC1Init,
+                  ADC_RegularChannelConfig, ADC_SoftwareStartConvCmd,
+                  USART_SendData, USART_ReceiveData, USART_GetFlagStatus,
+                  USART_ITConfig, USART_ClearITPendingBit, USART_Cmd,
+                  TIM_Cmd, TIM_ITConfig, ADC_Cmd, NVIC_Init,
+                  RCC_APB2PeriphClockCmd, RCC_APB1PeriphClockCmd,
+                  GPIO_PinRemapConfig, GPIO_EXTILineConfig, NVIC_PriorityGroupConfig},
+}
+
+% ---------- tcolorbox 样式 ----------
+\newtcolorbox{warnbox}{
+    colback=warnbg, colframe=warnborder, arc=3pt, boxrule=1pt,
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    fontupper=\small, before skip=6pt, after skip=6pt,
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg, colframe=tipborder, arc=3pt, boxrule=1pt,
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    fontupper=\small, before skip=6pt, after skip=6pt,
+}
+
+\newtcolorbox{codebox}[1][]{
+    colback=codebg, colframe=mainblue!40, arc=2pt, boxrule=0.5pt,
+    left=2mm, right=2mm, top=1mm, bottom=1mm,
+    fontupper=\small, before skip=4pt, after skip=4pt, #1,
+}
+
+% ---------- 自定义命令 ----------
+\newcommand{\keyword}[1]{\textcolor{mainblue}{\texttt{#1}}}
+\newcommand{\danger}[1]{\textcolor{accent}{\textbf{#1}}}
+\newcommand{\chaptitle}[1]{\clearpage\section{\centering\Large\textcolor{mainblue}{#1}\par\vspace{-2mm}\rule{0.6\textwidth}{1pt}\\[2mm]}}
+\newcommand{\important}[1]{\textcolor{accent}{\textbf{#1}}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\setlist{nosep, leftmargin=*, after=\vspace{2pt}}
+
+% ---------- 文档开始 ----------
+\begin{document}
+
+% ============================================================
+%  封面
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+    \vspace*{3cm}
+
+    {\huge\bfseries\color{mainblue} STM32标准库函数\\[4mm]手写代码速学手册}
+
+    \vspace{10mm}
+
+    {\Large STM32F10x Standard Peripheral Library\\[2mm] Handwriting Quick Reference}
+
+    \vspace{6mm}
+
+    \rule{0.7\textwidth}{1.5pt}
+
+    \vspace{8mm}
+
+    {\large\bfseries 期末考试 $\cdot$ 面试手写代码速查}
+
+    \vspace{8mm}
+
+    \begin{tikzpicture}
+        \node[flowboxw, fill=flowbg, text width=8cm] {
+            \textbf{定位}\\[2mm]
+            看到题目 $\rightarrow$ 回忆配置顺序 $\rightarrow$ 直接写代码\\[1mm]
+            \textbf{不写原理~~不推导~~只记模板}
+        };
+    \end{tikzpicture}
+
+    \vspace{12mm}
+
+    {\large 覆盖模块：\textbf{GPIO} $\cdot$ \textbf{EXTI} $\cdot$ \textbf{TIM} $\cdot$ \textbf{ADC} $\cdot$ \textbf{USART}}
+
+    \vspace{8mm}
+
+    {\normalsize 页数：约20页 \quad 适合考前打印A4复习}
+
+    \vspace{6mm}
+
+    {\large\bfseries 版本 2026.06}
+
+    \vspace{10mm}
+
+    \begin{warnbox}
+        \centering\bfseries
+        {\Large 注意}\\[2mm]
+        本手册仅覆盖期末考试 \& 面试常见题型\\
+        不包含输入捕获、DMA、SPI、I2C、CAN 等内容\\
+        所有代码基于 STM32F10x 标准库 3.5.0
+    \end{warnbox}
+
+\end{center}
+
+\clearpage
+
+% ============================================================
+%  目录
+% ============================================================
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+
+% ################################################################
+%  GPIO 章节
+% ################################################################
+\chaptitle{第一章\quad GPIO（通用输入输出）}
+
+\section*{一、考试考什么}
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item LED 亮灭控制（推挽输出）
+        \item 按键检测（浮空输入 / 上拉输入）
+        \item GPIO 初始化结构体填空
+        \item 模式选择（GPIO\_Mode）
+        \item 位操作函数选择
+    \end{itemize}
+\end{multicols}
+
+\section*{二、GPIO 配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=7mm]
+    \node[flowbox] (n1) {① 开启 GPIO 时钟\\\keyword{RCC\_APB2PeriphClockCmd()}};
+    \node[flowbox, below=of n1] (n2) {② 定义 GPIO\_InitTypeDef 结构体};
+    \node[flowbox, below=of n2] (n3) {③ 配置 Pin / Speed / Mode};
+    \node[flowbox, below=of n3] (n4) {④ 调用 \keyword{GPIO\_Init()}};
+    \node[flowbox, below=of n4] (n5) {⑤ 操作 GPIO\\\keyword{SetBits / ResetBits / ReadBit}};
+
+    \draw[flowarrow] (n1) -- (n2);
+    \draw[flowarrow] (n2) -- (n3);
+    \draw[flowarrow] (n3) -- (n4);
+    \draw[flowarrow] (n4) -- (n5);
+\end{tikzpicture}
+\end{center}
+
+\section*{三、万能代码框架}
+
+\subsection*{GPIO 初始化模板}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void GPIO_Config(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOx, ENABLE);  // 开时钟
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_x;              // 引脚号
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;        // 输出速度
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;        // 模式
+    GPIO_Init(GPIOx, &GPIO_InitStructure);                   // 写入配置
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{LED 闪烁模板}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void LED_Init(void)   // 初始化：推挽输出
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+}
+// main中: GPIO_SetBits(GPIOB, GPIO_Pin_5);  // 亮
+//         GPIO_ResetBits(GPIOB, GPIO_Pin_5); // 灭
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{按键检测模板}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void KEY_Init(void)   // 初始化：上拉输入
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;  // 上拉输入
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+// 读取: if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == 0) // 按下
+\end{lstlisting}
+\end{codebox}
+
+\section*{四、GPIO 模式速记}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{模式常量} & \textbf{用途} & \textbf{考试场景} \\
+    \midrule
+    \keyword{GPIO\_Mode\_Out\_PP} & 推挽输出 & LED、蜂鸣器 \\
+    \keyword{GPIO\_Mode\_Out\_OD} & 开漏输出 & I2C（不考） \\
+    \keyword{GPIO\_Mode\_AF\_PP}  & 复用推挽 & USART TX、PWM输出 \\
+    \keyword{GPIO\_Mode\_AF\_OD}  & 复用开漏 & I2C（不考） \\
+    \keyword{GPIO\_Mode\_IN\_FLOATING} & 浮空输入 & 外部信号输入 \\
+    \keyword{GPIO\_Mode\_IPU}     & 上拉输入 & 按键（默认高电平） \\
+    \keyword{GPIO\_Mode\_IPD}     & 下拉输入 & 按键（默认低电平） \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{五、必背函数表}
+
+\begin{center}
+\begin{tabular}{@{}p{5.5cm}p{2cm}p{3.5cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{作用} & \textbf{参数说明} \\
+    \midrule
+    \texttt{void GPIO\_Init(}\newline\texttt{~~~GPIO\_TypeDef* GPIOx,}\newline\texttt{~~~GPIO\_InitTypeDef* p)} & 初始化GPIO & GPIOx: GPIOA$\sim$G \\
+     &  & p: \&结构体变量 \\
+    \midrule
+    \texttt{void GPIO\_SetBits(}\newline\texttt{~~~GPIO\_TypeDef* GPIOx,}\newline\texttt{~~~uint16\_t GPIO\_Pin)} & 引脚置高 & GPIOx: 端口号 \\
+     &  & GPIO\_Pin: Pin\_0$\sim$Pin\_15 \\
+    \midrule
+    \texttt{void GPIO\_ResetBits(}\newline\texttt{~~~GPIO\_TypeDef* GPIOx,}\newline\texttt{~~~uint16\_t GPIO\_Pin)} & 引脚置低 & 同上 \\
+    \midrule
+    \texttt{uint8\_t GPIO\_ReadInputDataBit(}\newline\texttt{~~~GPIO\_TypeDef* GPIOx,}\newline\texttt{~~~uint16\_t GPIO\_Pin)} & 读取输入 & 返回0或1 \\
+    \midrule
+    \texttt{void GPIO\_WriteBit(}\newline\texttt{~~~GPIO\_TypeDef* GPIOx,}\newline\texttt{~~~uint16\_t GPIO\_Pin,}\newline\texttt{~~~BitAction BitVal)} & 写单个引脚 & BitVal: Bit\_SET/Bit\_RESET \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{六、易错点}
+
+\begin{warnbox}
+    \begin{itemize}
+        \item \danger{GPIO 挂在 APB2 总线上}，用 \texttt{RCC\_APB2PeriphClockCmd}
+        \item 输出模式必须写 \texttt{GPIO\_Speed}；输入模式可省略
+        \item LED 用 \textbf{推挽输出}，不是复用推挽
+        \item 按键用 \textbf{上拉输入}（默认高，按下为低）
+        \item 函数名大小写必须一致，考试拼错扣分
+    \end{itemize}
+\end{warnbox}
+
+% ################################################################
+%  EXTI 章节
+% ################################################################
+\chaptitle{第二章\quad EXTI（外部中断）}
+
+\section*{一、考试考什么}
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item 按键触发外部中断
+        \item EXTI 完整配置链
+        \item 中断服务函数书写
+        \item AFIO 时钟（最易漏）
+        \item 中断优先级分组
+    \end{itemize}
+\end{multicols}
+
+\section*{二、EXTI 配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=5.5mm]
+    \node[flowbox] (e1) {① 开启 GPIO 时钟\\\keyword{RCC\_APB2PeriphClockCmd(GPIOx)}};
+    \node[flowbox, below=of e1] (e2) {② 开启 AFIO 时钟\\\danger{最易漏！}\\\keyword{RCC\_APB2PeriphClockCmd(AFIO)}};
+    \node[flowbox, below=of e2] (e3) {③ 配置 GPIO 为输入模式};
+    \node[flowbox, below=of e3] (e4) {④ 连接 GPIO 到 EXTI 线\\\keyword{GPIO\_EXTILineConfig()}};
+    \node[flowbox, below=of e4] (e5) {⑤ 配置 EXTI 结构体\\Line / Mode / Trigger};
+    \node[flowbox, below=of e5] (e6) {⑥ 调用 \keyword{EXTI\_Init()}};
+    \node[flowbox, below=of e6] (e7) {⑦ 配置 NVIC\\优先级分组 + 中断通道};
+    \node[flowbox, below=of e7] (e8) {⑧ 写中断服务函数\\\keyword{EXTIx\_IRQHandler}};
+
+    \draw[flowarrow] (e1) -- (e2);
+    \draw[flowarrow] (e2) -- (e3);
+    \draw[flowarrow] (e3) -- (e4);
+    \draw[flowarrow] (e4) -- (e5);
+    \draw[flowarrow] (e5) -- (e6);
+    \draw[flowarrow] (e6) -- (e7);
+    \draw[flowarrow] (e7) -- (e8);
+\end{tikzpicture}
+\end{center}
+
+\section*{三、万能代码框架}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void EXTI_Config(void)
+{
+    GPIO_InitTypeDef   GPIO_InitStructure;
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    NVIC_InitTypeDef   NVIC_InitStructure;
+
+    // 1. 开时钟
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE); // 别漏AFIO!
+
+    // 2. GPIO输入
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; // 上拉输入
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    // 3. 连接GPIO到EXTI
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource0);
+
+    // 4. EXTI配置
+    EXTI_InitStructure.EXTI_Line    = EXTI_Line0;
+    EXTI_InitStructure.EXTI_Mode    = EXTI_Mode_Interrupt; // 中断模式
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling; // 下降沿
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
+
+    // 5. NVIC
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); // 2位抢占 2位响应
+    NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+}
+
+// 6. 中断服务函数
+void EXTI0_IRQHandler(void)
+{
+    if(EXTI_GetITStatus(EXTI_Line0) != RESET) // 检查中断源
+    {
+        // 用户处理代码
+        EXTI_ClearITPendingBit(EXTI_Line0); // 清标志位!
+    }
+}
+\end{lstlisting}
+\end{codebox}
+
+\section*{四、配置口诀}
+
+\begin{tipbox}
+    \textbf{EXTI 配置链（必背）：}\\[2mm]
+    \texttt{GPIO} $\rightarrow$ \texttt{AFIO} $\rightarrow$ \texttt{EXTI} $\rightarrow$ \texttt{NVIC}\\[1mm]
+    开时钟 $\rightarrow$ 配GPIO $\rightarrow$ 连线 $\rightarrow$ 配EXTI $\rightarrow$ 配NVIC $\rightarrow$ 写ISR
+\end{tipbox}
+
+\section*{五、必背函数表}
+
+\begin{center}
+\begin{tabular}{@{}p{5.5cm}p{2.2cm}p{3.3cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{作用} & \textbf{参数说明} \\
+    \midrule
+    \texttt{void GPIO\_EXTILineConfig(}\newline\texttt{~~~uint8\_t GPIO\_PortSource,}\newline\texttt{~~~uint8\_t GPIO\_PinSource)} & GPIO$\to$EXTI映射 & PortSource: GPIO\_PortSourceGPIOx \\
+     &  & PinSource: GPIO\_PinSource0$\sim$15 \\
+    \midrule
+    \texttt{void EXTI\_Init(}\newline\texttt{~~~EXTI\_InitTypeDef* p)} & 初始化EXTI & p: \&结构体变量 \\
+    \midrule
+    \texttt{ITStatus EXTI\_GetITStatus(}\newline\texttt{~~~uint32\_t EXTI\_Line)} & 检查中断标志 & EXTI\_Line: EXTI\_Line0$\sim$Line15 \\
+     &  & 返回 SET / RESET \\
+    \midrule
+    \texttt{void EXTI\_ClearITPendingBit(}\newline\texttt{~~~uint32\_t EXTI\_Line)} & 清除中断标志 & 同上 \\
+    \midrule
+    \texttt{void NVIC\_PriorityGroupConfig(}\newline\texttt{~~~uint32\_t NVIC\_PriorityGroup)} & 优先级分组 & Group\_0$\sim$Group\_4 \\
+    \midrule
+    \texttt{void NVIC\_Init(}\newline\texttt{~~~NVIC\_InitTypeDef* p)} & 初始化NVIC & p: \&结构体变量 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{六、中断通道名对照表}
+
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Pin} & \textbf{EXTI线} & \textbf{IRQn} & \textbf{ISR函数名} \\
+    \midrule
+    PA0/PB0/PC0 & EXTI\_Line0 & EXTI0\_IRQn & EXTI0\_IRQHandler \\
+    PA1/PB1/PC1 & EXTI\_Line1 & EXTI1\_IRQn & EXTI1\_IRQHandler \\
+    PA2/PB2/PC2 & EXTI\_Line2 & EXTI2\_IRQn & EXTI2\_IRQHandler \\
+    PA3/PB3/PC3 & EXTI\_Line3 & EXTI3\_IRQn & EXTI3\_IRQHandler \\
+    PA4/PB4/PC4 & EXTI\_Line4 & EXTI4\_IRQn & EXTI4\_IRQHandler \\
+    5--9 & 各自Line & EXTI9\_5\_IRQn & EXTI9\_5\_IRQHandler \\
+    10--15 & 各自Line & EXTI15\_10\_IRQn & EXTI15\_10\_IRQHandler \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}
+    \danger{注意：EXTI5\textasciitilde9 共用一个中断向量！EXTI10\textasciitilde15 共用一个！}\\
+    考试时 ISR 里必须分别判断各自 Line 的 ITStatus！
+\end{warnbox}
+
+\section*{七、易错点}
+
+\begin{warnbox}
+    \begin{itemize}
+        \item \danger{忘记开 AFIO 时钟}——最高频扣分点
+        \item 忘记 \texttt{GPIO\_EXTILineConfig()}（GPIO $\rightarrow$ EXTI 映射）
+        \item 中断服务函数名写错（对照上表！）
+        \item 忘记在 ISR 里清中断标志位
+        \item 优先级分组写错
+        \item EXTI5--9 / EXTI10--15 共用一个 ISR，需要分别判断 Line
+    \end{itemize}
+\end{warnbox}
+
+% ################################################################
+%  TIM 章节
+% ################################################################
+\chaptitle{第三章\quad TIM（定时器）}
+
+\section*{一、考试考什么}
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item 定时器中断（1ms / 1s 定时）
+        \item PWM 输出（方波占空比可调）
+        \item ARR 和 PSC 计算
+        \item CCR 与占空比关系
+        \item 定时器初始化结构体
+    \end{itemize}
+\end{multicols}
+
+\begin{warnbox}
+    \centering\bfseries 注意：本章不包含输入捕获！仅考察定时器中断 + PWM 输出。
+\end{warnbox}
+
+\section*{二、定时器中断配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=5.5mm]
+    \node[flowbox] (t1) {① 开启 TIM 时钟\\\keyword{RCC\_APB1PeriphClockCmd(TIMx)} \danger{APB1!}};
+    \node[flowbox, below=of t1] (t2) {② 配置 TIM\_TimeBaseInitTypeDef\\TIM\_Period (ARR) / TIM\_Prescaler (PSC)};
+    \node[flowbox, below=of t2] (t3) {③ 调用 \keyword{TIM\_TimeBaseInit()}};
+    \node[flowbox, below=of t3] (t4) {④ 使能定时器中断\\\keyword{TIM\_ITConfig(TIM\_IT\_Update)}};
+    \node[flowbox, below=of t4] (t5) {⑤ 配置 NVIC};
+    \node[flowbox, below=of t5] (t6) {⑥ 启动定时器 \keyword{TIM\_Cmd(ENABLE)}};
+
+    \draw[flowarrow] (t1) -- (t2);
+    \draw[flowarrow] (t2) -- (t3);
+    \draw[flowarrow] (t3) -- (t4);
+    \draw[flowarrow] (t4) -- (t5);
+    \draw[flowarrow] (t5) -- (t6);
+\end{tikzpicture}
+\end{center}
+
+\section*{三、PWM 配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=5.5mm]
+    \node[flowbox] (p1) {① 开启 GPIO + AFIO 时钟\\\keyword{RCC\_APB2PeriphClockCmd}};
+    \node[flowbox, below=of p1] (p2) {② 配置 GPIO 为复用推挽输出\\\keyword{GPIO\_Mode\_AF\_PP}};
+    \node[flowbox, below=of p2] (p3) {③ 开启 TIM 时钟\\\keyword{RCC\_APB1PeriphClockCmd(TIMx)}};
+    \node[flowbox, below=of p3] (p4) {④ 配置 TIM\_TimeBaseInitTypeDef\\(设置 ARR / PSC)};
+    \node[flowbox, below=of p4] (p5) {⑤ 配置 TIM\_OCInitTypeDef\\(PWM模式 + CCR)};
+    \node[flowbox, below=of p5] (p6) {⑥ 调用 \keyword{TIM\_OC1Init()} (通道1)};
+    \node[flowbox, below=of p6] (p7) {⑦ 调用 \keyword{TIM\_Cmd(ENABLE)}};
+
+    \draw[flowarrow] (p1) -- (p2);
+    \draw[flowarrow] (p2) -- (p3);
+    \draw[flowarrow] (p3) -- (p4);
+    \draw[flowarrow] (p4) -- (p5);
+    \draw[flowarrow] (p5) -- (p6);
+    \draw[flowarrow] (p6) -- (p7);
+\end{tikzpicture}
+\end{center}
+
+\section*{四、ARR \& PSC 作用（考试必背）}
+
+\begin{center}
+\begin{tabular}{@{}p{2cm}llp{3.5cm}@{}}
+    \toprule
+    \textbf{参数} & \textbf{名称} & \textbf{调什么} & \textbf{计算公式} \\
+    \midrule
+    \keyword{TIM\_Prescaler} & PSC（预分频器）& \important{调频率} &
+    $f_{\text{CK\_CNT}} = \dfrac{f_{\text{CLK}}}{\text{PSC}+1}$ \\[4mm]
+    \keyword{TIM\_Period}    & ARR（自动重载）& \important{调周期} &
+    $T = \dfrac{(\text{ARR}+1) \times (\text{PSC}+1)}{f_{\text{CLK}}}$ \\[4mm]
+    \keyword{TIM\_Pulse}     & CCR（比较值）& \important{调占空比} &
+    $\text{Duty} = \dfrac{\text{CCR}}{\text{ARR}+1} \times 100\%$ \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tipbox}
+    \textbf{考试秒记：}\\[1mm]
+    \begin{tabular}{@{}ll@{}}
+        \textbf{想改频率}   & $\rightarrow$ 改 \textbf{PSC} \\
+        \textbf{想改占空比} & $\rightarrow$ 改 \textbf{CCR} \\
+        \textbf{想改周期}   & $\rightarrow$ 改 \textbf{ARR} \\
+    \end{tabular}\\[1mm]
+    默认 $f_{\text{CLK}} = 72\text{MHz}$（STM32F103）
+\end{tipbox}
+
+\section*{五、万能代码框架}
+
+\subsection*{定时器中断（1ms）}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void TIM2_Init(void)    // TIM2在APB1上
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    NVIC_InitTypeDef        NVIC_InitStructure;
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE); // APB1!
+
+    TIM_TimeBaseStructure.TIM_Period        = 999;   // ARR
+    TIM_TimeBaseStructure.TIM_Prescaler     = 71;    // PSC
+    // 72MHz/(71+1)/(999+1) = 1kHz = 1ms
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE); // 使能更新中断
+
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    TIM_Cmd(TIM2, ENABLE); // 启动定时器!
+}
+
+void TIM2_IRQHandler(void)
+{
+    if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
+    {
+        // 用户代码
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update); // 清标志!
+    }
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{PWM 输出（TIM3 CH1, PA6）}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void PWM_Init(void)
+{
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    TIM_OCInitTypeDef TIM_OCInitStructure;
+
+    // 1. GPIO + AFIO时钟
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_AFIO, ENABLE);
+    // 2. GPIO复用推挽
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP; // 复用推挽!
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    // 3. TIM时钟
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); // APB1!
+    // 4. 时基
+    TIM_TimeBaseStructure.TIM_Period    = 999;   // ARR
+    TIM_TimeBaseStructure.TIM_Prescaler = 71;    // PSC (72MHz/72=1MHz)
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+    // 5. PWM模式
+    TIM_OCInitStructure.TIM_OCMode      = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse       = 500; // CCR = 50%占空比
+    TIM_OCInitStructure.TIM_OCPolarity  = TIM_OCPolarity_High;
+    TIM_OC1Init(TIM3, &TIM_OCInitStructure); // CH1
+    // 6. 启动
+    TIM_Cmd(TIM3, ENABLE);
+}
+
+// 运行时改占空比:
+// TIM_SetCompare1(TIM3, 800); // 80%占空比
+\end{lstlisting}
+\end{codebox}
+
+\section*{六、必背函数表}
+
+\begin{center}
+\begin{tabular}{@{}p{5.5cm}p{2.2cm}p{3.3cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{作用} & \textbf{参数说明} \\
+    \midrule
+    \texttt{void TIM\_TimeBaseInit(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~TIM\_TimeBaseInitTypeDef* p)} & 初始化时基 & TIMx: TIM1$\sim$TIM4 \\
+     & (ARR/PSC) & p: \&结构体变量 \\
+    \midrule
+    \texttt{void TIM\_OC1Init(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~TIM\_OCInitTypeDef* p)} & 初始化PWM CH1 & TIMx: 定时器号 \\
+     &  & p: \&结构体变量 \\
+    \midrule
+    \texttt{void TIM\_OC2Init(}\\\texttt{~~~(同上)} & 初始化PWM CH2 & 同OC1Init \\
+    \texttt{void TIM\_OC3Init(}\\\texttt{~~~(同上)} & 初始化PWM CH3 & 同OC1Init \\
+    \texttt{void TIM\_OC4Init(}\\\texttt{~~~(同上)} & 初始化PWM CH4 & 同OC1Init \\
+    \midrule
+    \texttt{void TIM\_ITConfig(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~uint16\_t TIM\_IT,}\newline\texttt{~~~FunctionalState NewState)} & 使能/关闭中断 & TIM\_IT: TIM\_IT\_Update(更新中断) \\
+     &  & NewState: ENABLE/DISABLE \\
+    \midrule
+    \texttt{void TIM\_Cmd(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~FunctionalState NewState)} & 启动/停止定时器 & NewState: ENABLE/DISABLE \\
+    \midrule
+    \texttt{ITStatus TIM\_GetITStatus(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~uint16\_t TIM\_IT)} & 检查中断标志 & 返回 SET / RESET \\
+    \midrule
+    \texttt{void TIM\_ClearITPendingBit(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~uint16\_t TIM\_IT)} & 清除中断标志 & 同上 \\
+    \midrule
+    \texttt{void TIM\_SetCompare1(}\newline\texttt{~~~TIM\_TypeDef* TIMx,}\newline\texttt{~~~uint16\_t Compare1)} & 修改CCR1 & Compare1: 0$\sim$ARR值 \\
+     & (调占空比) & 占空比=CCR/(ARR+1) \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{七、TIM 对应时钟总线}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{定时器} & \textbf{时钟总线} \\
+    \midrule
+    TIM1, TIM8    & APB2 \quad \texttt{RCC\_APB2PeriphClockCmd} \\
+    TIM2, TIM3, TIM4, TIM5 & APB1 \quad \texttt{RCC\_APB1PeriphClockCmd} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}
+    \danger{高频错误：TIM2/TIM3/TIM4 挂在 APB1，不是 APB2！}\\
+    考试中写 \texttt{RCC\_APB2PeriphClockCmd(RCC\_APB2Periph\_TIM2)} 直接扣分！
+\end{warnbox}
+
+\section*{八、PWM 通道与引脚映射（考试常用）}
+
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{定时器} & \textbf{通道} & \textbf{默认引脚} & \textbf{重映射} \\
+    \midrule
+    TIM1 CH1 & OC1 & PA8 & --- \\
+    TIM2 CH1 & OC1 & PA0 & PA15 \\
+    TIM3 CH1 & OC1 & PA6 & PB4 \\
+    TIM3 CH2 & OC2 & PA7 & PB5 \\
+    TIM4 CH1 & OC1 & PB6 & --- \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{九、易错点}
+
+\begin{warnbox}
+    \begin{itemize}
+        \item \danger{TIM2/3/4 在 APB1，TIM1/8 在 APB2}——写错总线
+        \item \danger{PWM 忘记设 GPIO 为 AF\_PP（复用推挽）}
+        \item \danger{忘记 TIM\_Cmd(ENABLE)}——定时器不跑
+        \item 忘记 TIM\_ITConfig 使能中断
+        \item 忘记在 ISR 里清中断标志位
+        \item PWM 忘记配置 TIM\_OCInitTypeDef
+        \item PSC 和 ARR 的值写反（PSC 调频率，ARR 调周期）
+    \end{itemize}
+\end{warnbox}
+
+% ################################################################
+%  ADC 章节
+% ################################################################
+\chaptitle{第四章\quad ADC（模数转换器）}
+
+\section*{一、考试考什么}
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item ADC 单通道软件触发采样
+        \item ADC 初始化结构体配置
+        \item 读取 ADC 转换值
+        \item 转换结果计算公式
+    \end{itemize}
+\end{multicols}
+
+\section*{二、ADC 配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=6mm]
+    \node[flowbox] (a1) {① 开启 GPIO 时钟 + 配置模拟输入\\\keyword{GPIO\_Mode\_AIN}};
+    \node[flowbox, below=of a1] (a2) {② 开启 ADC 时钟\\\keyword{RCC\_APB2PeriphClockCmd(ADC1)}};
+    \node[flowbox, below=of a2] (a3) {③ 配置 ADC 结构体\\Mode / ScanConvMode / NbrOfChannel};
+    \node[flowbox, below=of a3] (a4) {④ 调用 \keyword{ADC\_Init()}};
+    \node[flowbox, below=of a4] (a5) {⑤ 配置采样通道 + 采样周期\\\keyword{ADC\_RegularChannelConfig()}};
+    \node[flowbox, below=of a5] (a6) {⑥ 使能 ADC \keyword{ADC\_Cmd(ENABLE)}};
+    \node[flowbox, below=of a6] (a7) {⑦ 校准 ADC};
+    \node[flowbox, below=of a7] (a8) {⑧ 软件触发 + 读取结果};
+
+    \draw[flowarrow] (a1) -- (a2);
+    \draw[flowarrow] (a2) -- (a3);
+    \draw[flowarrow] (a3) -- (a4);
+    \draw[flowarrow] (a4) -- (a5);
+    \draw[flowarrow] (a5) -- (a6);
+    \draw[flowarrow] (a6) -- (a7);
+    \draw[flowarrow] (a7) -- (a8);
+\end{tikzpicture}
+\end{center}
+
+\section*{三、万能代码框架}
+
+\subsection*{ADC 初始化 + 读取}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void ADC1_Init(void)
+{
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    ADC_InitTypeDef   ADC_InitStructure;
+
+    // 1. 时钟
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_ADC1, ENABLE);
+
+    // 2. GPIO --- 模拟输入!
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;  // 模拟输入
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    // 3. ADC配置
+    ADC_InitStructure.ADC_Mode        = ADC_Mode_Independent; // 独立模式
+    ADC_InitStructure.ADC_ScanConvMode= DISABLE;     // 单通道 不扫描
+    ADC_InitStructure.ADC_ContinuousConvMode = DISABLE; // 单次转换
+    ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None; // 软件触发
+    ADC_InitStructure.ADC_DataAlign   = ADC_DataAlign_Right; // 右对齐
+    ADC_InitStructure.ADC_NbrOfChannel= 1;           // 1个通道
+    ADC_Init(ADC1, &ADC_InitStructure);
+
+    // 4. 通道配置: 通道1, 采样周期55.5周期, 序列1
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1,
+                             ADC_SampleTime_55Cycles5);
+
+    // 5. 使能 + 校准
+    ADC_Cmd(ADC1, ENABLE);
+    ADC_ResetCalibration(ADC1);
+    while(ADC_GetResetCalibrationStatus(ADC1));
+    ADC_StartCalibration(ADC1);
+    while(ADC_GetCalibrationStatus(ADC1));
+}
+
+// 读取函数
+uint16_t ADC_Read(void)
+{
+    ADC_SoftwareStartConvCmd(ADC1, ENABLE);   // 软件触发
+    while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)); // 等转换结束
+    return ADC_GetConversionValue(ADC1);      // 返回结果
+}
+\end{lstlisting}
+\end{codebox}
+
+\section*{四、常见函数速查表}
+
+\begin{center}
+\begin{tabular}{@{}p{5.8cm}p{2cm}p{3.2cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{作用} & \textbf{参数说明} \\
+    \midrule
+    \texttt{void ADC\_Init(}\newline\texttt{~~~ADC\_TypeDef* ADCx,}\newline\texttt{~~~ADC\_InitTypeDef* p)} & 初始化ADC & ADCx: ADC1$\sim$ADC3 \\
+     &  & p: \&结构体变量 \\
+    \midrule
+    \texttt{void ADC\_RegularChannelConfig(}\newline\texttt{~~~ADC\_TypeDef* ADCx,}\newline\texttt{~~~uint8\_t ADC\_Channel,}\newline\texttt{~~~uint8\_t Rank,}\newline\texttt{~~~uint8\_t ADC\_SampleTime)} & 配置规则通道 & ADC\_Channel: Channel\_0$\sim$17 \\
+     & + 采样周期 & Rank: 1$\sim$16（序列号） \\
+     &  & SampleTime: 55Cycles5等 \\
+    \midrule
+    \texttt{void ADC\_Cmd(}\newline\texttt{~~~ADC\_TypeDef* ADCx,}\newline\texttt{~~~FunctionalState NewState)} & 使能/关闭ADC & NewState: ENABLE/DISABLE \\
+    \midrule
+    \texttt{void ADC\_SoftwareStartConvCmd(}\newline\texttt{~~~ADC\_TypeDef* ADCx,}\newline\texttt{~~~FunctionalState NewState)} & 软件触发转换 & NewState: ENABLE \\
+    \midrule
+    \texttt{FlagStatus ADC\_GetFlagStatus(}\newline\texttt{~~~ADC\_TypeDef* ADCx,}\newline\texttt{~~~uint8\_t ADC\_FLAG)} & 检查标志位 & FLAG: ADC\_FLAG\_EOC(转换结束) \\
+     &  & 返回 SET / RESET \\
+    \midrule
+    \texttt{uint16\_t ADC\_GetConversionValue(}\newline\texttt{~~~ADC\_TypeDef* ADCx)} & 读取转换结果 & 返回0$\sim$4095(12位) \\
+    \midrule
+    \texttt{void ADC\_ResetCalibration(}\\\texttt{~~~ADC\_TypeDef* ADCx)} & 复位校准 & --- \\
+    \texttt{void ADC\_StartCalibration(}\\\texttt{~~~ADC\_TypeDef* ADCx)} & 开始校准 & --- \\
+    \texttt{FlagStatus ADC\_GetCalibrationStatus(}\\\texttt{~~~ADC\_TypeDef* ADCx)} & 校准完成? & 返回 SET/RESET \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{五、易错点}
+
+\begin{warnbox}
+    \begin{itemize}
+        \item \danger{ADC GPIO 模式是 AIN（模拟输入），不是 IN\_FLOATING}
+        \item 单通道时 \texttt{ADC\_ScanConvMode = DISABLE}
+        \item 软件触发时 \texttt{ADC\_ExternalTrigConv = ADC\_ExternalTrigConv\_None}
+        \item 忘记 ADC 校准流程（复位校准 $\rightarrow$ 开始校准 $\rightarrow$ 等完成）
+        \item 忘记 \texttt{ADC\_Cmd(ENABLE)}
+        \item 读取前没有等 EOC 标志位
+    \end{itemize}
+\end{warnbox}
+
+% ################################################################
+%  USART 章节
+% ################################################################
+\chaptitle{第五章\quad USART（串口通信）\quad [全书最详细]}
+
+\section*{一、考试考什么}
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item 串口发送一个字节
+        \item 串口发送字符串
+        \item 串口接收一个字节（轮询）
+        \item 串口接收中断
+        \item printf 重定向
+        \item 中断服务函数书写
+    \end{itemize}
+\end{multicols}
+
+\section*{二、USART 配置流程图}
+
+\begin{center}
+\begin{tikzpicture}[node distance=5.5mm]
+    \node[flowboxw] (u0) {\textbf{USART 初始化总流程}};
+    \node[flowbox, below=of u0] (u1) {① 开启 GPIO + USART 时钟\\\keyword{GPIO: APB2 \quad USART1: APB2}};
+    \node[flowbox, below=of u1] (u2) {② 配置 TX 引脚\\\keyword{GPIO\_Mode\_AF\_PP}（复用推挽）};
+    \node[flowbox, below=of u2] (u3) {③ 配置 RX 引脚\\\keyword{GPIO\_Mode\_IN\_FLOATING}（浮空输入）};
+    \node[flowbox, below=of u3] (u4) {④ 配置 USART 结构体\\BaudRate / WordLength / StopBits / Parity};
+    \node[flowbox, below=of u4] (u5) {⑤ 调用 \keyword{USART\_Init()}};
+    \node[flowbox, below=of u5] (u6) {⑥ [如需中断] 配置 NVIC\\+ \keyword{USART\_ITConfig()} 使能接收中断};
+    \node[flowbox, below=of u6] (u7) {⑦ 启动串口 \keyword{USART\_Cmd(ENABLE)}};
+
+    \draw[flowarrow] (u1) -- (u2);
+    \draw[flowarrow] (u2) -- (u3);
+    \draw[flowarrow] (u3) -- (u4);
+    \draw[flowarrow] (u4) -- (u5);
+    \draw[flowarrow] (u5) -- (u6);
+    \draw[flowarrow] (u6) -- (u7);
+\end{tikzpicture}
+\end{center}
+
+\section*{三、USART 收发流程图}
+
+\begin{center}
+\begin{tikzpicture}
+    % 发送流程
+    \node[flowboxw, fill=flowbg] (send_title) {\textbf{发送流程}};
+    \node[flowbox, below=of send_title] (s1) {\keyword{USART\_SendData(USART1, data)}};
+    \node[flowbox, below=of s1] (s2) {\keyword{while(!USART\_GetFlagStatus(}\\\keyword{USART\_FLAG\_TC))} 等待发送完成};
+    \coordinate[right=of s1] (sr1);
+
+    \node[flowbox, right=of sr1] (s3) {\textbf{接收流程（轮询）}};
+    \node[flowbox, below=of s3] (s4) {\keyword{while(!USART\_GetFlagStatus(}\\\keyword{USART\_FLAG\_RXNE))} 等待接收};
+    \node[flowbox, below=of s4] (s5) {\keyword{data = USART\_ReceiveData(USART1)}};
+
+    % 中断接收
+    \node[flowbox, right=of s4, xshift=4cm] (s6) {\textbf{接收流程（中断）}};
+    \node[flowbox, below=of s6] (s7) {初始化时使能 \keyword{USART\_IT\_RXNE}};
+    \node[flowbox, below=of s7] (s8) {ISR 中读 \keyword{USART\_ReceiveData()}};
+
+    \draw[flowarrow] (s1) -- (s2);
+    \draw[flowarrow] (s4) -- (s5);
+    \draw[flowarrow] (s7) -- (s8);
+\end{tikzpicture}
+\end{center}
+
+\section*{四、万能代码框架}
+
+\subsection*{USART1 初始化（完整版）}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void USART1_Config(void)
+{
+    GPIO_InitTypeDef   GPIO_InitStructure;
+    USART_InitTypeDef  USART_InitStructure;
+    NVIC_InitTypeDef   NVIC_InitStructure;
+
+    // 1. 开时钟 (GPIOA + USART1 都在 APB2)
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|
+                           RCC_APB2Periph_USART1, ENABLE);
+
+    // 2. TX --- PA9, 复用推挽
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP; // TX = AF_PP
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    // 3. RX --- PA10, 浮空输入
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // RX = IN_FLOATING
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    // 4. USART参数
+    USART_InitStructure.USART_BaudRate   = 9600;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits   = USART_StopBits_1;
+    USART_InitStructure.USART_Parity     = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl
+                                 = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+    USART_Init(USART1, &USART_InitStructure);
+
+    // 5. NVIC (中断接收才需要)
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    // 6. 使能接收中断 (中断接收才需要)
+    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+
+    // 7. 启动串口!
+    USART_Cmd(USART1, ENABLE);
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{发送一个字节}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void USART_SendByte(uint8_t data)
+{
+    USART_SendData(USART1, data);
+    while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+    // 等发送完成
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{发送字符串}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+void USART_SendString(char *str)
+{
+    while(*str)
+    {
+        USART_SendData(USART1, *str++);
+        while(USART_GetFlagStatus(USART1, USART_FLAG_TC)==RESET);
+    }
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{轮询接收一个字节}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+uint8_t USART_ReceiveByte(void)
+{
+    while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE)==RESET);
+    // 等 RXNE=1 (接收非空)
+    return (uint8_t)USART_ReceiveData(USART1);
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{中断接收 + ISR}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+uint8_t rx_data; // 全局变量接收数据
+
+void USART1_IRQHandler(void)
+{
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+    {
+        rx_data = USART_ReceiveData(USART1);
+        // 读取DR会自动清除RXNE标志
+    }
+}
+\end{lstlisting}
+\end{codebox}
+
+\subsection*{printf 重定向}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+// 需 #include <stdio.h>
+int fputc(int ch, FILE *f)
+{
+    USART_SendData(USART1, (uint8_t)ch);
+    while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+    return ch;
+}
+// 之后可直接用 printf("Hello\r\n");
+\end{lstlisting}
+\end{codebox}
+
+\section*{五、配置口诀}
+
+\begin{tipbox}
+    \textbf{USART 初始化口诀：}\\[1mm]
+    \texttt{开时钟 $\rightarrow$ 配TX(AF\_PP) $\rightarrow$ 配RX(IN\_FLOATING) $\rightarrow$ 配波特率 $\rightarrow$ 配NVIC $\rightarrow$ 开中断 $\rightarrow$ USART\_Cmd}\\[3mm]
+
+    \textbf{USART 收发口诀：}\\[1mm]
+    \texttt{发：SendData $\rightarrow$ 等 TC}\\
+    \texttt{收：等 RXNE $\rightarrow$ ReceiveData}\\[1mm]
+
+    \textbf{printf 重定向：}\\
+    \texttt{写 fputc $\rightarrow$ 包含 stdio.h $\rightarrow$ 直接 printf}
+\end{tipbox}
+
+\section*{六、必背函数表}
+
+\begin{center}
+\begin{tabular}{@{}p{5.8cm}p{2cm}p{3.2cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{作用} & \textbf{参数说明} \\
+    \midrule
+    \texttt{void USART\_Init(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~USART\_InitTypeDef* p)} & 初始化USART & USARTx: USART1$\sim$USART3 \\
+     &  & p: \&结构体变量 \\
+    \midrule
+    \texttt{void USART\_Cmd(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~FunctionalState NewState)} & 使能/关闭USART & \danger{必须写ENABLE!} \\
+    \midrule
+    \texttt{void USART\_SendData(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~uint16\_t Data)} & 发送一字节 & Data: 8位数据(0$\sim$255) \\
+    \midrule
+    \texttt{uint16\_t USART\_ReceiveData(}\newline\texttt{~~~USART\_TypeDef* USARTx)} & 读取一字节 & 返回接收到的8位数据 \\
+    \midrule
+    \texttt{FlagStatus USART\_GetFlagStatus(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~uint16\_t USART\_FLAG)} & 查询标志位 & FLAG: TC(发送完成) \\
+     &  & RXNE(接收非空) TXE(发送空) \\
+    \midrule
+    \texttt{void USART\_ITConfig(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~uint16\_t USART\_IT,}\newline\texttt{~~~FunctionalState NewState)} & 使能/关闭中断源 & USART\_IT: RXNE(接收中断) \\
+     &  & NewState: ENABLE/DISABLE \\
+    \midrule
+    \texttt{ITStatus USART\_GetITStatus(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~uint16\_t USART\_IT)} & 检查中断状态 & 在ISR中使用,返回SET/RESET \\
+    \midrule
+    \texttt{void USART\_ClearITPendingBit(}\newline\texttt{~~~USART\_TypeDef* USARTx,}\newline\texttt{~~~uint16\_t USART\_IT)} & 清除中断挂起 & 读DR后RXNE自动清除 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{七、USART 标志位速查}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{标志位} & \textbf{含义} & \textbf{使用场景} \\
+    \midrule
+    \keyword{USART\_FLAG\_TXE}  & 发送数据寄存器空 & 可继续发送下一字节 \\
+    \keyword{USART\_FLAG\_TC}   & 发送完成 & 等当前字节完全发出 \\
+    \keyword{USART\_FLAG\_RXNE} & 接收数据寄存器非空 & 有数据到达，可读取 \\
+    \keyword{USART\_IT\_RXNE}   & 接收中断使能 & 中断方式接收 \\
+    \keyword{USART\_IT\_TXE}    & 发送中断使能 & 中断方式发送 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}
+    \danger{考试注意区分：TXE（空，可继续发）vs TC（完成，已发出）}\\
+    发送字节后一般等 TC；连续发送时用 TXE 更高效（但考试多用 TC）。
+\end{warnbox}
+
+\section*{八、USART 常用引脚}
+
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{串口} & \textbf{TX} & \textbf{RX} & \textbf{时钟总线} \\
+    \midrule
+    USART1 & PA9  & PA10 & APB2 \\
+    USART2 & PA2  & PA3  & APB1 \\
+    USART3 & PB10 & PB11 & APB1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{九、易错点}
+
+\begin{warnbox}
+    \begin{itemize}
+        \item \danger{忘记 \texttt{USART\_Cmd(ENABLE)}}——最高频错误
+        \item \danger{TX 用 AF\_PP，RX 用 IN\_FLOATING}——模式写反
+        \item \danger{USART1 在 APB2；USART2/3 在 APB1}
+        \item 忘记 \texttt{USART\_ITConfig()} 使能中断
+        \item 发送后没等 TC/TXE 标志位
+        \item 接收前没等 RXNE 标志位
+        \item printf 重定向时忘记 \texttt{\#include <stdio.h>}
+        \item 中断函数名写错（USART1\_IRQHandler）
+        \item 串口模式忘了写 \texttt{USART\_Mode\_Tx | USART\_Mode\_Rx}
+    \end{itemize}
+\end{warnbox}
+
+% ################################################################
+%  附录：考试总口诀
+% ################################################################
+\chaptitle{附录A\quad 考试万能配置总口诀}
+
+\begin{tcolorbox}[colback=flowbg, colframe=mainblue, arc=3pt, boxrule=1pt,
+    left=3mm, right=3mm, top=3mm, bottom=3mm, fontupper=\small]
+
+    \begin{center}
+    {\large\bfseries 五大模块配置链（考试必背）}
+    \end{center}
+
+    \begin{multicols}{2}
+        \textbf{GPIO:}\\
+        开时钟 $\rightarrow$ 配Pin/Speed/Mode $\rightarrow$ GPIO\_Init
+
+        \textbf{EXTI:}\\
+        开时钟 $\rightarrow$ GPIO $\rightarrow$ AFIO $\rightarrow$ EXTI $\rightarrow$ NVIC $\rightarrow$ ISR
+
+        \textbf{TIM中断:}\\
+        开时钟 $\rightarrow$ 配ARR/PSC $\rightarrow$ TIM\_ITConfig $\rightarrow$ NVIC $\rightarrow$ TIM\_Cmd
+
+        \textbf{PWM:}\\
+        开时钟 $\rightarrow$ GPIO(AF\_PP) $\rightarrow$ TIM时基 $\rightarrow$ TIM\_OC $\rightarrow$ TIM\_Cmd
+
+        \textbf{ADC:}\\
+        开时钟 $\rightarrow$ GPIO(AIN) $\rightarrow$ ADC\_Init $\rightarrow$ 通道配置 $\rightarrow$ 校准 $\rightarrow$ 触发
+
+        \textbf{USART:}\\
+        开时钟 $\rightarrow$ TX(AF\_PP) $\rightarrow$ RX(IN\_FLOATING) $\rightarrow$ 波特率 $\rightarrow$ NVIC $\rightarrow$ 开中断 $\rightarrow$ USART\_Cmd
+    \end{multicols}
+
+\end{tcolorbox}
+
+% ============================================================
+%  附录B：NVIC 配置速查
+% ============================================================
+\section*{附录B\quad NVIC 配置模板}
+
+\begin{codebox}
+\begin{lstlisting}[style=stm32, numbers=none]
+NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+// 常用: Group_2 = 2位抢占 + 2位响应
+
+NVIC_InitStructure.NVIC_IRQChannel = XXXX_IRQn;
+NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = x; // 0~3
+NVIC_InitStructure.NVIC_IRQChannelSubPriority        = y; // 0~3
+NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+NVIC_Init(&NVIC_InitStructure);
+\end{lstlisting}
+\end{codebox}
+
+% ============================================================
+%  附录C：中断向量名速查
+% ============================================================
+\section*{附录C\quad 中断服务函数名速查}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+    \toprule
+    \textbf{外设} & \textbf{ISR 函数名} \\
+    \midrule
+    EXTI0 & \texttt{EXTI0\_IRQHandler} \\
+    EXTI1 & \texttt{EXTI1\_IRQHandler} \\
+    EXTI2 & \texttt{EXTI2\_IRQHandler} \\
+    EXTI3 & \texttt{EXTI3\_IRQHandler} \\
+    EXTI4 & \texttt{EXTI4\_IRQHandler} \\
+    EXTI5--9 & \texttt{EXTI9\_5\_IRQHandler} \\
+    EXTI10--15 & \texttt{EXTI15\_10\_IRQHandler} \\
+    TIM2 & \texttt{TIM2\_IRQHandler} \\
+    TIM3 & \texttt{TIM3\_IRQHandler} \\
+    TIM4 & \texttt{TIM4\_IRQHandler} \\
+    USART1 & \texttt{USART1\_IRQHandler} \\
+    USART2 & \texttt{USART2\_IRQHandler} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+%  附录D：时钟总线速查
+% ============================================================
+\section*{附录D\quad 时钟总线速查}
+
+\subsection*{RCC 时钟使能函数（考试必背）}
+
+\begin{center}
+\begin{tabular}{@{}p{6.2cm}p{2cm}p{3cm}@{}}
+    \toprule
+    \textbf{函数原型} & \textbf{总线} & \textbf{常用外设} \\
+    \midrule
+    \texttt{void RCC\_APB2PeriphClockCmd(}\newline\texttt{~~~uint32\_t RCC\_APB2Periph,}\newline\texttt{~~~FunctionalState NewState)} & \textbf{APB2} & GPIOA$\sim$G, AFIO, \\
+     & 72MHz & USART1, ADC1$\sim$3, \\
+     &  & TIM1, TIM8, SPI1 \\
+    \midrule
+    \texttt{void RCC\_APB1PeriphClockCmd(}\newline\texttt{~~~uint32\_t RCC\_APB1Periph,}\newline\texttt{~~~FunctionalState NewState)} & \textbf{APB1} & TIM2$\sim$TIM7, \\
+     & 36MHz & USART2$\sim$USART3, \\
+     &  & SPI2$\sim$SPI3, I2C \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{常用外设时钟参数}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{外设} & \textbf{时钟参数} & \textbf{总线} \\
+    \midrule
+    GPIOA$\sim$G  & \texttt{RCC\_APB2Periph\_GPIOx} & APB2 \\
+    AFIO         & \texttt{RCC\_APB2Periph\_AFIO}   & APB2 \\
+    USART1       & \texttt{RCC\_APB2Periph\_USART1} & APB2 \\
+    ADC1         & \texttt{RCC\_APB2Periph\_ADC1}  & APB2 \\
+    TIM1         & \texttt{RCC\_APB2Periph\_TIM1}  & APB2 \\
+    TIM2         & \texttt{RCC\_APB1Periph\_TIM2}  & APB1 \\
+    TIM3         & \texttt{RCC\_APB1Periph\_TIM3}  & APB1 \\
+    TIM4         & \texttt{RCC\_APB1Periph\_TIM4}  & APB1 \\
+    USART2       & \texttt{RCC\_APB1Periph\_USART2} & APB1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}
+    \danger{APB1 和 APB2 搞反，考试直接扣分！}\\
+    口诀：\textbf{GPIO、USART1、ADC —— APB2}\\
+    \phantom{口诀：}\textbf{TIM2/3/4、USART2/3 —— APB1}
+\end{warnbox}
+
+% ============================================================
+%  附录E：考试高频扣分点汇总
+% ============================================================
+\section*{附录E\quad 考试高频扣分点 TOP 10}
+
+\begin{warnbox}
+    \begin{enumerate}[label=\textbf{\textcolor{accent}{\#\arabic*}}, leftmargin=*]
+        \item \danger{忘记开外设时钟}（GPIO / USART / TIM / ADC 时钟无一例外都要开）
+        \item \danger{忘记开 AFIO 时钟}（EXTI 章节专属）
+        \item \danger{TIM2/3/4 写在 APB2}（应该用 RCC\_APB1PeriphClockCmd）
+        \item \danger{TX 和 RX 的 GPIO 模式写反}（TX = AF\_PP，RX = IN\_FLOATING）
+        \item \danger{PWM 的 GPIO 模式写成 Out\_PP 而不是 AF\_PP}
+        \item \danger{忘记 \texttt{XXX\_Cmd(ENABLE)}}（USART\_Cmd、TIM\_Cmd、ADC\_Cmd 都必须写）
+        \item \danger{ISR 函数名写错}（对照附录C）
+        \item \danger{忘记在 ISR 里清中断标志位}
+        \item \danger{ADC GPIO 模式写成 IN\_FLOATING 而不是 AIN}
+        \item \danger{结构体成员名拼写错误}（考试手写代码不能靠 IDE 补全）
+    \end{enumerate}
+\end{warnbox}
+
+% ============================================================
+%  结尾
+% ============================================================
+\vspace{1cm}
+\begin{center}
+    \rule{0.5\textwidth}{0.5pt}\\[4mm]
+    {\large\bfseries\color{mainblue} --- 祝考试顺利 ---}\\[2mm]
+    {\small 看到题目 $\rightarrow$ 回忆配置链 $\rightarrow$ 套模板 $\rightarrow$ 不漏步骤}\\[2mm]
+    {\small 考前对照附录E逐条自查，确保没有遗漏}
+\end{center}
+
+\end{document}

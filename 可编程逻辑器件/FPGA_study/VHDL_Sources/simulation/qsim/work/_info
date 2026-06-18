@@ -1,0 +1,90 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Lenovo/Desktop/FPGA_study/VHDL_Sources/simulation/qsim
+vTraffic_Light_Top
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+r1
+!s85 0
+31
+!i10b 1
+!s100 [bfi59OB:Yhb=;f`PT]YA3
+InNmTDzUQ428]B5kF[?QlK2
+R0
+w1781604852
+8Traffic_Light_Controller.vo
+FTraffic_Light_Controller.vo
+L0 31
+Z2 OL;L;10.4;61
+!s108 1781604853.778000
+!s107 Traffic_Light_Controller.vo|
+!s90 -work|work|Traffic_Light_Controller.vo|
+!i113 0
+Z3 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+n@traffic_@light_@top
+vTraffic_Light_Top_vlg_check_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 ]l<<1L0hoRVmiICoAPRg=2
+Ifj]47<N_8XLOIBfn<V5[K0
+R0
+Z4 w1781604851
+Z5 8Waveform1.vwf.vt
+Z6 FWaveform1.vwf.vt
+L0 61
+R2
+Z7 !s108 1781604853.855000
+Z8 !s107 Waveform1.vwf.vt|
+Z9 !s90 -work|work|Waveform1.vwf.vt|
+!i113 0
+R3
+n@traffic_@light_@top_vlg_check_tst
+vTraffic_Light_Top_vlg_sample_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 K<jiMX_?`IF<_WlLSN2ac0
+IblM0FGz2N5=FbBQK]O>6a1
+R0
+R4
+R5
+R6
+L0 29
+R2
+R7
+R8
+R9
+!i113 0
+R3
+n@traffic_@light_@top_vlg_sample_tst
+vTraffic_Light_Top_vlg_vec_tst
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 d:hjQ2B7^Vh?8@0h58<bz0
+IOO@XVZZjPFWR556aQ82B^2
+R0
+R4
+R5
+R6
+L0 559
+R2
+R7
+R8
+R9
+!i113 0
+R3
+n@traffic_@light_@top_vlg_vec_tst

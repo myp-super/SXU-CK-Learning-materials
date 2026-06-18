@@ -1,0 +1,579 @@
+\chapter{第18套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（十八）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟 \hspace{2em} 难度：中等）
+
+\vspace{0.3cm}
+\textit{适用对象：正在学习FPGA/VHDL基础的本科生。重点考查VHDL基本语法、组合逻辑与时序逻辑设计、有限状态机设计方法。}
+\end{center}
+
+% ============================================
+\section*{一、选择题（每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在FPGA中，$n$输入的查找表（$n$-input LUT）可以实现任意$n$变量组合逻辑函数，其根本原理是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & LUT内部使用SRAM单元存储$2^n$个真值表值，通过$n$个输入作为地址选择对应存储值输出 &
+B. & LUT内部使用若干个与门和或门动态组合实现任意逻辑函数 \\
+C. & LUT通过遍历所有可能的输入组合、实时计算输出值 &
+D. & LUT实际上是一个$n$位计数器，通过计数遍历所有真值表行 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL进程（PROCESS）内部，下列关于信号（SIGNAL）与变量（VARIABLE）赋值语句执行时机的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 信号赋值（\verb|<=|）在进程执行到该语句时立即生效；变量赋值（\verb|:=|）在进程挂起时才生效 \\
+B. & 变量赋值（\verb|:=|）在进程执行到该语句时立即生效；信号赋值（\verb|<=|）在进程执行完毕（挂起）后才更新目标信号的值 \\
+C. & 信号赋值和变量赋值均在进程执行到对应语句时立即生效，无区别 \\
+D. & 信号赋值和变量赋值均在进程挂起后才统一更新，无区别 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，若组合逻辑进程（PROCESS）的敏感信号列表（Sensitivity List）\textbf{不完整}（缺少某个被读取的输入信号），综合工具通常会（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 给出错误信息并拒绝综合 \\
+B. & 将缺少的信号自动补入敏感信号列表，综合结果与完整列表完全相同 \\
+C. & 综合出锁存器（Latch），因为综合工具认为该信号的变化无需触发进程重新计算——导致仿真与综合行为不一致 \\
+D. & 忽略该问题，仿真和综合行为完全一致 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 下列关于Moore型和Mealy型有限状态机（FSM）的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Moore型的输出仅取决于当前状态，输出变化与时钟边沿同步；Mealy型的输出取决于当前状态和输入，输入变化可直接影响输出 \\
+B. & Moore型和Mealy型在相同功能下状态数一定相同 \\
+C. & Mealy型的输出一定比Moore型慢一拍 \\
+D. & Moore型不能实现序列检测功能 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，下列关于并行信号赋值语句（Concurrent Signal Assignment）和进程内顺序信号赋值语句的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 并行信号赋值语句位于结构体（ARCHITECTURE）中，对所有赋值目标同时更新；进程内的信号赋值是顺序执行的，但在进程结束时统一更新 \\
+B. & 并行信号赋值和进程内信号赋值在实际电路行为上完全不同，前者对应组合逻辑，后者对应时序逻辑 \\
+C. & 并行信号赋值语句只能用于描述时序逻辑 \\
+D. & 进程内信号赋值在每条语句执行后立即更新信号值，与并行赋值无区别 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，下列关于逻辑运算符优先级的排列，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & AND的优先级高于OR \\
+B. & OR的优先级高于AND \\
+C. & \textbf{NOT} $>$ \textbf{AND} $>$ \textbf{OR} $>$ \textbf{XOR}（即NOT优先级最高，然后依次为AND、OR、XOR，XOR优先级最低） \\
+D. & 所有逻辑运算符优先级都相同，按从左到右的顺序计算 \\
+\end{tabular}
+
+\vspace{0.3cm}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（每题3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item \textbf{变量声明与赋值：}
+在VHDL中，变量（VARIABLE）只能在\underline{\hspace{2.5cm}}（填“结构体”或“进程/子程序”）内部声明。变量赋值使用符号\underline{\hspace{1.5cm}}（填一个2字符符号），赋值后变量值\underline{\hspace{2cm}}（填“立即改变”或“进程结束时改变”）。
+
+\vspace{0.8cm}
+
+\item \textbf{信号赋值：}
+在VHDL中，信号（SIGNAL）可在结构体中声明。信号赋值使用符号\underline{\hspace{1.5cm}}（填一个2字符符号）。进程内的信号赋值语句在\underline{\hspace{2.5cm}}（填“语句执行时”或“进程挂起时”）才实际更新目标信号的值。
+
+\vspace{0.8cm}
+
+\item \textbf{进程敏感信号列表规则：}
+描述组合逻辑的PROCESS，其敏感信号列表应包含\underline{\hspace{3cm}}（即所有在进程中被读取的输入信号）。若敏感信号列表不完整，综合工具可能推断出\underline{\hspace{2cm}}（填一种存储元件），导致综合前仿真与综合后仿真结果不一致。
+
+\vspace{0.8cm}
+
+\item \textbf{状态机三要素：}
+一个完整的有限状态机（FSM）通常由三个核心部分组成：
+(1) \underline{\hspace{2.5cm}}（用于保存当前状态的寄存器）；
+(2) \underline{\hspace{2.5cm}}（根据当前状态和输入决定次态的组合逻辑）；
+(3) \underline{\hspace{2.5cm}}（根据当前状态或当前状态+输入产生输出的逻辑）。
+
+\vspace{0.5cm}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+阅读以下VHDL代码。该代码意图实现一个带使能的4位二进制加法计数器，并利用组合逻辑对计数值进行译码输出。代码中存在\textbf{6处错误}。请找出\textbf{任意5处}（每处1分，共5分），指出错误原因及正确写法。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={含错误的VHDL代码——找出5处即满分（共6处错误）}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+-- 错误1：缺少numeric_std包，却使用了加法运算
+
+ENTITY counter_err IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;
+    en     : IN  STD_LOGIC;
+    q      : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+    flag   : OUT STD_LOGIC
+  );
+END counter_err;
+
+ARCHITECTURE behav OF counter_err IS
+  SIGNAL count : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000";
+  -- 错误2：count信号在进程间共享，但声明为默认初始值（:=），综合时会被忽略
+BEGIN
+  -- 计数器进程
+  PROCESS(clk)
+  BEGIN
+    IF rst = '1' THEN
+      count <= "0000";
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        count <= count + 1;  -- 错误3：STD_LOGIC_VECTOR不能直接与整数1相加
+      END IF;
+    END IF;
+  END PROCESS;
+
+  -- 输出译码进程
+  PROCESS(count)
+  BEGIN
+    IF count = "1010" THEN
+      flag <= '1';
+    END IF;
+    -- 错误4：IF缺少ELSE分支，且敏感信号列表中缺少flag读取的信号
+    -- 但flag未被读取，主要问题是缺少ELSE导致锁存器推断
+  END PROCESS;
+
+  -- 错误5：以下两个并发信号赋值语句均驱动q信号，构成多驱动
+  q <= count;
+  q <= count WHEN rst = '0' ELSE "0000";
+
+  -- 错误6：在PROCESS内部使用了变量但未声明
+  PROCESS(clk)
+    VARIABLE temp : STD_LOGIC;
+  BEGIN
+    IF rising_edge(clk) THEN
+      temp := en AND count(0);  -- :=用于variable正确，但en在时序逻辑中应同步
+      -- 此处temp声明了但未使用，无实际功能错误，但属于冗余代码
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}按以下格式逐条列出5处错误（每处1分，共5分）。注意：代码中的错误不止5处，请选择5处作答。\\[4pt]
+错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 原因：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+\vspace{0.5cm}
+\textbf{提示：}错误类型包括但不限于——(1)缺少必要的IEEE标准包引用（如numeric\_std）；(2)STD\_LOGIC\_VECTOR类型信号与整数直接进行算术运算；(3)组合进程IF语句缺少ELSE分支导致锁存器推断；(4)同一信号被多个并发语句驱动（多驱动冲突）；(5)进程敏感信号列表中缺少被读取的信号。
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+阅读以下VHDL代码，回答问题。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={环形计数器/序列发生器——待分析VHDL程序}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY ring_counter IS
+  PORT(
+    clk    : IN  STD_LOGIC;
+    rst    : IN  STD_LOGIC;
+    en     : IN  STD_LOGIC;
+    q      : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END ring_counter;
+
+ARCHITECTURE behav OF ring_counter IS
+  SIGNAL sr : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rising_edge(clk) THEN
+      IF rst = '1' THEN
+        sr <= "1000";
+      ELSIF en = '1' THEN
+        sr <= sr(0) & sr(3 DOWNTO 1);
+      ELSE
+        sr <= sr;
+      END IF;
+    END IF;
+  END PROCESS;
+
+  q <= sr;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？它在数字系统中通常有什么用途？
+  \item （1分）该电路属于组合逻辑还是时序逻辑？请结合代码中的PROCESS写法给出判断依据。
+  \item （2分）从复位释放后（\texttt{rst}从'1'变为'0'、\texttt{en = '1'}），请依次写出\textbf{前6个时钟上升沿}后输出\texttt{q}的值序列（以4位二进制形式）。该电路的一个完整循环周期包含几个时钟周期？
+  \item （1分）若将第18行的移位更新语句改为\texttt{sr <= sr(2 DOWNTO 0) \& sr(3);}，该电路的功能会发生什么变化？（仅文字描述即可）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：8--3优先编码器设计（20分）}
+
+设计一个8--3线优先编码器（Priority Encoder），输入为8位请求信号，输出为优先级最高的有效请求的3位二进制编码，同时提供群选通输出信号GS（Group Select，当至少有一个输入有效时为'1'）。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{D(7 DOWNTO 0)}（输入）：8位请求输入信号，高电平有效。\texttt{D(7)}优先级最高，\texttt{D(0)}优先级最低。
+  \item \texttt{Y(2 DOWNTO 0)}（输出）：优先级最高的有效请求对应的3位二进制编码。例如：若\texttt{D(5) = '1'}（且\texttt{D(7)}、\texttt{D(6)}均为'0'），则\texttt{Y = "101"}。
+  \item \texttt{GS}（输出）：群选通信号。当至少有一个输入为'1'时，\texttt{GS = '1'}；当所有输入均为'0'时，\texttt{GS = '0'}。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{功能表（部分）：}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{D(7..0)}（有效位） & \textbf{Y(2..0)} & \textbf{GS} & \textbf{说明} \\
+\hline
+1xxx xxxx & 111 & 1 & D(7)优先级最高 \\
+01xx xxxx & 110 & 1 & D(6)有效 \\
+001x xxxx & 101 & 1 & D(5)有效 \\
+0001 xxxx & 100 & 1 & D(4)有效 \\
+0000 1xxx & 011 & 1 & D(3)有效 \\
+0000 01xx & 010 & 1 & D(2)有效 \\
+0000 001x & 001 & 1 & D(1)有效 \\
+0000 0001 & 000 & 1 & D(0)有效 \\
+0000 0000 & --- & 0 & 无请求 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）画出8--3优先编码器的顶层端口框图，标注所有端口名称、方向和位宽。
+  \item （3分）列出该优先编码器的完整功能表（简化形式：以IF-ELSE优先链顺序列出8种情况，从D(7)到D(0)）。
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 采用\textbf{行为描述方式}，使用\textbf{PROCESS + IF-ELSIF-ELSE}语句链实现优先级判断逻辑；
+    \item 当没有任何输入有效时，\texttt{Y}输出为\texttt{"000"}且\texttt{GS = '0'}；
+    \item 代码中需要包含清晰的注释，说明优先级判定逻辑。
+  \end{itemize}
+  \item （2分）在代码注释中说明：为什么优先编码器的PROCESS敏感信号列表中应包含\texttt{D}的所有位？
+  \item （2分）回答：若改用\textbf{条件信号赋值语句}（WHEN-ELSE）来实现该优先编码器，与PROCESS+IF-ELSIF方式相比，两者在综合结果上有差异吗？简述理由。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 使用PROCESS实现组合逻辑优先编码器的典型模板：
+\begin{verbatim}
+PROCESS(D)
+BEGIN
+  IF D(7) = '1' THEN
+    Y <= "111"; GS <= '1';
+  ELSIF D(6) = '1' THEN
+    Y <= "110"; GS <= '1';
+  ...
+  ELSE
+    Y <= "000"; GS <= '0';
+  END IF;
+END PROCESS;
+\end{verbatim}
+  \item 注意：敏感信号列表必须包含所有8位输入\texttt{D}，且在IF-ELSE链中\textbf{必须包含最终的ELSE分支}，否则会推断出锁存器。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：8位多功能移位寄存器设计（20分）}
+
+设计一个带并行加载功能的8位多功能移位寄存器，支持4种操作模式。要求使用\textbf{时序逻辑}（PROCESS + 时钟）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：同步复位，高电平有效。复位后寄存器值为\texttt{"00000000"}。
+  \item \texttt{data\_in(7 DOWNTO 0)}（输入）：8位并行输入数据（用于加载操作）。
+  \item \texttt{mode(1 DOWNTO 0)}（输入）：2位操作模式选择信号，定义如下：
+  \begin{itemize}
+    \item \texttt{"00"} —— 保持（Hold）：寄存器内容保持不变。
+    \item \texttt{"01"} —— 逻辑左移（Shift Left）：寄存器内容整体左移1位，最高位移出丢弃，最低位补'0'。
+    \item \texttt{"10"} —— 逻辑右移（Shift Right）：寄存器内容整体右移1位，最低位移出丢弃，最高位补'0'。
+    \item \texttt{"11"} —— 并行加载（Parallel Load）：将\texttt{data\_in}的值加载到寄存器中。
+  \end{itemize}
+  \item \texttt{serial\_in}（输入）：串行输入位（本题中左移和右移均补'0'，串行输入暂不使用——此端口保留给扩展用）。
+  \item \texttt{q(7 DOWNTO 0)}（输出）：8位寄存器当前值。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）画出该多功能移位寄存器的顶层端口框图，标注所有端口名称、方向和位宽。
+  \item （3分）画出该移位寄存器的\textbf{工作模式表}（以\texttt{mode}为行、各操作模式的功能描述和次态表达式为列）。
+  \item （10分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 使用\textbf{一个时序PROCESS}（敏感信号列表包含\texttt{clk}即可，同步复位在\texttt{IF rising\_edge(clk)}内部处理）；
+    \item 在进程内部使用\textbf{CASE语句}根据\texttt{mode}选择操作模式；
+    \item 保持模式时寄存器值不变（自赋值或显式\texttt{NULL}处理）；
+    \item 代码中包含清晰的注释。
+  \end{itemize}
+  \item （2分）在代码注释中说明：为什么移位寄存器必须使用时序逻辑（边沿触发）而非组合逻辑来实现？
+  \item （2分）回答以下问题：若需要在该移位寄存器中增加“循环右移”（Rotate Right，最低位移出的位回填到最高位）作为第5种模式，现有设计需要如何修改？（仅说明修改方案，不要求写出完整代码）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 逻辑左移示例（\texttt{q = "10110010"}）：输出\texttt{"01100100"}（左移1位，LSB补'0'）。
+  \item 逻辑右移示例（\texttt{q = "10110010"}）：输出\texttt{"01011001"}（右移1位，MSB补'0'）。
+  \item 移位实现推荐使用VHDL拼接运算符\texttt{\&}和切片：
+  \begin{itemize}
+    \item 左移：\texttt{q <= q(6 DOWNTO 0) \& '0';}
+    \item 右移：\texttt{q <= '0' \& q(7 DOWNTO 1);}
+  \end{itemize}
+  \item CASE语句典型结构：
+\begin{verbatim}
+CASE mode IS
+  WHEN "00" => q <= q;           -- 保持
+  WHEN "01" => q <= q(6 DOWNTO 0) & '0';  -- 左移
+  WHEN "10" => q <= '0' & q(7 DOWNTO 1);  -- 右移
+  WHEN "11" => q <= data_in;     -- 加载
+  WHEN OTHERS => q <= q;
+END CASE;
+\end{verbatim}
+  \item 同步复位优先级最高：\texttt{IF rst = '1' THEN q <= (OTHERS => '0'); ELSIF ...}
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：十字路口交通灯控制器设计（20分）}
+
+设计一个简化版十字路口交通灯控制器。路口有两条道路：\textbf{主干道（Main Road, MR）}和\textbf{支路（Side Road, SR）}。控制系统按照固定时序循环切换交通灯状态，使用\textbf{Moore型状态机}实现，内部自带计数器计时。
+
+\vspace{0.3cm}
+
+\textbf{系统描述：}
+
+\begin{itemize}
+  \item 每条道路有红（R）、黄（Y）、绿（G）三盏灯，共6路控制信号：
+  \begin{itemize}
+    \item 主干道：\texttt{MR\_R}、\texttt{MR\_Y}、\texttt{MR\_G}
+    \item 支路：\texttt{SR\_R}、\texttt{SR\_Y}、\texttt{SR\_G}
+  \end{itemize}
+  \item 所有灯控信号均为高电平点亮（'1'=亮，'0'=灭）。
+  \item \textbf{基本循环（固定周期）：}
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \textbf{阶段} & \textbf{主干道（MR）} & \textbf{支路（SR）} & \textbf{持续时间} & \textbf{说明} \\
+  \hline
+  S0 & 绿灯 & 红灯 & 30秒 & 主干道通行 \\
+  S1 & 黄灯 & 红灯 & 5秒 & 主干道过渡 \\
+  S2 & 红灯 & 绿灯 & 20秒 & 支路通行 \\
+  S3 & 红灯 & 黄灯 & 5秒 & 支路过渡 \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \item 状态循环：$\text{S0} \rightarrow \text{S1} \rightarrow \text{S2} \rightarrow \text{S3} \rightarrow \text{S0} \rightarrow \cdots$。
+  \item 系统时钟假设为1Hz（即每时钟周期为1秒）。
+  \item \textbf{安全互锁要求：}任何时刻，主干道和支路的绿灯\textbf{不能同时点亮}（即\texttt{MR\_G = '1'}时必有\texttt{SR\_G = '0'}，反之亦然）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：系统时钟（1Hz）。
+  \item \texttt{rst}（输入）：异步复位，高电平有效。复位后进入S0状态（主干道绿灯、支路红灯），内部计数器清零。
+  \item \texttt{MR\_R, MR\_Y, MR\_G}（输出）：主干道红、黄、绿灯控制信号。
+  \item \texttt{SR\_R, SR\_Y, SR\_G}（输出）：支路红、黄、绿灯控制信号。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）\textbf{状态图设计：}
+  \begin{enumerate}
+    \item 定义所有状态（S0$\sim$S3），说明每个状态的含义以及该状态下的6路输出信号值（以表格形式：每个状态一行，列分别为状态名、MR\_R/Y/G、SR\_R/Y/G、持续时间）。
+    \item 画出\textbf{Moore型状态转移图}，标注：每个状态的名称、状态下的输出值（MR\_R MR\_Y MR\_G / SR\_R SR\_Y SR\_G），以及状态间的转移条件（计时到信号）。
+  \end{enumerate}
+
+  \item （4分）\textbf{状态转移表：}列出完整的状态转移表，格式如下：
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  \textbf{当前状态} & \textbf{计时条件} & \textbf{次态} & \textbf{输出（MR\_R MR\_Y MR\_G, SR\_R SR\_Y SR\_G）} \\
+  \hline
+  S0 & 计时 $<$ 30s & S0 &  \\
+  S0 & 计时 $\ge$ 30s & S1 &  \\
+  S1 & $\cdots$ & $\cdots$ &  \\
+  $\cdots$ & $\cdots$ & $\cdots$ &  \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \item （10分）\textbf{编写完整VHDL代码（实体+结构体）：}
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义状态：\texttt{TYPE traffic\_state IS (S0, S1, S2, S3);}
+    \item 采用\textbf{三进程描述风格}：
+    \begin{enumerate}
+      \item[进程1:] 时序进程——状态寄存器（\texttt{state <= next\_state}）+ 内部计数器（进入新状态时清零，否则每个时钟上升沿+1）+\texttt{rst}异步复位；
+      \item[进程2:] 组合进程——次态逻辑（根据当前状态和计数器值决定次态）；
+      \item[进程3:] 组合进程——输出逻辑（根据当前状态驱动6路输出信号）。
+    \end{enumerate}
+    \item 内部信号要求：
+    \begin{itemize}
+      \item \texttt{state, next\_state : traffic\_state;}（当前状态和次态信号）
+      \item \texttt{timer : INTEGER RANGE 0 TO 29;}（内部计数器，最大值只需到29即可，因为最长计时为S0的30秒，计数范围为0$\sim$29）
+    \end{itemize}
+    \item 各状态时间参数定义：
+    \begin{itemize}
+      \item S0持续时间：30秒（\texttt{timer}从0计数到29，当\texttt{timer = 29}时计时到）
+      \item S1持续时间：5秒（\texttt{timer}从0计数到4）
+      \item S2持续时间：20秒（\texttt{timer}从0计数到19）
+      \item S3持续时间：5秒（\texttt{timer}从0计数到4）
+    \end{itemize}
+    \item 代码规范：缩进清晰、信号命名合理、关键逻辑有中文注释。
+  \end{itemize}
+
+  \item （2分）\textbf{回答问题：}
+  \begin{enumerate}
+    \item 本设计中为什么选择Moore型而非Mealy型状态机？从输出时序稳定性和安全性角度给出理由。
+    \item 若将状态S2（支路绿灯）的持续时间由20秒改为可配置（通过输入端口\texttt{green\_time[5:0]}设置，范围为1$\sim$63秒），状态机设计需要做哪些修改？（简要说明修改方案，不要求写出完整代码）
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 计数器设计参考（在进程1中）：
+\begin{verbatim}
+PROCESS(clk, rst)
+BEGIN
+  IF rst = '1' THEN
+    state <= S0;
+    timer <= 0;
+  ELSIF rising_edge(clk) THEN
+    state <= next_state;
+    IF state /= next_state THEN
+      timer <= 0;    -- 状态切换时清零
+    ELSE
+      timer <= timer + 1;
+    END IF;
+  END IF;
+END PROCESS;
+\end{verbatim}
+  \item 次态逻辑参考（在进程2中）：
+\begin{verbatim}
+PROCESS(state, timer)
+BEGIN
+  CASE state IS
+    WHEN S0 =>
+      IF timer >= 29 THEN next_state <= S1;
+      ELSE next_state <= S0; END IF;
+    WHEN S1 =>
+      IF timer >= 4 THEN next_state <= S2;
+      ELSE next_state <= S1; END IF;
+    -- ... 其他状态类似
+  END CASE;
+END PROCESS;
+\end{verbatim}
+  \item 输出逻辑参考（在进程3中）：
+\begin{verbatim}
+PROCESS(state)
+BEGIN
+  CASE state IS
+    WHEN S0 =>
+      MR_R <= '0'; MR_Y <= '0'; MR_G <= '1';
+      SR_R <= '1'; SR_Y <= '0'; SR_G <= '0';
+    WHEN S1 =>
+      MR_R <= '0'; MR_Y <= '1'; MR_G <= '0';
+      SR_R <= '1'; SR_Y <= '0'; SR_G <= '0';
+    -- ... 其他状态类似
+  END CASE;
+END PROCESS;
+\end{verbatim}
+  \item 注意：每个状态均有完整输出赋值，避免推断出锁存器。所有信号在每个CASE分支中都必须被赋值。
+  \item 安全互锁验证：检查所有状态的输出，确保不存在\texttt{MR\_G = '1'}和\texttt{SR\_G = '1'}同时发生的情况。
+\end{itemize}
+\end{framed}
+
+\vspace{0.8cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

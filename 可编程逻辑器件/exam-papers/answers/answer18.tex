@@ -1,0 +1,178 @@
+\chapter{第18套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{C} — n输入LUT本质是$2^n\times1$ SRAM，可实现任意n变量组合逻辑函数。
+\item \textbf{B} — 信号在进程挂起后更新($\Delta$延时)；变量立即更新。
+\item \textbf{C} — 组合进程敏感列表不完整导致锁存器。
+\item \textbf{A} — Moore输出仅取决于状态；Mealy取决于状态+输入。
+\item \textbf{D} — 并发语句(WHEN-ELSE, WITH-SELECT)和顺序语句(CASE, IF)均可描述组合/时序逻辑。
+\item \textbf{B} — 优先级：NOT > AND > OR。\texttt{A AND NOT B OR C} = \texttt{(A AND (NOT B)) OR C}。
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item 变量赋值\texttt{:=}立即生效；信号赋值\texttt{<=}进程挂起后生效
+\item 组合进程敏感列表必须包含\textbf{所有输入信号}，否则产生\textbf{锁存器}
+\item 状态机三要素：\textbf{当前状态}、\textbf{次态逻辑}、\textbf{输出逻辑}
+\item 省略ELSE/WHEN OTHERS在组合进程中推断\textbf{锁存器(Latch)}
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\begin{enumerate}[label=错误\arabic*：]
+\item PROCESS内部对SIGNAL用\texttt{:=}赋值→应为\texttt{<=}
+\item IF语句缺少ELSE分支(组合进程)→推断锁存器
+\item 敏感列表缺少输入信号→行为不匹配
+\item 类型不匹配：STD\_LOGIC\_VECTOR与INTEGER混用→需类型转换
+\item CASE缺少WHEN OTHERS→推断锁存器
+\end{enumerate}
+
+{\centering 评分：每处1分，共5分。\par}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\textbf{（1）（1分）}环形计数器（4位，4状态one-hot循环）。\\
+\textbf{（2）（1分）}初始1000→0100→0010→0001→1000，4拍一个循环。\\
+\textbf{（3）（2分）}4个D触发器，one-hot编码，无需译码电路。\\
+\textbf{（4）（1分）}若进入非法状态(如全0)，无法自动恢复——需加自启动逻辑。
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：8-3优先编码器（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity priority_encoder_8to3 is
+  port(I : in std_logic_vector(7 downto 0);
+       Y : out std_logic_vector(2 downto 0);
+       GS : out std_logic);
+end priority_encoder_8to3;
+
+architecture behav of priority_encoder_8to3 is
+begin
+  process(I)
+  begin
+    if I(7)='1' then Y<="111"; GS<='1';
+    elsif I(6)='1' then Y<="110"; GS<='1';
+    elsif I(5)='1' then Y<="101"; GS<='1';
+    elsif I(4)='1' then Y<="100"; GS<='1';
+    elsif I(3)='1' then Y<="011"; GS<='1';
+    elsif I(2)='1' then Y<="010"; GS<='1';
+    elsif I(1)='1' then Y<="001"; GS<='1';
+    elsif I(0)='1' then Y<="000"; GS<='1';
+    else Y<="000"; GS<='0'; end if;
+  end process;
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}ENTITY 3分 + IF-ELSIF优先级链6分 + GS信号(区分无输入)4分 + 输出编码5分 + 代码完整2分。
+
+\subsection{设计题2：8位移位寄存器（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity shift_reg_8bit is
+  port(clk, rst : in std_logic;
+       mode : in std_logic_vector(1 downto 0);
+       si_l, si_r : in std_logic;
+       data_in : in std_logic_vector(7 downto 0);
+       q : out std_logic_vector(7 downto 0));
+end shift_reg_8bit;
+
+architecture behav of shift_reg_8bit is
+  signal reg : std_logic_vector(7 downto 0);
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then reg<=(others=>'0');
+    elsif rising_edge(clk) then
+      case mode is
+        when "00" => null;                     -- 保持
+        when "01" => reg <= si_r & reg(7 downto 1);  -- 右移
+        when "10" => reg <= reg(6 downto 0) & si_l;  -- 左移
+        when "11" => reg <= data_in;            -- 装载
+        when others => null;
+      end case;
+    end if;
+  end process;
+  q <= reg;
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}四模式CASE 8分 + 移位拼接正确6分 + 同步装载3分 + 异步复位2分 + 端口完整1分。
+
+\subsection{设计题3：交通灯控制器（20分）}
+
+\textbf{【分析】}主干道绿灯30s→黄灯5s→支路绿灯20s→黄灯5s→循环。Moore型，4状态，内部计数器计时。
+
+\textbf{【状态定义】}
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline 状态 & 含义 & MR灯(RYG) & SR灯(RYG) \\
+\hline S0 & 主干道绿灯 & 001 & 100 \\
+S1 & 主干道黄灯 & 010 & 100 \\
+S2 & 支路绿灯 & 100 & 001 \\
+S3 & 支路黄灯 & 100 & 010 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{【VHDL核心】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity traffic_light is
+  port(clk, rst : in std_logic;
+       MR_light, SR_light : out std_logic_vector(2 downto 0));
+end traffic_light;
+
+architecture moore_fsm of traffic_light is
+  type state_type is (MR_GREEN, MR_YELLOW, SR_GREEN, SR_YELLOW);
+  signal curr, nxt : state_type;
+  signal timer : integer range 0 to 29;
+  constant T_GREEN : integer := 29;  -- 30秒(0-29)
+  constant T_YELLOW : integer := 4;  -- 5秒(0-4)
+  constant T_SGREEN : integer := 19; -- 20秒
+  constant T_SYELLOW : integer := 4;
+begin
+  reg_proc: process(clk, rst)
+  begin
+    if rst='1' then curr<=MR_GREEN; timer<=0;
+    elsif rising_edge(clk) then
+      curr<=nxt;
+      if (curr=MR_GREEN and timer=T_GREEN) or
+         (curr=MR_YELLOW and timer=T_YELLOW) or
+         (curr=SR_GREEN and timer=T_SGREEN) or
+         (curr=SR_YELLOW and timer=T_SYELLOW) then
+        timer<=0;
+      else timer<=timer+1; end if;
+    end if;
+  end process;
+
+  comb_proc: process(curr, timer)
+  begin
+    case curr is
+      when MR_GREEN => if timer=T_GREEN then nxt<=MR_YELLOW; else nxt<=MR_GREEN; end if;
+      when MR_YELLOW => if timer=T_YELLOW then nxt<=SR_GREEN; else nxt<=MR_YELLOW; end if;
+      when SR_GREEN => if timer=T_SGREEN then nxt<=SR_YELLOW; else nxt<=SR_GREEN; end if;
+      when SR_YELLOW => if timer=T_SYELLOW then nxt<=MR_GREEN; else nxt<=SR_YELLOW; end if;
+    end case;
+  end process;
+
+  with curr select MR_light <= "001" when MR_GREEN, "010" when MR_YELLOW, "100" when others;
+  with curr select SR_light <= "100" when MR_GREEN|MR_YELLOW, "001" when SR_GREEN, "010" when SR_YELLOW;
+end moore_fsm;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}4状态定义+灯控表3分 + 内部timer计时6分 + 两段式VHDL 4分 + Moore输出3分 + 时序循环正确4分。

@@ -1,0 +1,161 @@
+\chapter{第19套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{B} — STD\_LOGIC是9值解析类型（U,X,0,1,Z,W,L,H,-），支持多驱动和总线；STD\_ULOGIC是9值无解析，不能多驱动。
+\item \textbf{C} — SIGNED和UNSIGNED定义在NUMERIC\_STD包中，支持算术运算。
+\item \textbf{A} — WITH-SELECT是并发语句(并行MUX)；WHEN-ELSE也是并发语句。两者均在ARCHITECTURE的BEGIN后直接使用。
+\item \textbf{C} — PROCESS被触发后，内部语句顺序执行，全部执行完后统一更新信号，然后挂起等待下次触发。
+\item \textbf{D} — JTAG、Master Serial、Slave Serial、SelectMAP均为FPGA常见配置模式。
+\item \textbf{A} — FUNCTION必须返回(return)一个值；PROCEDURE通过参数(OUT/INOUT)返回结果，不返回值。
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item STD\_LOGIC 9值：\textbf{U, X, 0, 1, Z, W, L, H, -}
+\item FUNCTION必须\textbf{return}值；PROCEDURE通过\textbf{OUT/INOUT参数}返回
+\item PACKAGE由\textbf{声明}和\textbf{PACKAGE BODY}两部分组成
+\item 并发语句：WITH-SELECT, WHEN-ELSE, 进程, BLOCK, COMPONENT实例化等
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\begin{enumerate}[label=错误\arabic*：]
+\item 异步复位但敏感列表无clk→当clk上升沿不会触发进程
+\item 使用过时库STD\_LOGIC\_ARITH/UNSIGNED→应改用NUMERIC\_STD
+\item 组合进程CASE无WHEN OTHERS→推断锁存器
+\item STD\_LOGIC\_VECTOR与字符字面量直接比较应使用STD\_LOGIC\_VECTOR字面量
+\item 组合进程敏感列表不完整(缺少部分输入)→锁存器推断
+\end{enumerate}
+
+{\centering 评分：每处1分，共5分。\par}
+
+\section{四、程序阅读分析题解析（5分）}
+
+\textbf{（1）（1分）}"101"序列检测器（Moore型）。\\
+\textbf{（2）（1分）}状态S0(0位), S1(匹配"1"), S2(匹配"10")。\\
+\textbf{（3）（2分）}输入101时：S0→S1(1)→S2(10)→(检测到, din=1时)输出1。\\
+\textbf{（4）（1分）}重叠检测（可自动复用末尾位）。
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：4位ALU（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity alu_4bit is
+  port(A, B : in unsigned(3 downto 0);
+       op : in std_logic_vector(2 downto 0);
+       result : out unsigned(3 downto 0);
+       carry, zero : out std_logic);
+end alu_4bit;
+
+architecture behav of alu_4bit is
+  signal tmp : unsigned(4 downto 0);
+begin
+  process(A, B, op)
+  begin
+    case op is
+      when "000" => tmp <= ('0'&A) + ('0'&B);          -- ADD
+      when "001" => tmp <= ('0'&A) - ('0'&B);          -- SUB
+      when "010" => tmp <= '0' & (A and B);            -- AND
+      when "011" => tmp <= '0' & (A or B);             -- OR
+      when "100" => tmp <= '0' & (A xor B);            -- XOR
+      when "101" => tmp <= '0' & (not A);              -- NOT
+      when others => tmp <= (others=>'0');
+    end case;
+  end process;
+  result <= tmp(3 downto 0);
+  carry <= tmp(4);
+  zero <= '1' when tmp(3 downto 0) = 0 else '0';
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}6种操作CASE 8分 + 进位扩展(5位)4分 + zero标志3分 + NUMERIC\_STD 3分 + 端口1分 + 规范1分。
+
+\subsection{设计题2：可编程分频器（20分）}
+
+\textbf{【VHDL】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity prog_divider is
+  generic(DIV : integer := 10);
+  port(clk, rst, en : in std_logic;
+       clk_out : out std_logic);
+end prog_divider;
+
+architecture behav of prog_divider is
+  signal cnt : integer range 0 to DIV-1;
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then cnt<=0;
+    elsif rising_edge(clk) then
+      if en='1' then
+        if cnt=DIV-1 then cnt<=0; else cnt<=cnt+1; end if;
+      end if;
+    end if;
+  end process;
+  clk_out <= '1' when cnt >= DIV/2 else '0';  -- 50%占空比(偶数DIV)
+end behav;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}GENERIC参数化5分 + 模DIV计数5分 + 50\%占空比4分 + en使能3分 + 计数器位宽合理3分。
+
+\subsection{设计题3：电梯控制器（20分）}
+
+\textbf{【分析】}3层电梯Moore型FSM。当前楼层(current\_floor)编码：01,10,11。输入：目标楼层按钮。输出：up/down/stop电机方向。
+
+\textbf{【VHDL核心】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+
+entity elevator is
+  port(clk, rst : in std_logic;
+       f1, f2, f3 : in std_logic;
+       current_floor : out std_logic_vector(1 downto 0);
+       motor : out std_logic_vector(1 downto 0));
+end elevator;
+
+architecture moore_fsm of elevator is
+  type floor_type is (F1, F2, F3);
+  signal curr, target : floor_type;
+  signal moving : boolean := false;
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then curr<=F1; target<=F1; moving<=false;
+    elsif rising_edge(clk) then
+      if f1='1' then target<=F1; moving<=true;
+      elsif f2='1' then target<=F2; moving<=true;
+      elsif f3='1' then target<=F3; moving<=true; end if;
+      if moving then
+        if curr=target then moving<=false;
+        elsif curr<target then
+          if curr=F1 then curr<=F2; else curr<=F3; end if;
+        else
+          if curr=F3 then curr<=F2; else curr<=F1; end if;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  with curr select current_floor <= "01" when F1, "10" when F2, "11" when F3;
+  motor <= "01" when (moving and curr<target) else   -- up
+           "10" when (moving and curr>target) else   -- down
+           "00";                                      -- stop
+end moore_fsm;
+\end{lstlisting}
+
+\textbf{【评分】（20分）}3状态定义+楼层编码3分 + 目标楼层锁存4分 + 移动逻辑5分 + 电机输出(互斥)4分 + 两段式+Moore 3分 + 代码完整1分。

@@ -1,0 +1,213 @@
+\chapter{第14套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item 基于SRAM工艺的FPGA芯片，上电时配置数据通常从何处加载？
+\begin{enumerate}[label=\Alph*.]
+  \item 片内掩膜ROM
+  \item 片内EEPROM
+  \item 外部非易失性存储器（PROM/Flash）
+  \item 无需加载，配置数据掉电不丢失
+\end{enumerate}
+
+\item CPLD的基本逻辑单元——宏单元（Macrocell）通常不包含以下哪一部分？
+\begin{enumerate}[label=\Alph*.]
+  \item 乘积项阵列（Product Term Array）
+  \item 查找表（LUT）
+  \item 可配置触发器（Flip-Flop）
+  \item 输出极性选择与反馈通路
+\end{enumerate}
+
+\item 下列VHDL语句中，\textbf{只能}在结构体的并发区域（PROCESS外部）使用的是：
+\begin{enumerate}[label=\Alph*.]
+  \item IF-ELSIF-ELSE
+  \item CASE-WHEN
+  \item 变量赋值（\texttt{:=}）
+  \item 选择信号赋值（\texttt{WITH-SELECT-WHEN}）
+\end{enumerate}
+
+\item 关于Moore型与Mealy型有限状态机的描述，\textbf{正确}的是：
+\begin{enumerate}[label=\Alph*.]
+  \item Moore型输出仅与当前状态有关，Mealy型输出与当前状态和输入均有关
+  \item Moore型比Mealy型所需状态数一定更少
+  \item Mealy型输出仅由输入决定，与状态无关
+  \item Moore型不能用于序列检测，Mealy型可以
+\end{enumerate}
+
+\item 在VHDL中，以下运算符优先级最高的是：
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{AND}
+  \item \texttt{=（等于）}
+  \item \texttt{NOT}
+  \item \texttt{\&（拼接）}
+\end{enumerate}
+
+\item 在VHDL中，\texttt{CONSTANT}（常量）可以在以下哪个位置声明？
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{ENTITY}的\texttt{PORT}中
+  \item \texttt{ARCHITECTURE}的声明区（\texttt{BEGIN}之前）
+  \item 仅能在\texttt{PACKAGE}（包）中
+  \item 仅能在\texttt{PROCESS}内部
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每题3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+\item VHDL中，\texttt{SIGNAL}通常在\underline{\hspace{2.5cm}}（ARCHITECTURE声明区）中定义，用于进程间通信；\texttt{VARIABLE}只能在\underline{\hspace{2.5cm}}（PROCESS或子程序）内部声明，赋值后立即生效。
+
+\item 关键字 \underline{\hspace{2.5cm}} 用于向实体传递位宽等静态参数，实例化时通过GENERIC MAP赋值；关键字 \underline{\hspace{2.5cm}} 用于声明可复用的子电路模板，实例化时使用PORT MAP连接端口。
+
+\item 在组合逻辑进程的敏感信号表中，应列出所有\underline{\hspace{2.5cm}}的信号（填“被读取”或“被赋值”），否则综合工具可能推断出\underline{\hspace{2.5cm}}（填写非期望的存储单元类型）。
+
+\item 生成语句中，\underline{\hspace{2cm}}\texttt{-GENERATE}按迭代次数重复生成硬件电路；\underline{\hspace{2cm}}\texttt{-GENERATE}按布尔条件选择性生成硬件电路。
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+阅读以下VHDL代码，找出其中的\textbf{5处错误}，并写出正确的修改方案。代码意图是设计一个带异步复位和使能端的4位加法计数器。
+
+\begin{lstlisting}[caption={存在错误的VHDL计数器代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY counter_bad IS
+  PORT(
+    clk : IN  STD_LOGIC;
+    rst : IN  STD_LOGIC;
+    en  : IN  STD_LOGIC;
+    q   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  )
+END ENTITY counter_bad;
+
+ARCHITECTURE behav OF counter_bad IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rst = '1' THEN
+      cnt := "0000";
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cnt <= cnt + 1;
+      END IF
+    END IF;
+  END PROCESS;
+
+  q <= cnt;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题要求：}逐行指出错误位置、错误原因及正确写法（每处1分，找出5处即得满分5分）。
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={程序阅读分析}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY freq_div IS
+  PORT(
+    clk_in  : IN  STD_LOGIC;
+    rst     : IN  STD_LOGIC;
+    clk_out : OUT STD_LOGIC
+  );
+END freq_div;
+
+ARCHITECTURE behav OF freq_div IS
+  SIGNAL count : INTEGER RANGE 0 TO 7 := 0;
+  SIGNAL temp  : STD_LOGIC := '0';
+BEGIN
+  PROCESS(clk_in, rst)
+  BEGIN
+    IF rst = '1' THEN
+      count <= 0;
+      temp  <= '0';
+    ELSIF rising_edge(clk_in) THEN
+      IF count = 3 THEN
+        count <= 0;
+        temp  <= NOT temp;
+      ELSE
+        count <= count + 1;
+      END IF;
+    END IF;
+  END PROCESS;
+  clk_out <= temp;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 该电路实现的是什么功能？分频比是多少？（2分）
+  \item 信号\texttt{count}的作用是什么？它一共有几种取值？（1分）
+  \item 若输入时钟\texttt{clk\_in}的频率为80\,MHz，输出\texttt{clk\_out}的频率是多少？占空比是多少？（2分）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计——BCD码转7段数码管译码器（20分）}
+
+设计一个BCD码转7段数码管译码器，将4位BCD码输入（0$\sim$9）转换为共阳极7段数码管的段选信号输出。输入为\texttt{bcd(3 DOWNTO 0)}，输出为\texttt{seg(6 DOWNTO 0)}（对应段a、b、c、d、e、f、g，低电平点亮）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 列出BCD码0$\sim$9对应的7段码真值表，包含输入\texttt{bcd}和输出\texttt{seg}的所有位（6分）
+  \item 画出顶层模块的端口框图，标注所有端口名称、方向和位宽（4分）
+  \item 编写完整的VHDL代码，使用\texttt{WITH-SELECT}或\texttt{CASE}语句实现译码逻辑。对于无效输入（10$\sim$15），输出全熄灭（全‘1’）。（10分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{参考：}共阳极数码管，段码为低电平时对应段点亮。各段位置约定：\texttt{seg(6)=a, seg(5)=b, seg(4)=c, seg(3)=d, seg(2)=e, seg(1)=f, seg(0)=g}。
+\end{framed}
+
+\newpage
+
+\subsection*{设计题2：时序逻辑设计——4位双向移位寄存器（20分）}
+
+设计一个4位双向移位寄存器，具备左移、右移、并行加载和保持功能。要求：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{端口定义（4分）：}输入端口包括——\texttt{clk}（时钟）、\texttt{rst}（异步复位，高电平有效）、\texttt{data\_in(3 DOWNTO 0)}（并行加载数据）、\texttt{load}（加载使能，高电平有效）、\texttt{dir}（移位方向，0=右移，1=左移）、\texttt{sin}（串行输入位）。输出端口——\texttt{q(3 DOWNTO 0)}（当前寄存器值）。
+  \item \textbf{功能描述（4分）：}列出4种工作模式（复位、加载、右移、左移）及其对应的控制信号和操作。
+  \item \textbf{VHDL代码（12分）：}编写完整的VHDL实体和结构体。使用单个PROCESS，在时钟上升沿处理。优先级：\texttt{rst} $>$ \texttt{load} $>$ 移位操作。右移时数据从高位向低位移动（\texttt{q(2:0)} $\to$ \texttt{q(3:1)}，\texttt{sin} $\to$ \texttt{q(0)}）；左移时数据从低位向高位移动（\texttt{q(3:1)} $\to$ \texttt{q(2:0)}，\texttt{sin} $\to$ \texttt{q(3)}）。
+\end{enumerate}
+
+\newpage
+
+\subsection*{设计题3：状态机设计——自动售货机控制器（20分）}
+
+设计一个简单自动售货机的控制器。售货机只接受1元和2元硬币（信号\texttt{coin1}和\texttt{coin2}，两者不会同时为‘1’），饮料售价为3元。控制器根据累计投币金额决定是否出货和找零。
+
+端口信号：\texttt{clk}（时钟）、\texttt{rst}（异步复位，高有效，回初始状态）、\texttt{coin1}（投入1元）、\texttt{coin2}（投入2元）、\texttt{give}（出货，1个时钟周期高电平）、\texttt{change}（找零1元，1个时钟周期高电平）。
+
+投币规则：每时钟周期检测一次投币信号（\texttt{coin1}或\texttt{coin2}为‘1’时表示该周期投入对应面额硬币）；当累计金额$\ge 3$元时，下一状态回到初始状态，同时输出\texttt{give}='1'；若累计金额$>3$元（即投入4元），除\texttt{give}='1'外还需输出\texttt{change}='1'（找零1元）。
+
+状态定义建议：\texttt{S0}（累计0元）、\texttt{S1}（累计1元）、\texttt{S2}（累计2元）。
+
+采用\textbf{Mealy型}状态机设计（输出与当前状态和输入均有关）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item 画出状态转移图，标注所有状态名称、转移条件（含输入条件）和输出值（\texttt{give/change}）。（8分）
+  \item 列出状态转移表，包含：当前状态、输入（\texttt{coin1 coin2}）、次态、输出（\texttt{give change}）。（4分）
+  \item 编写完整的VHDL代码（实体+结构体），采用双进程描述风格：一个时序进程（状态寄存器+异步复位），一个组合进程（次态逻辑+输出逻辑）。状态使用用户自定义枚举类型。（8分）
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}Mealy型状态机的输出在状态转移弧上标注，格式为“输入/输出”。当状态转移不满足出货条件时，\texttt{give}和\texttt{change}均为‘0’。
+\end{framed}
+
+\endinput

@@ -1,0 +1,576 @@
+\chapter{第5套试卷——参考答案与评分标准}
+
+\section{一、选择题答案（18分）}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+
+\item \textbf{答案：B}（3分）
+
+\textbf{解析：}CPLD基于乘积项（Product Term）结构，适合组合逻辑实现；FPGA基于查找表（LUT）结构，适合时序逻辑设计。选项A将二者说反了；选项C错误（二者结构不同）；选项D错误（FPGA集成度通常更高）。
+
+\item \textbf{答案：B}（3分）
+
+\textbf{解析：}FPGA中的查找表（LUT）实质上是一个由SRAM构成的小容量存储器。LUT将输入组合作为地址，通过查表实现任意组合逻辑函数。选项A描述的是触发器阵列，选项C是专用DSP模块，选项D是时钟管理资源。
+
+\item \textbf{答案：D}（3分）
+
+\textbf{解析：}选项D错误——信号（SIGNAL）通常在结构体的声明区声明（而非在进程内部），变量（VARIABLE）只能在进程内部声明。选项A正确（信号用于进程间通信），选项B正确（变量赋值立即生效，信号赋值在进程挂起时更新），选项C正确（信号用\verb|<=|，变量用\verb|:=|）。
+
+\item \textbf{答案：D}（3分）
+
+\textbf{解析：}IEEE STD\_LOGIC\_1164标准中STD\_LOGIC数据类型共包含9种逻辑值：'U'（未初始化）、'X'（未知/强冲突）、'0'（逻辑0）、'1'（逻辑1）、'Z'（高阻）、'W'（弱未知）、'L'（弱0）、'H'（弱1）、'-'（无关）。共9种。
+
+\item \textbf{答案：C}（3分）
+
+\textbf{解析：}PROCESS语句在敏感信号列表中任一信号发生变化时被激活执行。选项A错误（一个结构体可包含多个进程）；选项B错误（省略敏感信号列表可能导致仿真与综合不一致，且不完全的敏感列表会导致综合出锁存器）；选项D错误（进程内可以使用IF语句和CASE语句等顺序语句）。
+
+\item \textbf{答案：A}（3分）
+
+\textbf{解析：}PAL（可编程阵列逻辑）的基本结构特点是“与阵列可编程，或阵列固定”。这是PAL器件区别于PLA（与阵列和或阵列均可编程）和PROM（与阵列固定、或阵列可编程）的核心特征。
+
+\end{enumerate}
+
+\section{二、填空题答案（12分）}
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+
+\item \textbf{答案：}Field Programmable Gate Array；现场可编程门阵列（每空1.5分，共3分）
+
+\item \textbf{答案：}外部接口（输入/输出端口）；内部功能（逻辑行为/具体实现）（每空1.5分，共3分）
+
+\item \textbf{答案：}\verb|&|；\verb|<=|；\verb|:=|（每空1分，共3分）
+
+\item \textbf{答案：}\verb|clk|（或时钟信号名）；\verb|clk|（或时钟信号名）（每空1.5分，共3分。完整写法：\texttt{IF clk'EVENT AND clk = '1' THEN}）
+
+\end{enumerate}
+
+\section{三、程序改错题解析（5分）}
+
+\textbf{错误分析（共6处错误，找出并改正任意5处即得满分，每处1分）：}
+
+\begin{enumerate}[label=\textbf{错误\arabic*：}, leftmargin=*]
+
+\item \textbf{（第1行）缺少分号：}\texttt{LIBRARY IEEE;} 应为 \texttt{LIBRARY IEEE;}——原代码末尾缺少分号（注：原题代码中第1行确实缺少分号）。\textbf{更正：}在IEEE后添加分号：\texttt{LIBRARY IEEE;}
+
+\item \textbf{（第10--11行）端口声明语法：}\texttt{count : OUT INTEGER RANGE 0 TO 255} 中端口类型应为STD\_LOGIC\_VECTOR，因结构体内部使用的内部信号\texttt{cnt}为STD\_LOGIC\_VECTOR类型，且输出赋值\texttt{count <= cnt}要求类型一致。\textbf{更正：}\texttt{count : OUT STD\_LOGIC\_VECTOR(7 DOWNTO 0)}
+
+\item \textbf{（第15行）信号赋值方式错误：}\texttt{cnt <= 0;}——\texttt{cnt}是STD\_LOGIC\_VECTOR类型，不能直接赋整数值0。\textbf{更正：}\texttt{cnt <= (OTHERS => '0');}
+
+\item \textbf{（第18行）算术运算赋值符号错误：}\texttt{cnt = cnt + 1;}——在VHDL中，等式比较使用\texttt{=}，信号赋值应使用\texttt{<=}。且算术加法需要引用\texttt{IEEE.NUMERIC\_STD}包进行类型转换。\textbf{更正：}\texttt{cnt <= STD\_LOGIC\_VECTOR(UNSIGNED(cnt) + 1);} 或使用 \texttt{IEEE.STD\_LOGIC\_UNSIGNED} 包后写成 \texttt{cnt <= cnt + 1;}
+
+\item \textbf{（第19--20行）END PROCESS与END IF顺序颠倒：}\texttt{END PROCESS;} 出现在 \texttt{END IF;} 之前，导致IF语句未正确闭合。\textbf{更正：}先将\texttt{END IF;}放在\texttt{END PROCESS;}之前。正确顺序应为：
+\begin{verbatim}
+      END IF;
+    END IF;
+  END PROCESS;
+\end{verbatim}
+
+\item \textbf{（第22行）信号赋值缺少分号：}\texttt{count <= cnt} 末尾缺少分号。\textbf{更正：}\texttt{count <= cnt;}
+
+\end{enumerate}
+
+\textbf{修正后的完整VHDL代码：}
+
+\begin{lstlisting}[caption={修正后的8位计数器VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY counter8 IS
+  PORT(
+    clk      : IN  STD_LOGIC;
+    rst      : IN  STD_LOGIC;
+    en       : IN  STD_LOGIC;
+    count    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END counter8;
+
+ARCHITECTURE behavioral OF counter8 IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(7 DOWNTO 0);
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rst = '1' THEN
+      cnt <= (OTHERS => '0');
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cnt <= STD_LOGIC_VECTOR(UNSIGNED(cnt) + 1);
+      END IF;
+    END IF;
+  END PROCESS;
+
+  count <= cnt;
+END behavioral;
+\end{lstlisting}
+
+\textbf{评分标准：}指出并改正一处错误得1分，最高5分；修改后代码逻辑正确额外给分（已包含在每处1分中）。
+
+\section{四、程序阅读分析题解析（5分）}
+
+\begin{enumerate}[label=(\arabic*), leftmargin=*]
+
+\item \textbf{（2分）电路类型与功能：}该程序实现的是一个\textbf{3线--8线译码器（3-to-8 Decoder）}，带使能控制端。功能：当使能信号\verb|en = '1'|时，根据3位地址输入\verb|din(2:0)|将8位输出中的对应位置1（其余位为0），实现二进制地址到独热码输出的译码功能；当\verb|en = '0'|时所有输出均为0。
+
+\item \textbf{（1分）en信号的作用：}\verb|en|为使能控制信号。当\verb|en = '0'|时，输出\verb|dout = "00000000"|（所有位清零，译码器不工作）；当\verb|en = '1'|时，译码器正常工作。
+
+\item \textbf{（1分）输出值：}输入\verb|din = "011"|（即十进制3），对应CASE分支\verb|WHEN "011" => dout <= "00001000"|，输出\verb|dout = "00001000"|（第3位为1）。
+
+\item \textbf{（1分）电路类型及判断依据：}该电路属于\textbf{组合逻辑电路}。判断依据：
+\begin{itemize}
+  \item 进程的敏感信号列表中包含了所有输入信号（\texttt{din}和\texttt{en}），无时钟信号；
+  \item 输出仅取决于当前输入值，与历史状态无关；
+  \item 代码中无时钟边沿检测（如\texttt{clk'EVENT}或\texttt{rising\_edge(clk)}）；
+  \item CASE语句覆盖了所有可能输入组合（含WHEN OTHERS），不会综合出锁存器。
+\end{itemize}
+
+\end{enumerate}
+
+\textbf{评分标准：}（1）正确答出“3-8译码器/解码器”给1分，功能描述正确给1分；（2）en作用和en=0时输出各0.5分；（3）输出值正确给1分；（4）判断为组合逻辑给0.5分，依据合理给0.5分。
+
+\section{五、综合设计题参考答案（60分）}
+
+\subsection{设计题1：8线--3线优先编码器设计（20分）}
+
+\textbf{(1) 真值表（5分）}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$I_7$ & $I_6$ & $I_5$ & $I_4$ & $I_3$ & $I_2$ & $I_1$ & $I_0$ & $Y_2$ & $Y_1$ & $Y_0$ & GS \\
+\hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & X & 0 & 0 & 1 & 1 \\
+0 & 0 & 0 & 0 & 0 & 1 & X & X & 0 & 1 & 0 & 1 \\
+0 & 0 & 0 & 0 & 1 & X & X & X & 0 & 1 & 1 & 1 \\
+0 & 0 & 0 & 1 & X & X & X & X & 1 & 0 & 0 & 1 \\
+0 & 0 & 1 & X & X & X & X & X & 1 & 0 & 1 & 1 \\
+0 & 1 & X & X & X & X & X & X & 1 & 1 & 0 & 1 \\
+1 & X & X & X & X & X & X & X & 1 & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+注：X表示任意值（0或1），输入为高电平有效（'1'有效）。$I_7$优先级最高。
+
+\textbf{评分标准：}真值表完整（含所有输入情况）给3分，标注优先级顺序及GS正确给2分。
+
+\vspace{0.3cm}
+
+\textbf{(2) 逻辑表达式（5分）}
+
+\begin{align}
+Y_2 &= I_7 + I_6 + I_5 + I_4 \notag \\
+Y_1 &= I_7 + I_6 + \overline{I_5}\cdot\overline{I_4}\cdot I_3 + \overline{I_5}\cdot\overline{I_4}\cdot I_2 \notag \\
+    &= I_7 + I_6 + \overline{I_5}\cdot\overline{I_4}\cdot(I_3 + I_2) \notag \\
+Y_0 &= I_7 + \overline{I_6}\cdot I_5 + \overline{I_6}\cdot\overline{I_4}\cdot I_3 + \overline{I_6}\cdot\overline{I_4}\cdot\overline{I_2}\cdot I_1 \notag \\
+GS  &= I_7 + I_6 + I_5 + I_4 + I_3 + I_2 + I_1 + I_0 \notag
+\end{align}
+
+\textbf{评分标准：}每个输出表达式1.25分，共5分。表达式形式可不唯一，逻辑正确即可。
+
+\vspace{0.3cm}
+
+\textbf{(3) VHDL代码（6分）}
+
+\begin{lstlisting}[caption={8线--3线优先编码器VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY priority_encoder_83 IS
+  PORT(
+    I   : IN  STD_LOGIC_VECTOR(7 DOWNTO 0);  -- I7..I0, I7最高优先级
+    Y   : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);  -- 二进制编码输出
+    GS  : OUT STD_LOGIC                      -- 有效输出标志
+  );
+END priority_encoder_83;
+
+ARCHITECTURE behav OF priority_encoder_83 IS
+BEGIN
+  PROCESS(I)
+  BEGIN
+    -- 使用IF-ELSIF实现优先级逻辑
+    IF I(7) = '1' THEN
+      Y  <= "111";
+      GS <= '1';
+    ELSIF I(6) = '1' THEN
+      Y  <= "110";
+      GS <= '1';
+    ELSIF I(5) = '1' THEN
+      Y  <= "101";
+      GS <= '1';
+    ELSIF I(4) = '1' THEN
+      Y  <= "100";
+      GS <= '1';
+    ELSIF I(3) = '1' THEN
+      Y  <= "011";
+      GS <= '1';
+    ELSIF I(2) = '1' THEN
+      Y  <= "010";
+      GS <= '1';
+    ELSIF I(1) = '1' THEN
+      Y  <= "001";
+      GS <= '1';
+    ELSIF I(0) = '1' THEN
+      Y  <= "000";
+      GS <= '1';
+    ELSE
+      Y  <= "000";
+      GS <= '0';
+    END IF;
+  END PROCESS;
+END behav;
+\end{lstlisting}
+
+\textbf{评分标准：}实体定义正确（1分），IF-ELSIF优先级逻辑正确（3分），GS正确（1分），代码规范（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(4) 外部接口框图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % 模块框
+  \draw[thick, fill=blue!10] (0,0) rectangle (6,5);
+  \node at (3,4.5) {\textbf{8--3优先编码器}};
+  \node at (3,3.8) {\small (Priority Encoder 8-to-3)};
+
+  % 输入引脚 I7..I0 (左侧)
+  \draw[thick, ->] (-2,4.0) -- (0,4.0) node[left] at (-2.2,4.0) {$I_7$ (最高)};
+  \draw[thick, ->] (-2,3.3) -- (0,3.3) node[left] at (-2.2,3.3) {$I_6$};
+  \draw[thick, ->] (-2,2.6) -- (0,2.6) node[left] at (-2.2,2.6) {$I_5$};
+  \draw[thick, ->] (-2,1.9) -- (0,1.9) node[left] at (-2.2,1.9) {$I_4$};
+  \draw[thick, ->] (-2,1.2) -- (0,1.2) node[left] at (-2.2,1.2) {$I_3$};
+  \draw[thick, ->] (-2,0.5) -- (0,0.5) node[left] at (-2.2,0.5) {$I_2 \sim I_0$};
+
+  % 输出引脚 (右侧)
+  \draw[thick, ->] (6,3.5) -- (8,3.5) node[right] at (8.2,3.5) {$Y_2$ (MSB)};
+  \draw[thick, ->] (6,2.5) -- (8,2.5) node[right] at (8.2,2.5) {$Y_1$};
+  \draw[thick, ->] (6,1.5) -- (8,1.5) node[right] at (8.2,1.5) {$Y_0$ (LSB)};
+  \draw[thick, ->] (6,0.5) -- (8,0.5) node[right] at (8.2,0.5) {GS};
+
+  % 标签
+  \node[rotate=90] at (-1.5,2.2) {输入端 (8位)};
+  \node[rotate=-90] at (7.5,2.2) {输出端 (4位)};
+\end{tikzpicture}
+\end{center}
+
+\textbf{评分标准：}框图清晰（1分），输入信号标注完整（1分），输出信号标注完整（1分），标明优先级顺序和位宽（1分）。
+
+\subsection{设计题2：模60计数器设计（20分）}
+
+\textbf{(1) 状态转换图（4分）}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, node distance=2.5cm, thick,
+  state/.style={circle, draw, minimum size=0.9cm, fill=gray!10}]
+
+  % 代表性状态
+  \node[state] (S0)  {$0$};
+  \node[state] (S1)  [right of=S0]  {$1$};
+  \node[state] (S9)  [right of=S1]  {$9$};
+  \node[state] (S10) [below of=S0]  {$10$};
+  \node[state] (S11) [right of=S10] {$11$};
+  \node[state] (S19) [right of=S11] {$19$};
+  \node[state] (S58) [below of=S10] {$58$};
+  \node[state] (S59) [right of=S58] {$59$};
+
+  \path (S0)  edge node {} (S1)
+        (S1)  edge [dashed] node {} (S9)
+        (S9)  edge node {} (S10)
+        (S10) edge node {} (S11)
+        (S11) edge [dashed] node {} (S19)
+        (S58) edge node {} (S59)
+        (S59) edge [bend right] node {+1} (S0);
+
+  \node at (3.5, -3.5) {\small 注：rst=1时异步复位至0；en=1时每个时钟上升沿+1};
+\end{tikzpicture}
+\end{center}
+
+\textbf{评分标准：}标注复位初始状态（1分），状态迁移关系正确（1分），代表性状态选择合理（1分），59到0的循环正确（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(2) VHDL代码（8分）}
+
+\begin{lstlisting}[caption={模60计数器VHDL代码}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY mod60_counter IS
+  PORT(
+    clk   : IN  STD_LOGIC;
+    rst   : IN  STD_LOGIC;
+    en    : IN  STD_LOGIC;
+    tens  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);   -- 十位BCD (0~5)
+    units : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)    -- 个位BCD (0~9)
+  );
+END mod60_counter;
+
+ARCHITECTURE behav OF mod60_counter IS
+  SIGNAL t_val : INTEGER RANGE 0 TO 5 := 0;  -- 十位 0~5
+  SIGNAL u_val : INTEGER RANGE 0 TO 9 := 0;  -- 个位 0~9
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      t_val <= 0;
+      u_val <= 0;
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        IF u_val = 9 THEN
+          u_val <= 0;
+          IF t_val = 5 THEN
+            t_val <= 0;       -- 59 -> 00
+          ELSE
+            t_val <= t_val + 1;
+          END IF;
+        ELSE
+          u_val <= u_val + 1;
+        END IF;
+      END IF;
+    END IF;
+  END PROCESS;
+
+  tens  <= STD_LOGIC_VECTOR(TO_UNSIGNED(t_val, 4));
+  units <= STD_LOGIC_VECTOR(TO_UNSIGNED(u_val, 4));
+END behav;
+\end{lstlisting}
+
+\textbf{评分标准：}实体端口正确（1分），异步复位逻辑正确（1分），使能控制（1分），个位/十位进位逻辑正确（2分），59→0循环正确（2分），代码规范/注释（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(3) Testbench代码（6分）}
+
+\begin{lstlisting}[caption={模60计数器测试平台}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY tb_mod60_counter IS
+END tb_mod60_counter;
+
+ARCHITECTURE test OF tb_mod60_counter IS
+  COMPONENT mod60_counter
+    PORT(
+      clk   : IN  STD_LOGIC;
+      rst   : IN  STD_LOGIC;
+      en    : IN  STD_LOGIC;
+      tens  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+      units : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+    );
+  END COMPONENT;
+
+  SIGNAL clk   : STD_LOGIC := '0';
+  SIGNAL rst   : STD_LOGIC := '0';
+  SIGNAL en    : STD_LOGIC := '0';
+  SIGNAL tens  : STD_LOGIC_VECTOR(3 DOWNTO 0);
+  SIGNAL units : STD_LOGIC_VECTOR(3 DOWNTO 0);
+
+  CONSTANT clk_period : TIME := 10 ns;
+BEGIN
+  -- 实例化待测模块
+  UUT: mod60_counter PORT MAP(clk, rst, en, tens, units);
+
+  -- 时钟生成进程
+  clk_process: PROCESS
+  BEGIN
+    clk <= '0';
+    WAIT FOR clk_period / 2;
+    clk <= '1';
+    WAIT FOR clk_period / 2;
+  END PROCESS;
+
+  -- 测试激励进程
+  stim_proc: PROCESS
+  BEGIN
+    -- 测试异步复位
+    rst <= '1';
+    WAIT FOR 20 ns;
+    rst <= '0';
+    WAIT FOR 20 ns;
+
+    -- 测试使能计数 (使能计数70个周期，覆盖0->59->0->10)
+    en <= '1';
+    WAIT FOR 700 ns;   -- 70个周期，覆盖0~59~10
+
+    -- 测试使能关闭
+    en <= '0';
+    WAIT FOR 50 ns;
+
+    -- 测试重新使能
+    en <= '1';
+    WAIT FOR 100 ns;
+
+    -- 测试中途复位
+    rst <= '1';
+    WAIT FOR 20 ns;
+    rst <= '0';
+    WAIT FOR 100 ns;
+
+    WAIT;
+  END PROCESS;
+END test;
+\end{lstlisting}
+
+\textbf{评分标准：}时钟生成正确（1分），复位验证（1分），使能计数验证（1分），模60循环验证（2分），暂停/中途复位验证（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(4) 数字钟应用原理（2分）}
+
+模60计数器在数字钟系统中的应用原理：数字钟的秒和分均为60进制（0--59），由模60计数器实现。秒计数器每计满60（即59→0时）产生一个进位脉冲，驱动分计数器加1；分计数器同理驱动时计数器。当分计数器达到59且秒计数器也达到59时，下一秒来临时分计数器归零并进位到时计数器。因此，数字钟需要一个模60的秒计数器和一个模60的分计数器级联工作。
+
+\textbf{评分标准：}说明秒/分60进制（1分），说明进位级联关系（1分）。
+
+\subsection{设计题3：``101''序列检测器（Moore状态机）（20分）}
+
+\textbf{(1) 状态转换图（6分）}
+
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, node distance=3.2cm, thick,
+  state/.style={circle, draw, minimum size=1.4cm, fill=gray!10}]
+
+  \node[state] (S0) {\textbf{S0}\\\small 初始\\\small out=0};
+  \node[state] (S1) [right of=S0] {\textbf{S1}\\\small 已匹配``1''\\\small out=0};
+  \node[state] (S2) [right of=S1] {\textbf{S2}\\\small 已匹配``10''\\\small out=0};
+  \node[state] (S3) [below of=S1, yshift=-1cm] {\textbf{S3}\\\small 已匹配``101''\\\small out=1};
+
+  \path (S0) edge [loop above] node {din=0} (S0)
+             edge              node {din=1} (S1)
+        (S1) edge              node {din=0} (S2)
+             edge [loop above] node {din=1} (S1)
+        (S2) edge [bend left]  node {din=1} (S3)
+             edge [bend right=45] node [left] {din=0} (S0)
+        (S3) edge [bend right] node [right] {din=0} (S2)
+             edge [bend left=45] node [left]  {din=1} (S1);
+
+\end{tikzpicture}
+\end{center}
+
+\textbf{状态含义：}
+\begin{itemize}
+  \item S0（初始状态）：尚未匹配任何有效序列前缀，输出0。
+  \item S1：已匹配到``1''，等待``0''完成``10''，输出0。
+  \item S2：已匹配到``10''，等待``1''完成``101''，输出0。
+  \item S3：已匹配到完整的``101''，输出1（持续一个时钟周期），同时根据下一个输入决定次态。
+\end{itemize}
+
+\textbf{重叠检测说明：}S3状态下若din=0，则“101”的后缀“10”作为新序列的前缀，跳转到S2（因为S3的“101”以“10”结尾，接收0后变成“1010”，其中最后两位“10”对应S2状态）；若din=1，跳转到S1（最后一位“1”可作为新序列起始）。
+
+\textbf{评分标准：}状态数目及名称正确（1分），各状态输出标注正确（2分），转移条件完整正确（2分），重叠检测转移正确（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(2) 状态转换表（5分）}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{当前状态} & \textbf{输入 din} & \textbf{次态} & \textbf{输出 dout} \\
+\hline
+S0 & 0 & S0 & 0 \\
+S0 & 1 & S1 & 0 \\
+\hline
+S1 & 0 & S2 & 0 \\
+S1 & 1 & S1 & 0 \\
+\hline
+S2 & 0 & S0 & 0 \\
+S2 & 1 & S3 & 0 \\
+\hline
+S3 & 0 & S2 & 1 \\
+S3 & 1 & S1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{评分标准：}表格格式规范（1分），8行转移全部正确（4分，每错一处扣0.5分）。
+
+\vspace{0.3cm}
+
+\textbf{(3) VHDL代码（7分）}
+
+\begin{lstlisting}[caption={``101''序列检测器Moore状态机VHDL代码（双进程描述）}]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY seq_detector_101 IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    din  : IN  STD_LOGIC;
+    dout : OUT STD_LOGIC
+  );
+END seq_detector_101;
+
+ARCHITECTURE moore OF seq_detector_101 IS
+  TYPE state_type IS (S0, S1, S2, S3);
+  SIGNAL current_state, next_state : state_type;
+BEGIN
+  -- ========================================
+  -- 进程1：时序逻辑——状态寄存器（含异步复位）
+  -- ========================================
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      current_state <= S0;
+    ELSIF rising_edge(clk) THEN
+      current_state <= next_state;
+    END IF;
+  END PROCESS;
+
+  -- ========================================
+  -- 进程2：组合逻辑——次态逻辑 + 输出逻辑
+  -- ========================================
+  PROCESS(current_state, din)
+  BEGIN
+    -- 默认赋值
+    next_state <= S0;
+    dout <= '0';
+
+    CASE current_state IS
+      WHEN S0 =>
+        IF din = '1' THEN
+          next_state <= S1;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S1 =>
+        IF din = '0' THEN
+          next_state <= S2;
+        ELSE
+          next_state <= S1;  -- 保持，'1'可作为新序列起点
+        END IF;
+
+      WHEN S2 =>
+        IF din = '1' THEN
+          next_state <= S3;
+        ELSE
+          next_state <= S0;
+        END IF;
+
+      WHEN S3 =>
+        dout <= '1';         -- Moore型：输出仅取决于当前状态
+        IF din = '0' THEN
+          next_state <= S2;  -- 重叠：后缀"10"对应S2
+        ELSE
+          next_state <= S1;  -- 重叠：最后的'1'可作为新起点
+        END IF;
+    END CASE;
+  END PROCESS;
+END moore;
+\end{lstlisting}
+
+\textbf{评分标准：}状态枚举定义（1分），异步复位逻辑（1分），次态逻辑正确（3分，含重叠检测1分），Moore型输出逻辑（1分），代码规范（1分）。
+
+\vspace{0.3cm}
+
+\textbf{(4) 非重叠检测的修改方法（2分）}
+
+若不希望检测重叠序列（即``10101''中只检测出一次``101''），修改方法为：在S3状态下接收到完整``101''后，无论下一个输入din为何值，状态均无条件返回S0（重新开始检测），而不是根据输入跳转到S2或S1。具体在VHDL代码的S3分支中去掉IF判断，直接将next\_state设为S0。
+
+\textbf{评分标准：}说明S3→S0无条件转移（1分），解释放弃了重叠的后缀（1分）。
+
+\endinput

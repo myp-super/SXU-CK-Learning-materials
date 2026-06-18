@@ -1,0 +1,234 @@
+\chapter{第13套试卷}
+
+\section*{一、选择题（每题3分，共18分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 基于SRAM工艺的FPGA芯片，其配置数据通常存储于（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item FPGA内部EEPROM中，断电后配置不丢失
+  \item 外部配置存储器（如SPI Flash）中，上电后自动加载
+  \item FPGA内部熔丝中，一次编程永久固化
+  \item 不需要配置数据，FPGA功能由硬件连线固定
+\end{enumerate}
+
+\item 在VHDL结构体中，以下哪条语句属于并发语句（Concurrent Statement）？
+
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{IF ... THEN ... END IF;}（在PROCESS内部）
+  \item \texttt{FOR i IN 0 TO 7 LOOP ... END LOOP;}（在PROCESS内部）
+  \item \texttt{y <= a AND b;}（在PROCESS外部）
+  \item \texttt{VARIABLE temp : STD\_LOGIC;}（在PROCESS内部）
+\end{enumerate}
+
+\item Moore型状态机与Mealy型状态机的主要区别是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item Moore型状态机的输出仅取决于当前状态，Mealy型状态机的输出与当前状态和输入均有关
+  \item Moore型状态机的状态数一定比Mealy型少
+  \item Mealy型状态机不能检测序列，Moore型可以
+  \item Moore型状态机必须使用异步复位，Mealy型必须使用同步复位
+\end{enumerate}
+
+\item 在VHDL表达式中，运算符\texttt{NOT}、\texttt{AND}、\texttt{OR}、\texttt{XOR}的优先级从高到低排列正确的是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item \texttt{NOT > AND > OR > XOR}
+  \item \texttt{NOT > AND > XOR > OR}
+  \item \texttt{NOT > XOR > AND > OR}
+  \item \texttt{NOT > AND = OR = XOR}（三者优先级相同）
+\end{enumerate}
+
+\item 下列关于CPLD宏单元（Macrocell）的描述，\textbf{错误}的是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item 宏单元通常包含一个乘积项阵列和一个可配置的触发器
+  \item 宏单元中的触发器可以被旁路（Bypass），实现纯组合逻辑输出
+  \item 宏单元的输出极性通常不可配置，固定为高电平有效
+  \item 多个宏单元的乘积项可以通过乘积项共享（Product Term Sharing）进行扩展
+\end{enumerate}
+
+\item VHDL中，以下关于CONSTANT、SIGNAL和VARIABLE的声明范围的说法，\textbf{正确}的是（\quad）。
+
+\begin{enumerate}[label=\Alph*.]
+  \item CONSTANT可以在结构体和进程内部声明，VARIABLE只能在结构体中声明
+  \item SIGNAL只能在结构体中声明，VARIABLE只能在进程或子程序内部声明
+  \item VARIABLE可以在结构体中声明，用于进程间通信
+  \item CONSTANT只能在实体中声明，不能在结构体或进程内部声明
+\end{enumerate}
+
+\end{enumerate}
+
+\section*{二、填空题（每空3分，共12分）}
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL中，使用\textbf{\_\_\_\_\_\_\_\_\_\_}关键字定义常量；使用\textbf{\_\_\_\_\_\_\_\_\_\_}关键字定义变量；使用\textbf{\_\_\_\_\_\_\_\_\_\_}关键字定义信号。
+
+\item 在VHDL的结构化描述中，使用关键字\textbf{\_\_\_\_\_\_\_\_\_\_}声明一个待实例化的底层模块，使用关键字\textbf{\_\_\_\_\_\_\_\_\_\_}将其例化并连接端口。
+
+\item 在VHDL中，\texttt{GENERIC}关键字的作用是\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_；
+\texttt{FOR ... GENERATE}语句属于\_\_\_\_\_\_\_\_\_\_语句（填“顺序”或“并发”）。
+
+\item 在VHDL组合逻辑进程中，敏感信号表必须包含所有\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_的信号，否则综合时可能产生\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_（即意外的存储单元）。
+
+\end{enumerate}
+
+\newpage
+
+\section*{三、程序改错题（共5分）}
+
+阅读以下VHDL代码，找出其中的\textbf{5处错误}，并写出正确的修改方案。
+
+\begin{lstlisting}[caption={存在错误的VHDL代码（描述一个组合逻辑电路）}, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY comb_err IS
+  PORT(
+    a, b, c : IN  STD_LOGIC;
+    y       : OUT STD_LOGIC
+  );
+END comb_err;
+
+ARCHITECTURE behav OF comb_err IS
+  SIGNAL tmp : STD_LOGIC;
+BEGIN
+  PROCESS(a, b)
+  BEGIN
+    IF a = '1' THEN
+      tmp <= b;
+    ELSIF b = '1' THEN
+      tmp := c;
+    END IF;
+  END PROCESS
+  y = tmp;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题要求：}请按以下格式逐行列出错误位置、错误原因及正确写法（每处1分，共5分）。\par
+错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\par
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\par
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\par
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\par
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+\end{framed}
+
+\newpage
+
+\section*{四、程序阅读分析题（共5分）}
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码}, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY shift_circuit IS
+  PORT(
+    clk, rst : IN  STD_LOGIC;
+    q        : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END shift_circuit;
+
+ARCHITECTURE behav OF shift_circuit IS
+  SIGNAL sreg : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      sreg <= "1000";
+    ELSIF rising_edge(clk) THEN
+      sreg <= sreg(0) & sreg(3 DOWNTO 1);
+    END IF;
+  END PROCESS;
+  q <= sreg;
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item 该VHDL代码描述的是什么电路？请写出其名称。（1分）
+  \item 该电路在复位后，从第一个有效时钟边沿开始，输出\texttt{q}的值依次是什么？请列出完整的一个循环序列（以二进制形式给出）。（2分）
+  \item 若将第19行改为\texttt{sreg <= sreg(2 DOWNTO 0) \& NOT sreg(3);}，电路功能变成什么？请写出修改后电路的名称和输出循环序列。（2分）
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+\section*{五、综合设计题（共60分）}
+
+\subsection*{设计题1：组合逻辑设计——BCD码至7段数码管译码器（20分）}
+
+设计一个BCD码至7段共阳极数码管译码器（BCD-to-7-Segment Decoder）。输入为4位BCD码\texttt{bcd(3 downto 0)}（范围0000$\sim$1001，即十进制0$\sim$9），输出为7段数码管段选信号\texttt{seg(6 downto 0)}，低电平点亮（\texttt{seg(6)}对应a段，\texttt{seg(5)}对应b段，……，\texttt{seg(0)}对应g段）。当输入为非法值（1010$\sim$1111）时，数码管全灭（所有段输出高电平）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{（8分）}列出BCD码至7段码译码器的真值表。要求：列出所有有效输入（0$\sim$9）及非法输入（10$\sim$15的二进制）对应的\texttt{seg}输出值。段排列顺序为\texttt{\{a, b, c, d, e, f, g\}}。
+  \item \textbf{（10分）}写出完整的VHDL代码（包含库声明、实体定义和结构体），要求使用\textbf{数据流描述方式}——选择信号赋值语句（\texttt{WITH-SELECT-WHEN}）实现译码功能。实体名称为\texttt{bcd2seg7}。
+  \item \textbf{（2分）}代码注释中说明：为何选用\texttt{WITH-SELECT}而非\texttt{IF-ELSE}实现此功能？两者在使用场景上的主要区别是什么？
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}共阳极数码管：段选为'0'时该段点亮，'1'时熄灭。例如显示数字``0''时，除g段灭（'1'）外其余6段均亮（'0'），即seg = ``1000000''。
+\end{framed}
+
+\subsection*{设计题2：时序逻辑设计——N位双向移位寄存器（20分）}
+
+设计一个\textbf{参数化的N位双向移位寄存器}（默认N=8），要求使用\textbf{结构化VHDL描述方式}（Component + Port Map + Generate语句）。设计要求：
+
+\begin{itemize}
+  \item 输入端口：\texttt{clk}（时钟）、\texttt{rst}（同步复位，高电平有效）、\texttt{dir}（方向控制：'0'左移、'1'右移）、\texttt{din}（串行输入，1位）、\texttt{load}（并行加载使能，高电平有效）、\texttt{pin(7 downto 0)}（并行加载数据）。
+  \item 输出端口：\texttt{q(7 downto 0)}（当前寄存器值）、\texttt{dout}（串行输出，1位，左移时取自最高位，右移时取自最低位）。
+\end{itemize}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{（4分）}画出顶层模块的端口框图，标注所有端口名称、方向和位宽。
+  \item \textbf{（2分）}设计单个D触发器的底层元件\texttt{dff\_ce}（带时钟使能的D触发器），写出其实体定义（仅需实体，无需结构体完整代码）。
+  \item \textbf{（10分）}写出完整的顶层VHDL代码。要求：
+  \begin{itemize}
+    \item 使用\texttt{COMPONENT}声明\texttt{dff\_ce}元件；
+    \item 使用\texttt{FOR ... GENERATE}语句生成8个D触发器实例；
+    \item 使用\texttt{PORT MAP}进行元件例化，通过2选1多路选择逻辑（可用条件信号赋值语句）实现移位方向和并行加载的控制；
+    \item 第0位和第7位需要特殊处理移位输入/输出连接。
+  \end{itemize}
+  \item \textbf{（4分）}若需将位宽改为16位，代码中需要修改哪些地方？请在代码注释中标注参数化的关键位置，并说明如何利用\texttt{GENERIC}语句实现位宽可配置。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}结构体可声明内部信号数组（如\texttt{TYPE wire\_array IS ARRAY(0 TO 7) OF STD\_LOGIC}）用于级联互连。每个D触发器实例的输入由移位方向、加载信号共同决定。可参考以下结构：\texttt{q\_int(i) <= pin(i) WHEN load = '1' ELSE ...}（条件赋值决定每位D触发器的数据输入）。
+\end{framed}
+
+\subsection*{设计题3：状态机设计——``1011''序列检测器（20分）}
+
+设计一个``1011''序列检测器。输入信号为\texttt{din}（1位串行输入），输出信号为\texttt{found}（1位）。当连续检测到``1011''序列时\texttt{found}输出'1'（高电平有效），其余情况输出'0'。允许序列重叠检测（即``101011''中可检测出两次``1011''）。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{Moore型状态机（8分）}
+  \begin{enumerate}
+    \item 画出Moore型状态机的状态转移图，标注每个状态的名称、含义及该状态下\texttt{found}的输出值。需涵盖5个状态（S0$\sim$S4）。
+    \item 列出Moore型状态机的状态转移表（当前状态、输入\texttt{din}、次态、输出\texttt{found}）。
+  \end{enumerate}
+
+  \item \textbf{Mealy型状态机（6分）}
+  \begin{enumerate}
+    \item 画出Mealy型状态机的状态转移图，标注每个状态的名称、含义、转移条件及转移时的输出值。需涵盖4个状态（S0$\sim$S3）。
+    \item 列出Mealy型状态机的状态转移表（当前状态、输入\texttt{din}、次态、输出\texttt{found}）。
+  \end{enumerate}
+
+  \item \textbf{VHDL代码实现（6分）}
+  选择Moore型\textbf{或}Mealy型状态机，编写完整的VHDL代码。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义状态；
+    \item 采用双进程（或三进程）描述风格；
+    \item 时钟\texttt{clk}上升沿触发，复位\texttt{rst}为异步复位（低电平有效）。
+  \end{itemize}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}``1011''序列需5个状态（Moore）或4个状态（Mealy）。Moore型：S0（初始）、S1（已匹配``1''）、S2（已匹配``10''）、S3（已匹配``101''）、S4（已匹配``1011''，输出为1）。Mealy型：S0（初始）、S1（已匹配``1''）、S2（已匹配``10''）、S3（已匹配``101''），在S3状态下若输入为``1''则输出为1并转移到S1（重叠）。注意序列重叠情况——例如``101011''中：第1次``1011''（位0-3），第2次``1011''（位2-5）。
+\end{framed}
+
+\endinput

@@ -1,0 +1,109 @@
+# do clock_top_1.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# 
+# Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+# Start time: 22:41:23 on Jun 15,2026
+# vlog -work work clock_top_1.vo 
+# -- Compiling module clock_top_1
+# 
+# Top level modules:
+# 	clock_top_1
+# End time: 22:41:23 on Jun 15,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+# Start time: 22:41:23 on Jun 15,2026
+# vlog -work work Waveform.vwf.vt 
+# -- Compiling module clock_top_1_vlg_sample_tst
+# -- Compiling module clock_top_1_vlg_check_tst
+# -- Compiling module clock_top_1_vlg_vec_tst
+# 
+# Top level modules:
+# 	clock_top_1_vlg_vec_tst
+# End time: 22:41:23 on Jun 15,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -c -do "clock_top_1.do" 
+# Start time: 22:41:23 on Jun 15,2026
+# ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
+# 
+# //  ModelSim SE-64 10.4 Dec  3 2014 
+# //
+# //  Copyright 1991-2014 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //  THIS DOCUMENT CONTAINS TRADE SECRETS AND COMMERCIAL OR FINANCIAL
+# //  INFORMATION THAT ARE PRIVILEGED, CONFIDENTIAL, AND EXEMPT FROM
+# //  DISCLOSURE UNDER THE FREEDOM OF INFORMATION ACT, 5 U.S.C. SECTION 552.
+# //  FURTHERMORE, THIS INFORMATION IS PROHIBITED FROM DISCLOSURE UNDER
+# //  THE TRADE SECRETS ACT, 18 U.S.C. SECTION 1905.
+# //
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/work.clock_top_1_vlg_vec_tst
+# Loading work.clock_top_1_vlg_vec_tst
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/work.clock_top_1
+# Loading work.clock_top_1
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_io_obuf
+# Loading cycloneiii_ver.cycloneiii_io_obuf
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_io_ibuf
+# Loading cycloneiii_ver.cycloneiii_io_ibuf
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_lcell_comb
+# Loading cycloneiii_ver.cycloneiii_lcell_comb
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/altera_ver.dffeas
+# Loading altera_ver.dffeas
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_clkctrl
+# Loading cycloneiii_ver.cycloneiii_clkctrl
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_mux41
+# Loading cycloneiii_ver.cycloneiii_mux41
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/cycloneiii_ver.cycloneiii_ena_reg
+# Loading cycloneiii_ver.cycloneiii_ena_reg
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/work.clock_top_1_vlg_sample_tst
+# Loading work.clock_top_1_vlg_sample_tst
+# ** Error: (vsim-19) Failed to access library '220model_ver' at "220model_ver".
+# 
+# No such file or directory. (errno = ENOENT)
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/work.clock_top_1_vlg_check_tst
+# Loading work.clock_top_1_vlg_check_tst
+# SDF 10.4 Compiler 2014.12 Dec  3 2014
+# 
+# Loading instances from clock_top_1_v.sdo
+# Refreshing C:/Users/Lenovo/Desktop/digitalClock/simulation/qsim/verilog_libs/altera_ver.PRIM_GDFF_LOW
+# Loading altera_ver.PRIM_GDFF_LOW
+# Loading timing data from clock_top_1_v.sdo
+# ** Note: (vsim-3587) SDF Backannotation Successfully Completed.
+#    Time: 0 ps  Iteration: 0  Instance: /clock_top_1_vlg_vec_tst File: Waveform.vwf.vt
+# ERROR! Vector Mismatch for output port hour1[1] :: @time = 5000.000 ps
+#      Expected value = 0000
+#      Real value = 00x0
+# ERROR! Vector Mismatch for output port speak :: @time = 5000.000 ps
+#      Expected value = 0
+#      Real value = x
+# ERROR! Vector Mismatch for output port sec0[0] :: @time = 65000.000 ps
+#      Expected value = 0000
+#      Real value = 0001
+# ERROR! Vector Mismatch for output port sec0[1] :: @time = 125000.000 ps
+#      Expected value = 0000
+#      Real value = 0010
+# ERROR! Vector Mismatch for output port sec0[2] :: @time = 245000.000 ps
+#      Expected value = 0000
+#      Real value = 0100
+# ERROR! Vector Mismatch for output port sec0[3] :: @time = 485000.000 ps
+#      Expected value = 0000
+#      Real value = 1000
+# ERROR! Vector Mismatch for output port sec1[0] :: @time = 605000.000 ps
+#      Expected value = 0000
+#      Real value = 0001
+# ERROR! Vector Mismatch for output port sec1[1] :: @time = 1205000.000 ps
+#      Expected value = 0000
+#      Real value = 0010
+#           8 mismatched vectors : Simulation failed !
+# ** Note: $finish    : Waveform.vwf.vt(636)
+#    Time: 1500 ns  Iteration: 0  Instance: /clock_top_1_vlg_vec_tst/tb_out
+# End time: 22:41:25 on Jun 15,2026, Elapsed time: 0:00:02
+# Errors: 3, Warnings: 1

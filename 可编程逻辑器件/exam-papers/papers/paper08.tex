@@ -1,0 +1,428 @@
+\chapter{第8套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（八）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟）
+\end{center}
+
+% ============================================
+\section*{一、选择题（共6题，每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item FPGA中一个典型的逻辑单元（Slice）通常包含以下哪组资源？（\quad）
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 仅由LUT和D触发器组成 &
+B. & LUT、D触发器、进位链和多路选择器 \\
+C. & 完整的嵌入式微处理器核 &
+D. & 模拟锁相环（PLL）和时钟管理模块 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，若需将\texttt{STD\_LOGIC\_VECTOR}类型转换为\texttt{UNSIGNED}类型以进行算术运算，应引用以下哪个包？（\quad）
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{IEEE.STD\_LOGIC\_1164} &
+B. & \texttt{IEEE.STD\_LOGIC\_ARITH} \\
+C. & \texttt{IEEE.NUMERIC\_STD} &
+D. & \texttt{IEEE.STD\_LOGIC\_SIGNED} \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 下列关于同步复位（Synchronous Reset）与异步复位（Asynchronous Reset）的描述，\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 异步复位不依赖时钟即可生效，但对复位信号的毛刺较为敏感 &
+B. & 同步复位的响应速度比异步复位更快 \\
+C. & 异步复位在VHDL代码中不需要将复位信号列入敏感信号表 &
+D. & 同步复位比异步复位占用更多的逻辑资源 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 关于有限状态机（FSM）的状态编码方式，以下描述\textbf{正确}的是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 二进制编码使用最少的状态寄存器，但译码逻辑较复杂 &
+B. & 独热码（One-Hot）需要最少的状态寄存器 \\
+C. & 格雷码（Gray Code）在相邻状态转换时有多位同时翻转 \\
+D. & 独热码的抗干扰能力最差 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item 在VHDL中，\texttt{SUBTYPE}关键字的主要作用是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 创建一个全新的数据类型 &
+B. & 从已有类型派生子类型并添加范围约束 \\
+C. & 声明信号间的物理连接关系 &
+D. & 定义进程内部使用的局部变量 \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\item FPGA中的Block RAM与Distributed RAM的主要区别是（\quad）。
+
+\vspace{0.3cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & Distributed RAM由专用硬核实现，Block RAM由LUT构成 &
+B. & Block RAM是片内专用存储硬核，Distributed RAM由LUT逻辑资源构成 \\
+C. & 两者完全等价，没有本质区别 &
+D. & Block RAM仅用于存储程序代码，Distributed RAM仅用于存储数据 \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（共4题，每题3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item VHDL中常用的信号属性包括：
+\begin{itemize}
+  \item \texttt{clk'EVENT}：表示信号值\underline{\hspace{3cm}}（填“发生变化”或“达到稳定”）；
+  \item \texttt{rising\_edge(clk)}等价于\underline{\hspace{1.5cm}} AND \underline{\hspace{1.5cm}}；
+  \item \texttt{data'RANGE}返回信号\texttt{data}的\underline{\hspace{2.5cm}}范围。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item 在VHDL中描述三态输出：
+\begin{itemize}
+  \item 高阻态的字符表示为\underline{\hspace{1.5cm}}；
+  \item 描述双向总线时，端口模式应使用\underline{\hspace{2cm}}（填\texttt{IN}、\texttt{OUT}、\texttt{INOUT}或\texttt{BUFFER}）；
+  \item 当多个三态门驱动同一总线时，同一时刻最多只能有\underline{\hspace{1.5cm}}个门的使能有效。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item 同步复位与异步复位的VHDL代码模板有本质区别（以高电平复位为例）：
+\begin{itemize}
+  \item 同步复位的典型结构：
+  \par \texttt{IF rising\_edge(clk) THEN}
+  \par \quad \texttt{\underline{\hspace{2cm}} rst = '1' THEN ... END IF;}
+  \par \texttt{END IF;}
+  \item 异步复位的典型结构：
+  \par \texttt{IF rst = '1' THEN ...}
+  \par \texttt{\underline{\hspace{2cm}} rising\_edge(clk) THEN ... END IF;}
+\end{itemize}
+
+\vspace{0.5cm}
+
+\item 在IEEE.NUMERIC\_STD包中，将\texttt{UNSIGNED}类型转换为\texttt{INTEGER}类型的函数是\underline{\hspace{2.5cm}}；将\texttt{INTEGER}转换为\texttt{UNSIGNED}类型的函数是\underline{\hspace{2.5cm}}（需额外指定目标位宽参数）；将\texttt{STD\_LOGIC\_VECTOR}转换为\texttt{UNSIGNED}类型使用\underline{\hspace{2.5cm}}函数。
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+\textbf{题目：}以下VHDL程序意图设计一个带异步复位和使能端的8位二进制加法计数器（模256），但代码中存在\textbf{5处错误}。请逐一指出错误位置并写出正确的修改方案。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={带错误的8位计数器程序（找出5处错误，每处1分）}, language=VDL, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY counter8 IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    en   : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END counter8;
+
+ARCHITECTURE behav OF counter8 IS
+  SIGNAL cnt : STD_LOGIC_VECTOR(7 DOWNTO 0)
+BEGIN
+  PROCESS(clk)
+  BEGIN
+    IF rst = '1' THEN
+      cnt := (OTHERS => '0');
+    ELSIF rising_edge(clk) THEN
+      IF en = '1' THEN
+        cnt <= cnt + '1';
+      END IF;
+    END IF;
+  END PROCESS;
+  q <= cnt;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\begin{framed}
+\textbf{答题要求：}在答题纸上按以下格式依次写出各错误：
+
+\noindent 错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）\\
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_ 改为 \_\_\_\_\_\_\_\_\_\_（原因：\_\_\_\_\_\_\_\_\_\_）
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+\textbf{题目：}阅读以下VHDL程序，回答下列问题。
+
+\vspace{0.3cm}
+
+\begin{lstlisting}[caption={待分析VHDL程序——环形计数器}, language=VDL, numbers=left]
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY ring_counter IS
+  PORT(
+    clk  : IN  STD_LOGIC;
+    rst  : IN  STD_LOGIC;
+    q    : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+  );
+END ring_counter;
+
+ARCHITECTURE behav OF ring_counter IS
+  SIGNAL state : STD_LOGIC_VECTOR(3 DOWNTO 0);
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      state <= "1000";
+    ELSIF rising_edge(clk) THEN
+      state <= state(0) & state(3 DOWNTO 1);
+    END IF;
+  END PROCESS;
+  q <= state;
+END behav;
+\end{lstlisting}
+
+\vspace{0.3cm}
+
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？
+  \item （2分）从复位释放后开始，请依次写出连续8个时钟上升沿后信号\texttt{q}（即\texttt{state}）的值。设初始复位值已载入。
+  \item （1分）如果第16行右移拼接改为\texttt{state <= state(2 DOWNTO 0) \& state(3);}（即循环左移），该电路将变成什么类型？输出序列将如何变化？
+  \item （1分）该电路中输出信号\texttt{q(0)}的频率与输入时钟\texttt{clk}的频率之比是多少？请说明推导过程。
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共3题，共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：8位算术逻辑单元（ALU）（20分）}
+
+设计一个8位算术逻辑单元（ALU），能够对两个8位输入操作数执行8种基本运算。要求使用VHDL的行为描述风格（在PROCESS中使用CASE语句）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{a(7 downto 0)}（输入）：操作数A
+  \item \texttt{b(7 downto 0)}（输入）：操作数B
+  \item \texttt{op(2 downto 0)}（输入）：操作选择信号
+  \item \texttt{y(7 downto 0)}（输出）：运算结果
+  \item \texttt{zero}（输出）：零标志，当\texttt{y = "00000000"}时输出'1'
+  \item \texttt{sign}（输出）：符号标志，直接输出\texttt{y(7)}的值
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{操作码定义（op编码）：}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{op(2:0)} & \textbf{操作} & \textbf{说明} \\
+\hline
+\texttt{"000"} & PASS\_A & \texttt{y <= a}（直通A）\\
+\texttt{"001"} & ADD & \texttt{y <= a + b}（加法）\\
+\texttt{"010"} & SUB & \texttt{y <= a - b}（减法）\\
+\texttt{"011"} & AND\_OP & \texttt{y <= a AND b}（按位与）\\
+\texttt{"100"} & OR\_OP & \texttt{y <= a OR b}（按位或）\\
+\texttt{"101"} & XOR\_OP & \texttt{y <= a XOR b}（按位异或）\\
+\texttt{"110"} & NOT\_A & \texttt{y <= NOT a}（按位取反A）\\
+\texttt{"111"} & SHL\_A & \texttt{y <= a(6 downto 0) \& '0'}（逻辑左移一位）\\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （5分）画出该ALU的顶层模块端口框图，标注所有输入输出信号、方向和位宽。
+  \item （12分）编写完整的VHDL代码，包括库声明、实体定义和结构体。要求：
+  \begin{itemize}
+    \item 引用\texttt{IEEE.NUMERIC\_STD.ALL}包以支持算术运算；
+    \item 在PROCESS中使用CASE语句根据\texttt{op}选择运算；
+    \item 算术运算时需将\texttt{STD\_LOGIC\_VECTOR}转换为\texttt{UNSIGNED}，运算结果再转换回\texttt{STD\_LOGIC\_VECTOR}；
+    \item 除\texttt{zero}和\texttt{sign}外，CASE语句须覆盖所有\texttt{op}取值（含OTHERS分支）。
+  \end{itemize}
+  \item （3分）在代码中添加注释：说明数据流方向、各OP分支的功能，以及zero/sign标志的生成逻辑。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}算术运算的类型转换示例：
+\texttt{y <= STD\_LOGIC\_VECTOR(UNSIGNED(a) + UNSIGNED(b));}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：N级二分频器链（20分）}
+
+使用\textbf{结构化VHDL描述方法}设计一个N级二分频器链（由N个T触发器级联而成）。每级T触发器将输入时钟二分频后输出至下一级，最终输出频率为 $f_{out} = f_{clk\_in} / 2^{N}$。级数N通过GENERIC参数设定。
+
+\vspace{0.3cm}
+
+\textbf{基本单元——T触发器（TFF）：}
+T触发器在每个时钟上升沿将输出翻转。其端口定义如下：
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号
+  \item \texttt{rst}（输入）：异步复位，高电平有效，复位时\texttt{q <= '0'}
+  \item \texttt{q}（输出）：当前状态输出
+\end{itemize}
+
+\textbf{顶层模块端口：}
+\begin{itemize}
+  \item \texttt{clk\_in}（输入）：输入时钟
+  \item \texttt{rst}（输入）：异步复位，高电平有效
+  \item \texttt{clk\_out}（输出）：第N级T触发器的输出（即N级分频后的时钟）
+  \item \texttt{chain(0 to N-1)}（可选，中间节点输出，便于观察各级分频结果）：各级TFF的输出
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出N=3时该分频器链的电路框图，标注各级输入/输出信号及时钟频率关系（设\texttt{clk\_in}=8MHz）。
+  \item （3分）编写单个T触发器（TFF）的完整VHDL代码（ENTITY + ARCHITECTURE），使用变量\texttt{toggle}在PROCESS中实现翻转逻辑。
+  \item （10分）编写顶层N级分频器链的完整VHDL代码。要求：
+  \begin{itemize}
+    \item 使用\texttt{GENERIC}定义级数参数N（默认值N:=4）；
+    \item 在结构体中使用\texttt{COMPONENT}声明T触发器；
+    \item 使用\texttt{FOR...GENERATE}（必须）循环实例化N个TFF；
+    \item 使用内部信号\texttt{chain(0 TO N-1)}（类型\texttt{STD\_LOGIC\_VECTOR}）连接各级TFF的输出；
+    \item 第0级TFF的时钟连接至\texttt{clk\_in}，第i级（i>0）TFF的时钟连接至\texttt{chain(i-1)}；
+    \item 最终输出\texttt{clk\_out <= chain(N-1)}。
+  \end{itemize}
+  \item （3分）在代码中添加清晰的注释，说明各模块的功能、GENERIC参数的用途，以及GENERATE循环中各级的时钟连接关系。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item TFF内部实现要点：\texttt{VARIABLE toggle : STD\_LOGIC := '0';} ——在时钟上升沿执行\texttt{toggle := NOT toggle; q <= toggle;}。
+  \item GENERIC声明示例：\texttt{GENERIC (N : INTEGER := 4);}（写在ENTITY的PORT之前）。
+  \item GENERATE用法示例：\texttt{G1: FOR i IN 0 TO N-1 GENERATE ... END GENERATE G1;}
+  \item 第0级与其余级的连接方式不同，可使用IF GENERATE区分：\\
+  \texttt{first: IF i = 0 GENERATE ... END GENERATE first;}\\
+  \texttt{others: IF i > 0 GENERATE ... END GENERATE others;}
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：数字密码锁控制器（20分）}
+
+设计一个数字密码锁控制器（Finite State Machine）。该密码锁需要用户通过串行输入方式逐位输入4位二进制密码。预设正确密码为“\textbf{1011}”（即先输入1，再输入0，再输入1，再输入1）。当检测到完整的正确密码序列时，开锁信号有效；若输入错误位，则返回初始状态等待重新输入。允许序列重叠检测。
+
+\vspace{0.3cm}
+
+\textbf{功能说明：}
+\begin{itemize}
+  \item 每个时钟周期采样一位输入信号\texttt{key\_in}（1位），与预设密码逐位比对。
+  \item 正确密码序列为4位：“1” $\to$ “0” $\to$ “1” $\to$ “1”。当连续4个时钟周期输入与此序列完全匹配时，下一个时钟周期\texttt{unlock}输出高电平'1'（持续一个时钟周期），然后状态机返回初始状态。
+  \item 若在匹配过程中某一位输入与密码不符，状态机立即返回初始状态，之前的部分匹配作废。
+  \item 允许重叠检测：例如输入序列“1 0 1 1 0 1 1”（共7位），前四位“1011”触发第一次开锁（第4位之后），之后状态机返回S0，从第5位'0'开始重新匹配；第5--7位为0、1、1，无法构成完整密码“1011”，因此仅开锁一次。若输入为“1 0 1 1 0 1 1 0 1 1”，则第4位后开锁一次，第10位后再次开锁（重叠发生在第3--4--5--6位“1--1--0--1”和第7--8--9--10位“1--0--1--1”之间）... 实际上重叠检测的重点在于：密码的末尾若干位可能同时构成新密码的开头。例如输入“1 0 1 1 0 1 1”：位序列1-0-1-1开锁（位4后），位5=0无法匹配S0→S1，位6=1触发S0→S1，位7=1触发S1→S1（重叠利用）。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发
+  \item \texttt{rst}（输入）：异步复位，高电平有效，复位后回到初始状态
+  \item \texttt{key\_in}（输入）：串行密码输入（1位）
+  \item \texttt{unlock}（输出）：开锁信号（1位），高电平有效，持续一个时钟周期
+  \item \texttt{state\_disp(2:0)}（输出，可选）：当前状态的编码输出，便于调试观察
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （8分）画出该密码锁控制器的状态转移图（采用Moore型状态机）。要求：
+  \begin{itemize}
+    \item 至少包含5个状态：S0（初始/未匹配）、S1（已匹配第一位“1”）、S2（已匹配“10”）、S3（已匹配“101”）、S4（已匹配“1011”，即开锁状态）；
+    \item 标注每个状态的名称、含义及其输出值（unlock）；
+    \item 标注所有状态之间的转移条件（基于key\_in的值）。
+  \end{itemize}
+  \item （3分）列出状态转移表，包含当前状态、输入（key\_in）、次态和输出（unlock）。
+  \item （9分）编写完整的VHDL代码实现该密码锁控制器。要求：
+  \begin{itemize}
+    \item 使用用户自定义枚举类型定义状态（\texttt{TYPE lock\_state IS (S0, S1, S2, S3, S4);}）；
+    \item 采用双进程（或三进程）描述风格：一个时序进程（状态寄存器和异步复位），一个组合进程（次态逻辑和输出逻辑）；
+    \item 异步复位：rst为高电平时立即回到S0状态；
+    \item 使用二进制编码或独热码均可，但需在注释中说明编码方案；
+    \item 代码中包含清晰的功能注释。
+  \end{itemize}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item Moore型状态机中，\texttt{unlock}输出仅取决于当前状态（S4时输出1，其余状态输出0）。
+  \item 状态转移逻辑：
+  \begin{itemize}
+    \item S0：key\_in='1' $\to$ S1；key\_in='0' $\to$ 保持S0
+    \item S1：key\_in='0' $\to$ S2；key\_in='1' $\to$ S1（注意重叠：已完成的第一位'1'可作为新序列的开头）
+    \item S2：key\_in='1' $\to$ S3；key\_in='0' $\to$ S0
+    \item S3：key\_in='1' $\to$ S4；key\_in='0' $\to$ S2（注意："1010"中，后两位"10"恰好匹配S2的前缀）
+    \item S4：key\_in='1' $\to$ S1（重叠：S4的最后一个'1'可作为新序列的第一位）；key\_in='0' $\to$ S0
+  \end{itemize}
+  \item 三进程风格：一个时钟进程（状态寄存器+复位），一个组合进程（次态逻辑），一个组合进程（输出逻辑——Moore型只依赖当前状态）。
+\end{itemize}
+\end{framed}
+
+\vspace{0.3cm}
+
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

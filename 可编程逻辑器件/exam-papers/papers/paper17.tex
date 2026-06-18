@@ -1,0 +1,451 @@
+\chapter{第17套试卷}
+
+\begin{center}
+\textbf{FPGA与VHDL 基础试卷（十七）}
+
+（满分：100分 \hspace{2em} 考试时间：120分钟 \hspace{2em} 难度：中等）
+\end{center}
+
+% ============================================
+\section*{一、选择题（每题3分，共18分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 下列关于CPLD与FPGA架构差异的描述，\textbf{正确}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & CPLD基于查找表（LUT）结构实现逻辑功能；FPGA基于乘积项（Product Term）结构实现逻辑功能 &
+B. & CPLD基于乘积项（AND-OR阵列）结构，适合宽输入组合逻辑；FPGA基于查找表（LUT）结构，适合寄存器密集型和复杂时序逻辑 \\
+C. & CPLD的逻辑单元（宏单元）数量通常比FPGA多，且互连资源更丰富 &
+D. & FPGA的配置数据存储在非易失性Flash中，因此上电即可工作；CPLD则需要外部配置芯片 \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\item 在VHDL中，下列关于CASE语句与IF-ELSE语句综合结果的说法，\textbf{正确}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & CASE语句综合后通常生成\textbf{并行}的多路选择器（MUX）结构；IF-ELSIF语句综合后通常生成\textbf{优先级链}（Priority Chain）结构 &
+B. & CASE语句和IF-ELSE语句综合结果完全等价，综合工具会自动优化为相同电路 \\
+C. & CASE语句只能用于组合逻辑描述，不能出现在PROCESS内部 &
+D. & IF-ELSIF语句综合后总是生成并行结构，与CASE语句无区别 \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\item 在VHDL结构化描述中，关于COMPONENT（元件）声明和实例化的语法规则，以下说法\textbf{错误}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & COMPONENT声明位于ARCHITECTURE的声明区（BEGIN之前），其PORT列表必须与被例化实体的PORT完全一致 &
+B. & 元件实例化时使用\texttt{PORT MAP}关键字，支持命名关联（如\texttt{a => sig\_a}）和位置关联两种方式 \\
+C. & 同一COMPONENT在一个ARCHITECTURE中只能被实例化一次，多次实例化会导致综合错误 &
+D. & COMPONENT声明的作用是告知编译器待例化子模块的接口信息，真正的实体-结构体绑定由综合工具通过搜索工程文件完成（或通过CONFIGURATION显式指定） \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\item VHDL中GENERIC（类属参数）的使用规则，\textbf{正确}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & GENERIC声明必须位于ENTITY的PORT声明\textbf{之前}；实例化时使用\texttt{GENERIC MAP}为参数赋值 &
+B. & GENERIC只能在顶层ENTITY中声明，底层模块不能拥有自己的GENERIC参数 \\
+C. & GENERIC MAP的赋值只能使用位置关联方式，不支持命名关联 &
+D. & GENERIC参数的值在综合后仍可通过外部引脚动态修改 \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\item 关于VHDL中的GENERATE语句，下列描述\textbf{错误}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & \texttt{FOR ... GENERATE}用于重复生成多个相同的硬件结构实例（如N位寄存器的N个位片）；\texttt{IF ... GENERATE}用于根据条件选择性地生成硬件 &
+B. & GENERATE语句属于\textbf{并发语句}（Concurrent Statement），必须放在ARCHITECTURE的BEGIN之后 \\
+C. & GENERATE语句内部可以包含进程（PROCESS）、信号赋值语句、元件实例化等并发语句 &
+D. & GENERATE语句的循环变量（如\texttt{i}）需要在结构体声明区提前声明为SIGNAL类型，不能在GENERATE内部隐式定义 \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\item 在有限状态机（FSM）设计中，关于二进制编码与独热码（One-Hot）编码的比较，\textbf{正确}的是？
+
+\vspace{0.2cm}
+
+\begin{tabular}{@{}lp{0.44\textwidth}@{\qquad}lp{0.44\textwidth}@{}}
+A. & 二进制编码使用$\lceil\log_2 N\rceil$个触发器表示$N$个状态，触发器用量最少；独热码使用$N$个触发器，但次态逻辑和输出译码更简单 &
+B. & 独热码编码方式使用的触发器数量总是少于二进制编码，因此功耗更低 \\
+C. & 二进制编码的状态译码逻辑比独热码更简单，因为每一位直接对应一个状态 &
+D. & 对于所有FSM设计，FPGA综合工具默认强制使用二进制编码，无法更改 \\
+\end{tabular}
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{二、填空题（每空3分，共12分）}
+% ============================================
+
+\begin{enumerate}[label=\arabic*.]
+
+\item 在VHDL结构化描述中，使用关键字\underline{\hspace{2.5cm}}在ARCHITECTURE声明区定义待例化子模块的接口；在BEGIN之后使用关键字\underline{\hspace{2.5cm}}将子模块端口与顶层信号相关联。此过程称为\textbf{元件实例化}（Component Instantiation）。
+
+\vspace{0.6cm}
+
+\item 在VHDL中，GENERIC参数必须声明在ENTITY的\underline{\hspace{2.5cm}}声明\textbf{之前}。实例化带有GENERIC参数的子模块时，需使用关键字\underline{\hspace{2.5cm}}为类属参数指定实际值。
+
+\vspace{0.6cm}
+
+\item VHDL提供两种GENERATE语句：\underline{\hspace{2.5cm}} GENERATE用于按固定次数重复生成硬件结构（如N位全加器链）；\underline{\hspace{2.5cm}} GENERATE用于根据布尔条件选择性地生成或不生成某段硬件。
+
+\vspace{0.6cm}
+
+\item 在FSM状态编码方式中，对于具有$N$个状态的状态机：二进制编码需要\underline{\hspace{2cm}}个触发器（用表达式表示），独热码（One-Hot）编码需要\underline{\hspace{2cm}}个触发器。
+
+\end{enumerate}
+
+\newpage
+
+% ============================================
+\section*{三、程序改错题（共5分）}
+% ============================================
+
+以下VHDL代码意图描述一个使用COMPONENT例化和GENERATE语句构建的4位行波进位加法器（Ripple Carry Adder），由一个全加器位片和一个顶层累加器组成。代码中存在\textbf{6处错误}。请找出\textbf{任意5处}，指出错误位置（行号）、错误原因及正确写法（每处1分，共5分）。
+
+\begin{lstlisting}[caption={含错误的VHDL代码——4位行波进位加法器（6处错误，找出5处即满分）}, language=VDL, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+-- ============ 全加器位片（全加器 = Full Adder）============
+ENTITY full_adder IS
+  PORT(
+    a, b, cin : IN  STD_LOGIC;
+    sum, cout : OUT STD_LOGIC
+  );
+END full_adder;
+
+ARCHITECTURE dataflow OF full_adder IS
+BEGIN
+  sum  <= a XOR b XOR cin;
+  cout <= (a AND b) OR (a AND cin) OR (b AND cin);
+END dataflow;
+
+-- ============ 4位行波进位加法器顶层 ============
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY ripple_adder_4bit IS
+  PORT(
+    a, b : IN  STD_LOGIC_VECTOR(3 DOWNTO 0);
+    cin  : IN  STD_LOGIC;
+    sum  : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+    cout : OUT STD_LOGIC
+  );
+END ripple_adder_4bit;
+
+ARCHITECTURE structural OF ripple_adder_4bit IS
+  COMPONENT full_add PORT(          -- 错误1：COMPONENT名称与实体不一致
+    a, b, cin : IN  STD_LOGIC;
+    sum, cout : OUT STD_LOGIC
+  );
+  END COMPONENT full_add;
+  SIGNAL carry : STD_LOGIC_VECTOR(4 DOWNTO 0);  -- carry(0) = cin, carry(4) = cout
+BEGIN
+  carry(0) <= cin;
+
+  gen_adders: FOR i IN 0 TO 3 GENERATE
+    u_full_adder: full_add PORT MAP(
+      a   => a(i),
+      b   => b(i),
+      cin => carry(i),     -- 正确
+      sum => sum(i),       -- 错误：PORT MAP方向不匹配（sum在实体中是OUT，实例化时sum(i)是顶层输出）
+      cout => carry(i+1)
+    );
+  END GENERATE;
+
+  cout <= carry(3);          -- 错误：应为carry(4)而非carry(3)
+
+END structural;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{答题格式要求：}按以下格式逐条列出5处错误（每处1分，共5分）。注意：代码中的错误不止5处，请选择5处作答。\\[4pt]
+错误1（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 正确写法：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误2（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 正确写法：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误3（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 正确写法：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误4（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 正确写法：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\\[2pt]
+错误5（第\_\_行）：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ 正确写法：\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+\vspace{0.5cm}
+\textbf{提示：}错误类型包括但不限于——(1) COMPONENT名称与实体名不一致；(2) PORT MAP中输出端口与顶层输出信号的连接写法问题；(3) 进位链的正确索引；(4) 实体声明段重复或位置错误；(5) 全加器端口列表中信号模式的写法。
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{四、程序阅读分析题（共5分）}
+% ============================================
+
+阅读以下VHDL代码，回答问题。
+
+\begin{lstlisting}[caption={分析用VHDL代码——模60 BCD计数器}, language=VDL, numbers=left]
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY bcd_counter_60 IS
+  PORT(
+    clk   : IN  STD_LOGIC;
+    rst   : IN  STD_LOGIC;
+    en    : IN  STD_LOGIC;
+    q     : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);  -- 高4位=十位, 低4位=个位
+    tc    : OUT STD_LOGIC                      -- 计到59且en='1'时输出一个周期的高电平
+  );
+END bcd_counter_60;
+
+ARCHITECTURE behav OF bcd_counter_60 IS
+  SIGNAL ones : INTEGER RANGE 0 TO 9 := 0;   -- 个位 (0~9)
+  SIGNAL tens : INTEGER RANGE 0 TO 5 := 0;   -- 十位 (0~5)
+BEGIN
+  PROCESS(clk, rst)
+  BEGIN
+    IF rst = '1' THEN
+      ones <= 0;
+      tens <= 0;
+      tc   <= '0';
+    ELSIF rising_edge(clk) THEN
+      tc <= '0';  -- 默认值
+      IF en = '1' THEN
+        IF ones = 9 THEN
+          ones <= 0;
+          IF tens = 5 THEN
+            tens <= 0;
+            tc   <= '1';   -- 59 → 00时进位
+          ELSE
+            tens <= tens + 1;
+          END IF;
+        ELSE
+          ones <= ones + 1;
+        END IF;
+      END IF;
+    END IF;
+  END PROCESS;
+
+  -- BCD输出转换：整数 → 8位BCD码
+  q(3 DOWNTO 0) <= STD_LOGIC_VECTOR(TO_UNSIGNED(ones, 4));
+  q(7 DOWNTO 4) <= STD_LOGIC_VECTOR(TO_UNSIGNED(tens, 4));
+END behav;
+\end{lstlisting}
+
+\begin{framed}
+\textbf{问题：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （1分）该VHDL代码描述的是什么电路？其计数范围是多少？说明复位信号\texttt{rst}的复位方式是同步复位还是异步复位，并给出判断依据。
+  \item （2分）信号\texttt{tc}（终端计数/Terminal Count）的有效条件是什么？在什么情况下\texttt{tc}输出高电平？若将该计数器级联为更高位宽的计数器（如模600计数器），\texttt{tc}信号应如何连接？
+  \item （1分）代码第34--35行使用\texttt{TO\_UNSIGNED}函数进行类型转换。请说明为什么需要此转换？若不进行此转换，直接将整数信号\texttt{ones}和\texttt{tens}赋值给\texttt{STD\_LOGIC\_VECTOR}类型的端口\texttt{q}，会发生什么？
+  \item （1分）若需求改为\textbf{模100 BCD计数器}（计数范围0\~{}99，十位0\~{}9），需要对该代码做哪些修改？请简述修改点（不要求写完整代码）。
+\end{enumerate}
+\end{framed}
+
+\newpage
+
+% ============================================
+\section*{五、综合设计题（共60分）}
+% ============================================
+
+% ---------- 设计题1 ----------
+\subsection*{设计题1：4位数值比较器设计（20分）}
+
+设计一个4位数值比较器，对两个4位无符号二进制数A和B进行大小比较。要求使用\textbf{行为描述方式}（PROCESS）实现。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{A[3:0]}（输入）：4位无符号操作数A。
+  \item \texttt{B[3:0]}（输入）：4位无符号操作数B。
+  \item \texttt{GT}（输出）：当\texttt{A > B}时输出'1'，否则输出'0'。
+  \item \texttt{EQ}（输出）：当\texttt{A = B}时输出'1'，否则输出'0'。
+  \item \texttt{LT}（输出）：当\texttt{A < B}时输出'1'，否则输出'0'。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （4分）画出该比较器的顶层模块框图，标注所有端口名称、方向和位宽。列出该比较器的\textbf{功能表}（至少覆盖\texttt{A>B}、\texttt{A=B}、\texttt{A<B}三种情况各一个示例）。
+  \item （10分）使用\textbf{行为描述方式}编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 在结构体中使用\textbf{一个PROCESS}（敏感信号表包含A和B）；
+    \item 在PROCESS内部使用IF-ELSE语句实现比较逻辑；
+    \item 注意：三个输出信号GT、EQ、LT的任何组合中\textbf{有且仅有一个}为'1'；
+    \item 所有输出信号在PROCESS的每条执行路径中均被赋值（避免锁存器推断）。
+  \end{itemize}
+  \item （4分）使用\textbf{另外一种描述方式}——选择信号赋值语句（\texttt{WITH-SELECT-WHEN}）——重新实现该比较器的输出逻辑。请\textbf{完整写出}该结构体（实体部分可省略），并说明\texttt{WITH-SELECT-WHEN}语句与PROCESS内IF-ELSE语句在综合结果上的主要差异。
+  \item （2分）若将该比较器扩展为\textbf{8位比较器}，使用VHDL的GENERIC参数化设计，应如何修改代码？请写出带GENERIC参数的ENTITY声明，并简要说明结构体中的修改要点（不要求写完整结构体）。
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 比较两个STD\_LOGIC\_VECTOR类型的数据时，可使用关系运算符（\texttt{>}, \texttt{=}, \texttt{<}）直接比较，需在库声明中加入\texttt{USE ieee.numeric\_std.ALL}或\texttt{USE ieee.std\_logic\_unsigned.ALL}。
+  \item \texttt{WITH-SELECT-WHEN}是并发语句，必须放在ARCHITECTURE的BEGIN之后（PROCESS外部）。
+  \item \texttt{WITH-SELECT-WHEN}要求所有选择值被覆盖，必要时使用\texttt{WHEN OTHERS}。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题2 ----------
+\subsection*{设计题2：模60 BCD计数器设计（20分）}
+
+设计一个\textbf{模60 BCD计数器}，以两位BCD码格式（十位0\~{}5、个位0\~{}9）从0计数到59，计满后返回0。该计数器可作为数字钟的秒/分计数核心单元。
+
+\vspace{0.3cm}
+
+\textbf{端口定义：}
+\begin{itemize}
+  \item \texttt{clk}（输入）：时钟信号，上升沿触发。
+  \item \texttt{rst}（输入）：同步复位，高电平有效。复位后计数器值为00。
+  \item \texttt{en}（输入）：计数使能，高电平有效。为'1'时每个时钟上升沿计数值加1。
+  \item \texttt{load}（输入）：并行置数使能，高电平有效。为'1'时将\texttt{data\_in}的值加载到计数器。
+  \item \texttt{data\_in[7:0]}（输入）：并行置数数据，高4位为十位BCD码（0\~{}5），低4位为个位BCD码（0\~{}9）。
+  \item \texttt{q[7:0]}（输出）：当前计数值，高4位为十位BCD码，低4位为个位BCD码。
+  \item \texttt{tc}（输出）：终端计数（Terminal Count），当计数值为59且\texttt{en='1'}时输出'1'（持续一个时钟周期），其余时间为'0'。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{功能优先级}（从高到低）：复位 > 并行置数 > 计数使能 > 保持。
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （3分）画出该模60 BCD计数器的顶层模块框图，标注所有端口名称、方向和位宽。结合框图说明个位和十位之间的进位关系。
+  \item （12分）编写完整的VHDL代码（实体+结构体）。要求：
+  \begin{itemize}
+    \item 采用\textbf{行为描述方式}，使用单个PROCESS实现全部计数器逻辑；
+    \item 个位和十位分别用内部信号（或变量）维护，个位计数范围0\~{}9，十位计数范围0\~{}5；
+    \item 个位计到9时，下一个计数脉冲使个位归0、十位加1；
+    \item 十位计到5\textbf{且}个位计到9时，下一个计数脉冲使两者均归0，同时\texttt{tc}输出高电平；
+    \item 并行置数时仅当\texttt{data\_in}的十位$\le$5且个位$\le$9时才有效（否则保持原值）；
+    \item 使用\texttt{ieee.numeric\_std.ALL}包中的类型转换函数，将内部整数值转换为\texttt{STD\_LOGIC\_VECTOR}输出。
+  \end{itemize}
+  \item （3分）使用\textbf{COMPONENT例化方式}，用两个独立的BCD计数器子模块（一个模10个位计数器、一个模6十位计数器）和顶层逻辑重新实现该模60计数器。要求：
+  \begin{itemize}
+    \item 画出两个子模块及顶层连接的结构框图，标注进位信号流向；
+    \item 写出顶层模块的COMPONENT声明和各实例的PORT MAP语句（仅需写出关键连接，不要求完整VHDL代码）。
+  \end{itemize}
+  \item （2分）回答问题：
+  \begin{enumerate}
+    \item 若将\texttt{rst}从同步复位改为异步复位，VHDL代码中PROCESS的敏感信号表和复位判断逻辑应如何修改？
+    \item 若需要将两个模60计数器级联构成\textbf{模3600计数器}（用于计时秒数），简述级联方式。
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 个位和十位可使用INTEGER类型（范围约束）或STD\_LOGIC\_VECTOR类型，建议使用INTEGER以便算术运算。
+  \item 并行置数时的合法性检查示例：若\texttt{TO\_INTEGER(UNSIGNED(data\_in(7 DOWNTO 4))) > 5}则十位数据非法。
+  \item 终端计数逻辑：\texttt{tc <= '1' WHEN (tens = 5 AND ones = 9 AND en = '1') ELSE '0';}
+  \item 子模块方案中，模10个位计数器的进位输出（tc\_ones）作为模6十位计数器的使能输入（en\_tens）。
+\end{itemize}
+\end{framed}
+
+\newpage
+
+% ---------- 设计题3 ----------
+\subsection*{设计题3：数字密码锁——Moore型状态机设计（20分）}
+
+设计一个\textbf{数字密码锁控制器}。预设密码为4位数字\textbf{``2-5-3-7''}，用户通过两个按键以二进制方式串行输入：按键0输入比特'0'，按键1输入比特'1'。数字0\~{}9各用4位二进制表示（不足4位高位补0）。因此完整密码为16位二进制序列：
+
+{\centering
+\textbf{2} = ``0010'' $\rightarrow$ \textbf{5} = ``0101'' $\rightarrow$ \textbf{3} = ``0011'' $\rightarrow$ \textbf{7} = ``0111''\\[2pt]
+完整输入序列：\texttt{0,0,1,0, 0,1,0,1, 0,0,1,1, 0,1,1,1}
+\par}
+
+\vspace{0.3cm}
+
+\textbf{系统描述：}
+\begin{itemize}
+  \item \textbf{输入信号：}\texttt{clk}（时钟，上升沿触发）、\texttt{rst}（异步复位，高电平有效）、\texttt{din}（1位串行数据输入，取值为'0'或'1'）。
+  \item \textbf{输出信号：}\texttt{unlock}（开锁信号，高电平有效。当连续正确输入16位密码序列后输出'1'，持续一个时钟周期；任何一次输入错误后立即返回初始状态，\texttt{unlock}保持为'0'）。
+  \item 用户在每个时钟周期输入1位（通过按键0或按键1），状态机在每个时钟上升沿采样\texttt{din}并判断是否正确。
+  \item \textbf{安全要求：}任何一位输入错误，状态机立即回到初始等待状态（IDLE），前面的正确输入全部作废。只有连续16位全部正确，才输出开锁信号。
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{要求：}
+\begin{enumerate}[label=(\arabic*)]
+  \item （5分）\textbf{Moore型状态机——状态转移图与状态表：}
+  \begin{enumerate}
+    \item 定义所有状态：IDLE（初始等待）以及对应16位密码序列的16个中间状态（S1\~{}S16）和UNLOCK状态（共18个状态）。说明每个状态的含义（即当前已正确匹配到密码的第几位）。
+    \item 画出\textbf{完整的状态转移图}（至少画出IDLE、S1、S2、UNLOCK及关键转移弧，中间状态可用省略号表示但需注明转移规律）。每条转移弧上标注转移条件（\texttt{din='0'}或\texttt{din='1'}）。
+    \item 列出\textbf{状态转移表}，包含：当前状态、输入\texttt{din}、次态、输出\texttt{unlock}。
+  \end{enumerate}
+
+  \item （3分）\textbf{One-Hot编码定义：}
+  \begin{enumerate}
+    \item 写出所有18个状态的One-Hot编码（每个状态对应一个18位STD\_LOGIC\_VECTOR，其中仅1位为'1'）。
+    \item 若改用二进制编码，需要多少位？与One-Hot编码相比，各有何优缺点（从触发器数量、译码复杂度两个角度简要说明）？
+  \end{enumerate}
+
+  \item （10分）\textbf{完整VHDL代码实现：}
+  \begin{itemize}
+    \item 编写完整的实体和结构体（Moore型状态机）；
+    \item 使用\texttt{CONSTANT}定义所有状态的One-Hot编码值；
+    \item 采用\textbf{三进程描述风格}：
+    \begin{itemize}
+      \item 进程1（时序逻辑）：状态寄存器，异步复位（\texttt{rst='1'}时进入IDLE），时钟上升沿状态更新；
+      \item 进程2（次态组合逻辑）：根据当前状态和输入\texttt{din}计算次态；
+      \item 进程3（输出组合逻辑）：根据当前状态生成输出\texttt{unlock}（仅UNLOCK状态时\texttt{unlock='1'}）；
+    \end{itemize}
+    \item 密码序列正确性判断：在次态逻辑中，根据当前所处状态和输入\texttt{din}，判断是否符合密码对应位的期望值；
+    \item 代码中需有清晰的注释，标注每个状态对应的密码位及期望输入值。
+  \end{itemize}
+
+  \item （2分）\textbf{分析与扩展：}
+  \begin{enumerate}
+    \item 若密码改为\textbf{6位数字}（如``1-9-4-6-8-2''），需要增加多少个状态？One-Hot编码的位宽需要增加多少？
+    \item 为增强安全性，可增加\textbf{错误次数限制}（如连续3次输入错误则锁定30秒）。请简要说明：需要在现有状态机基础上增加哪些状态和计数器逻辑？（不要求写代码，仅说明设计思路）
+  \end{enumerate}
+\end{enumerate}
+
+\begin{framed}
+\textbf{提示：}
+\begin{itemize}
+  \item 密码序列共16位，各位期望值依次为：0, 0, 1, 0,  0, 1, 0, 1,  0, 0, 1, 1,  0, 1, 1, 1。
+  \item 状态定义建议：
+  \begin{itemize}
+    \item \texttt{S\_IDLE}（初始/错误后返回）、\texttt{S\_b01}（已正确输入第1位'0'）、\texttt{S\_b02}（已正确输入第2位'0'）、\texttt{S\_b03}（已正确输入第3位'1'）、\dots、\texttt{S\_b16}（已正确输入第16位'1'）、\texttt{S\_UNLOCK}（开锁状态）。
+  \end{itemize}
+  \item 次态逻辑规律：当前处于状态\texttt{S\_bK}（已正确匹配前K位）时，若\texttt{din}等于第$K+1$位的期望值，则进入\texttt{S\_b(K+1)}；否则回到\texttt{S\_IDLE}。
+  \item One-Hot编码示例：\texttt{IDLE} = \texttt{"000...001"}（仅bit0为'1'），\texttt{S\_b01} = \texttt{"000...010"}（仅bit1为'1'），依此类推（共18位，下标0\~{}17）。
+  \item 进程2（次态组合逻辑）中：建议使用CASE语句按当前状态分支，在每个分支中再用IF判断\texttt{din}的值。
+  \item 进程3（输出逻辑）中：\texttt{unlock <= '1' WHEN state = S\_UNLOCK ELSE '0';}（简单的条件信号赋值即可）。
+\end{itemize}
+\end{framed}
+
+\vspace{0.8cm}
+{\centering
+\rule{0.8\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+\textbf{—— 试卷结束 ——}
+
+\vspace{0.5cm}}
+
+\endinput

@@ -1,0 +1,90 @@
+\documentclass[12pt,a4paper]{ctexbook}
+
+% ── Packages ──────────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{framed}
+
+% ── Geometry ──────────────────────────────────────────────────────
+\geometry{
+  left=2.5cm,
+  right=2.5cm,
+  top=3cm,
+  bottom=2.5cm
+}
+
+% ── Listings (VHDL) ───────────────────────────────────────────────
+\lstset{
+  language=VHDL,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2
+}
+
+% ── Fancy Header / Footer ─────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\leftmark}
+\fancyhead[RE,LO]{FPGA与VHDL期末考试——参考答案}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Hyperref ──────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=cyan,
+  citecolor=green
+}
+
+% ── Title ─────────────────────────────────────────────────────────
+\title{FPGA与VHDL期末考试\\——20套参考答案与评分标准}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+
+\maketitle
+
+\tableofcontents
+
+\mainmatter
+
+% ── 20 套参考答案 ────────────────────────────────────────────────
+\%input{answers/answer01.tex}
+\input{answers/answer02.tex}
+\input{answers/answer03.tex}
+\input{answers/answer04.tex}
+\input{answers/answer05.tex}
+\input{answers/answer06.tex}
+\input{answers/answer07.tex}
+\input{answers/answer08.tex}
+\input{answers/answer09.tex}
+\input{answers/answer10.tex}
+\input{answers/answer11.tex}
+\input{answers/answer12.tex}
+\input{answers/answer13.tex}
+\input{answers/answer14.tex}
+\input{answers/answer15.tex}
+\input{answers/answer16.tex}
+\input{answers/answer17.tex}
+\input{answers/answer18.tex}
+\input{answers/answer19.tex}
+\input{answers/answer20.tex}
+
+\backmatter
+
+\end{document}

@@ -1,0 +1,40 @@
+\contentsline {section}{摘要}{3}{Doc-Start}%
+\contentsline {section}{\numberline {1}设计任务与目标}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}项目背景与工程价值}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}功能规格}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}设计约束与验收标准}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}系统总体方案设计}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}设计方法论}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}顶层模块结构框图}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}系统端口定义}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}计时参数配置}{6}{subsection.2.4}%
+\contentsline {section}{\numberline {3}状态机设计与状态转移图}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}状态定义与编码}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}状态转移图}{7}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}三段式状态机设计原理}{8}{subsection.3.3}%
+\contentsline {section}{\numberline {4}核心模块的 VHDL 实现}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}时钟分频模块——Clock\_Generator}{9}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}BCD 减计数器模块——BCD\_Down\_Counter}{10}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}三段式交通灯状态机——Traffic\_Light\_FSM}{13}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}七段译码显示模块——Seven\_Seg\_Decoder}{19}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}顶层集成模块——Traffic\_Light\_Top}{20}{subsection.4.5}%
+\contentsline {section}{\numberline {5}仿真验证与分析}{25}{section.5}%
+\contentsline {subsection}{\numberline {5.1}仿真平台与策略}{25}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}仿真加速策略}{25}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}场景一：无车等待验证}{25}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}场景二：完整周期验证}{25}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}仿真波形分析}{26}{subsection.5.5}%
+\contentsline {section}{\numberline {6}总结与心得}{27}{section.6}%
+\contentsline {subsection}{\numberline {6.1}同步复位与异步复位的工程选型分析}{27}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}三段式状态机对毛刺的抑制机理}{27}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}\texttt {numeric\_std} 替代 \texttt {std\_logic\_unsigned} 的必要性}{27}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}VHDL 命名冲突问题与 ST\_ 前缀约定}{28}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}工程实践的综合收获}{28}{subsection.6.5}%
+\contentsline {section}{\numberline {A}完整 VHDL 源代码}{29}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Clock\_Generator.vhd}{29}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}BCD\_Down\_Counter.vhd}{30}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Traffic\_Light\_FSM.vhd}{33}{subsection.A.3}%
+\contentsline {subsection}{\numberline {A.4}Seven\_Seg\_Decoder.vhd}{39}{subsection.A.4}%
+\contentsline {subsection}{\numberline {A.5}Traffic\_Light\_Top.vhd}{40}{subsection.A.5}%
+\contentsline {subsection}{\numberline {A.6}Traffic\_Light\_TB.vhd}{44}{subsection.A.6}%
+\contentsline {subsection}{\numberline {A.7}Clock\_Generator\_Sim.vhd}{50}{subsection.A.7}%
