@@ -298,6 +298,728 @@ SIPO = Serial In Parallel Out（串入并出）
 PISO = Parallel In Serial Out（并入串出）
 PIPO = Parallel In Parallel Out（并入并出）
 
+\section{移位寄存器实现分频器}
+
+\subsection{基本原理}
+
+移位寄存器天然具有分频能力。回顾环形计数器和Johnson计数器：
+
+\begin{itemize}
+  \item N位环形计数器：N个状态循环，任何Q输出的频率 = $f_{clk} / N$
+  \item N位Johnson计数器：2N个状态循环，任何Q输出的频率 = $f_{clk} / (2N)$
+\end{itemize}
+
+因为移位寄存器中的"1"（或状态模式）每N拍（或2N拍）才经过同一个触发器一次，所以每个Q输出的翻转频率恰好是时钟的$1/N$（或$1/2N$）。
+
+\subsection{逐拍分析：4位环形计数器做4分频}
+
+假设4位环形计数器初始状态1000，反馈Q0$\to$D3（闭环）。
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+时钟拍 & Q3 & Q2 & Q1 & Q0 & 说明 \\
+\hline
+0 & 1 & 0 & 0 & 0 & 初始 \\
+1 & 0 & 1 & 0 & 0 & 1右移 \\
+2 & 0 & 0 & 1 & 0 & \\
+3 & 0 & 0 & 0 & 1 & \\
+4 & 1 & 0 & 0 & 0 & 回到初始！\\
+\hline
+\end{tabular}
+\end{center}
+
+Q3的输出序列：1, 0, 0, 0, 1, 0, 0, 0, ...
+周期 = 4个时钟 $\to$ 频率 = $f_{clk} / 4$。
+
+\textbf{每个Q输出都是4分频信号，只是相位不同。}
+
+\subsection{Johnson计数器做分频器}
+
+4位Johnson计数器（8状态）：
+$$0000\to1000\to1100\to1110\to1111\to0111\to0011\to0001\to0000$$
+
+任意Q输出的周期 = 8个时钟 $\to$ 频率 = $f_{clk} / 8$。
+
+\textbf{规律：}N位Johnson计数器 = $2N$分频（所有Q输出频率相同，相位不同）。
+
+\subsection{VHDL实现：移位寄存器型分频器}
+
+\begin{lstlisting}[caption={4位环形计数器做4分频器}]
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity shift_div4 is
+  port(
+    clk, rst : in  std_logic;
+    clk_out  : out std_logic
+  );
+end shift_div4;
+
+architecture behav of shift_div4 is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst)
+  begin
+    if rst = '1' then reg <= "1000";
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(3 downto 1);
+    end if;
+  end process;
+  clk_out <= reg(3);  -- Q3 = 4分频输出
+end behav;
+\end{lstlisting}
+
+\subsection{与计数器分频的对比}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{分频方式} & \textbf{结构} & \textbf{可得分频比} \\
+\hline
+二进制计数器取Qn & 加法器+寄存器 & $2^n$（Q0=2, Q1=4, Q2=8...）\\
+环形计数器 & N个DFF+反馈 & N（4位$\to$4分频）\\
+Johnson计数器 & N个DFF+反相反馈 & 2N（4位$\to$8分频）\\
+模M计数器+比较 & 加法器+寄存器+比较器 & 任意M \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{移位寄存器分频的优缺点：}
+\begin{itemize}
+  \item 优点：结构规整（只有D触发器和反馈线），关键路径极短（1级DFF延迟），适合超高速分频
+  \item 缺点：分频比固定（N或2N），灵活性不如计数器方案
+\end{itemize}
+
+\section{移位寄存器实现序列发生器}
+
+\subsection{方法一：循环移位型（只能循环输出初值，不是真正的序列发生器）}
+
+\textbf{先说清楚：这不是真正的序列发生器。}它只是把装进去的值循环输出——装1001就循环出1001，装0101就循环出0101。你无法用它"设计"出一个新的序列。
+
+那为什么还要讲？因为\textbf{硬件结构}和真正的序列发生器一模一样：都是移位寄存器+反馈线。理解了循环移位，查表法就水到渠成。
+
+\textbf{方案：}移位寄存器 + 反馈逻辑（Q0直接反馈给D3）。每拍数据右移一位，最低位移回最高位。
+
+\textbf{例题：}4位寄存器，反馈 = Q0→D3，初值"1001"。
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+时钟拍 & Q3 & Q2 & Q1 & Q0 \\
+\hline
+0 & 1 & 0 & 0 & 1（初始）\\
+1 & 1 & 1 & 0 & 0（Q0=1反馈到D3）\\
+2 & 0 & 1 & 1 & 0 \\
+3 & 0 & 0 & 1 & 1 \\
+4 & 1 & 0 & 0 & 1（回到初始！）\\
+\hline
+\end{tabular}
+\end{center}
+
+序列长度 = 4拍。输出就是初值本身，循环重复。\textbf{这不是序列"生成"，只是"循环播放"。}
+
+\textbf{【VHDL——循环右移序列发生器】}
+\begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity shift_seq_gen is
+  port(clk, rst : in std_logic; seq_out : out std_logic_vector(3 downto 0));
+end shift_seq_gen;
+
+architecture behav of shift_seq_gen is
+  signal reg : std_logic_vector(3 downto 0);
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then reg <= "1001";
+    elsif rising_edge(clk) then
+      reg <= reg(0) & reg(3 downto 1);  -- 循环右移
+    end if;
+  end process;
+  seq_out <= reg;
+end behav;
+\end{lstlisting}
+
+\subsection{方法二：查表反馈型（通用序列发生器）}
+
+循环移位只能产生移位相关的序列。要产生\textbf{任意序列}，需要用查表法（CASE语句）根据当前状态决定反馈值。
+
+\textbf{核心结构：}移位寄存器 + CASE查表器。CASE根据寄存器的当前值，查表输出下一位要移入的din值。
+
+\subsection{例题：用3位移位寄存器产生序列 00011101 00011101...}
+
+\textbf{设计分析：}3位移位寄存器共8个状态，每个状态通过CASE指定反馈位din的值。输出取寄存器最高位q(2)。
+
+\subsection{核心问题：CASE表是怎么得到的？}
+
+这是初学者最容易困惑的地方。答案：\textbf{用3位滑动窗口在目标序列上滑动}。
+
+目标序列是：0 0 0 1 1 1 0 1（周期8，循环重复）。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+% Target sequence
+\node at (0, 2.5) {目标序列(循环):};
+\foreach \i/\b in {0/0,1/0,2/0,3/1,4/1,5/1,6/0,7/1} {
+  \node at (\i*1.2, 2) {\b};
+}
+% Window 0
+\draw[red,very thick] (-0.3,1.5) rectangle (2.1,1.0);
+\node[red] at (0.9, 1.25) {窗口0: 000};
+\node[red] at (3.3, 1.25) {$\to$ 下一个是1 $\to$ din='1'};
+\node[red] at (3.3, 0.75) {$\to$ state="000"};
+
+% Window 1
+\draw[blue,very thick] (0.9,1.5) rectangle (3.3,1.0);
+\node[blue] at (2.1, 0.5) {窗口1: 001 $\to$ 下一个1 $\to$ din='1'};
+
+% Window 2
+\draw[green!50!black,very thick] (2.1,1.5) rectangle (4.5,1.0);
+\node[green!50!black] at (3.3, 0.5) {窗口2: 011 $\to$ 下一个1 $\to$ din='1'};
+
+% Window 3
+\draw[orange,very thick] (3.3,1.5) rectangle (5.7,1.0);
+\node[orange] at (4.5, 0.5) {窗口3: 111 $\to$ 下一个0 $\to$ din='0'};
+
+% Ellipsis
+\node at (6.5, 0.5) {...};
+\end{tikzpicture}
+\end{center}
+
+\textbf{推导步骤：}
+
+\begin{enumerate}
+\item 把目标序列写成循环：\textbf{0 0 0 1 1 1 0 1 | 0 0 0 1 1 1 0 1 | ...}（首尾相接，无限重复）
+\item 用宽度为3的窗口，从序列开头每次移动一位，读取窗口内的3个bit——这就是3个D触发器的\textbf{当前状态}
+\item 窗口右边紧挨着的下一个bit——就是需要反馈进入的\textbf{din值}
+\item 覆盖所有8种可能的3-bit组合（因为3位有$2^3=8$种组合，恰好一个周期遍历完）
+\end{enumerate}
+
+\textbf{图解推导——3位滑动窗口法：}
+
+\begin{center}
+\begin{tabular}{cccccccccccccccccccc}
+\multicolumn{20}{c}{目标序列（无限循环，用竖线标出8个3位窗口）} \\
+& & & \fbox{0 0 0} & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 1 & ... & $\leftarrow$ 窗口0: state=000, din=1 \\
+& & 0 & \fbox{0 0 1} & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 1 & ... & & $\leftarrow$ 窗口1: state=001, din=1 \\
+& 0 & 0 & \fbox{0 1 1} & 1 & 0 & 1 & 0 & 0 & 0 & 1 & ... & & & $\leftarrow$ 窗口2: state=011, din=1 \\
+0 & 0 & 0 & \fbox{1 1 1} & 0 & 1 & 0 & 0 & 0 & 1 & ... & & & & $\leftarrow$ 窗口3: state=111, din=0 \\
+0 & 0 & 0 & 1 & \fbox{1 1 0} & 1 & 0 & 0 & 0 & 1 & ... & & & & $\leftarrow$ 窗口4: state=110, din=1 \\
+0 & 0 & 0 & 1 & 1 & \fbox{1 0 1} & 0 & 0 & 0 & 1 & ... & & & & $\leftarrow$ 窗口5: state=101, din=0 \\
+0 & 0 & 0 & 1 & 1 & 1 & \fbox{0 1 0} & 0 & 0 & 1 & ... & & & & $\leftarrow$ 窗口6: state=010, din=0 \\
+0 & 0 & 0 & 1 & 1 & 1 & 0 & \fbox{1 0 0} & 0 & 1 & ... & & & & $\leftarrow$ 窗口7: state=100, din=0 \\
+\end{tabular}
+\end{center}
+
+\textbf{关键理解：}
+\begin{itemize}
+  \item \fbox{框内3位} = 3个D触发器的当前状态 (qin)
+  \item 框右边紧跟着的bit = 下一个要移入的din值
+  \item 框最左边的bit = 当前输出值 (Q2)
+  \item 下一个时钟沿：din从右边移入，所有bit左移一位 → 窗口向右滑动一位 → Q2输出下一个bit
+\end{itemize}
+
+\subsection{关键技巧：需要几个D触发器？——试3个不行就换4个}
+
+\textbf{窗口宽度 = 寄存器的个数。}窗口太窄，不同位置的窗口值会重复（"撞车"），导致CASE表出现矛盾——同一个状态对应两个不同的din值。
+
+\textbf{举例：序列 00110011...（8位循环），先试3位窗口}
+
+\[
+\underbrace{001}_{\text{窗口0}}10011\underbrace{001}_{\text{窗口4}}10011...
+\]
+
+\begin{center}
+\begin{tabular}{c|c|c}
+窗口位置 & 窗口值(3位) & 下一个bit(din) \\
+\hline
+0 & 001 & 1 \\
+1 & 011 & 0 \\
+2 & 110 & 0 \\
+3 & 100 & 1 \\
+4 & 001 & \textbf{？} ← 窗口值=001又出现了！但这次下一个bit是1？0？\\
+\end{tabular}
+\end{center}
+
+窗口0（001）的下一个是1，窗口4（001）的下一个本来是接着序列...但\textbf{同一个状态"001"在CASE表中只能有一行}，不能同时对应din=1和din=0。这就是"撞车"。
+
+\textbf{解决方案：窗口加宽→换4个寄存器}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+窗口位置 & 窗口值(4位) & 下一个bit(din) \\
+\hline
+0 & 0011 & 0 \\
+1 & 0110 & 0 \\
+2 & 1100 & 1 \\
+3 & 1001 & 1 \\
+4 & 0011 & 0 ← 和窗口0一样！但下一个bit也一样(都是0)，不冲突 ✓ \\
+\end{tabular}
+\end{center}
+
+4位窗口下，0011→下一个是0，再次出现0011时下一个还是0，\textbf{CASE表不矛盾}。
+
+\textbf{通用法则：}
+
+\begin{keypoint}[寄存器位数的确定]
+\textbf{先试$k = \lceil\log_2 L\rceil$位（L=序列长度），用滑动窗口检查有没有"撞车"。}
+
+\begin{itemize}
+  \item 8种窗口值全不同 → $k$位够用
+  \item 有重复但重复处的din也相同 → $k$位够用
+  \item 有重复且din不同 → \textbf{窗口加宽为$k+1$位，重新检查}
+\end{itemize}
+
+选最小不撞车的位数作为寄存器个数。
+\end{keypoint}
+
+\subsection{完整例题：你需要几个寄存器？}
+
+\textbf{题目：用查表法产生序列 0011001 0011001...（7位循环），最少需要几个D触发器？}
+
+\textbf{第一步：算起步位数} $\lceil\log_2 7\rceil = 3$位。\textbf{先用3位窗口试。}
+
+把序列循环展开写两遍，方便看环绕：0 0 1 1 0 0 1 | 0 0 1 1 0 0 1
+
+\begin{center}
+\begin{tabular}{c|c|c}
+位置 & 3位窗口值(qin) & 右边一个bit(din) \\
+\hline
+0 & 001 & \textbf{1} \\
+1 & 011 & \textbf{0} \\
+2 & 110 & \textbf{0} \\
+3 & 100 & \textbf{0} \\
+4 & 001 & \textbf{0} ？\\
+5 & 010 & \textbf{0} \\
+6 & 100 & \textbf{1} ？\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{查撞车：}
+\begin{itemize}
+  \item 位置0的001 → din=1，位置4的001 → din=0。\textbf{同一个001，din不同！撞车！}
+  \item 位置3的100 → din=0，位置6的100 → din=1。\textbf{又撞车！}
+\end{itemize}
+
+3位不行→\textbf{换4位窗口。}
+
+\textbf{第二步：4位窗口}
+
+序列：0 0 1 1 0 0 1 | 0 0 1 1 0 0 1
+
+\begin{center}
+\begin{tabular}{c|c|c}
+位置 & 4位窗口值(qin) & 下一个bit(din) \\
+\hline
+0 & 0011 & 0 \\
+1 & 0110 & 0 \\
+2 & 1100 & 1 \\
+3 & 1001 & 0 \\
+4 & 0010 & 0 \\
+5 & 0100 & 1 \\
+6 & 1001 & \textbf{1} ？\\
+\hline
+\end{tabular}
+\end{center}
+
+位置3(1001)→din=0，位置6(1001)→din=1。\textbf{还是撞！}→ 换5位。
+
+\textbf{第三步：5位窗口}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+位置 & 5位窗口值(qin) & 下一个bit(din) \\
+\hline
+0 & 00110 & 0 \\
+1 & 01100 & 1 \\
+2 & 11001 & 0 \\
+3 & 10010 & 0 \\
+4 & 00100 & 1 \\
+5 & 01001 & 0 \\
+6 & 10011 & (回0)0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{7个5位窗口全部不同！}→ 需要\textbf{5个寄存器}。
+
+\textbf{结论：}$\lceil\log_2 7\rceil = 3$只是理论下界。实际寄存器数取决于序列本身的结构——有些序列3位够用（如00011101），有些需要更多（如0011001需要5位）。\textbf{试到不撞车为止。}
+
+\subsection{速查：多少位寄存器够用？}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+序列长度L & $\lceil\log_2 L\rceil$（起步） & 最坏需要 & 常见需要 \\
+\hline
+4 & 2 & 2 & 2 \\
+5 & 3 & 3 & 3 \\
+6 & 3 & 3$\sim$4 & 3 \\
+7 & 3 & 5 & 3$\sim$4 \\
+8 & 3 & 3 & 3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{考试做法：}先用$\lceil\log_2 L\rceil$位，画滑动窗口表，检查有无撞车（同一窗口值对应不同din）。不撞→够用；撞→加一位重新画。
+
+\subsection{VHDL实现：5位寄存器产生序列0011001}
+
+5位寄存器共$2^5=32$种可能状态，但循环只经过7个。CASE只写这7个合法状态，其余25个状态统一扔到when others回初始态。
+
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity seqgen_5bit is
+  port(clk, rst : in std_logic; q : out std_logic);
+end seqgen_5bit;
+
+architecture behav of seqgen_5bit is
+  signal qin : std_logic_vector(4 downto 0);
+  signal din : std_logic;
+begin
+  -- 查表产生反馈位din
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      case qin is
+        when "00110" => din <= '0';
+        when "01100" => din <= '1';
+        when "11001" => din <= '0';
+        when "10010" => din <= '0';
+        when "00100" => din <= '1';
+        when "01001" => din <= '0';
+        when "10011" => din <= '0';
+        when others  => din <= '0';  -- 非法状态兜底
+      end case;
+    end if;
+  end process;
+
+  -- 移位寄存器：左移，din进入最低位
+  process(clk, rst)
+  begin
+    if rst = '1' then
+      qin <= "00110";  -- 初始窗口0
+    elsif rising_edge(clk) then
+      qin <= qin(3 downto 0) & din;
+    end if;
+  end process;
+
+  q <= qin(4);  -- 输出最高位
+end behav;
+\end{lstlisting}
+
+\textbf{逐拍验证：}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+拍 & qin(当前) & din & q(输出)=qin(4) \\
+\hline
+0 & 00110 & 0 & 0 \\
+1 & 01100 & 1 & 0 \\
+2 & 11001 & 0 & 1 \\
+3 & 10010 & 0 & 1 \\
+4 & 00100 & 1 & 0 \\
+5 & 01001 & 0 & 0 \\
+6 & 10011 & 0 & 1 \\
+7 & 00110 & — & 0 ← 回到拍0 \\
+\hline
+\end{tabular}
+\end{center}
+
+输出 q：0,0,1,1,0,0,1,0,0,1,1,0,0,1,... ← 确实就是0011001循环。
+
+\textbf{这就是CASE表的来源：}不撞车的窗口值→下一个bit，整理成表。
+
+\textbf{这就是CASE表的来源：}把上面8个窗口的"窗口值→下一个bit"整理成表，就是CASE表。
+
+\textbf{完整CASE表推导：}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+窗口编号 & 窗口内容(qin) & 窗口右边bit(din) & 下一拍qin(左移后) & 输出q(2) \\
+\hline
+0 & 000 & \textbf{1} & 001 & 0 \\
+1 & 001 & \textbf{1} & 011 & 0 \\
+2 & 011 & \textbf{1} & 111 & 0 \\
+3 & 111 & \textbf{0} & 110 & 1 \\
+4 & 110 & \textbf{1} & 101 & 1 \\
+5 & 101 & \textbf{0} & 010 & 1 \\
+6 & 010 & \textbf{0} & 100 & 0 \\
+7 & 100 & \textbf{0} & 000 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{逐拍追踪：}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+时钟拍 & qin(当前) & CASE查表→din & 下一拍qin & 输出q(2) \\
+\hline
+0 & 000 & 1 & 001 & 0 \\
+1 & 001 & 1 & 011 & 0 \\
+2 & 011 & 1 & 111 & 0 \\
+3 & 111 & 0 & 110 & 1 \\
+4 & 110 & 1 & 101 & 1 \\
+5 & 101 & 0 & 010 & 1 \\
+6 & 010 & 0 & 100 & 0 \\
+7 & 100 & 0 & 000 & 1 \\
+8 & 000 & — & — & 回到拍0 \\
+\hline
+\end{tabular}
+\end{center}
+
+输出序列 q(2)：0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,... 周期=8。\textbf{与目标序列完全一致！}
+
+\textbf{【VHDL——查表反馈型序列发生器】}
+\begin{lstlisting}
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+
+entity seqgen_table is
+  port(clk, rst : in std_logic; q : out std_logic);
+end seqgen_table;
+
+architecture behav of seqgen_table is
+  signal qin : std_logic_vector(2 downto 0);
+  signal din : std_logic;
+begin
+  -- 第一段：CASE查表产生反馈位din
+  comb_proc: process(clk)
+  begin
+    if rising_edge(clk) then
+      case qin is
+        when "000" => din <= '1';
+        when "001" => din <= '1';
+        when "011" => din <= '1';
+        when "111" => din <= '0';
+        when "110" => din <= '1';
+        when "101" => din <= '0';
+        when "010" => din <= '0';
+        when "100" => din <= '0';
+        when others => din <= '0';
+      end case;
+    end if;
+  end process;
+
+  -- 第二段：移位寄存器（左移，din进入最低位）
+  shift_proc: process(clk, rst)
+  begin
+    if rst = '1' then qin <= (others => '0');
+    elsif rising_edge(clk) then
+      qin <= qin(1 downto 0) & din;
+    end if;
+  end process;
+
+  q <= qin(2);  -- 输出最高位
+end behav;
+\end{lstlisting}
+
+\textbf{【设计思想】}查表法的本质：把想要的序列"写死"在CASE表里。当前状态→查表→下一个输入位。只要改CASE表的内容，就能生成任何8位循环序列。这是\textbf{通用序列发生器}的设计范式。
+
+\subsection{两种方案对比}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{方案} & \textbf{循环移位型} & \textbf{查表反馈型} \\
+\hline
+反馈逻辑 & reg(0) $\to$ D(N-1)（一根线） & CASE表（多条件判断） \\
+序列来源 & 就是初值本身（装入什么输出什么）& CASE表任意指定（真正的设计）\\
+代码复杂度 & 1行 & N行（每个状态1行）\\
+修改序列 & 改初值（但只能输出初值循环）& 修改CASE表内容（任意序列）\\
+适用场景 & 学习移位寄存器工作原理 & 实际的序列发生器设计 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{移位寄存器实现串行加法器}
+
+\subsection{原理}
+
+并行加法器（如行波进位）一次完成所有位的加法。串行加法器逐位相加，每次处理1位，N拍后得到N位结果。\textbf{核心结构：}1位全加器 + 进位D触发器 + 两个移位寄存器（存放操作数A和B）+ 一个移位寄存器（存放结果）。
+
+\subsection{逐拍工作过程}
+
+以4位加法 1011 + 0110 为例：
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+拍 & A移位器(Q0) & B移位器(Q0) & Cin(DFF) & Sum位 & Cout \\
+\hline
+0（初）& 1 & 0 & 0 & — & — \\
+1 & 1 & 0 & 0 & 1 & 0 \\
+2 & 1 & 1 & 0 & 0 & 1 \\
+3 & 0 & 1 & 1 & 0 & 1 \\
+4 & 1 & 0 & 1 & 0 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+每拍：A和B各右移1位（最低位进入全加器），全加器计算Sum和Cout，Cout存入进位DFF作为下一拍的Cin。结果Sum逐位存入结果移位寄存器。4拍后结果移位寄存器 = 0001 0001（即17，1011+0110=17）。
+
+\textbf{【VHDL——4位串行加法器】}
+\begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity serial_adder is
+  port(
+    clk, rst, start : in std_logic;
+    A, B : in std_logic_vector(3 downto 0);
+    Sum : out std_logic_vector(3 downto 0);
+    done : out std_logic
+  );
+end serial_adder;
+
+architecture behav of serial_adder is
+  signal regA, regB, regSum : std_logic_vector(3 downto 0);
+  signal carry : std_logic := '0';
+  signal bit_cnt : integer range 0 to 4 := 0;
+  signal working : boolean := false;
+  signal s, c : std_logic;
+begin
+  s <= regA(0) xor regB(0) xor carry;
+  c <= (regA(0) and regB(0)) or (regA(0) and carry) or (regB(0) and carry);
+
+  process(clk, rst)
+  begin
+    if rst='1' then
+      regA <= (others=>'0'); regB <= (others=>'0');
+      regSum <= (others=>'0'); carry <= '0';
+      bit_cnt <= 0; working <= false; done <= '0';
+    elsif rising_edge(clk) then
+      done <= '0';
+      if start='1' and not working then
+        regA <= A; regB <= B; regSum <= (others=>'0');
+        carry <= '0'; bit_cnt <= 0; working <= true;
+      elsif working then
+        regA <= '0' & regA(3 downto 1);
+        regB <= '0' & regB(3 downto 1);
+        regSum <= s & regSum(3 downto 1);
+        carry <= c;
+        if bit_cnt=3 then
+          working <= false; done <= '1';
+        else bit_cnt <= bit_cnt+1; end if;
+      end if;
+    end if;
+  end process;
+  Sum <= regSum;
+end behav;
+\end{lstlisting}
+
+\section{移位寄存器实现串行累加器}
+
+\subsection{原理}
+
+累加器 = 加法器 + 累加寄存器（ACC）。串行累加器用移位寄存器做ACC：每输入一个新操作数，将其与ACC中的值串行相加，结果存回ACC。
+
+\textbf{结构：}1位全加器 + 进位DFF + ACC移位寄存器 + 输入移位寄存器。
+
+\textbf{【VHDL核心逻辑——累加循环】}
+\begin{lstlisting}
+-- ACC累加：ACC = ACC + Input
+-- 两个移位寄存器：acc_reg（累加值）和 in_reg（新输入）
+-- 每拍：acc_reg(0) + in_reg(0) + carry → sum位存入acc高位，进位更新
+...
+if working then
+  acc_reg <= sum_bit & acc_reg(7 downto 1);  -- 结果右移存入
+  in_reg  <= '0' & in_reg(7 downto 1);        -- 输入右移
+  carry   <= cout;
+  if bit_cnt = 7 then working <= false; end if;
+end if;
+\end{lstlisting}
+
+\section{移位寄存器实现乘法器}
+
+\subsection{原理——移位相加法}
+
+二进制乘法可以分解为移位+相加：
+
+$$A \times B = A \times (B_3 \cdot 2^3 + B_2 \cdot 2^2 + B_1 \cdot 2^1 + B_0 \cdot 2^0)$$
+
+逐位检查乘数B的每一位：
+\begin{itemize}
+  \item $B_0=1$：累加A（不移位）
+  \item $B_1=1$：累加A左移1位（即$A\times2$）
+  \item $B_2=1$：累加A左移2位
+  \item ...
+\end{itemize}
+
+\textbf{更高效的方法（移位-加乘法器）：}每拍检查B的最低位，若为1则ACC += A，然后A左移1位，B右移1位。N拍后ACC中为乘积。
+
+\textbf{逐拍分析：$5 \times 3 = 0101 \times 0011 = 15$}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+拍 & B(最低位) & 操作 & ACC & A(左移) \\
+\hline
+0 & 1 & ACC+=A(0101) & 0101 & 0101 \\
+1 & 1 & ACC+=A(1010) & 1111 & 1010 \\
+2 & 0 & 不加 & 1111 & 0100(移出) \\
+3 & 0 & 不加 & 1111 & — \\
+\hline
+\end{tabular}
+\end{center}
+
+结果ACC=1111=15，正确。
+
+\textbf{【VHDL——4位移位-加乘法器】}
+\begin{lstlisting}
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity shift_multiplier is
+  port(
+    clk, rst, start : in std_logic;
+    A_in, B_in : in unsigned(3 downto 0);
+    product : out unsigned(7 downto 0);
+    done : out std_logic
+  );
+end shift_multiplier;
+
+architecture behav of shift_multiplier is
+  signal A_reg : unsigned(7 downto 0);
+  signal B_reg : unsigned(3 downto 0);
+  signal ACC : unsigned(7 downto 0) := (others=>'0');
+  signal cnt : integer range 0 to 4 := 0;
+  signal working : boolean := false;
+begin
+  process(clk, rst)
+  begin
+    if rst='1' then
+      ACC<=(others=>'0'); cnt<=0; working<=false; done<='0';
+    elsif rising_edge(clk) then
+      done <= '0';
+      if start='1' and not working then
+        A_reg <= "0000" & A_in;
+        B_reg <= B_in;
+        ACC <= (others=>'0');
+        cnt <= 0; working <= true;
+      elsif working then
+        if cnt=4 then
+          working <= false; done <= '1';
+        else
+          if B_reg(0)='1' then ACC <= ACC + A_reg; end if;
+          A_reg <= A_reg(6 downto 0) & '0';  -- 左移1位
+          B_reg <= '0' & B_reg(3 downto 1);   -- 右移1位
+          cnt <= cnt+1;
+        end if;
+      end if;
+    end if;
+  end process;
+  product <= ACC;
+end behav;
+\end{lstlisting}
+
 \section{考试常见变式}
 
 \begin{enumerate}

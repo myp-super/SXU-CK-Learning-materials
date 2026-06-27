@@ -608,6 +608,311 @@ end test;
 \end{itemize}
 \end{examtip}
 
+\section{状态机的其他应用——不止序列检测器}
+
+序列检测器是状态机最经典的应用，但状态机的应用远不止于此。实际上，前面学过的很多电路本质上都是状态机。
+
+\subsection{计数器 = 状态机}
+
+\textbf{用状态机的眼光重新看模6计数器：}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{状态机要素} & \textbf{模6计数器对应} & \textbf{硬件实现} \\
+\hline
+当前状态 & cnt[2:0]（3位D触发器）& 3个DFF \\
+次态逻辑 & $cnt_{next} = cnt + 1$（若$cnt=5$则归0）& 加法器+比较器 \\
+输出逻辑 & count = cnt, carry = 1 when cnt=5 & 连线+比较器 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{状态转移图（模6计数器）：}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=2cm,auto]
+\node[draw,circle] (s0) at (0,0) {000/0};
+\node[draw,circle] (s1) at (2,0) {001/0};
+\node[draw,circle] (s2) at (4,0) {010/0};
+\node[draw,circle] (s3) at (6,0) {011/0};
+\node[draw,circle] (s4) at (8,0) {100/0};
+\node[draw,circle] (s5) at (10,0) {101/1};
+\draw (s0) -- (s1); \draw (s1) -- (s2); \draw (s2) -- (s3);
+\draw (s3) -- (s4); \draw (s4) -- (s5);
+\draw (s5) edge[bend right=60] (s0);
+\end{tikzpicture}
+\end{center}
+（状态标注格式：计数值/carry输出）
+
+\textbf{用直观状态机写法重写模6计数器：}
+
+\begin{lstlisting}[caption={模6计数器——每个状态一行，输出和下一拍一起写}]
+architecture Behavioral of counter_mod6_fsm is
+  type state is (s0,s1,s2,s3,s4,s5);
+  signal present_state, next_state: state;
+begin
+  process(rst, clk)
+  begin
+    if rst='0' then present_state <= s0;
+    elsif clk'event and clk='1' then
+      present_state <= next_state;
+    end if;
+  end process;
+
+  COM: process(present_state)
+  begin
+    case present_state is
+      when s0 => count<="000"; carry<='0'; next_state<=s1;
+      when s1 => count<="001"; carry<='0'; next_state<=s2;
+      when s2 => count<="010"; carry<='0'; next_state<=s3;
+      when s3 => count<="011"; carry<='0'; next_state<=s4;
+      when s4 => count<="100"; carry<='0'; next_state<=s5;
+      when s5 => count<="101"; carry<='1'; next_state<=s0;
+      when others => count<="000"; carry<='0'; next_state<=s0;
+    end case;
+  end process COM;
+end Behavioral;
+\end{lstlisting}
+
+\textbf{对比：}上面用的是\textbf{枚举6个状态}的写法（6个when分支），下面是用加法器+清零的写法：
+
+\begin{lstlisting}[caption={模6计数器——传统写法（等价但更简洁）}]
+  if cnt = 5 then cnt <= 0; else cnt <= cnt + 1; end if;
+\end{lstlisting}
+
+两段代码\textbf{完全等价}——综合出来的硬件一模一样。但枚举写法让你看清：计数器就是一个6状态的循环状态机。
+
+\textbf{拓展练习：用状态机实现模5计数器}
+
+将上面模6的方法直接套用到模5：5个状态s0-s4。
+
+\begin{lstlisting}[caption={模5计数器——直观状态机写法}]
+type state is (s0,s1,s2,s3,s4);
+signal present_state, next_state: state;
+...
+COM: process(present_state)
+begin
+  case present_state is
+    when s0 => count<="000"; next_state<=s1;
+    when s1 => count<="001"; next_state<=s2;
+    when s2 => count<="010"; next_state<=s3;
+    when s3 => count<="011"; next_state<=s4;
+    when s4 => count<="100"; next_state<=s0;
+    when others => count<="000"; next_state<=s0;
+  end case;
+end process COM;
+\end{lstlisting}
+
+\textbf{任意模N计数器都可以这样写——N个状态，N个when分支。}每个分支写清楚当前状态输出什么值、下一拍去哪里。模12=12行，模24=24行，以此类推。
+
+\subsection{分频器 = 状态机}
+
+分频器的本质：一个状态在$M$个状态间循环，输出在特定状态翻转。
+
+\textbf{例题：12分频器（占空比50\%）。}$M=12$，需要12个状态。前6个状态输出0，后6个状态输出1。
+
+\textbf{状态转移图（12状态循环）：}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=1.3cm,auto,scale=0.7]
+\node[draw,circle] (s0) at (0,0) {S0/0};
+\node[draw,circle] (s1) at (1.5,0) {S1/0};
+\node[draw,circle] (s2) at (3,0) {S2/0};
+\node[draw,circle] (s3) at (4.5,0) {S3/0};
+\node[draw,circle] (s4) at (6,0) {S4/0};
+\node[draw,circle] (s5) at (7.5,0) {S5/0};
+\node[draw,circle] (s6) at (9,0) {S6/1};
+\node[draw,circle] (s7) at (10.5,0) {S7/1};
+\node[draw,circle] (s8) at (3,-2) {S8/1};
+\node[draw,circle] (s9) at (5,-2) {S9/1};
+\node[draw,circle] (sa) at (7,-2) {S10/1};
+\node[draw,circle] (sb) at (9,-2) {S11/1};
+\draw (s0)--(s1); \draw (s1)--(s2); \draw (s2)--(s3); \draw (s3)--(s4);
+\draw (s4)--(s5); \draw (s5)--(s6); \draw (s6)--(s7);
+\draw (s7) -- (10.5,-1) -- (sb);
+\draw (sb)--(sa); \draw (sa)--(s9); \draw (s9)--(s8);
+\draw (s8) -- (1.5,-2) -- (s0);
+\end{tikzpicture}
+\end{center}
+（S0-S5输出0，S6-S11输出1，12个状态循环。6拍低+6拍高=50\%占空比。）
+
+\textbf{VHDL——直观状态机写法：}
+\begin{lstlisting}[caption={12分频器——每个状态一行，输出和转移一起写}]
+architecture Behavioral of div12_fsm is
+  type state is (s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11);
+  signal present_state, next_state: state;
+begin
+  process(rst, clk)
+  begin
+    if rst='0' then present_state <= s0;
+    elsif clk'event and clk='1' then
+      present_state <= next_state;
+    end if;
+  end process;
+
+  COM: process(present_state)
+  begin
+    case present_state is
+      when s0  => clk_out<='0'; next_state<=s1;
+      when s1  => clk_out<='0'; next_state<=s2;
+      when s2  => clk_out<='0'; next_state<=s3;
+      when s3  => clk_out<='0'; next_state<=s4;
+      when s4  => clk_out<='0'; next_state<=s5;
+      when s5  => clk_out<='0'; next_state<=s6;
+      when s6  => clk_out<='1'; next_state<=s7;
+      when s7  => clk_out<='1'; next_state<=s8;
+      when s8  => clk_out<='1'; next_state<=s9;
+      when s9  => clk_out<='1'; next_state<=s10;
+      when s10 => clk_out<='1'; next_state<=s11;
+      when s11 => clk_out<='1'; next_state<=s0;
+      when others => clk_out<='0'; next_state<=s0;
+    end case;
+  end process COM;
+end Behavioral;
+\end{lstlisting}
+
+\textbf{和传统计数器写法对比：}
+\begin{lstlisting}[caption={传统写法（模12计数器+比较）}]
+if cnt=11 then cnt<=0; else cnt<=cnt+1; end if;
+clk_out <= '0' when cnt < 6 else '1';
+\end{lstlisting}
+
+同样等价！状态机12状态枚举写法更直观——你看状态图就知道输出波形是什么。计数器写法更紧凑——4位计数器+比较器搞定。\textbf{考试中两种写法都正确，状态机写法更容易画状态转移图拿步骤分。}
+
+\subsection{移位寄存器 = 状态机}
+
+移位寄存器的"状态"就是N个D触发器的内容——一个N位向量，总共$2^N$种可能。次态函数非常简单：$Q_{next} = \{si, Q[N-1:1]\}$（右移）或$\{Q[N-2:0], si\}$（左移）。
+
+\textbf{本质上它是状态机，但次态逻辑太简单了——一行拼接就表达完毕，不需要case枚举。}
+
+\textbf{移位寄存器是状态机——但你不会用case去写它。}
+
+4位移位寄存器有$2^4=16$个状态。\textbf{理论上}可以枚举16个状态用case写——比如状态"0000"输入1→下一拍"1000"；状态"1000"输入0→下一拍"0100"...以此类推，16个状态×2种输入=32个when分支。
+
+\textbf{但没人会这样写}——太蠢了。一行\texttt{reg <= si \& reg(3 downto 1)}就搞定的事情，写32行case毫无意义。
+
+\textbf{这说明一个重要区别：}
+\begin{itemize}
+  \item 有些电路的次态逻辑\textbf{有简洁的数学表达}（移位=拼接、计数=+1）→ 不需要枚举状态
+  \item 有些电路没有（序列检测的前缀匹配、售货机的金额累计）→ \textbf{必须}枚举状态
+\end{itemize}
+
+\textbf{什么时候必须用显式状态机？}次态逻辑没有简洁公式时。序列检测器检测1011——你没法用一个数学表达式描述"已匹配101时输入1→检测到"，所以必须枚举S0/S1/S2/S3四个状态。计数器和移位寄存器的次态有简洁公式（+1和拼接），用传统写法即可。
+
+\textbf{环形计数器和Johnson计数器}是移位寄存器的特例：反馈线不同，同样不需要显式状态机。
+
+\subsection{序列发生器 = 状态机}
+
+序列发生器是\textbf{无外部输入的状态机}— 没有din，次态只取决于当前状态。以序列00011101为例：
+
+\textbf{状态转移图（8状态，无输入）：}
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth,node distance=1.8cm,auto,scale=0.85]
+\node[draw,circle] (s0) at (0,0) {000/0};
+\node[draw,circle] (s1) at (2.5,0) {001/0};
+\node[draw,circle] (s2) at (5,0) {011/0};
+\node[draw,circle] (s3) at (7.5,0) {111/1};
+\node[draw,circle] (s4) at (10,0) {110/1};
+\node[draw,circle] (s5) at (2.5,-2) {101/1};
+\node[draw,circle] (s6) at (5,-2) {010/0};
+\node[draw,circle] (s7) at (7.5,-2) {100/1};
+\draw (s0) -- (s1); \draw (s1) -- (s2); \draw (s2) -- (s3);
+\draw (s3) -- (s4); \draw (s4) -- (s5); \draw (s5) -- (s6);
+\draw (s6) -- (s7); \draw (s7) edge[bend right=80] (s0);
+\end{tikzpicture}
+\end{center}
+（状态标注格式：Q/输出值。转移弧上无标注——因为没有外部输入。）
+
+\textbf{注意和序列检测器的对比：}
+\begin{itemize}
+  \item 检测器弧上有输入值(0/1)，因为去哪取决于din
+  \item 发生器弧上没有输入，因为去哪是确定的（CASE表写死了）
+\end{itemize}
+
+\textbf{用状态机写法实现：}
+
+\begin{lstlisting}[caption={序列发生器00011101——直观状态机写法}]
+architecture Behavioral of seqgen_fsm is
+  type state is (s0,s1,s2,s3,s4,s5,s6,s7);
+  signal present_state, next_state: state;
+begin
+  -- 状态寄存器
+  process(rst, clk)
+  begin
+    if rst='0' then present_state <= s0;
+    elsif clk'event and clk='1' then
+      present_state <= next_state;
+    end if;
+  end process;
+
+  -- 次态逻辑 + 输出（每个状态一行：输出什么 + 下一拍去哪）
+  COM: process(present_state)
+  begin
+    case present_state is
+      when s0 => q <= '0'; next_state <= s1;
+      when s1 => q <= '0'; next_state <= s2;
+      when s2 => q <= '0'; next_state <= s3;
+      when s3 => q <= '1'; next_state <= s4;
+      when s4 => q <= '1'; next_state <= s5;
+      when s5 => q <= '1'; next_state <= s6;
+      when s6 => q <= '0'; next_state <= s7;
+      when s7 => q <= '1'; next_state <= s0;
+      when others => q <= '0'; next_state <= s0;
+    end case;
+  end process COM;
+end Behavioral;
+\end{lstlisting}
+
+\textbf{这种写法的好处：}每个状态一行——\texttt{when s3 => q <= '1'; next\_state <= s4;} → 状态s3输出1，下一拍去s4。8个状态8行，序列00011101直接写在代码里，一目了然。和状态转移图完全对应——图上每个圈写什么，代码里每个when就写什么。
+
+\textbf{和移位寄存器+CASE表写法对比：}两者功能完全相同。状态机枚举写法更直观（8个状态看得清清楚楚），查表写法更紧凑（不需要枚举状态类型）。
+
+\subsection{统一视角}
+
+\begin{center}
+\begin{tikzpicture}[>=stealth]
+\node[draw,minimum width=3cm,minimum height=1cm] (reg) at (0,0) {状态寄存器(D触发器)};
+\node[draw,minimum width=3cm,minimum height=1.2cm] (nsl) at (5,0) {次态逻辑};
+\node[draw,minimum width=3cm,minimum height=1cm] (ol) at (5,-2) {输出逻辑};
+\draw[->] (reg) -- (nsl) node[midway,above]{当前状态};
+\draw[->] (nsl.east) -- ++(1,0) |- (reg.north) node[near end,right]{下一状态};
+\draw[->] (reg.east) -- ++(0.5,0) |- (ol.west);
+\draw[->] (ol.east) -- ++(1.5,0) node[right]{输出};
+\node at (2.5,-3.5) {所有同步时序电路都遵循这个结构};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{电路} & \textbf{次态逻辑} & \textbf{输出逻辑} & \textbf{输入} \\
+\hline
+计数器 & $+1$ 加法器 & 计数值/进位 & 无（或en/load）\\
+移位寄存器 & 移位拼接 & 并行/串行数据 & si/din \\
+序列发生器 & CASE查表 & Q最高位 & 无 \\
+序列检测器 & 前缀匹配判断 & detected信号 & din串行输入 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{核心结论：}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{电路} & \textbf{次态逻辑} & \textbf{需要显式状态机？} \\
+\hline
+计数器 & $cnt+1$（有简洁数学公式）& 不需要，一行cnt<=cnt+1即可 \\
+移位寄存器 & 拼接运算（有简洁公式）& 不需要，一行reg<=si\&reg即可 \\
+序列发生器 & CASE查表/枚举 & 可以（枚举更直观）\\
+序列检测器 & 前缀匹配判断 & \textbf{必须}——没有简洁公式 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{什么时候用显式状态机：次态逻辑没有简洁数学表达式的时候。}计数器+1、移位拼接——一行代码搞定。序列检测的前缀匹配、售货机的金额累计——必须老老实实画状态图、写case枚举。\textbf{不是所有电路都要写成状态机，但所有电路都可以用状态机来理解。}
+
 \section{变式详解}
 \chapter{序列检测器——全部变式详解}
 
