@@ -1,0 +1,4 @@
+matplotlib>=3.5
+numpy>=1.21
+pythonnet>=3.0
+pyserial>=3.5

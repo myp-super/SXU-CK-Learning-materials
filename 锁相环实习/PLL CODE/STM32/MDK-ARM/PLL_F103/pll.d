@@ -1,0 +1,14 @@
+pll_f103\pll.o: ..\PLL\pll.c
+pll_f103\pll.o: ..\PLL\pll.h
+pll_f103\pll.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_math.h
+pll_f103\pll.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm3.h
+pll_f103\pll.o: D:\51\ARM\ARMCC\Bin\..\include\stdint.h
+pll_f103\pll.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_compiler.h
+pll_f103\pll.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_armcc.h
+pll_f103\pll.o: D:\51\ARM\ARMCC\Bin\..\include\string.h
+pll_f103\pll.o: D:\51\ARM\ARMCC\Bin\..\include\math.h
+pll_f103\pll.o: ..\PLL\signal_generator.h
+pll_f103\pll.o: ..\PLL\phase_detector.h
+pll_f103\pll.o: ..\PLL\notch_filter.h
+pll_f103\pll.o: ..\PLL\loop_filter.h
+pll_f103\pll.o: ..\PLL\nco.h

@@ -1,0 +1,15 @@
+ 
+要开始，请键入 doc。
+有关产品信息，请访问 www.mathworks.com。
+ 
+[警告: The model name 'PLL' is shadowing another name in the MATLAB workspace or path. Type "which -all PLL" at the command line to find the other uses of this name. You should
+change the name of the model to avoid problems.] 
+[> 位置：build_slx (第 14 行)
+位置: run (第 112 行)] 
+[build_slx] PLL.slx created successfully.
+Open with: open_system('PLL')
+[警告: The model name 'PLL' is shadowing another name in the MATLAB workspace or path. Type "which -all PLL" at the command line to find the other uses of this name. You should
+change the name of the model to avoid problems.] 
+[> 位置：build_slx (第 14 行)] 
+[build_slx] PLL.slx created successfully.
+Open with: open_system('PLL')

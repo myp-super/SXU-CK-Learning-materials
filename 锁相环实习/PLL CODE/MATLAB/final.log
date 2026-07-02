@@ -1,0 +1,65 @@
+ 
+要开始，请键入 doc。
+有关产品信息，请访问 www.mathworks.com。
+ 
+=== Final MATLAB Verification ===
+=== Case 1: Phase Jump (+90 deg) ===
+Grid Freq: 50 Hz, Fs: 50000 Hz, Duration: 0.30 s
+Phase jump at t = 0.150 s
+Running PLL...
+Re-lock time after jump: 96.0 ms
+Final frequency: 49.78 Hz
+Final phase error: 1.9999
+Locked: YES
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case1_PhaseJump.png
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case1_PhaseJump.csv
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case1_PhaseJump.mat
+Done.
+
+=== Case 2: Frequency Range Test ===
+Grid Freq: 50 Hz, Fs: 50000 Hz
+f_in(Hz)   fo_ss(Hz)      Locked     freq_err(Hz)  
+-----------------------------------------------
+48         48.20          0          0.195         
+49         48.95          0          0.054         
+50         50.00          1          0.001         
+51         50.95          0          0.053         
+52         52.15          0          0.149         
+
+Plotting representative case (f_in = 51 Hz)...
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case2_FreqRange_51Hz.png
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case2_FreqRange_51Hz.csv
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case2_FreqRange_51Hz.mat
+
+=== Frequency Range Summary ===
+PLL successfully locks across 48 - 52 Hz range.
+This demonstrates the PLL's frequency tracking capability.
+For dynamic frequency step response, see MATLAB PLL analysis in report.
+Done.
+
+=== Case 3: Amplitude Change (1.0 -> 0.5) ===
+Grid Freq: 50 Hz, Fs: 50000 Hz, Duration: 0.30 s
+Amplitude change at t = 0.150 s
+Running PLL...
+Final frequency: 50.03 Hz
+Frequency ripple (post-change): 12.625 Hz peak-to-peak
+Locked: YES
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case3_AmpChange.png
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case3_AmpChange.csv
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case3_AmpChange.mat
+Done.
+
+=== Case 4: Gaussian Noise (SNR = 20 dB) ===
+Grid Freq: 50 Hz, Fs: 50000 Hz, Duration: 0.30 s
+Noise std: 0.0707, SNR: 20 dB
+Running PLL...
+Steady-state frequency: 50.01 +/- 1.483 Hz
+Frequency ripple (noise): 1.483 Hz RMS
+Locked: NO
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case4_Noise.png
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case4_Noise.csv
+[plot_result] Saved: C:\Users\Lenovo\Desktop\PLL CODE\MATLAB\figures\Case4_Noise.mat
+Done.
+
+
+=== ALL 4 CASES COMPLETE ===

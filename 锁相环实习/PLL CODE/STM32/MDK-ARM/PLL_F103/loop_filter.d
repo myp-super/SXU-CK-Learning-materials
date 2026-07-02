@@ -1,0 +1,9 @@
+pll_f103\loop_filter.o: ..\PLL\loop_filter.c
+pll_f103\loop_filter.o: ..\PLL\loop_filter.h
+pll_f103\loop_filter.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\arm_math.h
+pll_f103\loop_filter.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm3.h
+pll_f103\loop_filter.o: D:\51\ARM\ARMCC\Bin\..\include\stdint.h
+pll_f103\loop_filter.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_compiler.h
+pll_f103\loop_filter.o: D:\51\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_armcc.h
+pll_f103\loop_filter.o: D:\51\ARM\ARMCC\Bin\..\include\string.h
+pll_f103\loop_filter.o: D:\51\ARM\ARMCC\Bin\..\include\math.h
